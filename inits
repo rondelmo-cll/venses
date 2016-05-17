@@ -1,0 +1,1441 @@
+:- style_check(-singleton). 
+
+:- assert(wfst(off)).
+:- assert(strap(off)).
+:- assert(strata(off)).
+:- assert(stratf(off)).
+:- assert(stratl(off)).
+:- assert(comp_less(off)).
+:- assert(strath(off)).
+:- assert(minimal(off)).
+:- assert(pronoun(off)).
+:- assert(genre(narrative)).
+:- assert(active_grammar(english)).
+:- assert(interp(compl)).
+:- assert(sw(nil-nil-nil)).
+
+active_output_win(user).
+
+:-assert(rete(a1)).
+
+wfront(A).
+
+one(Goal) :- Goal, !.
+
+%% false :- fail,!.
+
+
+/*
+%remove(A,B,C):- subtract(B,[A],C).
+remove(A, B, C):-
+   subtract(B, [A], C),
+   B\=[], C\=B.
+*/
+
+remove(A,[A|L],L).
+remove(A,[B|L],[B|M]) :- remove(A,L,M).
+
+
+
+pname(A,AA):-
+  nonvar(A),
+  \+ atomic(A),
+  functor(A,B,C),
+  AA=A,
+  !.
+  
+pname(AA,B):-
+  nonvar(B),
+  \+ atomic(B),
+  functor(B,A,C),
+  AA=A,
+  !.
+
+pname(A,B):- var(A), atom_to_term(B,A,_).
+pname(A,B):- var(B), atom_to_term(A,B,_).
+
+list(A):- is_list(A).
+lst(A):- is_list(A).
+
+writenl(_,[]) :- nl.
+writenl(_,T) :-    
+     write(T), nl.
+     
+writeqnl(_,[]) :- nl.
+writeqnl(_,T) :-    
+     writeq(T), nl.
+     
+writeseq([]):-!.
+writeseq([T|C]) :-
+   write(T),tab(1), 
+   writeseq(C).
+writeseq(_,[]):-!.
+writeseq(_,[T|C]) :-
+   write(T),tab(1), 
+   writeseq(_,C).
+
+writeseqnl(_,[]) :- nl.
+writeseqnl(_,[T|C]) :-    
+       write(T),tab(1), writeseqnl(_,C).
+writeseqnl([]) :- nl.
+writeseqnl([T|C]) :-    
+       write(T),tab(1), nl,
+       writeseqnl(C).
+
+
+sommatoria([], 0, 0).
+sommatoria([H| T], S, N) :-
+  sommatoria(T, S1, N1),
+  S is H + S1,
+  N is N1 + 1.
+sommatoria([], 0).
+sommatoria([H| T], S) :-
+  sommatoria(T, S1),
+  S is H + S1.
+
+:- dynamic(proposto/1).
+:- dynamic(principale/1).
+:- dynamic(secondario/1).
+:- dynamic(altri/2).
+:- dynamic(stato/2).
+:- dynamic(frase_corrente/2).
+:- dynamic(risolto/4).
+:- dynamic(topic/3).
+:- dynamic(ind/2).
+:- dynamic(set/2).
+:- dynamic(ent/2).
+:- dynamic(loc/3).
+:- dynamic(class/1).
+:- dynamic(new_pred/2).
+:- dynamic(card/3).
+:- dynamic(in/3).
+:- dynamic(po_view/2).
+:- dynamic(fact/6).
+:- dynamic(sit/6).
+:- dynamic(new_ind/3).
+:- dynamic(eq_infon/2).
+:- dynamic(confer_ind/3).
+:- dynamic(confer_infon/4).
+:- dynamic(confer_topic/5).
+:- dynamic(confer_rel_temp/3).
+:- dynamic(current_prop_node/1).
+:- dynamic(info/9).
+:- dynamic(antecedente/4).
+:- dynamic(esterno/1).
+:- dynamic(genre/1).
+:- dynamic(interp/1).
+:- dynamic(comp_less/1).
+:- dynamic(minimal/1).
+:- dynamic(termin/1).
+:- dynamic(stackxp/1).
+:- dynamic(look/1).
+:- dynamic(wfst/1).
+:- dynamic(rcs/2).
+:- dynamic(prph/1).
+:- dynamic(stratl/1).
+:- dynamic(strata/1).
+:- dynamic(stratf/1).
+:- dynamic(stratp/1).
+:- dynamic(strap/1).
+:- dynamic(strath/1).
+:- dynamic(esterno/3).
+:- dynamic(controllato/2). 
+:- dynamic(fin_fp/1).
+:- dynamic(frase_atomo/2).
+:- dynamic(contains/2). 
+:- dynamic(overlap/2). 
+:- dynamic(after/2). 
+:- dynamic(before/2). 
+:- dynamic(during/2). 
+:- dynamic(undef/2). 
+
+:- dynamic(rete/1).
+:- dynamic(lista_fcs/1).
+:- dynamic(entity_relevance/3).
+:- dynamic(pronoun/1).
+:- dynamic(logical/1).
+:- dynamic(todo/2).
+:- dynamic(int_temp/1).
+:- dynamic(rel_temp/3).
+:- dynamic(has_ref_int/2).
+:- dynamic(is_ref_int/1).
+:- dynamic(current_node/1).
+:- dynamic(current_num/2).
+
+
+:- multifile(principale/1).
+:- multifile(secondario/1).
+:- multifile(antecedente/4).
+:- multifile(altri/2).
+:- multifile(esterno/1).
+:- multifile(termin/1).
+:- multifile(stackxp/1).
+:- multifile(comp_less/1).
+:- multifile(minimal/1).
+:- multifile(look/1).
+:- multifile(prph/1).
+:- multifile(wfst/1).
+:- multifile(genre/1).
+:- multifile(interp/1).
+:- multifile(stratl/1).
+:- multifile(strata/1).
+:- multifile(stratf/1).
+:- multifile(stratp/1).
+:- multifile(strap/1).
+:- multifile(strath/1).
+:- multifile(esterno/3).
+:- multifile(controllato/2).
+:- multifile(fin_fp/1).
+:- multifile(frase_atomo/2).
+
+:- multifile(frase_corrente/2).
+:- multifile(set/2).
+:- multifile(card/3).
+:- multifile(class/1).
+:- multifile(new_pred/2).
+:- multifile(ind/2).
+:- multifile(po_view/2).
+:- multifile(loc/3).
+:- multifile(in/3).
+:- multifile(confer_ind/3).
+:- multifile(confer_rel_temp/3).
+:- multifile(new_ind/3).
+:- multifile(eq_infon/3).
+:- multifile(confer_infon/4).
+:- multifile(confer_topic/5).
+:- multifile(entity_relevance/3).
+:- multifile(fact/6).
+:- multifile(sit/6).
+:- multifile(ent/2).
+:- multifile(topic/3).
+:- multifile(risolto/4).
+:- multifile(altri/2).
+:- multifile(fp/2).
+:- multifile(info/9).
+:- multifile(stato/2).
+:- multifile(todo/2).
+:- multifile(int_temp/1).
+:- multifile(rel_temp/3).
+:- multifile(has_ref_int/2).
+:- multifile(is_ref_int/1).
+:- multifile(current_node/1).
+:- multifile(current_prop_node/1).
+:- multifile(current_num/2).
+:- multifile(active_grammar/1).
+
+
+
+:- op(600,xfy,'&&').
+:- op(600,xfy,&).
+%:- op(600,xfy,of).
+:- op(800,xfx,is_string).
+:- op(800,xfx,is_atom).
+:- op(800,xfx,the_list).
+:- op(480,fx,'<'). % Per la forma logica era 954
+:- op(500,xf,'>'). % Per la forma logica era 955
+:- op(605,xfy,':').
+%:- op(700, xfy, isa).
+%:- op(700, xfy, in).
+:- op(800,xfx,the_list).
+:- op(655,xfy,'::'). 
+:- op(800,xfy,:::). 
+:- op(950,xfy,'=>').
+:- op(610, xfy, aftr).
+
+/*
+:- op(900, fx,  forget).
+:- op(900, fx,  redescribe).
+:- op(800, xf,  noibox).
+:- op(700, xfy, ?<).
+:- op(700, xfy, ?:).
+:- op(700, xfy, :=).
+:- op(700, xfy, :<).
+:- op(700, xfy, ::).
+:- op(700, xfy, ==>).
+:- op(700, xfy, *=).
+:- op(650, xfy, type).
+:- op(640, fx,  describe).          
+:- op(640, fx,  describe_fully). 
+:- op(640, fx,  defined_as).       
+:- op(640, fx,  introduced_as).       
+:- op(640, fx,  self).       
+:- op(640, fx,  msc).       
+:- op(635, xfy, for).              
+:- op(630, fx,  getall).            
+:- op(630, xfy, union).
+:- op(625, xfy, '.').
+:- op(625, xfy, comp).
+:- op(625, xfy, intersection).
+:- op(620, xfy, or).
+:- op(610, xfy, without).
+:- op(610, xfy, and).
+:- op(575, xfy, '..').
+:- op(606, xfy, '*').
+
+  op(500, fx, '<'), 
+  op(480, xf, '>'), 
+  op(520, xfy, '>'), 
+  op(480, fx, '<'), 
+  op(655,xfy,'::').
+*/
+
+operators :-
+  op(600,xfy,&&),
+  op(600,xfy,&),
+  op(800,xfx,is_string),
+  op(800,xfx,is_atom),
+  op(800,xfx,the_list),
+  op(955,fx,'<'),
+  op(954,xf,'>'),
+  op(705,xfy,':').
+
+/* operatori per uso di the_list (in varie) */
+
+
+
+multifiles:-
+  multifile(principale/1),
+  multifile(secondario/1),
+  multifile(antecedente/4),
+  multifile(esterno/1),
+  multifile(termin/1),
+  multifile(stackxp/1),
+  multifile(comp_less/1),
+  multifile(minimal/1),
+  multifile(look/1),
+  multifile(wfst/1),
+  multifile(genre/1),
+  multifile(stratl/1),
+  multifile(strata/1),
+  multifile(stratf/1),
+  multifile(stratp/1),
+  multifile(strap/1),
+  multifile(strath/1),
+  multifile(pronoun/1),
+  multifile(logical/1),
+  multifile(esterno/3),
+  multifile(controllato/2),
+  multifile(fin_fp/1),
+  multifile(frase_atomo/2),
+  multifile(f/2),
+  multifile(frase_corrente/2),
+  multifile(set/2),
+  multifile(card/3),
+  multifile(class/1),
+  multifile(new_pred/2),
+  multifile(ind/2),
+  multifile(po_view/2),
+  multifile(loc/3),
+  multifile(in/3),
+  multifile(confer_ind/3),
+  multifile(new_ind/3),
+  multifile(eq_infon/3),
+  multifile(confer_infon/4),
+  multifile(confer_topic/5),
+  multifile(entity_relevance/2),
+  multifile(fact/6),
+  multifile(sit/6),
+  multifile(ent/2),
+  multifile(topic/3),
+  multifile(risolto/4),
+  multifile(altri/2),
+  multifile(fp/2),
+  multifile(info/9),
+  multifile(stato/2),
+  multifile(todo/2),
+  multifile(int_temp/1),
+  multifile(rel_temp/3),
+  multifile(has_ref_int/2),
+  multifile(is_ref_int/1),
+  multifile(current_node/1),
+  multifile(active_grammar/1).
+
+dynamics :-
+   dynamic(principale/1),
+   dynamic(secondario/1),
+   dynamic(antecedente/4),
+   dynamic(esterno/1),
+   dynamic(altri/2),
+   dynamic(termin/1),
+   dynamic(stackxp/1),
+   dynamic(comp_less/1),
+   dynamic(minimal/1),
+   dynamic(look/1),
+   dynamic(wfst/1),
+   dynamic(prph/1),
+   dynamic(genre/1),
+   dynamic(interp/1),
+   dynamic(stratl/1),
+   dynamic(strata/1),
+   dynamic(stratp/1),
+   dynamic(strap/1),
+   dynamic(stratf/1),
+   dynamic(strath/1),
+   dynamic(pronoun/1),
+   dynamic(logical/1),
+   dynamic(esterno/3),
+   dynamic(controllato/2),
+   dynamic(fin_fp/1),
+   dynamic(frase_atomo/2),
+   dynamic(f/2),
+   dynamic(lista_fcs/1),
+   dynamic(frase_corrente/2),
+   dynamic(set/2),
+   dynamic(card/3),
+   dynamic(class/1),
+   dynamic(new_pred/2),
+   dynamic(ind/2),
+   dynamic(po_view/2),
+   dynamic(loc/3),
+   dynamic(in/3),
+   dynamic(confer_ind/3),
+   dynamic(confer_rel_temp/3),
+   dynamic(new_ind/3),
+   dynamic(eq_infon/3),
+   dynamic(confer_infon/4),
+   dynamic(confer_topic/5),
+   dynamic(entity_relevance/3),
+%  dynamic(entity_relevance/2),
+   dynamic(fact/6),
+   dynamic(sit/6),
+   dynamic(ent/2),
+   dynamic(topic/3),
+   dynamic(risolto/4),
+   dynamic(altri/2),
+   dynamic(fp/2),
+   dynamic(info/9),
+   dynamic(stato/2),
+   dynamic(todo/2),
+   dynamic(int_temp/1),
+   dynamic(rel_temp/3),
+   dynamic(has_ref_int/2),
+   dynamic(is_ref_int/1),
+   dynamic(current_node/1),
+   dynamic(current_prop_node/1),
+   dynamic(current_num/2),
+   dynamic(active_grammar/1),
+   dynamic(contains/2),
+   dynamic(overlap/2),
+   dynamic(after/2),
+   dynamic(before/2),
+   dynamic(during/2),
+   dynamic(undef/2). 
+
+
+/************************   INITS   ******************/
+
+init:-
+    assert(count(on)),
+   abolish(fp/2),
+   abolish(frase/1),
+   abolish(ags/1),
+   dynamic(frase/1),
+    abolish(disc/1),
+    abolish(totf/1),
+    abolish(numtoks/3),   
+    abolish(numtyp/3),   
+    abolish(typtoks/4),   
+    abolish(tr/1),
+    abolish(tt/1),
+   assert(tt(off)),
+    abolish(rr/1),
+   assert(rr(0-0)),
+   assert(newp(off)),
+   assert(numtyp(0,0,0)),
+   assert(typtoks(0,0,0,0)),
+   assert(numtoks(0,1,1)),
+   assert(disc(1-[])),
+   assert(rm(nil,nil)),
+     abolish(parsed/1),
+    abolish(wnet/1),
+    assert(wnet(on)),
+    abolish(curr_frase/1),
+    assert(curr_frase(1)),
+   !.
+
+init_sems:-
+   retractall(current_num(_,_)),
+   abolish(frase_corrente/2),
+   dynamic(frase_corrente/2),
+   init_tops,
+   init_risolto,
+   reset_ds,
+   !.
+init_tops:-
+   abolish(tr/1),
+   abolish(topps/5),
+   abolish(topic/3),
+   abolish(main/2),
+   abolish(second/2),
+   abolish(others/1),
+   abolish(risolto/4),
+   dynamic(risolto/4),
+   assert(topps(nil, nil,nil,nil,nil)),
+   assert(topic(nil, nil,nil)),
+   assert(main(nil, 0)),
+   assert(second(nil, 0)),
+   assert(others([])),
+   !.
+
+init_risolto:-
+   abolish(risolto/4),
+   dynamic(risolto/4),
+   abolish(recent_concepts/1),
+   dynamic(recent_concepts/1),
+   !.
+
+sentence_inits:-
+  abolish(termin/1),
+  abolish(stackxp/1),
+  dynamic(termin/1),
+  assert(look(head)),
+  asserta(stackxp(0-0-0-0)),
+  gen_sym(f,0),
+  gen_sym(sn,0),
+  gen_sym(finf,0),              
+  abolish(tensed/1),
+  assert(tensed(nil)),
+  !.
+
+initheaps:-
+   abolish(dgrs/2),
+   abolish(funcs/4),
+   abolish(ref_funcs/4),
+   abolish(copul/1),
+   dynamic(copul/1),
+   abolish(passiv/1),
+   dynamic(passiv/1),
+   dynamic(ref_funcs/4),
+   dynamic(funcs/4),
+   abolish(contr/1),
+   assert(contr(off)),
+   dynamic(dgrs/2),
+   abolish(governor/2),
+   dynamic(governor/2),
+   asserta(governor(nil,nil)),
+   !.
+   
+init_lexicon:-
+   abolish(sw/1),
+   assert(sw(nil-nil-nil)),
+   abolish(mult/2),
+   assert(mult(nil,nil)),
+   abolish_all_new,
+   assert(pronoun(on)),
+   assert(logical(off)),
+   assert(new_avv(nil,nil)),
+   assert(new_n(nil,nil,nil)),
+   assert(new_np(nil,nil,nil)),
+   assert(new_npro(nil,nil,nil)),
+   assert(new_pp_ger(nil,nil)),
+   assert(new_v(nil,nil,nil,nil,nil,nil)),
+   assert(new_a_engl(nil)),
+   assert(new_pred_np(nil,nil,nil,nil)),
+   assert(new_pred_n(nil,nil,nil,nil)),
+   assert(new_pred_a(nil,nil,nil)).
+   abolish_all_new:-
+	abolish(new_avv/2),
+	abolish(new_n/3),
+	abolish(new_np/3),
+	abolish(new_npro/3),
+	abolish(new_pp_ger/2),
+	abolish(new_v/6),
+	abolish(new_a_engl/1),
+	abolish(new_pred_np/4),
+	abolish(new_pred_n/4),
+	abolish(new_pred_a/3),
+   dynamic(new_avv/2),
+   dynamic(new_n/3),
+   dynamic(new_np/3),
+   dynamic(new_npro/3),
+   dynamic(new_pp_ger/2),
+   dynamic(new_v/6),
+   dynamic(new_a_engl/1),
+   dynamic(new_pred_np/4),
+   dynamic(new_pred_n/4),
+   dynamic(new_pred_a/3).
+
+:-init_lexicon.
+
+nstart :-
+   abolish(topps/4),
+   abolish(proposto/1),
+   abolish(principale/1),
+   abolish(secondario/1),
+   abolish(recent_concepts/1),
+   abolish(altri/2),
+   abolish(stato/2),
+   abolish(frase_corrente/2),
+   abolish(topic/3),
+   abolish(ind/2),
+   abolish(set/2),
+   abolish(ent/2),
+   abolish(loc/3),
+   abolish(class/2),
+   abolish(new_pred/2),
+   abolish(card/3),
+   abolish(in/3),
+   abolish(rcs/2),
+   abolish(po_view/2),
+   abolish(fact/6),
+   abolish(sit/6),
+   abolish(new_ind/3),
+   abolish(eq_infon/2),
+   abolish(confer_ind/3),
+   abolish(confer_infon/5),
+   abolish(confer_topic/5),
+   abolish(confer_rel_temp/3),
+   abolish(current_prop_node/1),
+   abolish(disc_struc/10).
+
+start :-
+   dynamic(indefinite/1),
+   dynamic(proposto/1),
+   dynamic(principale/1),
+   dynamic(secondario/1),
+   dynamic(recent_concepts/1),
+   dynamic(altri/2),
+   dynamic(stato/2),
+   dynamic(frase_corrente/2),
+   dynamic(topic/3),
+   dynamic(ind/2),
+   dynamic(set/2),
+   dynamic(ent/2),
+   dynamic(loc/3),
+   dynamic(class/2),
+   dynamic(new_pred/2),
+   dynamic(card/3),
+   dynamic(in/3),
+   dynamic(po_view/2),
+   dynamic(fact/6),
+   dynamic(sit/6),
+   dynamic(new_ind/3),
+   dynamic(eq_infon/2),
+   dynamic(confer_ind/3),
+   dynamic(confer_infon/5),
+   dynamic(confer_topic/5),
+   dynamic(confer_rel_temp/3),
+   dynamic(current_prop_node/1),
+   dynamic(current_main_loc/3),
+   dynamic(disc_struc/10),
+   assert(frase_corrente(1, nil)),
+   assert(fact(nil,nil,nil,nil,nil,nil)),
+   assert(sit(nil,nil,nil,nil,nil,nil)),
+   assert(class(nil,nil)),
+   assert(rcs(nil,nil)),
+   gen_sym(infon, 0),
+   gen_sym(id, 0).
+
+
+reset_ds:-
+    retractall(sinfo(_, _, _, _, _, _, _, _, _, _, _, _)),
+    retractall(sd_structure(_,_, _, _, _, _, _, _, _)),
+    assert(sinfo(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)),
+    assert(sd_structure(nil,nil, nil, nil, nil, nil, nil, nil, nil)),
+    !.
+
+lista_frasi(Lista) :-
+  findall(Frase,frase_atomo(N, Frase), Lista).
+
+converti_frasi :-
+  kill(frase_atomo),
+  fp(Code,Words),
+    words_to_atom([Code | Words], Atomo),
+    assert(frase_atomo(Code,Atomo)),
+  fail.
+converti_frasi.
+
+/*
+rte_all_texts(Dir,Output):-
+   abolish(statsfp/5),
+   asserta(statsfp(0,0,0,0,0)),
+       cd(Dir),
+       expand_file_name(*,Files),
+   rteopenfile(Files,Output),
+   compute_ft_total(riassunto,Stats),
+   !.
+*/
+
+parse_discourses(0,Input,[],NoFr, NoFr,[]) :-!.
+
+parse_discourses(1, Input,[Code|Codes], NoFr, Cl,[[Evaluate]|Evals]) :-
+   getcfilename(Code,Outs,Name),
+   fp(Code,Sent),
+   nl,
+   writenl(_,Name),
+   writeseqnl(_,Sent),
+%   tell(Outs),
+   nl,
+   writenl(Modss, '**************************'),
+   nl,
+  retractall(frase_corrente(_,_)),
+  NoFr1 is NoFr + 1,
+  hypo_parse(NoFr1, Code, Out, NewNoCl, Input, Evaluation),
+  listing_ref_funcs,
+  Evaluate=..[Code,Evaluation,Out],
+%  told,
+  parse_discourses(0,Input,Codes, NewNoCl, Cl,Evals),
+  !.
+
+parse_discourses(L,Input,[Code|Codes], NoFr, Cl,[Evaluate|Evals]) :-
+  retractall(frase_corrente(_,_)),
+   getcfilename(Code,Outs,Name),
+   fp(Code,Sent),
+   nl,
+   writenl(_,Name),
+   writeseqnl(_,Sent),
+%   tell(Outs),
+  NoFr1 is NoFr + 1,
+  hypo_parse(NoFr1, Code, Out, NewNoCl, Input, Evaluation),
+  listing_ref_funcs,
+  Evaluate=..[Code,Evaluation,Out],
+%  told,
+  L1 is L-1,
+  parse_discourses(L1,Input,Codes, NewNoCl, Cl,Evals),
+  !.
+
+
+rteparsetext(Text,Output):-
+  retractall(current_num(_,_)),
+  newtager(Text,Output),
+  findall(Code,fp(Code,_), Codes),
+  init_sems,
+  rteopen_file(Codes, Stats,1,1),
+  !.
+  
+rteopen_file([], [], _, _):-!.
+
+rteopen_file([Text|Noms], [Evals|Stats], NoFr, NoCl):-
+   writenl(_,Text),
+   getcfilename(Text,Outs,Name),
+   fp(Text,Sent),
+   writeseqnl(_,Sent),
+   tell(Outs),
+   parse_discourse(Logfile,[Name],NoFr, NoCl,Evals),
+   told,
+   NewNo is NoFr + 1,
+   NewCl is NoCl + 1,
+   garb_coll(NoFr),
+   rteopen_file(Noms, Stats, NewNo, NewCl),
+   !.
+
+parse_all_texts(Dir,Output):-
+       cd(Dir),
+       expand_file_name(*,Files),
+   nopen_file(Files,Output),
+   !.
+
+nopen_file([],Output):-!.
+
+nopen_file([outs|Noms],Output):-
+   nopen_file(Noms,Output),
+   !.
+nopen_file([Text|Noms],Output):-
+   parsetext(Text,Output,Stat),
+   concat(evaluation,'_',Logfil),
+   concat(Logfil, Text, Logfile),
+   atom_to_term(Outs,outs/Logfile,_),
+  tell(Outs),
+  findall(Sym-A-B-C-D-E-F-G-H, d_structure(Sym,A,B,C,D,E,F,G,H), Stru),
+  writeseqnl(Stru),
+  told,
+   nopen_file(Noms,Output),
+   !.
+
+parsetext(Text,Output,Stats):-
+  retractall(current_num(_,_)),
+  newtager(Text,Output),
+  findall(Code,fp(Code,_), Codes),
+  init_sems,
+  allopen_file('Macintosh HD:dumps', Codes, Stats,1,0),
+  !.
+  
+allopen_file(Num, [], [], _, _):-!.
+
+allopen_file(File, [Text|Noms], [Stat|Stats], NoFr, NoCl):-
+   writenl(_,Text),
+   getcfilename(Text,Outs,Name),
+   fp(Text,Sent),
+   writeseqnl(_,Sent),
+   tell(Outs),
+   newparse_discourse(Logfile,[Text],NoFr, NoCl, NewCl, Stat),
+   told,
+   NewNo is NoFr + 1,
+%   NewCl is NoCl + 1,
+   garb_coll(NoFr),
+   allopen_file(File, Noms, Stats, NewNo, NewCl),
+   !.
+parseonetext(Text,Output):-
+  retractall(current_num(_,_)),
+  newtager(Text,Output),
+  findall(Code,fp(Code,_), Codes),
+  init_sems,
+  newopen_file(Output, Codes, Stats,1,0),
+  tell(evaluation),
+  findall(Sym-A-B-C-D-E-F-G-H, d_structure(Sym,A,B,C,D,E,F,G,H), Stru),
+  writeseqnl(Stru),
+  told.
+
+writerte_eval(Name,RefExs,GRs):-
+/*  concat(evaluate,'_',Fil),
+  concat(Fil,Name,File),
+   term_to_atom(outs/File,Outs),
+  atom_to_term(Outs,outs/File,_),
+  tell(Outs),
+*/  write('Referring Expressions and Semantic Representation contained in Text and Hypothesis'),
+  nl,nl,
+  writeallrefss(RefExs),
+  nl,nl,
+  writeallgrss(GRs),
+%  told,
+  !.
+writerte_eval(Name,RefExs,GRs).
+  
+  
+writeallrefss([_-Hypo|RefExs]):-
+  writenl(_,'Referring Expressions contained in the Hypothesis'),
+  appiattisci(Hypo,Hypos),
+  writeallrefs(Hypos),
+  nl,
+  appiattisci(RefExs,RefExss),
+  writenl(_,'Referring Expressions contained in the Text'),
+  writeallrefs(RefExss),
+  !.
+writeallrefss([Hypo|RefExs]):-
+  writenl(_,'Referring Expressions contained in the Hypothesis'),
+  appiattisci(Hypo,Hypos),
+  writeallrefs(Hypos),
+  nl,
+  appiattisci(RefExs,RefExss),
+  writenl(_,'Referring Expressions contained in the Text'),
+  writeallrefs(RefExss),
+  !.
+writeallrefs([]):-!.
+writeallrefs([Ref|Rest]):-
+   writenl(_,Ref),
+   writeallrefs(Rest),
+  !.
+
+writeallgrss([_-Hypo|GRs]):-
+  writenl(_,'Semantic Representation contained in the Hypothesis'),
+  appiattisci(Hypo,Hypos),
+  writeallgrs(Hypos),
+  nl,
+  appiattisci(GRs,GRss),
+  writenl(_,'Semantic Representation contained in the Text'),
+  writeallgrs(GRss),
+  !.
+
+writeallgrss([Hypo|GRs]):-
+  writenl(_,'Semantic Representation contained in the Hypothesis'),
+  appiattisci(Hypo,Hypos),
+  writeallgrs(Hypos),
+  nl,
+  appiattisci(GRs,GRss),
+  writenl(_,'Semantic Representation contained in the Text'),
+  writeallgrs(GRss),
+  !.
+
+writeallgrs([]):-!.
+writeallgrs([Ref|Rest]):-
+   writenl(_,Ref),
+   writeallgrs(Rest),
+  !.
+  
+parser_examples(Text):-
+  retractall(current_num(_,_)),
+  see(Sentences),
+  assert_sentences(Text,Sentences),
+  findall(Code,fp(Code,_), Codes),
+  init_sems,
+  Logfil=anafore,
+  tell(Logfil),
+  newopen_file('Macintosh HD:dumps', Codes, Stats,1,0),
+  told.
+
+newopen_file(Num, [], [], _, _):-!.
+
+newopen_file(File, [Text|Noms], [Stat|Stats], NoFr, NoCl):-
+   writenl(_,Text),
+   getcfilename(Text,Outs,Name),
+   fp(Text,Sent),
+   writeseqnl(_,Sent),
+%   tell(Outs),
+   newparse_discourse(Logfile,[Text],NoFr, NoCl, NewCl, Stat),
+%   told,
+   NewNo is NoFr + 1,
+%   NewCl is NoCl + 1,
+   nl,nl,
+   garb_coll(NoFr),
+   newopen_file(File, Noms, Stats, NewNo, NewCl),
+   !.
+
+newparse_discourse(Input,[],I, _,[]) :-
+   !.
+newparse_discourse(Input,[Code | Codes], NoFr, NoCl, NewNoCl, [Evaluate]) :-
+  retractall(frase_corrente(_,_)),
+  newhypo_parse(NoFr, Code, Out, NoCl, NewNoCl, Input, Evaluation),
+    Evaluate=..[Code,Evaluation,Out],
+  !.
+
+newhypo_parse(NoFr, Symb, [Ibas, Tags,Scored,Output], NoCl, NewNoCl, Input, Alls):-
+   dyn_ext_pron,
+   writesymb_assert(NoFr, Symb),
+   fp(Symb,Sent),
+   tagging_disamb(NoFr, Sent,Disambs, Tags,  Scored, Input,Output,Frase),
+   allparsers(NoFr, Frase, Input, Disambs, Tags, Ibars, Scored, Output, Out, No),
+   getibarsall(Ibars,Ibas),
+   discourse(NoFr, Symb, Input, Scored, Out, WeightedRefs),
+   newbuild_dsr(NoFr,Symb, Ibars, DSR, NoCl, NewNoCl),
+   append([DSR],[WeightedRefs],Alls),
+     !.
+
+newbuild_dsr(NoFr,Symb,Disambs, OutRte, NoCl, NewNoCl):-
+    writenl(evaluation, 'Semantic Interpretation and Informational Structure'),
+    nl,
+    get_lemmata_preds(Disambs, Lems),
+    info_evaluation(NoFr,Lems,Cl,Infos,Args),
+    discourse_structure(Infos,DSR),
+    get_string(DSR,String),
+    writedstructure(NoCl, NewNoCl,'Evaluation',String,Outs),
+    add_features(Outs,Feats),
+    writedstruct(Feats),
+    compute_info_structure(Feats,Args,Infons),
+    process_infons(Infons,DS),
+    detect_causal_relations(DS,DR),
+    assertdstructs(Symb,DR),
+    nl,nl,
+    writenl(_,Symb),
+    writenl(evaluation, 'Discourse Relations and Discourse Structure'),
+    nl,
+    writedstruct(DR),
+    append([String],[Infons],OutRt),
+    append(OutRt,[Args],OutRte),
+    !.
+newbuild_dsr(NoFr,Symb,Disambs, [],NoCl, NoCl):-
+    !.
+
+pasbuild_dsr(NoFr,Symb,Disambs, OutPas, NoCl, NewNoCl):-
+    writenl(evaluation, 'Semantic Interpretation and Informational Structure'),
+    nl,
+    get_lemmata_preds(Disambs, Lems),
+    info_evaluation(NoFr,Lems,Cl,Infos,Args),
+    discourse_structure(Infos,DSR),
+    get_string(DSR,String),
+    writedstructure(NoCl, NewNoCl,'Evaluation',String,Outs),
+    add_features(Outs,Feats),
+    writedstruct(Feats),
+    createpas(Feats,Args,PAS),
+    compute_info_structure(Feats,Args,Infons),
+    process_infons(Infons,DS),
+    detect_causal_relations(DS,DR),
+    assertdstructs(Symb,DR),
+    nl,nl,
+    writenl(_,Symb),
+    writenl(evaluation, 'Discourse Relations and Discourse Structure'),
+    nl,
+    writedstruct(DR),
+    append([String],[Infons],OutRt),
+    append(OutRt,[Args],OutRte),
+    append([PAS],OutRte, OutPas),
+    !.
+pasbuild_dsr(NoFr,Symb,Disambs, [],NoCl, NoCl):-
+    !.
+     
+
+/*
+getcfilename(Text,Outs):-
+   concat(cstructure,'_',Logfil),
+   concat(Logfil, Text, Logfile),
+   atom_to_term(Outs,outs/Logfile,_),
+   !.
+   
+*/
+
+parse_one_text(Text,Output,Evals, Stats):-
+  retractall(current_num(_,_)),
+  newtager(Text,Output),
+%   open(Logfile, write),
+%  tell(Text),
+%  init_sems,
+  findall(Code,fp(Code,_), Codes),
+  parse_discourse(Logfile,Codes, 1, 1, Evals).
+%  writeall_ref_exs(Input,Evals).
+%  rte_evaluation_module(L,Score, Evals, GRs),
+%  write_score('Evaluation',L,Score).
+%  mem_stat_ft(L,Score).
+
+rteparse_one_text(Text,Output,Evals, Stats):-
+  retractall(current_num(_,_)),
+  newtager(Text,Output),
+  findall(Code,fp(Code,_), Codes),
+  parse_discourse(Logfile,Codes, 1, 1, Evals),
+%  writeall_ref_exs(Input,Evals).
+  rte_evaluation_module(L,Score, Evals, GRs, []),
+  write_score('Evaluation',L,Score),
+  mem_stat_ft(L,Score).
+
+
+getcfilename(Text,Outs,File):-
+   concat_atom(K,/,Text),
+   reverse(K,[File|Rev]),
+%   concat(cstructure,'_',Logfil),
+%   concat(Logfil, File, Logfile),
+   term_to_atom(outs/File,Outs),
+   !.
+
+
+getcfilename(Text,Outs,File):-
+   concat_atom(K,/,Text),
+   reverse(K,[File|Rev]),
+   !.
+
+getdfilename(Text,File):-
+   concat_atom(K,'_',Text),
+   reverse(K,[Fil|Rev]),
+   pname(Fil,File),
+   !.
+getefilename(Text,File,B):-
+   concat_atom(K,'_',Text),
+   reverse(K,[_,Fil|Rev]),
+   pname(Fil,File),
+   K=[A,B|_],
+   !.
+getffilename(Text,File,C):-
+   concat_atom(K,'_',Text),
+   reverse(K,[N|Rev]),
+   pname(N,File),
+   concat_atom(K1,'.',Text),
+   K1=[A,B|_],
+   mcon(A,'.',B1),
+   mcon(B1,B,C),
+   !.
+
+assertsents(Text,Sent):-
+   getcfilename(Text,Outs,File),
+%   gen_sym(File,E),
+   mcon(File,'_',Txt),
+   get_num(File,Num),
+   mcon(Txt,Num,Txt1),
+   assert(fp(Txt1,Sent)),
+   !.    
+
+readsent([],[]):-!.
+readsent([T-C-P|Frase],[W|Sent]):-
+    (atomic(T),W=T;T=W-_),
+    readsent(Frase,Sent),
+   !.    
+
+assert_sents(Text,InFile):-
+   repeat,
+   see(InFile),
+   read(T), 
+  (T=end_of_file,!
+   ;
+   T\=end_of_file,
+%   T=f(N,Sentence),
+   T=f(N,_,Sentence),
+   nchecklex(Sentence,LFrase),
+%   lowcase_all(Sentence, LowSentence),
+   mcon(Text,'_',Txt),
+   gen_sym(Text,E),
+   assert(fp(E,LFrase)),
+   fail
+   ),
+   seen.
+
+
+tag_one_text(L) :-
+  newtager(L,Texts),
+  findall(Code,fp(Code,_), Codes),
+  newopenfile('Macintosh HD:dumps', Codes, 1).
+
+newopenfile(Num, [], []):-!.
+
+newopenfile(File, [Text|Noms], NoFr):-
+   concat(File,':',Logfil),
+   concat(Logfil, Text, Logfile),
+  tagging_disamb(NoFr, Text, Tensed, Tags, Parse, Logfile,Out,NFrase),  
+   NewNo is NoFr + 1,
+   newopenfile(File, Noms, NewNo),
+   !.
+tag_all_texts(Folder):-
+   tagopen_file(1, Files, File),
+   !.
+
+tagopen_file(Num, [], File):-!.
+
+tagopen_file(NoFr, [Text|Noms], File):-
+   concat(File,':',Logfil),
+   concat(Logfil, Text, Logfile),
+   tag_one_text(NoFr, Text,Logfile,'Macintosh HD:dumps'),
+   NewNo is NoFr + 1,
+   tagopen_file(NewNo, Noms, File),
+   !.
+
+tag_one_text(NoFr, Text,Logfile, Input):-
+  retractall(current_num(_,_)),
+  newtager(Text,Logfile),
+  init_pwindows,
+  tagging_disamb(NoFr, Text, Tensed, Tags, Parse, Logfile,Out,NFrase),  
+   !.
+
+writecosts([]):-!.
+writecosts([Func-Ind-Head-Cost|Costs]):-
+   Ref=..[ref_func,Func,Ind,Head,Cost],
+   writenl(_,Ref),
+   writecosts(Costs),
+   !.
+writecosts1([]):-!.
+writecosts1([Func-Ind-Head-Cost|Costs]):-
+   Ref=..[pred_func,Func,Ind,Head,Cost],
+   writenl(_,Ref),
+   writecosts1(Costs),
+   !.
+
+listing_ref_funcs:-
+   setof(Func-Ind-Head-Cost, ref_funcs(Func,Ind,Head,Cost),Costs),
+   setof(Func-Ind-Head-Cost, (funcs(Func,Ind,Head,Cost),nonvar(Ind),nonvar(Head),nonvar(Cost),
+       (Func=ibar;Func=sv5;Func=sv3;Func=vcomp)),Costs1),
+   writecosts(Costs),
+   nl,nl,
+   writecosts1(Costs1),
+   nl,nl,
+   !.
+listing_ref_funcs:-!.
+
+parse_discourse(Input,[],I, _,[]) :-
+   !.
+parse_discourse(Input,[Code | Codes], NoFr, NoCl,[Evaluation-Code|Evals]) :-
+  retractall(frase_corrente(_,_)),
+  hypo_parse(NoFr, Code, Out, NewNoCl, Input, Evaluation),
+  listing_ref_funcs,
+%  Evaluate=..[Code,Evaluation],
+  !,
+  NewNoFr is NoFr+1,
+  parse_discourse(Input,Codes, NewNoFr, NewNoCl,Evals).
+
+is_a_grammar(italiano).
+is_a_grammar(english).
+is_a_grammar(deutsch).
+
+write_dgrs(Input, NoFr, Symb, Model):-
+%   dvol('Macintosh HD:dumps'),
+%   tell(Input),
+   nwrite_sentence_grs(Input, NoFr),
+    !.
+write_dgrs(Input, NoFr, Symb, Model):-!.
+
+writedgrs(Win, []):-!.
+writedgrs(Win, [Fact|Facts]):-
+   writeq(Fact),dot,nl,
+   writedgrs(Win, Facts),
+   !.
+
+/*
+nwrite_sentence_grs(Win, NoFr) :-
+   findall(NFact, (dgrs(N,Fact),correct_fact(Fact,NFact)), Fas),
+   writedgrs(Win, Fas). 
+*/
+
+nwrite_sentence_grs(Win, NoFr) :-
+   findall(NFact, (dgrs(N,Fact),onecorrect_fact(Fact,NFact)), Fas),
+   writedgrs(Win, Fas). 
+nwrite_sentence_grs(_,_).
+
+onecorrect_fact(Fact,NFact):-
+   Fact=..[Pref,Sem,Head,Dep],
+   Sem=det,
+   NFact=..[Sem,Pref,Head,Dep],
+   !.
+onecorrect_fact(Fact,NFact):-
+   Fact=..[Pref,Head-Ind,Dep],
+   Pref=ncmod,
+   NFact=..[mod,Ind,Head,Dep],
+   !.
+onecorrect_fact(Fact,Fact):-
+   !.
+
+
+write_score(Win,L,false):-
+  writenl(_,***************),
+  writenl(_,L),
+  tab(5),
+  writenl(_,false),
+  writenl(_,'NO ENTAILMENT'),
+  writenl(_,***************),
+  !.
+
+write_score(Win,L,unknown):-
+  writenl(_,***************),
+  writenl(_,L),
+  tab(5),
+  writenl(_,unknown),
+  writenl(_,'NO ENTAILMENT'),
+  writenl(_,***************),
+  !.
+
+write_score(Win,L,true-Score):-
+  writenl(_,***************),
+  writenl(_,L),
+  tab(5),
+  writenl(_,true),
+  write('ENTAILMENT'),
+  write('   '),
+  writenl(_,Score),
+  writenl(_,***************),
+  !.
+
+match_score_ft(F,false):-
+   (F=f;F='F'),
+   retract(statsfp(Nf,Nt,G,T,Sco)),
+   N1 is Nf + 1,
+   F1 is G + 1,
+   asserta(statsfp(N1,Nt,F1,T,Sco)),
+   !.
+match_score_ft(U,false):-
+   (U=u;U='U'),
+   retract(statsfp(Nf,Nt,G,T,Sco)),
+   N1 is Nf + 1,
+   F1 is G + 1,
+   asserta(statsfp(N1,Nt,F1,T,Sco)),
+   !.
+match_score_ft(T,false):-
+   (T=t;T='T'),
+   retract(statsfp(Nf,Nt,F,G,Sco)),
+   N1 is Sco + 1,
+   T1 is G + 1,
+   asserta(statsfp(Nf,Nt,F,T1,N1)),
+   !.
+match_score_ft(F,unknown):-
+   (F=f;F='F'),
+   retract(statsfp(Nf,Nt,G,T,Sco)),
+   N1 is Nf + 1,
+   F1 is G + 1,
+   asserta(statsfp(N1,Nt,F1,T,Sco)),
+   !.
+match_score_ft(U,unknown):-
+   (U=u;U='U'),
+   retract(statsfp(Nf,Nt,G,T,Sco)),
+   N1 is Nf + 1,
+   F1 is G + 1,
+   asserta(statsfp(N1,Nt,F1,T,Sco)),
+   !.
+match_score_ft(T,unknown):-
+   (T=t;T='T'),
+   retract(statsfp(Nf,Nt,F,G,Sco)),
+   N1 is Sco + 1,
+   T1 is G + 1,
+   asserta(statsfp(Nf,Nt,F,T1,N1)),
+   !.
+match_score_ft(T,true-Score):-
+   (T=t;T='T'),
+   retract(statsfp(Nf,Nt,F,G,Sco)),
+   N1 is Nt + 1,
+   T1 is G + 1,
+   asserta(statsfp(Nf,N1,F,T1,Sco)),
+   !.
+match_score_ft(F,true-Score):-
+   (F=f;F='F'),
+   retract(statsfp(Nf,Nt,G,T,Scor)),
+   F1 is G + 1,
+   Sco is Scor + 1,
+   asserta(statsfp(Nf,Nt,F1,T,Sco)),
+   !.
+match_score_ft(U,true-Score):-
+   (U=u;U='U'),
+   retract(statsfp(Nf,Nt,G,T,Scor)),
+   F1 is G + 1,
+   Sco is Scor + 1,
+   asserta(statsfp(Nf,Nt,F1,T,Sco)),
+   !.
+mem_stat_ft(L,Score):-
+   stringof(Name,L),
+   reverse(Name,[F|Rest]),
+   match_score_ft(F,Score),
+   reverse(Rest,[i,d,'_'|Nu]),
+   stringof(Nu,N),
+   asserttac(N,Score),
+   !.
+
+asserttac(N,false):-
+   asserta(tac(N,false)),
+   !.
+asserttac(N,unknown):-
+   asserta(tac(N,false)),
+   !.
+asserttac(N,true-L):-
+   asserta(tac(N,true-L)),
+   !.
+
+writealltac:-
+   tac(N,Ent),
+   write(N),tab(5),writenl(_,Ent),
+   fail.
+writealltac:-
+   !.   
+   
+compute_ft_total(Win,Stats):-
+   statsfp(Nf,Nt,F,T,Sco),
+   write('Total Results for Correct False Snippets  '),
+   writenl(Win,Nf),
+   write('Total Results for Correct True Snippets  '),
+   writenl(Win,Nt),
+   write('Total Results for Wrong Snippets  '),
+   writenl(Win,Sco),
+   Sum is Nf + Nt + Sco,
+   SumRec is Nf + Nt,
+   SumPres is F + T,
+   SumRecalTot1 is Nf / F  * 100,
+   SumRecalTot2 is Nt / T * 100,
+   SumPrecTot is SumRec / Sum * 100,
+   SumRecalTot3 is Sco / SumPres * 100,
+   write('Recall for False Snippets  '),
+   writenl(Win,SumRecalTot1),
+   write('Recall for True Snippets  '),
+   writenl(Win,SumRecalTot2),
+   write('Total Error Rate  '),
+   writenl(Win,SumRecalTot3),
+   write('Total Precision  '),
+   writenl(Win,SumPrecTot),
+   !.
+compute_statistics(Text,Evals, Stats, Cores):-
+   computestatistics(Evals, StatsAll),
+   summation(StatsAll, Stats, Core),
+   Cores=..[Text|Core],
+   !.
+
+compute_high_total(Evals):-
+   computehightotal(Evals, Stats),
+   summtot(Stats, Core),
+   !.
+
+computehightotal([], []):-!.
+computehightotal([Eval|Evals], [NoTots|Stats]):-
+   NoTots=..[NoTxt,TotalFuncts,TotalBTGrs,TotalTDGRs],
+   Eval=..[NoTxt,TotalF,TotalBU,TotalTD],
+   assertz(totstats(NoTxt, TotalF,TotalBU,TotalTD)),
+   nl('Display'),
+   write('Display','Total Results for Text  '),
+   writenl('Display',NoTxt),
+   write('Display','Total Grammatical Functions for Text  '),
+   writenl('Display',NoTxt),
+   writenl('Display',TotalF),
+   write('Display','Total BU Grammatical Relations for Text  '),
+   writenl('Display',NoTxt),
+   writenl('Display',TotalBU),
+   write('Display','Total TD Grammatical Relations for Text  '),
+   writenl('Display',NoTxt),
+   writenl('Display',TotalTD),
+   Ratio1 is TotalBU/TotalF*100, 
+   Ratio2 is TotalTD/TotalF*100, 
+   write('Display','Ratio BU System/Total Words  '),
+   writenl('Display',Ratio1),
+   write('Display','Ratio Rejected/Total Words  '),
+   writenl('Display',Ratio2),
+   computehightotal(Evals, Stats),
+   !.   
+computehightotal([Eval|Evals], Stats):-
+   computehightotal(Evals, Stats),
+   !.   
+
+summtot([Eval|Evals], [TToks,TBu,TPf]):-
+   findall(TotalToks, (totstats(NoTxt, TotalToks,TotalBU,TotalPF), nonvar(TotalToks)), Sums1),
+   sommatoria(Sums1, TToks, _),
+   findall(TotalBU, (totstats(NoTxt, TotalToks,TotalBU,TotalPF), nonvar(TotalBU)), Sums2),
+   sommatoria(Sums2, TBU, _),
+   findall(TotalPF, (totstats(NoTxt, TotalToks,TotalBU,TotalPF), nonvar(TotalPF)), Sums3),
+   sommatoria(Sums3, TPF, _),
+   nl('Display'),
+   write('Display','Total Results for all Texts  '),
+   write('Display','Total Tokens for all Texts  '),
+   writenl('Display',TToks),
+   write('Display','Total Left Over Tokens for all Texts  '),
+   writenl('Display',TBU),
+   write('Display','Total Rejected Tokens for all Texts  '),
+   writenl('Display',TPF),
+   Ratio1 is TBU/TToks*100, 
+   Ratio2 is TPF/TToks*100, 
+   write('Display','Ratio BU System/Total Words  '),
+   writenl('Display',Ratio1),
+   write('Display','Ratio Rejected/Total Words  '),
+   writenl('Display',Ratio2),
+   !.
+
+summation(StatsAll, 
+           [TotalToks,TotalBTGrs,TotalBtT,MeanBtt,TotalFuncts,Meansht,TotalShT], 
+            [TotalFuncts,TotalBTGrs]):-
+   length(StatsAll,Ls),
+   findall(ShT, (stats(Toks,ShT,Functs,BtT, BTGrs), nonvar(ShT)), Sums1),
+   sommatoria(Sums1, TotalShT, _),
+   Meansht is TotalShT / Ls,
+   findall(BtT, (stats(Toks,ShT,Functs,BtT, BTGrs), nonvar(BtT)), Sums8),
+   sommatoria(Sums8, TotalBtT, _),
+   MeanBtt is TotalBtT / Ls,
+   findall(Toks, (stats(Toks,ShT,Functs,BtT, BTGrs), nonvar(Toks)), Sums10),
+   sommatoria(Sums10, TotalToks, _),
+   findall(BTGrs, (stats(Toks,ShT,Functs,BtT, BTGrs), nonvar(BTGrs)), Sums11),
+   sommatoria(Sums11, TotalBTGrs, _),
+   findall(Functs, (stats(Toks,ShT,Functs,BtT, BTGrs), nonvar(Functs)), Sums12),
+   sommatoria(Sums12, TotalFuncts, _),
+   !.
+
+computestatistics([], []):-!.
+computestatistics([Eval|Evals], [NoFrs|Stats]):-
+   NoFrs=..[NoFr,BtT,BTGrs,ShT],
+   Eval=..[NoFr,bt(BtT),btu(BTGrs),sh(ShT),Toks,Functs],
+   length(BTGrs,Lbt),
+   assertz(stats(Toks,ShT,Functs,BtT, Lbt)),
+   computestatistics(Evals, Stats),
+   !.   
+computestatistics([Eval|Evals], Stats):-
+   computestatistics(Evals, Stats),
+   !.   
+
+write_stats(Text,Stats):-
+   nl('Evaluation'),
+   writenl('Evaluation',Text),
+   writestats(Stats),
+   nl('Evaluation'),
+   !.
+
+writestats([TotalToks,TotalBTGrs,TotalBtT,MeanBtt,TotalFuncts,Meansht,TotalShT]):-
+   writenl('Evaluation','Results of Robust System'),
+   nl('Evaluation'),
+   write('Evaluation','Total No Tokens   '),
+   writenl('Evaluation',TotalToks),
+   write('Evaluation','Total No Grammatical Functions   '),
+   writenl('Evaluation',TotalFuncts),
+   write('Evaluation','Mean computation time Robust System   '),
+   writenl('Evaluation',Meansht),
+   write('Evaluation','Total computation time Robust System   '),
+   writenl('Evaluation',TotalShT),
+   nl('Evaluation'),
+   writenl('Evaluation','Results of Bottum-Up System'),
+   nl('Evaluation'),
+   write('Evaluation','Total No Grammatical Relations   '),
+   writenl('Evaluation',TotalBTGrs),
+   write('Evaluation','Mean computation time Bottum-Up System   '),
+   writenl('Evaluation',MeanBtt),
+   write('Evaluation','Total computation time Bottum-Up System   '),
+   writenl('Evaluation',TotalBtT),
+   nl('Evaluation'),
+   !.
+
+write_evals(Text,Evals):-
+   nl('Evaluation'),
+   writenl('Evaluation',Text),
+   writevals(Evals),
+   nl('Evaluation'),
+   !.
+writevals([]):-!.
+writevals([Eval|Evals]):-
+   writenl('Evaluation',Eval),
+   writevals(Evals),
+   !.
+
+make_tag:- [allinitss, tagger,'interp-parser','sem-anafora','dictionaries/dict-old','dictionaries/hyp-eng','dictionaries/wn-n','dictionaries/dict-old','dictionaries/diz1','dictionaries/diz2','dictionaries/diz3','dictionaries/diz4','dictionaries/diz5','dictionaries/verbsinfs','dictionaries/wn-verbs','dictionaries/nounshyp'].
+
+
+make_all:- [allinitss, afsa, chunker, evaluat,fsas,ggltrigs,tagger,interp_parser,rtecode,subsem,sem_anafora,semsall, 'dictionaries/also_called', 'dictionaries/dict_old','dictionaries/hyp_eng','dictionaries/wn_n','dictionaries/diz1','dictionaries/diz2','dictionaries/diz3','dictionaries/diz4','dictionaries/diz5','dictionaries/diz6','dictionaries/verbsinfs','dictionaries/wn_verbs','dictionaries/listupx','dictionaries/nounshyp','dictionaries/cities','dictionaries/wnnn/allinfer','dictionaries/wnnn/wn3rest','dictionaries/wnnn/wnnoun','dictionaries/moby/mblist'].
+% qsave_program(nome,[stand_alone(true),goal(gui)]).

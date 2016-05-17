@@ -1,0 +1,4717 @@
+:- style_check(-singleton).
+
+check_subcn_factive(Head):-
+   coml_n(Head, Feats),
+   on(subc-Obl, Feats),
+   on(_/_/fcomp, Obl),
+   !.
+check_subcn_factive(Head):-
+   on(Head, [belief, desire, decision, evidence, hypothesis, possibility, proof, will, wish]),
+   !.
+check_subcn_factive(Head):-
+   findall(K,(pred_n(Head,_,_,Args),on(_/prop/_/_,Args), K=that),Ks),
+    Ks\=[],!.
+
+check_subcn_fact(Head):-
+   factambs(Ambs),
+   on(Head, Ambs).
+
+factambs([accord, answer, challenge, curse, desire, invite, joke, mandate, motive, need, object, option, order, outrage, plan, plea, plot, response, test, thrill, tocsin, torment, torture, trend, trial, tryst, vote, wish]).
+
+/*
+ [accord, agreement, alternative, answer, belief, challenge, crime, criterion, curse, custom, decision, desire, hypothesis, idea, incentive, invitation, invite, irony, irregularity, joke, mandate, miscalculation, motive, need, object, option, order, outrage, paradox, phantasy, plan, plea, plot, policy, potential, prayer, precondition, prerequisite, presumption, problem, prognosis, proposal, proviso, punctilio, response, suggestion, tactic, temptation, tendency, test, thrill, tocsin, torment, torture, tradition, tragedy, trend, trial, tryst, understanding, vote, wish]
+ */
+trovasubcat(Testa, Lemma,Sub,Feats, Valenz):-
+    nonvar(Lemma),
+    coml(Lemma,Subs),
+    normalize_comls(Subs,Norm_Subs),
+    coml_corrs(Lemma,Norm_Subs, Sub,Valenz).
+
+trovasubcat(Testa, Lemma,Sub,Feats, Valenz):-
+    nonvar(Lemma),
+    v(Lemma,Subs),
+    once(inf_v(Lemma,C)),
+    corrs(Lemma,Subs, Sub,Valenz).
+
+trovasubcat(Testa, Lemma,Sub,Feats, Valenz):-
+    nonvar(Testa),
+    coml(Testa,Subs),
+    normalize_comls(Subs,Norm_Subs),
+    coml_corrs(Testa,Norm_Subs, Sub,Valenz).
+
+trovasubcat(Testa, Lemma,Sub,Feats, Valenz):-
+    nonvar(Testa),
+    v(Testa,Subs),
+    once(inf_v(Testa,C)),
+    corrs(Testa,Subs, Sub,Valenz).
+
+trovasubcat(Testa, Lemma,Sub,Feats, Valenz):-
+    nonvar(Testa),
+    var(Lemma),
+    lemmatize_dic_v(Testa, Lemma, S),
+    coml(Testa,Subs),
+    normalize_comls(Subs,Norm_Subs),
+    coml_corrs(Testa, Norm_Subs, Sub,Valenz),!.
+
+trovasubcat(Testa, Lemma,Sub,Feats, Valenz):-
+    nonvar(Testa),
+    var(Lemma),
+    lemmatize_dic_v(Testa, Lemma, S),
+    v(Testa,Subs),
+    corrs(Lemma,Subs, Sub,Valenz),!.
+
+trovasubcat(Testa, Lemma,Sub,Feats, Valenz):-
+    nonvar(Testa),
+    spy_lower(Testa, LowW, Pol),
+    (Pol=0,
+     v(Testa,Subs),
+     once(inf_v(Testa,C))
+     ;
+     Pol=1,
+     v(LowW,Subs),
+     once(inf_v(LowW,C))),
+    corrs(LowW,Subs, Sub,Valenz),!.
+
+
+/*
+trans = t
+intrans = i
+ditrans = d
+link   = l
+phr  =  pr
+prep = p
+phrprep = pp
+exp = e
+tr_prop = tf
+tr_intr = ti
+tr_xcom = tx
+tr_cop  = tc
+tr  = t
+tr2  = t2
+rais    = rs
+ditr    = d
+va   = va
+tr_id = tm
+cop = c
+vp = vp
+vn1 = vn1
+psyc = ps
+vn = vn
+erg = eg
+vp2 = vp2
+vp3 = vp3
+cop_a = c_a
+intr = i
+atms = atmospheric = ms
+imp - impersonal
+vs = verb supporto
+exp
+corr(tr_prop_di, tr, Args):-
+    corr(tr, tr, Args).
+corr(tr_prop, tr, Args):-
+    corr(tr, tr, Args).
+*/
+
+corrs(Lemma,Subs, Sub, Corr):-
+    findall(CatGr-CatV-Args, 
+             (on(Sub, Subs), corr(Lemma,Sub, CatGr, CatV, Args)), 
+    Corrs),
+    select_longest(Corrs, NCorr),
+    sort(NCorr,Ncorrs),
+    length(Ncorrs,L),
+    (1<L,
+     remove([A], Ncorrs, NCor),
+     reverse(NCor, RCor),
+     on(Corr, RCor)
+     ;
+     reverse(Ncorrs, Corr)
+     ;
+     reverse(NCorr, RCor),
+     on(Corr, RCor),
+     Corr\=[Sogg,xcomp-prop-Contr]
+     ;
+     reverse(NCorr, RCor),
+     on(Corr, RCor)     
+     ),     
+    !.
+
+coml_corrs(Lemma,Subs, Sub, Corr):-
+    findall(CatGr-CatV-Args, 
+             (on(Sub, Subs), coml_corr(Lemma,Sub, CatGr, CatV, Args)), 
+    Corrs),
+    select_longest(Corrs, NCorr),
+    length(NCorr,L),
+    (1<L,
+     remove([A], NCorr, NCor),
+     reverse(NCor, RCor),
+     Corr=RCor
+     ;
+     reverse(NCorr, RCor),
+     Corr=RCor
+     ;
+     reverse(NCorr, RCor),
+     Corr=RCor    
+     ),     
+    !.
+
+select_longest([], []):-!.
+select_longest([Corr|Corrs], [Corr|NCorr]):-
+    Corr\=[A],
+    select_longest(Corrs, NCorr),
+    !.
+select_longest([Corr|Corrs], [Corr|NCorr]):-
+    Corr=[A], Corrs=[],
+    select_longest(Corrs, NCorr),
+    !.
+select_longest([Corr|Corrs], NCorr):-
+    Corr=[A],
+    select_longest(Corrs, NCorr),
+    !.
+coml_corr(Lemma,fcomp/Role, trans, riportivo, [sn/sogg/actor/[any], f/fcomp/Role/[subj=x]]):-
+     sy(Lemma),!.
+coml_corr(Lemma,fcomp/Role, trans, Cat, [sn/sogg/actor/[any], f/fcomp/Role/[subj=x]]):-
+     vem(Lemma),Cat=emotivo,!;vcg(Lemma),Cat=soggettivo,!;Cat=attivita.
+coml_corr(Lemma,vcomp/Role/sc, trans, Cat, [sn/sogg/actor/[any], vcomp/Role/to/[subj=subj1]]):-
+     vem(Lemma),Cat=emotivo,!;vcg(Lemma),Cat=soggettivo,!;Cat=attivita.
+coml_corr(Lemma,vcomp/Role/oc, trans, Cat, [sn/sogg/actor/[any], sn/ogg/theme_aff/[any], vcomp/prop/to/[subj=obj]]):-
+     vem(Lemma),Cat=emotivo,!;vcg(Lemma),Cat=soggettivo,!;Cat=risultato.
+coml_corr(Lemma,[ogg, ncomp/prop], trans, Cat, [sn/sogg/actor/[any], sn/ogg/theme_aff/[any], ncomp/prop/[subj=ogg]]):-
+     vem(Lemma),Cat=emotivo,!;vcg(Lemma),Cat=soggettivo,!;Cat=attivita.
+coml_corr(Lemma,[ogg, acomp/prop], trans, Cat, [sn/sogg/actor/[any], sn/ogg/theme_aff/[any], acomp/prop/[subj=ogg]]):-
+     vem(Lemma),Cat=emotivo,!;vcg(Lemma),Cat=soggettivo,!;Cat=attivita.
+coml_corr(Lemma,[ogg, pcomp/prop], trans, Cat, [sn/sogg/actor/[any], sn/ogg/theme_aff/[any], pcomp/prop/[subj=ogg]]):-
+     vem(Lemma),Cat=emotivo,!;vcg(Lemma),Cat=soggettivo,!;Cat=attivita.
+coml_corr(Lemma,[ogg2, vcomp/Role/Preps], trans, risultato, [sn/sogg/actor/[any], sn/ogg2/goal/[any], vcomp/Role/Preps/[subj=subj1]]):- nonvar(Lemma).
+
+
+corr(Lemma,tx, trans, Cat, [sn/sogg/actor/[any], sn/ogg/theme_aff/[any], vcomp/prop/to/[subj=subj1]]):-
+     vem(Lemma),Cat=emotivo,!;vcg(Lemma),Cat=soggettivo,!;vstv(Lemma),Cat=state,!;Cat=risultato.
+corr(Lemma,tf, trans, Cat, [sn/sogg/actor/[any], vcomp/prop/to/[subj=subj1]]):-
+     vem(Lemma),Cat=emotivo,!;vcg(Lemma),Cat=soggettivo,!;Cat=attivita.
+corr(Lemma,t, trans, Cat, [sn/sogg/agent/[any], sn/ogg/theme_aff/[any]]):-
+     vem(Lemma),Cat=emotivo,!;vcg(Lemma),Cat=soggettivo,!;vstv(Lemma),Cat=state,!;
+     Cat=risultato.
+corr(Lemma,ps, trans, Cat, [sn/sogg/exper/[umano], sn/ogg/theme_unaff]):-
+     vem(Lemma),Cat=emotivo,!;vcg(Lemma),Cat=soggettivo,!;vstv(Lemma),Cat=state,!;Cat=attivita.
+corr(Lemma,exp, trans, Cat, [sn/sogg/perciv/[umano], sn/ogg/theme_unaff/[any]]):-
+     vem(Lemma),Cat=emotivo,!;vcg(Lemma),Cat=soggettivo,!;Cat=attivita.
+corr(Lemma,d, trans, Cat, [sn/sogg/actor/[any], sn/ogg/theme_unaff/[any], sp/ogg2/goal/[any]]):-
+     vem(Lemma),Cat=emotivo,!;vcg(Lemma),Cat=soggettivo,!;Cat=risultato.
+corr(Lemma,d, trans, Cat, [sn/sogg/actor/[any], sn/ogg/theme_unaff/[any], sp/obl/locat/[luogo]]):-
+     vem(Lemma),Cat=emotivo,!;vcg(Lemma),Cat=soggettivo,!;Cat=risultato.
+corr(Lemma,rs, trans, camb-att, [sn/sogg/actor/[any], sn/ogg/theme_unaff/[any], xcomp/prop/[subj=ogg]]).
+corr(Lemma,tc, trans, camb-att, [sn/sogg/actor/[any], sn/ogg/theme_aff/[any], xcomp/prop/[subj=ogg]]).
+corr(Lemma,I, intr, attivita, [sn/sogg/expl/[any]]):-
+     (I=i;I=ti),vwth(Lemma).
+corr(Lemma,i, intr, attivita, [sn/sogg/actor/[any]]):-
+     \+ vwth(Lemma).
+corr(Lemma,ms, atm, attivita, [sn/sogg/expl/[any]]).
+corr(Lemma,imp, intr, attivita, [sn/sogg/expl/[any]]).
+corr(Lemma,erg, intr, attivita, [sn/sogg/theme_aff/[any]]).
+corr(Lemma,c, cop, stato, [sn/sogg/theme_unaff/[any], xcomp/prop/[subj=sogg]]).
+corr(Lemma,l, cop, stato, [sn/sogg/theme_unaff/[any], xcomp/prop/[subj=sogg]]).
+corr(Lemma,c_a, cop, stato, [sn/sogg/theme_unaff/[any], acomp/prop/[subj=sogg]]).
+corr(Lemma,c_a, trans, camb-att, [sn/sogg/actor/[any], sn/ogg/theme_aff/[any], xcomp/prop/[subj=ogg]]).
+corr(Lemma,c_n, trans, camb-att, [sn/sogg/actor/[any], sn/ogg/theme_aff/[any], xcomp/prop/[subj=ogg]]).
+corr(Lemma,ti, intr, attivita, [sn/sogg/actor/[any]]):-
+     \+ vwth(Lemma).
+corr(Lemma,ti, trans, Cat, [sn/sogg/agent/[any], sn/ogg/theme_aff/[any]]):-
+     \+ vwth(Lemma), vem(Lemma),Cat=emotivo,!;vcg(Lemma),Cat=soggettivo,!;Cat=risultato.
+
+prendi_subcat(Verb, Valenzen):-
+    findall(Valenz, trovasubcat(Verb, Lemma,Sub,Feats, Valenz),
+        Valenzen),!.
+
+build_vc(Lem,[], [], []):-!.
+build_vc(Lem,[Valenz|Rest], [Args|Valenzen], [CatGr-CatV|Cats]):-
+   Valenz=CatGr-CatVv-Args,
+   check_catv(Lem,CatGr,CatVv,CatV),
+   build_vc(Lem,Rest, Valenzen, Cats),!.
+
+colllemsfeats([],[],[]):-!.
+colllemsfeats([Lemma-Feat|AllFeats],[Lemma|Lemmas],[Sub|Subs]):-
+     nonvar(Lemma),
+     on(tense=Ten,Feat),
+     on(subcat=Sub,Feat),
+     colllemsfeats(AllFeats,Lemmas,Subs),!.
+colllemsfeats([Lemma-Feat|AllFeats],[Lemma|Lemmas],Subs):-
+     nonvar(Lemma),
+     on(tense=Ten,Feat),
+     colllemsfeats(AllFeats,Lemmas,Subs),!.
+colllemsfeats([Feat|AllFeats],[Lemma|Lemmas],[Sub|Subs]):-
+     (on(cat=verb,Feat)
+      ;on(cat=aux,Feat)),
+     on(pred=Lemma, Feat),
+     on(subcat=Sub,Feat),
+     colllemsfeats(AllFeats,Lemmas,Subs),!.
+colllemsfeats([Feat|AllFeats],[Lemma|Lemmas],Subs):-
+     (on(cat=verb,Feat)
+      ;on(cat=aux,Feat)),
+     on(pred=Lemma, Feat),
+     colllemsfeats(AllFeats,Lemmas,Subs),!.
+colllemsfeats([_-Feat|AllFeats],[Lemma|Lemmas],Subs):-
+     on(tense=Ten,Feat),
+     on(pred=Lemma, Feat),
+     colllemsfeats(AllFeats,Lemmas,Subs),!.
+colllemsfeats([Feat|AllFeats],[Lemma|Lemmas],Subs):-
+     on(tense=Ten,Feat),
+     on(pred=Lemma, Feat),
+     colllemsfeats(AllFeats,Lemmas,Subs),!.
+colllemsfeats([Feat|AllFeats],[V|Lemmas],Subs):-
+     Feat=V-[],
+     v(V,Sub),
+     colllemsfeats(AllFeats,Lemmas,Subs),!.
+colllemsfeats([Feat|AllFeats],Lemmas,Subs):-
+     colllemsfeats(AllFeats,Lemmas,Subs),!.
+
+normalize_comls([],[]):-!.
+normalize_comls([Sub|Subs],[Sub|Norm]):-
+     list(Sub),
+     normalize_comls(Subs,Norm),
+     !.
+normalize_comls([Sub|Subs],[NSub|Norm]):-
+     \+ list(Sub),
+     Sub\=fcomp/Prop,
+     Sub\=vcomp/Prop/Contr,
+     normalize_coml([Sub|Subs],NSub,Rest),
+     normalize_comls(Rest,Norm),
+     !.
+normalize_comls([Sub|Subs],[Sub|Norm]):-
+     (Sub=fcomp/Prop;Sub=vcomp/Prop/Control),
+     normalize_comls(Subs,Norm),
+     !.
+normalize_coml([Sub|[]],[Sub],[]):-
+     \+ list(Sub),!.
+normalize_coml([Sub|Subs],[],[Sub|Subs]):-
+     list(Sub),!.
+normalize_coml([Sub|Subs],[Sub|NSub],Rest):-
+     \+ list(Sub),
+    normalize_coml(Subs,NSub,Rest),!.
+
+analizza_prenominals(Tab,[],[],Tab):-!.
+
+analizza_prenominals(Tab,Resto,[Testa|Pren], Tab1):-
+     Resto\=[],
+     remove(Testa-Cat-_, Resto, Res),
+     anncats(Cat),
+     \+ qm(Testa),
+     analizza_prenominals(Tab,Res,Pren, Tab1),
+     !.
+analizza_prenominals(Tab,Resto,[Testa-Cat-_|Pren], Tab1):-
+     Resto\=[],
+     remove(Testa-Cat-_, Resto, Res),
+     nncats(Cat),
+     \+ qm(Testa),
+     analizza_prenominals(Tab,Res,Pren, Tab1),
+     !.
+
+analizza_prenominals(Tab,Resto,Pren, Tab2):-
+     Resto\=[],
+     remove(Testa-Cat-_, Resto, Res),
+     Cat=num,
+     remove(nil,Tab, [Ref,Def,Part|Tabs]),
+     Tab1=[Ref,Def,Part,Testa|Tabs],
+     analizza_prenominals(Tab1,Res,Pren, Tab2),
+     !.
+
+analizza_prenominals(Tab,Resto,Pren, Tab2):-
+     Resto\=[],
+     remove(Testa-Cat-_, Resto, Res),
+     (qcats(Cat);qm(Testa)),
+     remove(nil,Tab, [Ref,Def|Tabs]),
+     Tab1=[Ref,Def,Testa|Tabs],
+     analizza_prenominals(Tab1,Res,Pren, Tab2),
+     !.
+
+analizza_prenominals(Tab,Resto,Pren, Tab2):-
+     Resto\=[],
+     remove(Testa-Cat-_, Resto, Res),
+     (qcats(Cat);qm(Testa)),
+     remove(nil,Tab, [Ref,Def,Quant|Tabs]),
+     Tab1=[Ref,Def,Quant,Testa|Tabs],
+     analizza_prenominals(Tab1,Res,Pren, Tab2),
+     !.
+
+analizza_prenominals(Tab,Resto,Pren, Tab1):-
+     Resto\=[],
+     remove(Testa-Cat-_, Resto, Res),
+     analizza_prenominals(Tab,Res,Pren, Tab1),
+     !.
+
+analizza_prenominals(Tab,Resto,Pren, Tab1):-
+     Resto\=[],
+     remove(Testa, Resto, Res),
+     analizza_prenominals(Tab,Res,Pren, Tab1),
+     !.
+analizza_prenominals(Tab,[],[],Tab1):-!.
+
+
+costruisci_mods_aggs([], [], [], [], [], [], [], [], []):-!.
+costruisci_mods_aggs(First, Testa, Resto, Lemma, CatSem, Tab2, Tratti1, Ind, Mods):-
+     (remove(Pref-Cong-C, First, Parse),(Pref=and;Pref=or;Pref=but);
+     remove(fc-[and-Cong-C], First, Parse),Pref=and,
+      findall(V, member(ibar-V,Parse),Vs), Vs=[];
+     remove(fc-[or-Cong-C], First, Parse),Pref=or,
+      findall(V, member(ibar-V,Parse),Vs), Vs=[]),
+     Parse\=[],
+     reverse(Parse,[Fun-Cost|RevParse]),
+     reverse(RevParse,RevPp),
+     (RevPp\= [], Fun\=obl, Fun\=mod,
+        remove(either-Cs-Costt, RevPp, RevP)
+      ; remove(both-Cs-Costt, RevPp, RevP)
+      ; RevPp= [], RevP=[]),
+     (Fun=obl, remove(obl-Second, Parse, FirstParse)
+      ; Fun\=obl, FirstParse=Parse),
+     assign_index(Ind),
+     prendi_mod(FirstParse, Testa, Resto, Mod, Cat),
+     Cost\=Mod, 
+     genera_tratti(Feats, Testa, Tratti, Lemma, Cat),
+     trova_CatSem(Cat, Lemma, CatSem),
+     assegna_tab(Cat, Testa, Resto, Tab),
+     costruisci_mmod(Mod, Tab, Cat, Lemma,Testa, RevP, Mods, Tab1,Ind),
+     !.
+
+costruisci_mods_aggs(First, Testa, Resto, Coord, CatSemAll, Tab2, Tratti1, [Ind,Ind1], ModsAll):-
+     (remove(Pref-Cong-C, First, Parse),(Pref=and;Pref=or;Pref=but);
+     remove(fc-[and-Cong-C], First, Parse),Pref=and,
+      findall(V, member(ibar-V,Parse),Vs), Vs=[];
+     remove(fc-[or-Cong-C], First, Parse),Pref=or,
+      findall(V, member(ibar-V,Parse),Vs), Vs=[]      ;
+      remove(Prefs, First, Parse),Prefs=f3-[','-punt-fp], Pref=and),
+     Parse\=[],
+     length(Parse,K), 
+     3=<K,
+     divideup_coord(First,Fir,Sec),
+     appiattisci(Fir,AFir),
+     (reverse(AFir,[Fun-Cost|RevParse]),
+      (Fun=obl;Fun=sn;Fun=subj;Fun=obj), 
+      remove(Fun-Second, AFir, FirstParse)
+      ; 
+      FirstParse=AFir,
+      (reverse(AFir,[W-Ca-Cos|RevParse]);
+      reverse(AFir,RevParse), on(W-Ca-Cos,RevParse)),
+      announcats(Ca)),
+     assign_index(Ind),
+     prendi_mod(FirstParse, Testa, Resto, Mod, Cat),
+     genera_tratti(Feats, Testa, Tratti, Lemma, Cat),
+     trova_CatSem(Cat, Lemma, CatSem),
+     assegna_tab(Cat, Testa, Resto, Tab),
+     costruisci_mmod(Mod, Tab, Cat, Lemma, Testa, Fir, Mods, Tab1, Ind),
+     costruisci_mods_aggs(Sec, Tes, Rest, Lem, CatSem1, Tab2, Tratti1, Ind1, Mods1),
+     append(Mods,Mods1,ModsAll),
+     (CatSem=nil, CatSemAll=CatSem1; 
+       atomic(CatSem), 
+       append([CatSem],CatSem1,CatSemAll)
+       ;
+       is_list(CatSem),
+      append(CatSem,CatSem1,CatSemAll)),
+%     costruisci_coord_lems(Lemma,Pref,Tes,Coord),
+     Coord=..[Pref,[Lemma,Lem]],
+     !.
+
+costruisci_mods_aggs(First, Testa, Resto, Coord, CatSemAll, Tab2, Tratti1, [Ind,Ind1], ModsAll):-
+     (remove(Pref-Cong-C, First, Parse),(Pref=and;Pref=or;Pref=but);
+     remove(fc-[and-Cong-C], First, Parse),Pref=and,
+      findall(V, member(ibar-V,Parse),Vs), Vs=[];
+     remove(fc-[or-Cong-C], First, Parse),Pref=or,
+      findall(V, member(ibar-V,Parse),Vs), Vs=[]      ;
+      remove(Prefs, First, Parse),Prefs=f3-[','-punt-fp], Pref=and),
+     Parse\=[],
+     length(Parse,K), 
+      K<3,
+     (reverse(Parse,[Fun-Cost|RevParse]),
+      Fun=obl, remove(obl-Second, Parse, FirstParse)
+      ; 
+      FirstParse=Parse, RevParse=[]),
+     assign_index(Ind),
+     prendi_mod(FirstParse, Testa, Resto, Mod, Cat),
+     genera_tratti(Feats, Testa, Tratti, Lemma, Cat),
+     trova_CatSem(Cat, Lemma, CatSem),
+     assegna_tab(Cat, Testa, Resto, Tab),
+     reverse(RevParse,RevPp),
+     (RevPp\= [], Fun\=obl, Fun\=mod,
+      remove(Test-Cs-Costt, RevPp, RevP), Test\=Testa, Test\=Lemma
+      ; RevPp= [], RevP=[]
+      ; true),
+     costruisci_mmod(Mod, Tab, Cat, Lemma, Test, RevP, Mods, Tab1, Ind),
+     (Cost\=[],
+       (Cost=Mod, Cos=Resto; 
+        Cost\=Mod, 
+        (remove(Testa-_-_, Cost, NCost),Cos=NCost; Cos=Cost))
+      ;
+      Cost=[],        
+      (remove(Testa-_-_, Resto, NCost),Cos=NCost; Cos=Resto)
+        ),
+     costruisci_mods_aggs(Cos, Tes, Rest, Lem, CatSem1, Tab2, Tratti1, Ind1, Mods1),
+     append(Mods,Mods1,ModsAll),
+     (CatSem=nil, CatSemAll=CatSem1;
+       atomic(CatSem), 
+       append([CatSem],CatSem1,CatSemAll)
+       ;
+       is_list(CatSem),
+      append(CatSem,CatSem1,CatSemAll)),
+%     costruisci_coord_lems(Lemma,Pref,Tes,Coord),
+     Coord=..[Pref,[Lemma,Lem]],
+     !.
+
+costruisci_mods_aggs(First, Testa, Resto, Coord, CatSem, Tab1, Tratti, Ind, Mods):-
+     (remove(Pref-Cong-C, First, Parse),(Pref=and;Pref=or;Pref=but);
+     remove(fc-[and-Cong-C], First, Parse),Pref=and,
+      findall(V, member(ibar-V,Parse),Vs), Vs=[];
+     remove(fc-[or-Cong-C], First, Parse),Pref=or,
+      findall(V, member(ibar-V,Parse),Vs), Vs=[]
+      ;
+      remove(Prefs, First, Parse),Prefs=f3-[','-punt-fp], Pref=and),
+     Parse\=[],
+     reverse(Parse,[Tes-Cc-Cost|RevParse]),
+     prendi_mod(Parse, Testa, Resto, Mod, Cat),
+     genera_tratti(Feats, Testa, Tratti, Lemma, Cat),
+     trova_CatSem(Cat, Lemma, CatSem),
+     assegna_tab(Cat, Testa, Resto, Tab),
+     assign_index(Ind),
+     announcats(Cc),
+     reverse(RevParse,RevPp),
+     (RevPp\= [], remove(Test-Cs-Costt, RevPp, RevP), Test\=Testa, Test\=Lemma
+      ; RevPp= [], RevP=[]),
+     costruisci_mmod(Mod, Tab, Cat, Lemma, Test, RevP, Mods, Tab1, Ind),
+%     costruisci_coord_lems(Lemma,Pref,Tes,Coord),
+     Coord=..[Pref,[Lemma,Test]],
+     !.
+
+
+costruisci_mods_aggs(First, Testa, Resto, Coord, CatSem, Tab1, Tratti, Ind, Mods):-
+     remove(Cong-cong-C, First, Parse),
+     (Cong=or;Cong=and;Cong=but;Cong=either;Cong=but;Cong=even),
+     Parse\=[],
+     reverse(Parse,[Fun-Cost|RevParse]),
+     prendi_mod(Parse, Testa, Resto, Mod, Cat),
+     genera_tratti(Feats, Testa, Tratti, Lemma, Cat),
+     trova_CatSem(Cat, Lemma, CatSem),
+     assegna_tab(Cat, Testa, Resto, Tab),
+     assign_index(Ind),
+     remove(Test-Cs-Costt, Parse, RevP), 
+     announcats(Cs), Test\=Testa,
+     costruisci_mmod(Mod, Tab, Cat, Lemma, Test, RevP, Mods, Tab1, Ind),
+%     costruisci_coord_lems(Lemma,Pref,Tes,Coord),
+     Coord=..[Cong,[Lemma,Test]],
+     !.
+
+costruisci_mods_aggs(First, Test, Rest, Lemma, CatSem, Tab1, Tratti, Ind, Mods):-
+     prendi_mod(First, Testa, Resto, Mod, Cat),
+     qcats(Cat),
+     genera_tratti(Feat, Testa, Tratt, Lemm, Cat),
+     atomic(Testa),
+     Testa=Lemm, Mod\=[],
+      Mod=[of-_-_|Ref],
+      append([Testa-Cat-_],Ref,Refs),
+     prendi_mod(Refs, Test, Rest, Modd, Cat1),
+     genera_tratti(Feats, Test, Tratti, Lemma, Cat1),
+     trova_CatSem(Cat1, Lemma, CatSem),
+     assegna_tab(Cat1, Test, Rest, Tab),
+     assign_index(Ind),
+     costruisci_mmod(Modd, Tab, Cat, Lemma, Test, Rest, Mods, Tab1, Ind),
+     !.
+
+
+costruisci_mods_aggs(First, Testa, Resto, Lemma, CatSem, Tab1, Tratti, Ind, Mods):-
+     prendi_mod(First, Testa, Resto, Mod, Cat),
+     genera_tratti(Feats, Testa, Tratti, Lemma, Cat),
+     Cat\=avv,
+     (is_list(Lemma), \+ on(pron,Lemma),
+      trova_CatSem(Cat, Testa, CatSem)
+     ;
+     atomic(Lemma),
+     trova_CatSem(Cat, Lemma, CatSem)),
+     assegna_tab(Cat, Testa, Resto, Tab),
+     assign_index(Ind),
+     costruisci_mmod(Mod, Tab, Cat, Lemma, Testa, Resto, Mods, Tab1, Ind),
+     !.
+
+costruisci_mods_aggs(First, Testa, [], Lemma, CatSem, Tab, Tratti, Ind, []):-
+     (First=sn, Cat=n;First=sa, Cat=ag),
+     genera_tratti(Feats, Testa, Tratti, Lemma, Cat),
+     Cat\=avv,
+     (is_list(Lemma),\+ on(pron,Lemma),
+      trova_CatSem(Cat, Testa, CatSem)
+     ;
+     atomic(Lemma),
+     trova_CatSem(Cat, Lemma, CatSem)),
+     assegna_tab(Cat, Testa, Resto, Tab),
+     assign_index(Ind),
+     !.
+
+costruisci_mods_aggs(First, Testa, Resto, Lemma, CatSem, Tab1, Tratti, Ind, Mods):-
+     First=[Fun-Cost|Rest],
+     Cost\=A-B,
+     append(Cost,Rest,Costs),
+     costruisci_mods_aggs(Costs, Testa, Resto, Lemma, CatSem, Tab1, Tratti, Ind, Mods),
+     !.
+
+costruisci_mmod(Mod, Tab, Cat, Testa, Resto, Mods, Tab1):-
+     atomic(Testa),
+     qcats(Cat),
+     remove(Testa-Cat-_, Resto, Res),
+     remove(nil,Tab, [Ref,Def|Tabs]),
+     Tab1=[Ref,Def,Testa|Tabs],
+     analizza_prenominals(Tab, Res, Pren,Tab1),
+     (Mod\=[],
+     append(Mod, Pren, Mods)
+      ;
+      Mods=Pren),
+     !.
+
+costruisci_mmod(Mod, Tab, Cat, Testa, Resto, Mods, Tab1):-
+     atomic(Testa),
+     (remove(Testa-Cat-_, Resto, Res)
+      ;
+       Res=Resto),
+     analizza_prenominals(Tab, Res, Pren, Tab1),
+     (Mod\=[],
+     append(Mod, Pren, Mods)
+      ;
+      Mods=Pren),
+     !.
+
+costruisci_mmod(Mod, Tab, Cat, Testa, Resto, Mod, Tab):-!.
+
+crea_valenze([], []):-!.
+crea_valenze([subj-SUBJ|Altri], [subj-theme_bound|Valenz]):-
+     crea_valenze(Altri, Valenz),!.
+crea_valenze([obj-SUBJ|Altri], [obj-theme_aff|Valenz]):-
+     crea_valenze(Altri, Valenz),!.
+crea_valenze([obl-SUBJ|Altri], [obj2-goal|Valenz]):-
+     crea_valenze(Altri, Valenz),!.
+crea_valenze([xcomp-SUBJ|Altri], [xcomp-prop|Valenz]):-
+     crea_valenze(Altri, Valenz),!.
+crea_valenze([Func-SUBJ|Altri], Valenz):-
+     crea_valenze(Altri, Valenz),!.
+
+cat_gramm(Vinf, CatGr, CatV2, LArgsV) :-
+   nonvar(Vinf),Vinf\=[],
+   pred_vv(Vinf,CatGrs,CatVv,LArgsV1),
+    (list(CatGrs),
+    transcatgr(CatGrs,CatGr),
+    check_catv(Vinf,CatGr,CatVv,CatV)
+    ;
+     list(CatVv), atomic(CatGr),
+      on(CatV,CatVv)
+    ;
+     list(CatGrs), list(CatVv), 
+     transcatgr(CatGrs,CatGr),
+       on(CatV,CatVv)
+    ;
+     atomic(CatGrs), CatGr=CatGrs,
+     check_catv(Vinf,CatGr,CatVv,CatV)),   
+% cat_gramm(Vinf, CatGr, CatV, LArgsV) :-
+%    nonvar(Vinf),Vinf\=[],
+    cat_gramm1(Vinf, CatGr1, CatV1, LArgsV2),
+    on(El,LArgsV1), 
+    (is_list(El),
+     append(LArgsV1,LArgsV2,LArgsV)
+     ;
+     \+ is_list(El),
+     append([LArgsV1],LArgsV2,LArgsV)),
+    (var(CatV), CatV2=CatV1; CatV2=CatV),
+   !.
+
+check_catv(Lem,CatGr,CatVv,CatV):-
+    atomic(CatVv),
+    CatV=CatVv,!.
+
+check_catv(Lem,CatGr,CatVv,CatV):-
+   nonvar(CatVv),
+   transcatV(CatVv,CatV).
+
+check_catv(Lem,CatGr,CatVv,CatV):-
+    var(CatVv),
+    (sy(Lem), CatV=riportivo
+     ;
+     vem(Lemma),Cat=emotivo
+      ;
+      vcg(Lemma),Cat=soggettivo
+     ;
+     corr(Lem,Cg, CatGr,CatV, Subs)).
+
+transcatV(camb-att,cambiamento).
+transcatV(camb-att,attivita).
+%transcatgr([A,B],A-B):-!.
+transcatgr([A,B],[A,B]):-!.
+
+pred_vvs(Pred, Synt, Sem, SubCat) :- 
+   findall(Synt-Sem-SubCat, 
+          pred_vv(Pred, Synt, Sem, SubCat), Subs),
+    on(Synt-Sem-SubCat,Subs).
+    
+pred_vv(Pred, Synt, Sem, SubCat) :- 
+   pvm(Pred, Defs, Synt, Sem, SubCat).
+
+pred_vv(Pred, Synt, Sem, SubCat) :- 
+   pred_vs(
+      Pred, Synt, Sem, 
+      Arg1, Role1, Sem1,
+      Arg2, Prep2, Role2, Sem2,
+      Arg3, Prep3, Role3, Sem3),
+   map_subcat_list(
+      [
+      [Arg1, Role1, Sem1],
+      [Arg2, Prep2, Role2, Sem2],
+      [Arg3, Prep3, Role3, Sem3]
+      ],
+      0,
+      SubCat).
+
+pred_vv(Pred, Synt, Sem, SubCat) :-
+   pred_vc(Pred, Synt, Sem, SubCat).
+
+pred_vv(Pred, Synt, Sem, SubCat) :- 
+   evaluate_ssrs(Pred,Synt,Sem,SubCat).
+
+pred_vv(Pred, Synt, Sem, SubCat) :- 
+   evaluate_pbfs(Pred,Synt,Sem,SubCat).
+
+pred_vv(Pred, Synt, Sem, SubCat) :-
+   cat_gramm1(Pred, Synt, Sem, SubCat),
+   !.
+
+/*
+pred_vv(Pred, Synt, Sem, SubCats) :-
+   cat_gramm1(Pred, Synt, Sem, SubCat),
+   (evaluate_pbfs(Pred,Synt1,Sem1,SubCat1),
+    append(SubCat,SubCat1,SubCats);
+     SubCats=SubCat),
+   !.
+*/
+
+gn(entity,lfr).
+gn(something,lfr).
+gn(life_form,lfr).
+gn(organism,lfr).
+gn(being,lfr).
+gn(living_thing,lfr).
+gn(life,lfr).
+gn(biont,lfr).
+gn(cell,lfr).
+gn(causal_agent,lfr).
+gn(cause,lfr).
+gn(causal_agency,lfr).
+
+gn(person,hum).
+gn(individual,hum).
+gn(someone,hum).
+gn(somebody,hum).
+gn(mortal,hum).
+gn(mortal_being,hum).
+gn(human,hum).
+gn(human_being,hum).
+gn(soul,hum).
+gn(causal_agent,hum).
+gn(cause,hum).
+gn(causal_agency,hum).
+gn(group,hum).
+gn(grouping,hum).
+
+gn(institution,col).
+gn(company,col).
+gn(group,col).
+gn(grouping,col).
+
+gn(animal,amb).
+gn(animate_being,amb).
+gn(beast,amb).
+gn(brute,amb).
+gn(creature,amb).
+
+gn(fauna,plt).
+gn(plant,plt).
+gn(flora,plt).
+gn(plant_life,plt).
+
+gn(entity,pho).
+gn(something,pho).
+gn(object,pho).
+gn(physical_object,pho).
+gn(natural_object,pho).
+gn(thing,pho).
+
+gn(possession,pho).
+gn(credit,pho).
+
+gn(substance,mtt).
+gn(matter,mtt).
+
+gn(food,fod).
+gn(nutrient,fod).
+
+gn(entity,art).
+gn(something,art).
+gn(artifact,art).
+gn(artefact,art).
+gn(article,art).
+gn(thing,art).
+gn(possession,art).
+
+gn(knowledge,abs).
+gn(psychological_feature,abs).
+gn(abstraction,abs).
+gn(cognition,abs).
+
+gn(motivation,psy).
+gn(motive,psy).
+gn(need,psy).
+gn(feeling,psy).
+gn(kindness,psy).
+
+gn(state,sts).
+
+gn(measure,qun).
+gn(quantity,qun).
+gn(amount,qun).
+gn(quantum,qun).
+gn(credit,qun).
+
+gn(location,llc).
+gn(space,llc).
+gn(earth,llc).
+gn(world,llc).
+
+gn(shape,frm).
+gn(form,frm).
+
+gn(event,evt).
+gn(phenomenon,evt).
+
+gn(accomplishment,hvt).
+gn(achievement,hvt).
+gn(deed,hvt).
+gn(feat,hvt).
+gn(effort,hvt).
+gn(exploit,hvt).
+gn(masterpiece,hvt).
+gn(masterstroke,hvt).
+
+gn(human_action,unb).
+gn(human_activity,unb).
+gn(action,unb).
+gn(act,unb).
+
+gn(attribute,atr).
+gn(relation,atr).
+gn(social_relation,atr).
+
+gn(engineering,	eng).
+gn(aeronautical_engineering,eng).
+gn(automotive_technology,	eng).
+gn(automotive_engineering,	eng).
+gn(chemical_engineering,	eng).
+gn(rail_technology,	eng).
+gn(technology, tec).
+gn(communications_technology, tec).
+gn(digital_communications_technology, tec).
+gn(computer_technology, tec).
+
+gn(justice,leg).
+gn(judge,leg).
+gn(legal_action,leg).
+gn(legal_activity,leg).
+
+gn(information,inf).
+gn(learning_activity,inf).
+gn(media,inf).
+
+gn(economy,ecn).
+gn(economics,ecn).
+gn(economic_activity,ecn).
+
+translate_nwn_cats(Cats, CatSem):-
+    transl_nwn_cats(Cats, CatS),
+    appiattisci(CatS, Catss),
+    sort(Catss, CatSem),
+    !.
+
+transl_nwn_cats([], []):-!.
+transl_nwn_cats([Cat|Cats], [CatS|CatSem]):-
+   translnwn_cats(Cat, CatS),
+   transl_nwn_cats(Cats, CatSem),!.
+transl_nwn_cats([Cat|Cats], [Cat|CatSem]):-
+   transl_nwn_cats(Cats, CatSem),!.
+
+translnwn_cats(Cat, All):-
+   findall(CatS, lex_sem(Cat, CatS),
+       AllC),
+   sort(AllC, All).
+
+translate_wn_cats(Cats, CatSem):-
+    transl_wn_cats(Cats, CatS),
+    appiattisci(CatS, Catss),
+    sort(Catss, CatSem),
+    !.
+
+transl_wn_cats([], []):-!.
+transl_wn_cats([Cat|Cats], [CatS|CatSem]):-
+   translwn_cats(Cat, CatS),
+   transl_wn_cats(Cats, CatSem),!.
+transl_wn_cats([Cat|Cats], [Cat|CatSem]):-
+   transl_wn_cats(Cats, CatSem),!.
+
+
+translwn_cats([Cat], All):-
+   findall(CatS, translwncats(Cat, CatS, C),
+       AllC),
+   sort(AllC, All).
+
+translwn_cats(Cat, All):-
+   findall(CatS, translwncats(Cat, CatS, C),
+       AllC),
+   sort(AllC, All).
+
+c_translwncats([], [], Cats):-!.
+c_translwncats(SCats, CatSem, Cats):-
+    c_transl_wn_cats(SCats, CatC),
+    appiattisci(CatC, Catcc),
+    sort(Catcc, Cats),
+    transl_wn_cats(SCats, CatS),
+    appiattisci(CatS, Catss),
+    sort(Catss, CatSem),!.
+c_translwncats(SCats, CatSem, Cats):-
+    atomic(SCats),
+    CatSem=SCats,
+    !.    
+
+c_transl_wn_cats([], []):-!.
+c_transl_wn_cats([Cat|Cats], [CatS|CatSem]):-
+   c_translwn_cats(Cat, CatS),
+   c_transl_wn_cats(Cats, CatSem),!.
+c_transl_wn_cats(Cat, [CatS]):-
+   atomic(Cat),
+   c_translwn_cats(Cat, CatS),!.
+c_transl_wn_cats([Cat|Cats], [Cat|CatSem]):-
+   c_transl_wn_cats(Cats, CatSem),!.
+
+c_translwn_cats(Cat, All):-
+   findall(C, translwncats(Cat, CatS, C),
+       AllC),
+   appiattisci(AllC, Allc),
+   sort(Allc, All).
+
+translwncats(ach, evento, [n]).
+translwncats(acl, attivita, [n]).
+translwncats(acl, legale, [n]).
+translwncats(act, attivita, [n]).
+translwncats(anm, animato, [n]).
+translwncats(atm, evento, [n]).
+translwncats(atm, cambia, [n]).
+translwncats(bod, body_part, [n]).
+translwncats(bod, oggetto, [n]).
+translwncats(ntl, luogo, [n]).
+translwncats(btl, luogo, [np]).
+translwncats(btl, evento, [n]).
+translwncats(chd, evento, [n]).
+translwncats(chp, evento, [n]).
+translwncats(chd, cambia, [n]).
+translwncats(chp, cambia, [n]).
+translwncats(col, umano, [nh]).
+translwncats(col, istituzione, [nh]).
+translwncats(com, astratto, [n]).
+translwncats(sac, sociale, [nh]).
+translwncats(com, attivita, [n]).
+translwncats(ecn, legale, [n]).
+translwncats(edb, edible, [n]).
+translwncats(emt, emotivo, [n]).
+translwncats(evl, astratto, [n]).
+translwncats(evn, evento, [n]).
+translwncats(fac, attivita, [n]).
+translwncats(lat, attivita, [n]).
+translwncats(lat, informa, [n]).
+translwncats(lcg, luogo, [np]).
+translwncats(lng, luogo, [np]).
+translwncats(loc, luogo, [np]).
+translwncats(mab, astratto, [n]).
+translwncats(mab, informa, [n]).
+translwncats(mac, attivita, [n]).
+translwncats(mac, informa, [n]).
+translwncats(mat, plant, [n]).
+translwncats(mnt, attivita, [n]).
+translwncats(mnt, informa, [n]).
+translwncats(mst, stato, [n]).
+translwncats(mst, astratto, [n]).
+translwncats(mtf, astratto, [n]).
+translwncats(mtf, misura, [n]).
+translwncats(mus, astratto, [n]).
+translwncats(mus, attivita, [n]).
+translwncats(nat, danger, [n]).
+translwncats(nat, attivita, [n]).
+translwncats(nev, evento, [n]).
+translwncats(nfa, informa, [n]).
+translwncats(nfa, attivita, [n]).
+translwncats(nfl, informa, [n]).
+translwncats(nfl, attivita, [n]).
+translwncats(nft, attivita, [n]).
+translwncats(nft, informa, [n]).
+translwncats(nhm, umano, [nh]).
+translwncats(nlg, luogo, [np]).
+translwncats(nlg, umano, [nh]).
+translwncats(pos, oggetto, [n]).
+translwncats(pro, attivita, [n]).
+translwncats(qua, nquant, [n]).
+translwncats(rel, relat, [nh]).
+translwncats(rel, umano, [nh]).
+translwncats(rel, sociale, [nh]).
+translwncats(sac, sociale, [nh]).
+translwncats(sac, umano, [nh]).
+translwncats(sha, astratto, [n]).
+translwncats(sta, stato, [n]).
+translwncats(str, oggetto, [n]).
+translwncats(str, strumento, [n]).
+translwncats(sub, sostanza, [n]).
+translwncats(sur, umano, [n]).
+translwncats(tit, sociale, [nh]).
+translwncats(tit, umano, [nh]).
+translwncats(tme, tempo, [nt]).
+translwncats(unr, umano, [nh]).
+translwncats(unr, astratto, [n]).
+translwncats(cmp, informa, [n]).
+translwncats(cmp, tecno, [n]).
+translwncats(adv, informa, [n]).
+translwncats(adv, pubblic, [n]).
+translwncats(lfr, animato, [n]).
+translwncats(hum, umano, [nh]).
+translwncats(amb, animato, [n]).
+translwncats(plt, plant, [n]).
+translwncats(pho, oggetto, [n]).
+translwncats(mtt, sostanza, [n]).
+translwncats(fod, edible, [n]).
+translwncats(art, oggetto, [n]).
+translwncats(art, strumento, [n]).
+translwncats(abs, astratto, [n]).
+translwncats(psy, astratto, [n]).
+translwncats(psy, informa, [n]).
+translwncats(llc, luogo, [np]).
+translwncats(frm, astratto, [n]).
+translwncats(evt, evento, [n]).
+translwncats(hvt, cambia, [n]).
+translwncats(unb, attivita, [n]).
+translwncats(atr, astratto, [n]).
+translwncats(sur, umano, [nh]).
+translwncats(nmm, umano, [nh]).
+translwncats(nmf, umano, [nh]).
+
+
+citiespreds(X,[place]):-
+   lw4(X,Type,Hyper,Type1),
+   !.
+citiespreds(X,[place]):-
+   lw2(X,Type),
+   !.
+citiespreds(X,[place]):-
+   lwc(X,Type,Hyper,Type1,Super,Type2),
+   !.
+   
+trova_CatSem(Cat, [], nil):-!.
+trova_CatSem(Cat, X, nil):-
+      grw(X),!.
+trova_CatSem(num, Lemma, CatSem):-
+    integer(Lemma),
+    (1000 < Lemma, CatSem=[date,tempo]; CatSem=[nquant]).
+
+trova_CatSem(Num, Lemma, CatSem):-
+    stringof([Int|Rest],Lemma),
+    pname(In,Int),
+    integer(In),
+    length([Int|Rest],L),
+    (4=<L,
+     CatSem=[date,tempo], \+ on('%',Rest)
+     ;
+     CatSem=[nquant]).
+
+trova_CatSem(n, Lemma, CatSem):-
+    integer(Lemma),
+    (1000 < Lemma, CatSem=[date,tempo]; CatSem=[nquant]).
+
+trova_CatSem(n, Lemma, CatSem):-
+    atomic(Lemma), Lemma\=[],
+    stringof([Int|_],Lemma),
+    pname(In,Int),
+    integer(In),
+    CatSem=[date,tempo].
+
+trova_CatSem(num, Lemma, CatSem):-
+    atomic(Lemma), Lemma\=[],
+    stringof([Int|_],Lemma),
+    pname(In,Int),
+    nonvar(In),
+    checkabm(In),
+    CatSem=[money,oggetto].
+
+trova_CatSem(Cat, Lemma, [umano]):-
+    nonvar(Cat), Cat=poss,!.
+
+trova_CatSem(Cat, Lemma, Feats):-
+    nonvar(Cat), Cat=pron,
+    get_feats_pron(Lemma,Feats),
+    !.
+
+trova_CatSem(Cat, Lemma, [tempo]):-
+    nonvar(Cat),Cat=nt,!.
+trova_CatSem(Cat, Lemma, CatSem):-
+    atomic(Lemma), Lemma\=[],
+    spy_lower(Lemma, LowW, Pol),
+    proncat(Cat),
+    pred_p(P, LowW, _, CatSem, []),
+    !.
+trova_CatSem(N, Lemma, CatSem):-
+    (N=n;N=npro;N=np),
+    citiespreds(Lemma,CatSem),
+    \+ if_first_name(Lemma),
+    !.
+trova_CatSem(N, Lemma, CatSem):-
+    atomic(Lemma), Lemma\=[],
+    sw(Lemma-[Categ]-LCa),
+    (nogen_member(feat=Cat, LCa),
+     (list(Cat),Catt=Cat;atomic(Cat),Catt=[Cat]),
+     translate_wn_cats(Catt, CatS),
+     (CatS\=[],CatSem=CatS;CatSem=[Cat])     
+     ;
+     nonvar(A),A=npro,
+     \+ grammw(Lemma,_),
+     CatSem=[istituzione,umano,sociale]),
+    !.
+
+trova_CatSem(N, Lemma, CatSem):-
+    atomic(Lemma), Lemma\=[],
+    sw(Lemma-[A]-[[A]-Lemma-LCa]),
+    (nogen_member(feat=Cat, LCa),
+     (list(Cat),Catt=Cat;atomic(Cat),Catt=[Cat]),
+     translate_wn_cats(Catt, CatS),
+     (CatS\=[],CatSem=CatS;CatSem=[Cat])
+     ;
+     nonvar(A),A=npro,
+     \+ grammw(Lemma,_),
+     CatSem=[istituzione,umano,sociale]),
+    !.
+
+trova_CatSem(N, Lemma, CatSem):-
+    atomic(Lemma), Lemma\=[],
+    sw(Lemma-[A]-[[A]-Lemma-[cat=A, feat=Feat, gen=Gen|Num]]),
+    (
+     (list(Feat),Catt=Feat;atomic(Feat),Catt=[Feat]),
+     translate_wn_cats(Catt, CatS),
+     (CatS\=[],CatSem=CatS;CatSem=[Feat])
+     ;
+     nonvar(A),A=npro,
+     \+ grammw(Lemma,_),
+     CatSem=[istituzione,umano,sociale]),
+    !.
+
+trova_CatSem(N, Lemma, Cats):-
+    atomic(Lemma), Lemma\=[],
+    stringof(MWord,Lemma),
+    reverse(MWord,['_',s, '-'|Word]),
+    reverse(Word,RevWord),
+    stringof(RevWord,Lex),
+    search_wn_cats(Lex,Cats),
+    Cats\=[],
+    !.
+trova_CatSem(N, Lemma, [umano]):-
+    atomic(Lemma), Lemma\=[],
+   stringof(MWord,Lemma),
+   member('_', MWord),
+   check_title(MWord,Tit),
+    !.
+trova_CatSem(N, Lemma, [Cat]):-
+    atomic(Lemma), Lemma\=[],
+    gn(Lemma,Class),
+    findall(Gn, gn(Gn,Class), Gns),
+    on(Cat, Gns),
+    stringof(MWord,Cat),
+    on('_', MWord),
+    !.    
+
+trova_CatSem(N, Lemma, [abstract]):-
+    atomic(Lemma), Lemma\=[],
+    abstr_head(Lemma),!.
+
+trova_CatSem(N, Lemma, Cats):-
+    atomic(Lemma), Lemma\=[],
+    spy_lower(Lemma, LowW, 0),
+    search_wn_cats(LowW,Cats),
+    Cats\=[],
+    !.
+
+trova_CatSem(Cat, Lemma, Cats):-
+    list(Lemma), Lemma\=[],
+    reverse(Lemma,RLemma), 
+    on(Lem,RLemma),
+    search_wn_cats(Lem,Cats),
+    Cats\=[],
+    !.
+
+trova_CatSem(N, Lemma, CatSem):-
+    atomic(Lemma), Lemma\=[],
+    stringof(MWord,Lemma),
+    (member('_', MWord);member('-', MWord)),
+    recover_descriptions(Lemma, Word),
+    member(Lex,Word),   
+    search_wn_cats(Lex,CatSem1),
+    reverse(Word,Words1),   
+    member(Lex1,Words1),   
+    search_wn_cats(Lex1,CatSem2),
+    is_list(CatSem1),
+    append(CatSem1,CatSem2,CatSem),
+    CatSem\=[],
+    !.
+trova_CatSem(Cat, Lemma, []):-
+    grammw(Lemma,Cat),
+    !.
+trova_CatSem(N, Lemma, CatSem):-
+    atomic(Lemma),
+    super_predn(Lemma, Stem, CatSem, Sub),
+    !.
+trova_CatSem(n, Lemma, Cats):-
+    search_wn_cats(Lemma,Cats),
+    Cats\=[],
+    !.
+
+trova_CatSem(npro, Lemma, CatSem):-
+    translate_wn_cats([col,hum], CatSem),!.
+
+trova_CatSem(fw, Lemma, CatSem):-
+    translate_wn_cats([col,loc], CatSem),!.
+
+trova_CatSem(nh, Lemma, [umano]):-!.
+
+trova_CatSem(Cat, Lemma, Cats):-
+    list(Cat), 
+    (on(n,Cat);on(np,Cat);on(fw,Cat);on(npro,Cat)),
+    search_wn_cats(Lemma,Cats),
+    Cats\=[],
+    !.
+
+trova_CatSem(Cat, Lemma, nil):-
+    atomic(Lemma), Lemma\=[].
+
+trova_CatSem_mw(np, Lemma, Cats):-
+    search_wn_cats(Lemma,Cats),
+    Cats\=[],
+    !.
+
+lex_sem('3',any).
+lex_sem('4',attivita).
+lex_sem('5',animato).
+lex_sem('6',strumento).
+lex_sem('6',oggetto).
+lex_sem('7',astratto).
+lex_sem('8',body_part).
+lex_sem('8',umano).
+lex_sem('9',astratto).
+lex_sem('03',any).
+lex_sem('04',attivita).
+lex_sem('05',animato).
+lex_sem('06',strumento).
+lex_sem('06',oggetto).
+lex_sem('07',astratto).
+lex_sem('08',body_part).
+lex_sem('08',umano).
+lex_sem('09',astratto).
+lex_sem('10',informa).
+lex_sem('10',attivita).
+lex_sem('11',evento).
+lex_sem('12',emotivo).
+lex_sem('13',edible).
+lex_sem('13',oggetto).
+lex_sem('14',umano).
+lex_sem('14',istituzione).
+lex_sem('15',luogo).
+lex_sem('16',astratto).
+lex_sem('16',informa).
+lex_sem('17',oggetto).
+lex_sem('18',umano).
+lex_sem('27',sostanza).
+lex_sem('28',tempo).
+lex_sem('26',stato).
+lex_sem('25',astratto).
+lex_sem('24',relat).
+lex_sem('23',nquant).
+lex_sem('22',attivita).
+lex_sem('21',astratto).
+lex_sem('21',oggetto).
+lex_sem('20',plant).
+lex_sem('19',attivita).
+lex_sem('19',cambia).
+lex_sem(3,any).
+lex_sem(4,attivita).
+lex_sem(5,animato).
+lex_sem(6,strumento).
+lex_sem(6,oggetto).
+lex_sem(7,astratto).
+lex_sem(8,body_part).
+lex_sem(8,umano).
+lex_sem(9,astratto).
+lex_sem(03,any).
+lex_sem(04,attivita).
+lex_sem(05,animato).
+lex_sem(06,strumento).
+lex_sem(06,oggetto).
+lex_sem(07,astratto).
+lex_sem(08,body_part).
+lex_sem(08,umano).
+lex_sem(09,astratto).
+lex_sem(10,informa).
+lex_sem(10,attivita).
+lex_sem(11,evento).
+lex_sem(12,emotivo).
+lex_sem(13,edible).
+lex_sem(13,oggetto).
+lex_sem(14,umano).
+lex_sem(14,istituzione).
+lex_sem(15,luogo).
+lex_sem(16,astratto).
+lex_sem(16,informa).
+lex_sem(17,oggetto).
+lex_sem(18,umano).
+lex_sem(27,sostanza).
+lex_sem(28,tempo).
+lex_sem(26,stato).
+lex_sem(25,astratto).
+lex_sem(24,relat).
+lex_sem(23,nquant).
+lex_sem(22,attivita).
+lex_sem(21,astratto).
+lex_sem(21,oggetto).
+lex_sem(20,plant).
+lex_sem(19,attivita).
+lex_sem(19,cambia).
+
+
+generic_head(person, [man]).
+generic_head(person, [woman]).
+generic_head(man, [man]).
+generic_head(woman, [woman]).
+generic_head(persona, [uomo]).
+generic_head(uomo, [uomo]).
+generic_head(Tes,CatSem):-
+  atomic(Tes),
+  cwn(Tes),
+  trova_CatSem(n,Tes, CatSem),CatSem\=[],CatSem\=nil.
+
+generic_head(Tess,CatSem):-
+  list(Tess),
+  on(Tes,Tess),
+  cwn(Tes),
+  trova_CatSem(n,Tes, CatSem),CatSem\=[],CatSem\=nil.
+
+generic_head(Tes,CatSem):-
+  atomic(Tes),
+  gn(Tes,Class),
+  (s_included(InC, Class),
+   (InC=rel;InC=sac)
+   ;
+   (Class=hum;Class=rel;Class=sac;Class=col)
+   ),
+  trova_CatSem(n,Tes, CatSem),CatSem\=[],CatSem\=nil.
+
+generic_head(Tess,CatSem):-
+  list(Tess),
+  on(Tes,Tess),
+  gn(Tes,Class),
+  (s_included(InC, Class),
+   (InC=rel;InC=sac)
+   ;
+   (Class=hum;Class=rel;Class=sac;Class=col)
+   ),
+  trova_CatSem(n,Tes, CatSem),CatSem\=[],CatSem\=nil.
+
+generic_head(A, B):-
+  !,
+ (var(A);var(B)), fail.
+
+abstr_head(scope).
+abstr_head(ambito).
+abstr_head(type).
+abstr_head(tipo).
+abstr_head(species).
+abstr_head(specie).
+abstr_head(kind).
+abstr_head(genere).
+
+rel_head(relation).
+rel_head(relazione).
+rel_head(relationship).
+
+collective_head(gruppo).
+collective_head(group).
+collective_head(committee).
+collective_head(commissione).
+collective_head(council).
+collective_head(consiglio).
+collective_head(organization).
+collective_head(organizzazione).
+collective_head(comitato).
+collective_head(society).
+collective_head(company).
+collective_head(institution).
+collective_head(istituzione).
+collective_head(Head):-
+  cwn(Head).
+
+ssr0(group).
+ssr0(institution).
+ssr0(employee).
+ssr0(evaluee).
+ssr0(honoree).
+ssr1(addressee).
+ssr1(agent).
+ssr1(attendee).
+ssr1(co_resident).
+ssr1(co_travelers).
+ssr1(cognizer).
+ssr1(communicator).
+ssr1(experiencer).
+ssr1(focal_participant).
+ssr1(healer).
+ssr1(host).
+ssr1(interlocutor_1).
+ssr1(interlocutor_2).
+ssr1(interlocutors).
+ssr1(killer).
+ssr1(patient).
+ssr1(perpetrator).
+ssr1(resident).
+ssr1(speaker).
+ssr1(student).
+ssr1(teacher).
+ssr1(traveler).
+ssr1(victim).
+ssr1(reversive).
+ssr2(area).
+ssr2(distance).
+ssr2(duration).
+ssr2(event).
+ssr2(frequency).
+ssr2(ground).
+ssr2(journey).
+ssr2(location).
+ssr2(path).
+ssr2(period_of_iterations).
+ssr2(phenomenon).
+ssr2(place).
+ssr2(place_of_employment).
+ssr2(position).
+ssr2(road).
+ssr2(social_event).
+ssr2(source).
+ssr2(speed).
+ssr2(state).
+ssr2(subregion).
+ssr2(time).
+ssr2(treatment).
+ssr3(degree).
+ssr3(difference).
+ssr3(level).
+ssr3(scale).
+ssr3(value_1).
+ssr3(value_2).
+ssr4(affliction).
+ssr4(depictive).
+ssr4(stimulus).
+ssr4(trigger).
+ssr4(message).
+ssr4(subject).
+ssr4(topic).
+ssr5(attribute).
+ssr5(cause).
+ssr5(co_variable).
+ssr5(conditions).
+ssr5(evidence).
+ssr5(goal).
+ssr5(goal_conditions).
+ssr5(internal_cause).
+ssr5(manner).
+ssr5(purpose).
+ssr5(reason).
+ssr5(result).
+ssr5(reversive).
+ssr5(standard).
+ssr6(carrier).
+ssr6(connector).
+ssr6(goods).
+ssr6(handle).
+ssr6(instrument).
+ssr6(item).
+ssr6(means).
+ssr6(means_of_communication).
+ssr6(medication).
+ssr6(medium).
+ssr6(mode_of_transportation).
+ssr7(message).
+ssr7(subject).
+ssr7(topic).
+ssr8(qualification).
+ssr8(role).
+ssr9(cotheme).
+ssr9(theme).
+
+/*body_part, descrittivo, salut_danger, edible, distanza, testo, atmosferico, week, means_trans, locuz_prep, proprt, stato_mentale, plant_life?*/
+
+evaluate_ssrs(Pred,Synt,Sem,SubsAll)
+    :-
+    v(Pred,Sints), 
+    translate_synts(Sints,Synt),
+    ssr(Pred,Sems,Sroles),
+    translate_all_ssroles(Pred,Sroles,Subs),
+    translate_allssrolesfuncs(Pred,Subs,SubsAll),
+    !.
+
+translate_allssrolesfuncs(Pred,[],[]):-!.
+translate_allssrolesfuncs(Pred,Sroles,Subs):-
+     Sroles=[A|_],
+     atomic(A),
+     translate_ssrolesfuncs(Pred,Sroles,Subs),
+     !.
+
+translate_allssrolesfuncs(Pred,[Srole|Sroles],[Subs|SubsAll]):-
+    translate_ssrolesfuncs(Pred,Srole,Subs),
+    translate_allssrolesfuncs(Pred,Sroles,SubsAll),
+    !.
+
+translate_all_ssroles(Pred,[],[]):-!.
+translate_all_ssroles(Pred,Sroles,[Subs]):-
+     Sroles=[A|_],
+     atomic(A),
+     length(Sroles,N),
+     numerate_roles(Sroles,N,Subs),
+     !.
+
+translate_all_ssroles(Pred,[Srole|Sroles],[Subs|SubsAll]):-
+    translate_ssroles(Pred,Srole,Subs),
+    translate_all_ssroles(Pred,Sroles,SubsAll),
+    !.
+
+translate_ssroles(Pred,Sroles,NRoles):-
+     Sroles=[A|_],
+     atomic(A),
+     length(Sroles,N),
+     numerate_roles(Sroles,N,NRoles),
+     !.
+
+translate_ssroles(Pred,[Srole|Sroles],[NRoles|SubsAll]):-
+     list(Srole),
+     length(Srole,N),
+     numerate_roles(Sroles,N,NRoles),
+     translate_ssroles(Pred,Sroles,SubsAll),
+     !.
+     
+
+numerate_roles(Sroles,N,[N3-Role|Roles]):-
+     nonvar(Role),
+     remove(Role,Sroles,Rest),
+     nth(Sroles,N1,Role),
+     N2 is N - 1,
+     N3 is N1 - 1,
+     numerate_roles1(Rest,Sroles,N2,Roles),
+     !.
+
+numerate_roles1([],Sroles,N,[]):-!.
+numerate_roles1([A],Sroles,1,[N3-A]):-
+     nth(Sroles,N,A),
+     N3 is N - 1,
+     !.
+numerate_roles1([A|Rest],Sroles,N1,[N3-A|Roles]):-
+     nth(Sroles,N,A),
+     N2 is N1 - 1,
+     N3 is N - 1,
+     numerate_roles1(Rest,Sroles,N2,Roles),
+     !.
+
+numerate_roles1(Rest,Sroles,N2,Roles):-!.
+numerate_roles1(Rest,Sroles,N2,[N3-Role|Roles]):-
+     nonvar(Role),
+     remove(Role,Sroles,Rest),
+     nth(Sroles,N1,Role),
+     N2 is N - 1,
+     N3 is N1 - 1,
+     numerate_roles1(Rest,Sroles,N2,Roles),
+     !.
+
+srol(Role,1,sn,[umano,istituzione,legale,relat,sociale,relazionale,collettivo]):-
+    ssr0(Role),
+     !.   
+srol(Role,No,Cost,[umano,istituzione,legale,relat,sociale,relazionale,collettivo]):-
+    ssr0(Role),
+    (2<No,Cost=sp;Cost=sn),
+    !.
+srol(Role,1,sn,[animato,umano,istituzione,relat,sociale,relazionale]):-
+    ssr1(Role),
+     !.   
+srol(Role,No,Cost,[animato,umano,istituzione,relat,sociale,relazionale]):-
+    ssr1(Role),
+    (2<No,Cost=sp;Cost=sn),
+    !.
+srol(Role,1,sn,[attivita,evento,stato,tempo,durata,luogo,astratto,quantita,misura,nquant]):-
+    ssr2(Role),
+     !.   
+srol(Role,No,sp,[attivita,evento,stato,tempo,durata,luogo,astratto,quantita,misura,nquant]):-
+    ssr2(Role),
+    2=<No,
+    !.
+srol(Role,1,sn,[attivita,evento,informa,stato,astratto,quantita,misura,nquant]):-
+    ssr3(Role),
+     !.   
+srol(Role,No,sp,[attivita,evento,informa,stato,astratto,quantita,misura,nquant]):-
+    ssr3(Role),
+    2=<No,
+    !.
+srol(Role,1,sn,[attivita,evento,informa,stato,astratto,emotivo,soggettivo]):-
+    ssr4(Role),
+     !.   
+srol(Role,No,sp,[attivita,evento,informa,stato,astratto,emotivo,soggettivo]):-
+    ssr4(Role),
+    2=<No,
+    !.
+srol(Role,1,sn,[attivita,evento,informa,stato,astratto,legale,misura,modo,quantita]):-
+    ssr5(Role),
+     !.   
+srol(Role,No,sp,[attivita,evento,informa,stato,astratto,legale,misura,modo,quantita]):-
+    ssr5(Role),
+    2=<No,
+    !.
+srol(Role,1,sn,[animato,umano,istituzione,oggetto,strumento,matter,informa,stato,astratto,legale]):-
+    ssr6(Role),
+     !.   
+srol(Role,No,sp,[animato,umano,istituzione,oggetto,strumento,matter,informa,stato,astratto,legale]):-
+    ssr6(Role),
+    2=<No,
+    !.
+srol(Role,1,sn,[istituzione,oggetto,strumento,informa,stato,astratto,legale]):-
+    ssr7(Role),
+     !.   
+srol(Role,No,sp,[istituzione,oggetto,strumento,informa,stato,astratto,legale]):-
+    ssr7(Role),
+    2=<No,
+    !.
+srol(Role,1,sn,[umano,istituzione,legale,relat,sociale,relazionale]):-
+    ssr8(Role),
+     !.   
+srol(Role,No,Cost,[umano,istituzione,legale,relat,sociale,relazionale]):-
+    ssr8(Role),
+    (2<No,Cost=sp;Cost=sn),
+    !.
+srol(Role,No,sn,[any]):-
+    ssr9(Role),
+     !.   
+
+translate_ssrolesfuncs(Pred,[],[]):-!.
+translate_ssrolesfuncs(Pred,[No-Role|SubCats],[Cost/Func/Role/Feats|SubCat]):-
+          srol(Role,No,Cost,Feats),
+          atomic(Cost), Cost\=f,Cost\=sp,
+          pbfunc(No,Cost,Func),
+          translate_ssrolesfuncs(Pred,SubCats,SubCat),
+          !.
+translate_ssrolesfuncs(Pred,[No-Role|SubCats],[Cost/Func/Role/Contr|SubCat]):-
+          srol(Role,No,Cost,Feats),
+          atomic(Cost), Cost=f,
+          pbfunc(No,Cost,Func),
+          translate_ssrolesfuncs(Pred,SubCats,SubCat),
+          !.
+translate_ssrolesfuncs(Pred,[No-Role|SubCats],[Cost/Func/Role/Preps/Feats|SubCat]):-
+          srol(Role,No,Cost,Feats),
+          atomic(Cost), Cost=sp,
+          pbfunc(No,Cost,Func),
+          vsp(Pred, Preps),
+          translate_ssrolesfuncs(Pred,SubCats,SubCat),
+          !.
+translate_ssrolesfuncs(Pred,[No-Role|SubCats],[Cost/Func/Role/Contr|SubCat]):-
+          srol(Role,No,Costs,Feats),
+          list(Costs),
+          pbfunc(No,Cost,Func),Cost\=sp,
+          translate_ssrolesfuncs(Pred,SubCats,SubCat),
+          !.
+translate_ssrolesfuncs(Pred,[No-Role|SubCats],[Cost/Func/Role/Preps/Feats|SubCat]):-
+          srol(Role,No,Costs,Feats),
+          list(Costs),
+          pbfunc(No,Cost,Func),Cost=sp,
+          vsp(Pred, Preps),
+          translate_ssrolesfuncs(Pred,SubCats,SubCat),
+          !.
+translate_ssrolesfuncs(Pred,[No-Role|SubCats],SubCat):-
+          translate_ssrolesfuncs(Pred,SubCats,SubCat),
+          !.
+
+evaluate_pbfs(Pred,Synt,Sem,SubsAll)
+    :-
+    findall(Synt-Sem-SubCat, 
+            (v(Pred,Sints), translate_synts(Sints,Synt),
+               pbf(Pred,Sem,SubCats),
+               translate_pbroles(Pred,SubCats,SubCat)),Subs),
+          Subs\=[],
+          on(Synt-_-_,Subs),
+          findall(Sub,on(_-_-Sub,Subs),SubsAll),
+          !.
+
+translate_synts(Sints,Cat):-
+          findall(Synt,
+             (on(Sint,Sints),
+               transl_syn(Sint,Synt)),Syntss),
+               sort(Syntss,Synts),
+          assign_gramm_cat(Synts,Cat),!.
+
+translate_pbroles(Pred,[],[]):-!.
+translate_pbroles(Pred,[No-Mean-Role|SubCats],[Cost/Func/Role/Feats|SubCat]):-
+          pbrol(Role,No,Cost,Feats),
+          atomic(Cost), Cost\=f,Cost\=sp,
+          pbfunc(No,Cost,Func),
+          translate_pbroles(Pred,SubCats,SubCat),
+          !.
+translate_pbroles(Pred,[No-Mean-Role|SubCats],[Cost/Func/Role/Contr|SubCat]):-
+          pbrol(Role,No,Cost,Feats),
+          atomic(Cost), Cost=f,
+          pbfunc(No,Cost,Func),
+          translate_pbroles(Pred,SubCats,SubCat),
+          !.
+translate_pbroles(Pred,[No-Mean-Role|SubCats],[Cost/Func/Role/Preps/Feats|SubCat]):-
+          pbrol(Role,No,Cost,Feats),
+          atomic(Cost), Cost=sp,
+          pbfunc(No,Cost,Func),
+          vsp(Pred, Preps),
+          translate_pbroles(Pred,SubCats,SubCat),
+          !.
+translate_pbroles(Pred,[No-Mean-Role|SubCats],[Cost/Func/Role/Contr|SubCat]):-
+          pbrol(Role,No,Costs,Feats),
+          list(Costs),
+          pbfunc(No,Cost,Func),Cost\=sp,
+          translate_pbroles(Pred,SubCats,SubCat),
+          !.
+translate_pbroles(Pred,[No-Mean-Role|SubCats],[Cost/Func/Role/Preps/Feats|SubCat]):-
+          pbrol(Role,No,Costs,Feats),
+          list(Costs),
+          pbfunc(No,Cost,Func),Cost=sp,
+          vsp(Pred, Preps),
+          translate_pbroles(Pred,SubCats,SubCat),
+          !.
+translate_pbroles(Pred,[No-Mean-Role|SubCats],SubCat):-
+          translate_pbroles(Pred,SubCats,SubCat),
+          !.
+translate_pbroles(Pred,[No-Mean|SubCats],[Cost/Func/Rol/Feats|SubCat]):-
+          pbrol(Role,No,Cost,Feats),
+          atomic(Cost), Cost\=f,Cost\=sp,
+          pbfunc(No,Cost,Func),
+          (No=0,Rol=agent;No=1,Rol=theme),
+          translate_pbroles(Pred,SubCats,SubCat),
+          !.
+translate_pbroles(Pred,[No-Mean|SubCats],[Cost/Func/Role/Contr|SubCat]):-
+          pbrol(Role,No,Cost,Feats),
+          atomic(Cost), Cost=f,
+          pbfunc(No,Cost,Func),
+          translate_pbroles(Pred,SubCats,SubCat),
+          !.
+translate_pbroles(Pred,[No-Mean|SubCats],[Cost/Func/Role/Preps/Feats|SubCat]):-
+          pbrol(Role,No,Cost,Feats),
+          atomic(Cost), Cost=sp,
+          pbfunc(No,Cost,Func),
+          vsp(Pred, Preps),
+          translate_pbroles(Pred,SubCats,SubCat),
+          !.
+translate_pbroles(Pred,[No-Mean|SubCats],[Cost/Func/Role/Contr|SubCat]):-
+          pbrol(Role,No,Costs,Feats),
+          list(Costs),
+          pbfunc(No,Cost,Func),Cost\=sp,
+          translate_pbroles(Pred,SubCats,SubCat),
+          !.
+translate_pbroles(Pred,[No-Mean|SubCats],[Cost/Func/Role/Preps/Feats|SubCat]):-
+          pbrol(Role,No,Costs,Feats),
+          list(Costs),
+          pbfunc(No,Cost,Func),Cost=sp,
+          vsp(Pred, Preps),
+          translate_pbroles(Pred,SubCats,SubCat),
+          !.
+translate_pbroles(Pred,[No-Mean|SubCats],SubCat):-
+          translate_pbroles(Pred,SubCats,SubCat),
+          !.
+pbfunc(0,sn,subj).
+pbfunc(1,sn,obj).
+pbfunc(2,sp,iobj).
+pbfunc(3,sp,iobj).
+pbfunc(2,Cost,ccomp):-
+      list(Cost),
+      on(f,Cost).
+pbfunc(2,Cost,iobj):-
+      list(Cost),
+      on(sp,Cost).
+pbfunc(2,Cost,xcomp):-
+      list(Cost).
+transl_syn(tx,trans).
+transl_syn(tf,trans).
+transl_syn(t,trans).
+transl_syn(ps,trans).
+transl_syn(d,trans).
+transl_syn(rs,trans).
+transl_syn(tc,trans).
+transl_syn(i,intr).
+transl_syn(ms,atm).
+transl_syn(imp,intr).
+transl_syn(erg,intr).
+transl_syn(c,cop).
+transl_syn(l,cop).
+transl_syn(c_a,trans).
+transl_syn(c_n,trans).
+transl_syn(ti,trans).
+
+/******************
+== Estrae da ogni frase la lista degli argomenti che potrebbero essere ripresi nella frase successiva. La lista e' composta di sintagmi nominali ordinati secondo il peso assegnato loro dalla regola pesa_lista.
+La lista viene asserita nel database insieme all'indice di frase relativo. 
+******************/
+
+tabella_ref(pr_int,chi,[+ref,-pro,-ana,+me]).
+tabella_ref(pr_int,cosa,[+ref,-pro,-ana,+me]).
+tabella_ref(pro_expl,form,[-ref,-pro,-ana,-me]).
+tabella_ref(prorel,pro,[+ref,-pro,-ana,-me]).
+tabella_ref(prorel,quale,[+ref,-pro,-ana,+me]).
+tabella_ref(prorel,pPro,[+ref,-pro,-ana,-me]).
+tabella_ref(prorel,_,[+ref,-pro,-ana,-me]).
+tabella_ref(possessivo,proprio,[-ref,+pro,+ana,+me,-subj]).
+tabella_ref(possessivo,one_s,[-ref,+pro,+ana,+me,-subj]).
+tabella_ref(personale,_,[+ref,+pro,-ana,+me]).                          
+tabella_ref(pro_picc,_,[+ref,+pro,-ana,-me]).
+tabella_ref(pro_grande,_,[+ref,+pro,+ana,-me]).
+tabella_ref(coordinate,_,[+ref,-pro,-ana,+class]).
+tabella_ref(possessivo,Pred,[+ref,+pro,-ana,+me]) :- Pred \= proprio.
+tabella_ref(pr_int,who,[+ref,-pro,-ana,+me]).
+tabella_ref(pr_int,what,[+ref,-pro,-ana,+me]).
+tabella_ref(int,Pro,[+ref,-pro,-ana,+me]).
+tabella_ref(intj,Pro,[+ref,-pro,-ana,+me]).
+%tabella_ref(_,it,[-ref,-pro,-ana,-me]).
+tabella_ref(rel,pro,[+ref,-pro,-ana,-me]).
+tabella_ref(pro_n,_,[+ref,-pro,-ana,-me]).
+tabella_ref(rel,which,[+ref,-pro,-ana,+me]).
+tabella_ref(rel,pPro,[+ref,-pro,-ana,-me]).
+tabella_ref(rel,_,[+ref,-pro,-ana,-me]).
+tabella_ref(poss,own,[-ref,+pro,+ana,+me,-subj]).
+tabella_ref(poss,one_s,[-ref,+pro,+ana,+me,-subj]).
+tabella_ref(i,_,[+ref,-pro,-ana,+class]).
+tabella_ref(n,_,[+ref,-pro,-ana,+class]).
+tabella_ref(nf,_,[+ref,-pro,-ana,+class]).
+tabella_ref(ng,_,[+ref,-pro,-ana,+class]).
+tabella_ref(abbr,_,[+ref,-pro,-ana,-class]).
+tabella_ref(noun,_,[+ref,-pro,-ana,+class]).
+tabella_ref(vbl,_,[+ref,-pro,-ana,-me]).
+tabella_ref(nh,_,[+ref,-pro,-ana,-class]).
+tabella_ref(nt,_,[+ref,-pro,-ana,-class]).
+tabella_ref(avv,_,[+ref,-pro,-ana,-class]).
+tabella_ref(np,_,[+ref,-pro,-ana,-class]).
+tabella_ref(num,_,[+ref,-pro,-ana,-class]).
+tabella_ref(npro,_,[+ref,-pro,-ana,-class]).
+tabella_ref(dim,_,[+ref,+pro,-ana,+class]).
+tabella_ref(deit,_,[+ref,+pro,-ana,+class]).
+tabella_ref(deittico,_,[+ref,+pro,-ana,+class]).
+tabella_ref(clitico,_,[+ref,+pro,+ana,+me]).
+tabella_ref(enclitico,_,[+ref,+pro,+ana,+me]).
+tabella_ref(pers,_,[+ref,+pro,-ana,+me]).                          
+tabella_ref(prone,_,[+ref,+pro,-ana,+me]).                          
+tabella_ref(prona,_,[+ref,+pro,-ana,+me]).                          
+tabella_ref(pronm,_,[+ref,+pro,-ana,+me]).                          
+tabella_ref(pronl,_,[+ref,+pro,-ana,+me]).                          
+tabella_ref(rifl_lungo,_,[-ref,+pro,+ana,+me,+subj]).
+tabella_ref(pr_quantif,_,[+ref,-pro,-ana,+me]).
+tabella_ref(quant,_,[+ref,-pro,-ana,+me]).
+tabella_ref(q,_,[+ref,-pro,-ana,+me]).
+tabella_ref(qc,_,[+ref,-pro,-ana,+me]).
+tabella_ref(qd,_,[+ref,-pro,-ana,+me]).
+tabella_ref(in,_,[+ref,-pro,-ana,+me]).
+tabella_ref(pro_imp,_,[+ref,-pro,-ana,+me]).
+tabella_ref(ana_clit,_,[+ref,+pro,+ana,+me]).
+tabella_ref(expl,_,[+ref,+pro,+ana,+me]).
+tabella_ref(enfatico,_,[+ref,+pro,+ana,+me]).
+tabella_ref(pr_int,_,[-ref,-pro,-ana,+me]).
+tabella_ref(poss,Pred,[+ref,+pro,-ana,+me]).
+tabella_ref(ag,_,[-ref,+pro,+ana,+me]).
+tabella_ref(rifl_corto,_,[+ref,-pro,+ana,+me,-subj]) :-
+   gr(english), \+ genre(legal).
+tabella_ref(rifl_corto,_,[-ref,-pro,+ana,+me,-subj]) :-
+   gr(english),genre(legal).
+tabella_ref(rifl_corto,_,[-ref,-pro,+ana,+me,-subj]) :-
+   gr(romance).
+tabella_ref(pron,_,[+ref,+pro,-ana,+me]).  
+
+
+prendisubcats(ArgsV, Valenz):-
+    ArgsV=.. [pred_v,Verb|_],
+    prendisubcat(Verb, Valenz).
+
+prendisubcats(ArgsV, Valenz):-
+    ArgsV = pred_v(V, G, S, SubCat),
+    on(Sub,SubCat),
+     (list(Sub), Args=SubCat
+       ;
+      Args=[SubCat]),
+    selectr(Args, Valenz),
+    !.
+
+prendisubcats(ArgsV, Valenz):-
+    selectr([ArgsV], Valenz),
+    !.
+
+prendisubcat(Verb, Valenz):-
+    pred_vs(Verb, Trans, A, C1-V1, R1, S1, C2-V2, P1, R2, S2, C3-V3, P2, R3, S3),
+    (V3=nn, Valenz=[V2]
+    ;
+    V3\=nn, Valenz=[V2,V3]).
+
+prendisubcat(Verb, Valenz):-
+    pred_vs(Verb, Trans, A, C1-V1, R1, S1, C2-V2, P1, R2, S2, V3, P2, R3, S3),
+    (V3=nn, Valenz=[V2]
+    ;
+    V3\=nn, Valenz=[V2,V3]).
+
+prendisubcat(Verb, Valenz):-
+    pred_vs(Verb, Trans, A, C1-V1, R1, S1, V2, P1, R2, S2, C3-V3, P2, R3, S3),
+    (V3=nn, Valenz=[V2]
+    ;
+    V3\=nn, Valenz=[V2,V3]).
+
+prendisubcat(Verb, Valenz):-
+    pred_vs(Verb, Trans, A, C1-V1, R1, S1, V2, P1, R2, S2, V3, P2, R3, S3),
+    (V3=nn, Valenz=[V2]
+    ;
+    V3\=nn, Valenz=[V2,V3]).
+
+
+prendisubcat(Verb, Valenz):-
+    subcatsr(Verb, Valenzen),
+    selectr(Valenzen, Valenz1),
+    sort(Valenz1, Valenz).
+
+selectr([], []):-!.
+selectr([Erste|Rest], [Val|Valenz]):-
+   select_complr(Erste, Val),
+   selectr(Rest, Valenz),
+   !.
+selectr(Erste, [Val]):-
+   \+ list(Erste),
+   select_complr([Erste], Val),
+   !.
+selectr([], []):-!.
+selectr([Erste|Rest], [Val|Valenz]):-
+   select_compli(Erste, Val),
+   selectr(Rest, Valenz),
+   !.
+
+select_complr([Erste], nil):-!.
+select_complr([C/sogg/R/F|Erste], Val):-
+   s_c_subr(Erste, Val),!.
+
+select_complr(Erste, nil).
+
+s_c_subr([Erste|Rest], Role):-
+   check_subcatsi(Erste, Role-Val).
+   
+subcatsr(Verb, Valenzen):-
+   pred_vc(Verb, Synt, Aspekt, Valenzen),
+   !.
+
+select([], []):-!.
+select([Erste|Rest], [Val|Valenz]):-
+   select_compl(Erste, Val),
+   select(Rest, Valenz),
+   !.
+
+select_compli([Erste], nil):-!.
+select_compli([C/sogg/R/F|Erste], Val):-
+   s_c_subb(Erste, Val),!.
+
+select_compli(Erste, nil).
+
+s_c_subb([Erste], Val):-
+   check_subcatsi(Erste, Val-Role).
+
+check_subcatsi(ncomp/Role/Contr, ncomp-prop).
+check_subcatsi(pcomp/Role/Contr, pcomp-prop).
+check_subcatsi(acomp/Role/Contr, acomp-prop).
+check_subcatsi(xcomp/Role/Contr, xcomp-prop).
+check_subcatsi(vcomp/Role/P/Contr, vcomp-prop).
+check_subcatsi(f/fcomp/Role/Contr, fcomp-prop).
+check_subcatsi(sp/Val/Role/P/Fea, V-Role):-
+    transl_val(Val,V).
+check_subcatsi(sp/Val/Role/Fea, V-Role):-
+    transl_val(Val,V).
+check_subcatsi(sn/Val/Role/Fea, V-Role):-
+    transl_val(Val,V).
+check_subcatsi(Funz/Val/Role/Fea, V-Role).
+check_subcatsi(sp/Val/Role/P, V-Role):-
+    transl_val(Val,V).
+check_subcatsi(sp/Val/Role, V-Role):-
+    transl_val(Val,V).
+check_subcatsi(sn/Val/Role, V-Role):-
+    transl_val(Val,V).
+check_subcatsi(Funz/Val/Role, V-Role).
+
+transl_val(sogg,subj).
+transl_val(ogg,obj).
+transl_val(ogg2,obj2).
+transl_val(V,V).
+
+assign_gramm_cat(Synts,Cat):-
+          length(Synts,L),
+          sort(Synts,Syts),
+          length(Syts,L1),
+          on(Syt,Syts),
+          (
+          L1 = L,
+          1<L1,
+          Cat=Syts
+          ;
+          L1 =< L,
+          assign_grammcat(Syt,Synts,Cat)
+          ;
+          L=L1, Cat=Syt),!.
+
+assign_grammcat(Syt,Synts,Cat):-
+       findall(Syt, on(Syt,Synts), C),
+       on(C1, Synts), Syt\=C1,
+       findall(C1, on(C1,Synts), C2),
+       length(C,L1),
+       length(C2,L2),
+       (L1 < L2, Cat=C1; Cat=Syt),
+       !.
+
+cat_gramm1(Vinf, CatGr, CatV, LArgsV) :-
+   nonvar(Vinf),Vinf\=[],
+   prendi_subcat(Vinf, Valenze),
+   (Valenze=CatGr-CatV-LArgsV
+     ;
+     sort(Valenze, Valenz),
+     (
+      length(Valenz,L),
+      (L=1,
+       Valenz=[CatGr-CatV-LArgsV]
+       ;
+        1<L,
+        build_vc(Vinf, Valenz, LArgsVs, Cats)
+%        on(CatGr-CatV,Cats),
+%        on(LArgsV,LArgsVs)
+        )
+       ;
+       Valenz=[Vallen],
+       length(Vallen,L),
+       (L=1,
+        Vallen=[CatGr-CatV-LArgsV]
+        ;
+        1<L,
+        build_vc(Vinf, Vallen, LArgsV, Cats),
+        on(CatGr-CatV,Cats)
+        )
+       ;
+       appiattisci(Valenz,Vallen),
+       length(Vallen,L),
+       (L=1,
+        Vallen=[CatGr-CatV-LArgsV]
+        ;
+        1<L,
+        build_vc(Vinf, Vallen, LArgsV, Cats),
+        on(CatGr-CatV,Cats)
+        )
+       )).
+
+cat_gramm1(Vinf, CatGr, CatV, LArgsV) :-
+   default_subcat(CatGr, CatV, LArgsV),
+    !.
+
+default_subcat(trans, attivita, [sn/sogg/agent/[any], sn/ogg/theme_aff/[any]]):-!.
+
+sh_prendi_subcat(Vinf, Val):-
+    cat_gramm(Vinf, CatGr, CatV, LArgsV),
+    all_s_c_subr(LArgsV, Val).
+
+sh_prendi_subcat(Vinf, [subj-actor,fcomp-Role]):-
+   coml(Vinf, Subs),
+   on(fcomp/Role, Subs),
+   !.
+
+all_s_c_subr([], []):-!.
+all_s_c_subr([ idioms/form/_|LArgsV], Vals):-
+    all_s_c_subr(LArgsV, Vals),
+    !.
+all_s_c_subr([ idioms/_/form/_|LArgsV], Vals):-
+    all_s_c_subr(LArgsV, Vals),
+    !.
+all_s_c_subr([LArgs|LArgsV], [Val|Vals]):-
+    s_c_subrs(LArgs, Val),
+    all_s_c_subr(LArgsV, Vals),
+    !.
+
+s_c_subrs([], []):-!.
+s_c_subrs([Erste|Rest], [Role-Val|Vals]):-
+   check_subcatsi(Erste, Role-Val),
+   nonvar(Role),
+    s_c_subrs(Rest, Vals),!.
+s_c_subrs([Erste|Rest], Vals):-
+    s_c_subrs(Rest, Vals),!.
+
+s_c_subrs(Erste, Role-Val):-
+   check_subcatsi(Erste, Role-Val),
+   !.
+select_compl([Erste], nil):-!.
+select_compl([C/sogg/R/F|Erste], [sogg-R|[Val]]):-
+   s_c_sub(Erste, Val),!.
+
+select_compl([C/sogg/R/F|Erste], [sogg-R|Vals]):-
+   Erste=[First|Rest],
+   Rest\=[],
+   s_c_sub([First], Val),
+   s_c_sub(Rest, Val1),
+   append([Val], [Val1], Vals),
+   !.
+
+select_compl(Erste, nil).
+
+s_c_sub([Erste], Val):-
+   check_subcats(Erste, Val).
+
+check_subcats(ncomp/Role/Contr, ncomp-Role).
+check_subcats(acomp/Role/Contr, acomp-Role).
+check_subcats(xcomp/Role/Contr, xcomp-Role).
+check_subcats(vcomp/Role/P/Contr, nil-nil).
+check_subcats(f/fcomp/Role/Contr, nil-nil).
+check_subcats(sp/Val/Role/P/Fea, Val-Role).
+check_subcats(sn/Val/Role/Fea, Val-Role).
+
+r4(specif).
+r4(modal).
+r4(mod).
+r4(poss).
+r4(form).
+r0(group).
+r0(institution).
+r0(interlocutor_1).
+r0(resident).
+r0(student).
+r0(addressee).
+r0(attendee).
+r0(beneficiario).
+r0(beneficiary).
+r0(benefactive).
+r0(benef).
+r0(malef).
+r0(malefattivo).
+r0(malefactive).
+r0(goal).
+r0(recipient).
+r1(actor).
+r1(actor1).
+r1(actor2).
+r1(agent).
+r1(agente).
+r1(cause).
+r1(causal).
+r1(causale).
+r1(cognizer).
+r1(communicator).
+r1(experiencer).
+r1(esperiente).
+r1(healer).
+r1(host).
+r1(interlocutors).
+r1(killer).
+r1(perpetrator).
+r1(speaker).
+r1(teacher).
+r1(traveler).
+r2(co_resident).
+r2(co_travelers).
+r2(cotheme).
+r2(employee).
+r2(evaluee).
+r2(focal_participant).
+r2(honoree).
+r2(interlocutor_2).
+r2(patient).
+r2(patient1).
+r2(theme_aff).
+r2(theme_eff).
+r2(theme_bound).
+r2(theme_nonaff).
+r2(theme_unaff).
+r2(theme_emot).
+r2(victim).
+r3(topic).
+r3(predicate).
+r3(product).
+r3(source).
+r3(stimulus).
+r3(subject).
+r3(subj_disc).
+r3(affliction).
+r3(area).
+r3(asset).
+r3(attribute).
+r3(carrier).
+r3(comitative).
+r3(comitativo).
+r3(co_variable).
+r3(conditions).
+r3(connector).
+r3(degree).
+r3(depictive).
+r3(destination).
+r3(difference).
+r3(distance).
+r3(durata).
+r3(duration).
+r3(event).
+r3(evidence).
+r3(extent).
+r3(frequency).
+r3(goal_conditions).
+r3(goods).
+r3(ground).
+r3(handle).
+r3(instrument).
+r3(strumentale).
+r3(strumento).
+r3(internal_cause).
+r3(item).
+r3(journey).
+r3(level).
+r3(locat).
+r3(location).
+r3(loc_origin).
+r3(manner).
+r3(material).
+r3(means).
+r3(means_of_communication).
+r3(medication).
+r3(medium).
+r3(message).
+r3(mode_of_transportation).
+r3(path).
+r3(patient2).
+r3(period_of_iterations).
+r3(phenomenon).
+r3(place).
+r3(place_of_employment).
+r3(position).
+r3(privation).
+r3(prop).
+r3(purpose).
+r3(reason).
+r3(result).
+r3(reversive).
+r3(road).
+r3(scale).
+r3(social_event).
+r3(speed).
+r3(standard).
+r3(state).
+r3(stato).
+r3(stimulus).
+r3(subregion).
+r3(theme).
+r3(theme1).
+r3(theme2).
+r3(time).
+r3(tempor).
+r3(topic).
+r3(treatment).
+r3(trigger).
+r3(value_1).
+r3(value_2).
+
+
+pbrol(actor1,0,sn,[attivita,evento,stato,oggetto,strumento,legale,astratto,istituzione,informa,sostanza,plant]).
+pbrol(actor2,1,sn,[attivita,evento,stato,oggetto,strumento,legale,astratto,istituzione,informa,sostanza,plant]).
+pbrol(actor2,2,sp,[attivita,evento,stato,oggetto,strumento,legale,astratto,istituzione,informa,sostanza,plant]).
+pbrol(agent,0,sn,[animato,umano,istituzione,relat]).
+pbrol(asset,1,sn,[attivita,evento,stato,oggetto,strumento,legale,astratto]).
+pbrol(asset,2,sp,[attivita,evento,stato,oggetto,strumento,legale,astratto]).
+pbrol(asset,3,sp,[attivita,evento,stato,oggetto,strumento,legale,astratto]).
+pbrol(asset,4,sp,[attivita,evento,stato,oggetto,strumento,legale,astratto]).
+pbrol(attribute,0,sn,[informa,astratto,stato,legale,nquant]).
+pbrol(attribute,1,sn,[informa,astratto,stato,legale,nquant]).
+pbrol(attribute,2,sn,[informa,astratto,stato,legale,nquant]).
+pbrol(attribute,3,[sn,sp],[informa,astratto,stato,nquant]).
+pbrol(beneficiary,2,sp,[animato,umano,istituzione,legale,relat]).
+pbrol(beneficiary,3,sp,[animato,umano,istituzione,legale,relat]).
+pbrol(beneficiary,4,sp,[animato,umano,istituzione,legale,relat]).
+pbrol(cause,0,sn,[attivita,evento,stato,oggetto,strumento,astratto,istituzione,informa,sostanza,plant]).
+pbrol(cause,1,sn,[attivita,evento,stato,oggetto,strumento,astratto,istituzione,informa,sostanza,plant]).
+pbrol(cause,2,[f,sp],[attivita,evento,stato,oggetto,strumento,astratto,istituzione,informa,sostanza,plant]).
+pbrol(cause,3,sp,[attivita,evento,stato,oggetto,strumento,astratto,istituzione,informa,sostanza,plant]).
+pbrol(destination,1,sn,[luogo,astratto,stato,tempo]).
+pbrol(destination,2,sp,[luogo,astratto,stato,tempo]).
+pbrol(destination,3,sp,[luogo,astratto,stato,tempo]).
+pbrol(destination,4,sp,[luogo,astratto,stato,tempo]).
+pbrol(destination,5,sp,[luogo,astratto,stato,tempo]).
+pbrol(experiencer,0,sn,[animato,umano,istituzione,relat]).
+pbrol(experiencer,1,sn,[animato,umano,istituzione,relat]).
+pbrol(experiencer,2,sn,[animato,umano,istituzione,relat]).
+pbrol(experiencer,3,sp,[animato,umano,istituzione,relat]).
+pbrol(extent,2,[sn,sp],[luogo,astratto,stato,tempo]).
+pbrol(extent,3,[sn,sp],[luogo,astratto,stato,tempo]).
+pbrol(instrument,2,sp,[oggetto,strumento,sostanza]).
+pbrol(instrument,3,sp,[oggetto,strumento,sostanza]).
+pbrol(location,0,sn,[luogo,oggetto,strumento,plant,stato,tempo]).
+pbrol(location,1,sn,[luogo,oggetto,strumento,plant,stato,tempo]).
+pbrol(location,2,sp,[luogo,oggetto,strumento,plant,stato,tempo]).
+pbrol(location,3,sp,[luogo,oggetto,strumento,plant,stato,tempo]).
+pbrol(location,4,sp,[luogo,oggetto,strumento,plant,stato,tempo]).
+pbrol(material,1,sn,[oggetto,strumento,sostanza,nquant]).
+pbrol(material,2,sp,[oggetto,strumento,sostanza,nquant]).
+pbrol(material,3,sp,[oggetto,strumento,sostanza,nquant]).
+pbrol(patient,0,sn,[animato,umano,istituzione,relat]).
+pbrol(patient,1,sn,[animato,umano,istituzione,relat]).
+pbrol(patient,2,sp,[animato,umano,istituzione,relat]).
+pbrol(patient1,0,sn,[animato,umano,istituzione,relat]).
+pbrol(patient1,1,sn,[animato,umano,istituzione,relat]).
+pbrol(patient2,1,sn,[animato,umano,istituzione,relat]).
+pbrol(patient2,2,sp,[animato,umano,istituzione,relat]).
+pbrol(patient2,3,sp,[animato,umano,istituzione,relat]).
+pbrol(predicate,1,[f,sn],[astratto,informa,sostanza]).
+pbrol(predicate,2,[f,sn],[astratto,informa,sostanza]).
+pbrol(predicate,3,[f,sn,sp],[astratto,informa,sostanza]).
+pbrol(product,0,sn,[oggetto,strumento,istituzione,informa,sostanza]).
+pbrol(product,1,sn,[oggetto,strumento,istituzione,informa,sostanza]).
+pbrol(product,2,sp,[oggetto,strumento,istituzione,informa,sostanza]).
+pbrol(product,4,sp,[oggetto,strumento,istituzione,informa,sostanza]).
+pbrol(recipient,1,sn,[animato,umano,istituzione,relat]).
+pbrol(recipient,2,sp,[animato,umano,istituzione,relat]).
+pbrol(recipient,3,sp,[animato,umano,istituzione,relat]).
+pbrol(recipient,4,sp,[animato,umano,istituzione,relat]).
+pbrol(source,1,sn,[any]).
+pbrol(source,2,sp,[any]).
+pbrol(source,3,sp,[any]).
+pbrol(source,4,sp,[any]).
+pbrol(stimulus,0,sn,[attivita,evento,stato,oggetto,strumento,astratto,istituzione,informa,sostanza,plant]).
+pbrol(stimulus,1,sn,[attivita,evento,stato,oggetto,strumento,astratto,istituzione,informa,sostanza,plant]).
+pbrol(theme,0,sn,[any]).
+pbrol(theme,1,sn,[any]).
+pbrol(theme,2,[sn,sp],[any]).
+pbrol(theme,3,[sn,sp],[any]).
+pbrol(theme1,0,sn,[any]).
+pbrol(theme1,1,sn,[any]).
+pbrol(theme1,2,sp,[any]).
+pbrol(theme1,3,sp,[any]).
+pbrol(theme2,1,sn,[any]).
+pbrol(theme2,1,sp,[any]).
+pbrol(theme2,1,sp,[any]).
+pbrol(topic,1,sn,[informa,astratto]).
+pbrol(topic,2,[f,sn,sp],[informa,astratto]).
+
+controlla_cats(C,CatS):-
+     C\=nil, CatS\=nil,
+     nogen_member(any, C),
+%     (\+ nogen_member(umano, CatS);
+%     nogen_member(istituzione, CatS)),
+     !.
+
+controlla_cats(CatS,C):-
+     C\=nil, CatS\=nil,
+     nogen_member(any, C),
+%     (\+ nogen_member(umano, CatS);
+%     nogen_member(istituzione, CatS)),
+     !.
+
+controlla_cats(C,CatS):-
+     C\=nil, CatS\=nil,
+     controlla_cat1(C,CatS),!.
+
+ /* CatSN  e' istanziato e sara' una lista */
+% controlla_cat([],CatArgVerbo) :- !.
+
+controlla_cat1(C,C1) :- C=C1,!.
+
+controlla_cat1(_,[]) :- fail,!.
+
+controlla_cat1([],C) :- fail,!.
+controlla_cat1(nil,C) :- !.
+controlla_cat1(C,nil) :- !.
+
+controlla_cat1([Cat],CatArgVerbo) :-
+     gn(Cat,CatSN),
+     translate_wn_cats([CatSN], CatSem),
+     CatSem\=[Cat],
+     controlla_cat1(CatSem,CatArgVerbo),!.
+controlla_cat1(CatArgVerbo,[Cat]) :-
+     gn(Cat,CatSN),
+     translate_wn_cats([CatSN], CatSem),
+     CatSem\=[Cat],
+     controlla_cat1(CatSem,CatArgVerbo),!.
+controlla_cat1([Cat],CatArg) :-
+     gn(Cat,CatSN),
+     !.
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatSN),
+       nogen_member(CC,CatSN),
+       nogen_member(CC,CatArgVerbo).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatSN),
+       CatSN=[coll, real, soc, set],
+       nogen_member(luogo,CatArgVerbo).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatSN),
+       CatSN=[ind, real, quant, locat],
+       nogen_member(luogo,CatAV).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatSN),
+       CatSN=[ind, real, quant, gen_locat],
+       nogen_member(luogo,CatAV).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatSN),
+       nogen_member(oggetto,CatSN),
+       nogen_member(materiale,CatAV).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatSN),
+       nogen_member(umano,CatSN),
+       nogen_member(informa,CatAV),
+       \+ nogen_member(oggetto,CatAV),
+       \+ nogen_member(tecno,CatAV),
+       \+ nogen_member(attivita,CatAV),
+       \+ nogen_member(evento,CatAV),
+       \+ nogen_member(stato,CatAV),
+       \+ nogen_member(danger,CatAV).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatSN),
+       nogen_member(plant,CatSN),
+       nogen_member(animato,CatAV).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatSN),
+       nogen_member(umano,CatSN),
+       nogen_member(plant,CatAV).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatSN),
+       nogen_member(oggetto,CatSN),
+       nogen_member(proprt,CatAV).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatSN),
+       nogen_member(legale,CatSN),
+       nogen_member(umano,CatAV),
+       \+ nogen_member(oggetto,CatSN),
+       \+ nogen_member(tecno,CatSN),
+       \+ nogen_member(attivita,CatSN),
+       \+ nogen_member(evento,CatSN),
+       \+ nogen_member(stato,CatSN),
+       \+ nogen_member(danger,CatSN).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatSN),
+       nogen_member(legale,CatSN),
+       nogen_member(sociale,CatAV).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatSN),
+       nogen_member(descrittivo,CatSN),
+       nogen_member(attivita,CatAV).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatSN),
+       nogen_member(umano,CatSN),
+       nogen_member(istituzione,CatAV).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatAV),
+       nogen_member(umano,CatAV),
+       nogen_member(istituzione,CatSN).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatSN),
+       CatSN=[ind, real, nat, hum],
+       nogen_member(umano,CatArgVerbo).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatSN),
+       CatSN=[ind, real, nat, relat],
+       nogen_member(umano,CatArgVerbo).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatSN),
+       CatSN=[ind, real, soc, role],
+       nogen_member(umano,CatArgVerbo).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatSN),
+       CatSN=[coll, real, soc, hum_set],
+       nogen_member(umano,CatArgVerbo).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatSN),
+       (CatSN=[coll, real, mil, hum_set]
+       ;
+       nogen_member(umano,CatSN)),
+       nogen_member(astratto,CatArgVerbo).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatSN),
+       CatSN=[ind, real, mil, role],
+       (nogen_member(umano,CatArgVerbo)
+        ;
+        nogen_member(istituzione,CatArgVerbo)).
+     
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatSN),
+       CatSN=[ind, abst, soc, state],
+       (nogen_member(astratto,CatArgVerbo)
+        ;
+        nogen_member(stato,CatArgVerbo)).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatSN),
+       CatSN=[ind, abst, quant, temp],
+       (nogen_member(astratto,CatArgVerbo)
+        ;
+        nogen_member(tempo,CatArgVerbo)).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatSN),
+       CatSN=[ind, real, phys, nonliv],
+       nogen_member(oggetto,CatArgVerbo).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatSN),
+       CatSN=[ind, real, soc, nonliv],
+       (nogen_member(astratto,CatArgVerbo)
+        ;nogen_member(oggetto,CatArgVerbo)).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatSN),
+       nogen_member(ist_soc,CatSN),
+       nogen_member(umano,CatArgVerbo).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatSN),
+       nogen_member(sostanza,CatSN),
+       nogen_member(edible,CatAV).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatArgVerbo),
+       nogen_member(sociale, CatSN),
+       (nogen_member(umano,CatArgVerbo)
+        ;nogen_member(attivita,CatArgVerbo)).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatArgVerbo),
+       nogen_member(ist_soc,CatArgVerbo),
+       nogen_member(umano,CatSN).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatSN),
+       nogen_member(legale,CatAV),
+       nogen_member(umano,CatSN),
+       \+ nogen_member(oggetto,CatAV),
+       \+ nogen_member(tecno,CatAV),
+       \+ nogen_member(attivita,CatAV),
+       \+ nogen_member(evento,CatAV),
+       \+ nogen_member(stato,CatAV),
+       \+ nogen_member(danger,CatAV).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatSN),
+       nogen_member(man,CatAV),
+       (nogen_member(umano,CatSN);nogen_member(mortal_being,CatSN)).
+
+controlla_cat1(CatAV,CatSN) :-
+       nonvar(CatSN),
+       nogen_member(man,CatAV),
+       (nogen_member(umano,CatSN);nogen_member(mortal_being,CatSN)).
+
+controlla_cat1(CatSN,CatAV) :-
+       nonvar(CatSN),
+       nogen_member(legale,CatAV),
+       nogen_member(sociale,CatSN).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatArgVerbo),
+       CatArgVerbo=[coll, real, soc, set],
+       nogen_member(luogo,CatSN).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatArgVerbo),
+       CatArgVerbo=[ind, real, nat, hum],
+       nogen_member(umano,CatSN).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatArgVerbo),
+       CatArgVerbo=[ind, real, nat, relat],
+       nogen_member(umano,CatSN).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatArgVerbo),
+       CatArgVerbo=[ind, real, soc, role],
+       nogen_member(umano,CatSN).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatArgVerbo),
+       CatArgVerbo=[coll, real, soc, hum_set],
+       nogen_member(umano,CatSN).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatArgVerbo),
+       (CatArgVerbo=[coll, real, mil, hum_set]
+       ;
+       nogen_member(umano,CatArgVerbo)),
+       nogen_member(astratto,CatSN).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatArgVerbo),
+       CatArgVerbo=[ind, real, mil, role],
+       (nogen_member(umano,CatSN)
+        ;
+        nogen_member(istituzione,CatSN)).
+     
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatArgVerbo),
+       CatArgVerbo=[ind, abst, soc, state],
+       (nogen_member(astratto,CatSN)
+        ;nogen_member(stato,CatSN)).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatArgVerbo),
+       nogen_member(number,CatSN),
+       nogen_member(astratto,CatArgVerbo).
+
+controlla_cat1(CatSN, CatAV) :-
+  nonvar(CatAV),
+  nogen_member(nonhuman,CatAV),
+  (nogen_member(animato, CatSN)
+   ;
+    nogen_member(oggetto, CatSN)
+        ;
+        nogen_member(istituzione,CatSN)).
+
+controlla_cat1(CatSN, CatAV) :-
+  nonvar(CatAV),
+  nogen_member(plant,CatAV),
+  nogen_member(animato, CatSN) .
+
+controlla_cat1(CatSN, CatAV) :-
+  nonvar(CatAV),
+  nogen_member(sostanza,CatAV),
+  nogen_member(edible, CatSN) .
+
+controlla_cat1(CatSN, CatAV) :-
+  nonvar(CatAV),
+  nogen_member(nonhuman,CatSN),
+  (nogen_member(animato, CatAV)
+        ;
+    nogen_member(oggetto, CatAV)
+        ;
+        nogen_member(istituzione,CatAV)).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatArgVerbo),
+       CatArgVerbo=[ind, abst, quant, temp],
+       (nogen_member(astratto,CatSN)
+        ;nogen_member(tempo,CatSN)).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatArgVerbo),
+       CatArgVerbo=[ind, real, phys, nonliv],
+       nogen_member(oggetto,CatSN).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatArgVerbo),
+       CatArgVerbo=[ind, real, soc, nonliv],
+       (nogen_member(astratto,CatSN)
+        ;nogen_member(oggetto,CatSN)).
+
+controlla_cat1(CatSN,CatArgVerbo) :-
+       nonvar(CatArgVerbo),
+       nogen_member(sociale, CatArgVerbo),
+       (nogen_member(umano,CatSN)
+        ;nogen_member(attivita,CatSN)).
+
+
+assign_funz_roles(Ibar,Sub,Lem,NSubcat,P):-
+   appiattisci(Ibar,Iba),
+   remove(Not-neg-ibar, Iba, NIbar),
+   assign_funz_roles(NIbar,Sub,Lem,NSubcat,P),!.
+
+assign_funz_roles(Ibar,Sub,Lem,NSubcat,P):-
+   appiattisci(Ibar,Iba),
+   remove(Avv-in-ibar, Iba, NIbar),
+   assign_funz_roles(NIbar,Sub,Lem,NSubcat,P),!.
+
+assign_funz_roles(Ibar,Sub,Lem,NSubcat,P):-
+   appiattisci(Ibar,Iba),
+   remove(even-_-ibar, Iba, NIbar),
+   assign_funz_roles(NIbar,Sub,Lem,NSubcat,P),!.
+
+assign_funz_roles(Ibar,Sub,Lem,NSubcat,0):-
+   appiattisci(Ibar,Iba),
+   remove(Not-neg-ibar, Iba, NIbar),
+   assign_funz_role(NIbar,Sub,Lem,Valenz,Feats),
+   apply_passive(Iba, Valenz, NSubcat),
+   !.
+assign_funz_roles(Ibar,Sub,Lem,NSubcat,0):-
+   appiattisci(Ibar,Iba),
+   remove(never-avv-ibar, Iba, NIbar),
+   assign_funz_role(NIbar,Sub,Lem,Valenz,Feats),
+   apply_passive(Iba, Valenz, NSubcat),
+   !.
+assign_funz_roles(Ibar,Sub,Lem,NSubcat,1):-
+   appiattisci(Ibar,Iba),
+   remove(Avv-avv-ibar, Iba, NIbar),
+   assign_funz_role(NIbar,Sub,Lem,Valenz,Feats),
+   apply_passive(Iba, Valenz, NSubcat),
+   !.
+assign_funz_roles(Ibar,Sub,Lem,NSubcat,1):-
+   appiattisci(Ibar,Iba),
+   remove(_-par-_,Iba,NIbar),
+   assign_funz_role(NIbar,Sub,Lem,Valenz,Feats),
+   apply_passive(Iba, Valenz, NSubcat),
+   !.
+
+assign_funz_roles(Ibar,Sub,Lem,NSubcat,1):-
+   appiattisci(Ibar,Iba),
+   assign_funz_role(Iba,Sub,Lem,Valenz,Feats),
+   apply_passive(Iba, Valenz, NSubcat),
+   !.
+apply_passive(Ibar, Subcat, NSubCat):-
+     funcs(Func, K, Head, All), 
+     Func=voice,
+     All=passive-Verbs,
+     on(Verb, Verbs),
+     on(Verb, Ibar),
+     passive_lexical_rule(Subcat, NSubCat),
+     !.
+apply_passive(Ibar, Subcat, Subcat).
+
+passive_lexical_rule(Subcats, NSubCat):-
+     on(Subcat, Subcats),
+     remove(obj-Role, Subcat, PSubCat),
+     remove(subj-_, PSubCat, SSubCat),
+     append([subj-Role], SSubCat, NSubCat),
+     !.
+passive_lexical_rule(Subcats, NSubCat):-
+     on(Subcat, Subcats),
+     remove(obj2-Role, Subcat, PSubCat),
+     remove(subj-_, PSubCat, SSubCat),
+     append([subj-Role], SSubCat, NSubCat),
+     !.
+passive_lexical_rule(Subcat, NSubCat):-
+     remove(ogg-Role, Subcat, PSubCat),
+     remove(sogg-_, PSubCat, SSubCat),
+     append([sogg-Role], SSubCat, NSubCat),
+     !.
+passive_lexical_rule(Subcat, NSubCat):-
+     remove(obj-Role, Subcat, PSubCat),
+     remove(subj-_, PSubCat, SSubCat),
+     append([subj-Role], SSubCat, NSubCat),
+     !.
+passive_lexical_rule(Subcat, NSubCat):-
+     remove(obj2-Role, Subcat, PSubCat),
+     remove(subj-_, PSubCat, SSubCat),
+     append([subj-Role], SSubCat, NSubCat),
+     !.
+prep_extr_args(ListArg, Cues, Role):-
+    appiattisci(ListArg,ListArgs),
+    (
+    (
+     nogen_member(sp/ogg2/Role/Preps/_, ListArgs),
+     (\+ atomic(Preps), Cues=Preps;
+       Cues=[Preps]),!
+    ;
+     nogen_member(sp/ogg2/Role/[any], ListArgs),
+       Cues=[to],!
+    ;
+     nogen_member(pcomp/locativo/_, ListArgs),
+       Cues=[in,on,at,by,over,above,below],Role=locat,!
+    ),!
+    ;
+    nogen_member(sp/obl/Role/Cues/_, ListArgs),
+     (\+ atomic(Preps), Cues=Preps;
+       Cues=[Preps]),!
+    ),!.
+
+check_subjects_subs(Subs, Subs):-
+    appiattisci(Subs, Sub),
+    (on(subj-_, Sub);on(sn/sogg/_/_,Sub)),
+    !.
+check_subjects_subs(Subs, Sus):-
+    remove(Cat-Sem-Su, Subs, Sub),
+    (on(subj-_, Su);on(sn/sogg/_/_,Su)),
+    findall(S, on(Ca-Se-S, Subs), Suss),
+    appiattisci(Suss,Sus),
+    !.
+
+assign_funz_role([s_-Cat-_],[vc],is,[sn/subj/theme_bound, xcomp/prop/[subj=sogg]],[]):-!.
+   
+assign_funz_role([P-p-_, Av-avv-_, Modal, Verb-Cat-_|_],Sub,Lem,Valenz,Feats):-
+   prendi_lemma(Verb, Sub,Lem,Feats),
+   sh_prendi_subcat(Verb, Valez),
+   check_subjects_subs(Valez,Valenz),
+    !.
+
+assign_funz_role([P-p-_, Modal, Verb-Cat-_|_],Sub,Lem,Valenz,Feats):-
+   prendi_lemma(Verb, Sub,Lem,Feats),
+   sh_prendi_subcat(Verb, Valez),
+   check_subjects_subs(Valez,Valenz),
+    !.
+
+assign_funz_role([P-p-_, Modal, Verb-Cat-_|_],Sub,Lem,Valenz,Feats):-
+   prendi_lemmas(Verb, Sub, Lem, Valez,Feats),
+   check_subjects_subs(Valez,Valenz),
+   !.
+
+assign_funz_role([P-p-_, Verb-Cat-_|_],Sub,Lem,Valenz,Feats):-
+   prendi_lemma(Verb, Sub,Lem,Feats),
+   sh_prendi_subcat(Verb, Valez),
+   check_subjects_subs(Valez,Valenz),
+   !.
+
+assign_funz_role([P-p-_, Verb-Cat-_|_],Sub,Lem,Valenz,Feats):-
+   prendi_lemmas(Verb, Sub, Lem, Valez,Feats),
+   check_subjects_subs(Valez,Valenz),
+   !.
+
+assign_funz_role([Aux-Ca-_, Modal, Verb-Cat-_, Head-Cv-_],Sub,Lem,Valenz,Feats):-
+   (check_auxbe(Ca);check_auxcat(Cat)),
+   prendi_lemma(Head, Sub,Lem,Feats),
+   sh_prendi_subcat(Lem, Valez),
+   check_subjects_subs(Valez,Valenz),
+   !.
+assign_funz_role([Mod-Ca-_, A-vsup-_, Head-Cv-_],Sub,Lem,Valenz,Feats):-
+   support(Mod),
+   prendi_lemma(Head, Sub,Lem,Feats),
+   sh_prendi_subcat(Lem, Valez),
+   check_subjects_subs(Valez,Valenz),
+   !.
+assign_funz_role([Aux-Ca-_, Verb-Cat-_, Head-Cv-_|_],Sub,Lem,Valenz,Feats):-
+   (check_auxbe(Ca);check_auxcat(Cat)),
+   \+ check_auxcat(Cv),
+   prendi_lemma(Head, Sub,Lem,Feats),
+   sh_prendi_subcat(Lem, Valez),
+   check_subjects_subs(Valez,Valenz),
+   !.
+assign_funz_role([Aux-Ca-_, A-vsup-_, Head-Cat-_],Sub,Lem,Valenz,Feats):-
+   (A=set_to;A=going_to;A=meant_to),
+   (check_auxbe(Ca);check_auxcat(Cat)),
+   prendi_lemma(Head, Sub,Lem,Feats),
+   sh_prendi_subcat(Lem, Valez),
+   check_subjects_subs(Valez,Valenz),
+   !.
+assign_funz_role([Aux-Ca-_, P-p-_, Head-Cat-_],Sub,Lem,Valenz,Feats):-
+   (check_auxbe(Ca);check_auxcat(Cat)),
+   prendi_lemma(Head, Sub,Lem,Feats),
+   sh_prendi_subcat(Lem, Valez),
+   check_subjects_subs(Valez,Valenz),
+   !.
+assign_funz_role([Modal, Verb-Cat-_, Head-Cv-_],Sub,Lem,Valenz,Feats):-
+   (check_auxbe(Cat);check_auxcat(Cat)),
+   prendi_lemma(Head, Sub,Lem,Feats),
+   sh_prendi_subcat(Lem, Valez),
+   check_subjects_subs(Valez,Valenz),
+   !.
+
+assign_funz_role([Modal, Verb-Cat-_|_],Sub,Lem,Valenz,Feats):-
+   prendi_lemma(Verb, Sub,Lem,Feats),
+   sh_prendi_subcat(Lem, Valez),
+   check_subjects_subs(Valez,Valenz),
+   !.
+
+assign_funz_role([Modal, Verb-Cat-_|_],Sub,Lem,Valenz,Feats):-
+   prendi_lemma(Verb, Sub,Lem,Feats),
+   sh_prendi_subcat(Verb, Valez),
+      check_subjects_subs(Valez,Valenz).
+
+assign_funz_role([Modal, Verb-Cat-_|_],Sub,Lem,Valenz,Feats):-
+   prendi_lemmas(Verb, Sub, Lem, Valez,Feats),
+   check_subjects_subs(Valez,Valenz),
+   !.
+
+assign_funz_role([Verb-vin-_],Sub,Lem,Valenz,Feats):-
+   prendi_lemma(Verb, Sub,Lem,Feats),
+   sh_prendi_subcat(Lem, Valez),
+   check_subjects_subs(Valez,Valenz),
+   !.
+
+assign_funz_role([Verb-vt-_],Sub,Lem,Valenz,Feats):-
+   prendi_lemma(Verb,Sub, Lem,Feats),
+   sh_prendi_subcat(Lem, Valez),
+   check_subjects_subs(Valez,Valenz),
+   !.
+
+assign_funz_role([Verb-vc-_],Sub,Lem,Valenz,Feats):-
+   prendi_lemma(Verb,Sub, Lem,Feats),
+   sh_prendi_subcat(Lem, Valez),
+   check_subjects_subs(Valez,Valenz),
+   !.
+
+assign_funz_role([Verb-Cat-_],Sub,Lem,Valenz,Feats):-
+   prendi_lemma(Verb, Sub,Lem,Feats),
+   sh_prendi_subcat(Lem, Valez),
+   check_subjects_subs(Valez,Valenz),
+   !.
+
+assign_funz_role([Verb-Cat-_],Sub,Verb,Valenz,Feats):-
+   sh_prendi_subcat(Verb, Valez),
+   check_subjects_subs(Valez,Valenz),
+   !.
+
+assign_funz_role(Ibar,Sub,Lem,Valenz,Feats):-
+   remove(Avv-avv-_, Ibar, Rest),
+   assign_funz_role(Rest,Sub,Lem,Valenz,Feats),
+   !.
+assign_funz_role(Ibar,Sub,Lem,Valenz,Feats):-
+   on(Verb-Cat-_, Ibar),
+   check_vcat(Cat),
+   prendi_lemma(Verb, Sub,Lem,Feats),
+   sh_prendi_subcat(Lem, Valez),
+   check_subjects_subs(Valez,Valenz),
+   !.
+ 
+assign_funz_role(Verb-Cat-_,Sub,Lem,Valenz,Feats):-
+   prendi_lemmas(Verb, Sub, Lem, Valez,Feats),
+   check_subjects_subs(Valez,Valenz),
+   !.
+assign_funz_role(Ibar,Sub,Lem,Valenz,Feats):-
+   on(Verb-Cat-_, Ibar),
+   prendi_lemmas(Verb, Sub, Lem, Val,Feats),
+   sh_prendi_subcat(Lem, Valez),
+   check_subjects_subs(Valez,Valenz),
+   !.
+
+/*
+check_subcn(Head,P):-
+    nt(Head),
+    tipo_agg(temporale,P,_),!.
+*/
+
+test_subcn(Word,P):-
+   sbn(Word,Pps),
+   member(Ps,Pps),
+   on(P, Ps),
+   prepos(P),!.
+test_subcn(Word,P):-
+    ggt(Word,P,_,S)
+    ;
+    ggt(_,Word,P,S),
+    !.
+check_subcn(Head,P):-
+   recover_descs(Head,Preds), 
+   reverse(Preds,[Hea|_]),
+   (sbcn(Hea-Ps),
+    on(P, Ps),!
+    ;
+    test_subcn(Head,P)
+    ;
+    ggt(Hea,P,_,S)
+    ;
+    ggt(_,Hea,P,S)
+    ;
+    spy_lower(Hea, LowW, 1),
+    (sbcn(LowW-Ps),
+     on(P, Ps),!
+     ;
+     test_subcn(LowW,P))
+    ),
+    !.
+
+check_subcn(Head,P):-
+   sbcn(Head-Ps),
+   on(P, Ps),!.
+check_subcn(Head,P):-
+   test_subcn(Head,P),!.
+
+check_subcn(Head,P):-
+   atomic(Head),
+   spy_lower(Head, LowW, 1),
+   check_subcn(LowW,P),!.
+
+check_subcn(Head,P):-
+   lemmatize_dic(Head, Word, S),
+   (sbcn(Word-Ps),
+    member(P, Ps),!
+    ;
+    test_subcn(Word,P)),!.
+
+check_subcn(Head,P):-
+   coml_n(Head, Feats),
+   on(subc-Obl, Feats),
+   on(pp/obl/Preps, Obl),
+   on(P, Preps),!.
+check_subcn(Head,P):-
+   coml_n(Head, Feats),
+   on(subc-Obl, Feats),
+   on(adj/Preps/_, Obl),
+   (atomic(Preps), P=Preps
+    ;
+    list(Preps),
+   on(P, Preps)),!.
+
+check_subcn(Head,that):-
+    pred_n(Head,_,_,Args),
+    Args\=[],
+   on(vcomp/Preps/_/_, Args),
+   !.
+
+check_subcn(Head,P):-
+    pred_n(Head,_,_,Args),
+    Args\=[],
+   on(sp/obl/Preps/_/_, Args),
+   on(P, Preps),!.
+    
+check_subcn(Head,P):-
+   vsp(Head, Ps),
+   on(P, Ps),!.
+
+vparse(AllF, Testas, ''):-
+   (atomic(Testas), Testa=Testas
+    ;
+    list(Testas), on(Testa,Testas)), 
+    get_vfeats(Testa, Feats),
+    AllF=[Root-Feats],!.
+
+vparse(AllF, Testas, ''):-
+   (atomic(Testas), Testa=Testas
+    ;
+    list(Testas), on(Testa,Testas)), 
+    sw(Testa-T-Lems),
+    Lems\=[],
+    get_lems_feats(Lems, AllF),!.
+
+
+/*
+vparse(AllF, Testa, ''):-
+   spy_lower(Testa, LowW, Pol),
+   dvol('Macintosh HD:work:riassuntore:dizionari'),
+    (Pol=0,
+     findall(Feats,mparse(Feats,Testa, ''),AllF)
+     ;
+     Pol=1,
+     findall(Feats,mparse(Feats,LowW, ''),AllF)
+     ),
+   dvol('Macintosh HD:work:riassuntore:dizionari:noun_sem').
+*/
+
+get_vfeats(Testa, Feats):-
+    v(Testa, Root, Mood, Tense, Pers, Num),
+    Feats=[pred=Root, mood=Mood, tense=Tense, pers=Pers, num=Num],
+    !.
+
+get_vfeats(Testa, Feats):-
+    aux(Testa, Root, Mood, Tense, Pers, Num),
+    Feats=[pred=Root, mood=Mood, tense=Tense, pers=Pers, num=Num],
+    !.
+
+get_vfeats(Testa, Feats):-
+    modal(Testa, Root, Mood, Tense, Pers, Num),
+    Feats=[pred=Root, mood=Mood, tense=Tense, pers=Pers, num=Num],
+    !.
+
+get_vfeats(Testa, Feats):-
+    pp_ger(Testa, Root),
+    Feats=[pred=Root, mood=ind, tense=past, pers=3, num=Num],
+    !.
+
+get_vfeats(Testa, Feats):-
+    pp_ger(Testa, Root),
+    Feats=[pred=Root, mood=part, tense=past, pers=3, num=Num],
+    !.
+
+get_lems_feats(Lems, AllF):-
+    findall(Root-Feats,
+                 on(Cat-Root-Feats, Lems) , Roots),
+    sort(Roots, Nroots),
+    Nroots\=[],
+    AllF=Nroots,!.
+
+get_lems_feats(Lems, AllF):-
+    findall(Root,
+             on(pred=Root, Lems), Roots),
+    Roots\=[],
+    on(Root, Roots),
+    get_vfeats(Root, Feats),
+    Feats\=[],
+    on(pred=Lemma,Feats),
+    AllF=[Lemma-Feats],
+    !.
+   
+get_lems_feats(Feats, AllF):-
+    on(Lems, Feats),
+    on(pred=Root, Lems),
+    AllF=[Root-[]],
+    !.
+
+get_lems_feats(Feats, AllF):-
+    on(Root-Cat,Feats),
+    AllF=[Root-[]],
+    !.
+    
+check_fac_subcat(Ibar):-
+   (Ibar=[ibar-Verb];
+   Ibar=[sv2-Verb]),
+   assign_funz_role(Verb,Sub,Lem,Valenz,Feats),
+   cat_gramm(Lem, CatGr, CatV, LArgsV),
+   PredV=pred_v(Lem,CatGr,CatV,LArgsV),
+   shallow_subcat_check(2,PredV),
+   !.
+
+shallow_subcat_check(N,ArgsV):-
+   nonvar(ArgsV),
+   (
+    ArgsV=.. [pred_v, Lem,_,CatV|_],
+    coml(Lem, Subs),
+    on(fcomp/Role, Subs), R=prop
+    ;
+    select_subcat(f/fcomp/prop/_, ArgsV, _)
+    ), 
+     (Cond =  
+      (  Rest=[] -> true
+      ;
+       Rest \= [sn/ogg/_/_,f/fcomp/_/_],
+       Rest \= [sp/ogg2/_/_/_,f/fcomp/_/_],
+       Rest \= [sp/ogg2/_/_/_,sn/ogg/_/_]
+      ),
+      select_subcatt([sn/sogg/_/_| Rest], Cond, ArgsV, PredV1)),
+      match_list_subs(N,PredV1,ArgsV),
+        complessverbs(Lem,CatV),
+    !.
+shallow_subcat_check(N,ArgsV):-
+   nonvar(ArgsV),
+   (
+    ArgsV=.. [pred_v, Lem,_,CatV|_],
+    coml(Lem, Subs),
+    on(fcomp/Role, Subs), R=prop
+    ;
+    select_subcat(f/fcomp/prop/_, ArgsV, _)
+    ), 
+     (Cond =  
+      (  Rest=[] -> true
+      ;
+       Rest \= [sn/obj/_/_,f/fcomp/_/_],
+       Rest \= [sp/obj2/_/_/_,f/fcomp/_/_],
+       Rest \= [sp/iobj/_/_/_,sn/obj/_/_]
+      ),
+      select_subcatt([sn/subj/_/_| Rest], Cond, ArgsV, PredV1)),
+      match_list_subs(N,PredV1,ArgsV),
+        complessverbs(Lem,CatV),
+    !.
+
+search_list_subs(ArgsV,Prep):-
+       (Rest = sn/obl/Role/Preps/_;
+       Rest = sp/ogg2/Role/Preps/_
+      ), 
+      subcat_on(Rest,ArgsV),
+      (list(Preps),on(Prep,Preps)
+       ;
+      atomic(Preps),Prep=Preps),
+    !.
+
+shallow_subcat_checksp(Lemma,P):-
+   cat_gramm(Lemma, CatGr, CatV, LArgsV),
+   PredV=pred_v(Lemma,CatGr,CatV,LArgsV),
+   nonvar(LArgsV),
+   search_list_subs(LArgsV,Prep),
+    !.
+shallow_subcat_checksp(Lemma,P):-
+   vsp(Lemma, Ps),
+   on(P, Ps),!.
+
+complessverbs(Lem,CatV):-
+     nonvar(Lem),
+     list(CatV),
+     (on(emotivo,CatV);
+      on(riportivo,CatV);
+     on(soggettivo,CatV);
+     on(presuppositivo,CatV)),
+     !.
+complessverbs(Lem,CatV):-
+     nonvar(Lem),
+     nonvar(CatV),
+     (CatV=emotivo;
+     CatV=riportivo;
+     CatV=soggettivo;
+     CatV=presuppositivo),
+     !.
+complessverbs(Lem,CatV):-
+     nonvar(Lem),
+     sy(Lem);vem(Lem);vcg(Lem).
+
+compless_verbs(CatV):-
+     CatV\=emotivo,
+     CatV\=riportivo,
+     CatV\=soggettivo,
+     CatV\=presuppositivo,
+     !.
+compless_verbs(CatV):-
+     list(CatV),
+     \+ nogen_member(emotivo,CatV),
+     \+ nogen_member(riportivo,CatV),
+     \+ nogen_member(soggettivo,CatV),
+     \+ nogen_member(presuppositivo,CatV),
+     !.
+
+match_list_subs(2,PredV,ArgsV):-
+    PredV=.. [pred_v, Lem,Gr,Cat,SubCats1],
+    ArgsV=.. [pred_v, Lem,Gr,Cat,SubCats2],
+    length(SubCats1,L1),
+    length(SubCats2,L2),
+    L1\=L2,
+    !.
+match_list_subs(1,PredV,ArgsV):-
+    PredV=.. [pred_v, Lem,Gr,Cat,SubCats1],
+    ArgsV=.. [pred_v, Lem,Gr,Cat,SubCats2],
+    length(SubCats1,L1),
+    length(SubCats2,L1),
+    !.
+match_list_subs(1,PredV,ArgsV):-
+    PredV=.. [pred_v, Lem,Gr,Cat,SubCats1],
+    ArgsV=.. [pred_v, Lem,Gr,Cat,SubCats2],
+    length(SubCats1,L1),
+    length(SubCats2,L2),
+    (L is L2 - L1, L=1, member(Sub,SubCats2), Sub=[A];
+     L is L1 - L2, L=1, member(Sub,SubCats1), Sub=[A]
+     ),
+    !.
+
+
+assert_gold_lfg1(N,P,Govern,Func,Role,Depend):-
+     stringof(Lis,Govern),
+     Lis=[c,l|_],
+     term_to_atom(Func-Role,FunR),
+     DepGr=..[FunR,P,arb,Depend],
+     asserta(dgrs(N,DepGr)),
+     !.
+
+assert_gold_lfg1(N,P,Govern,Func,Role,Depend):-
+     term_to_atom(Func-Role,FunR),
+     DepGr=..[FunR,P,Govern,Depend],
+     asserta(dgrs(N,DepGr)),
+     !.
+assert_gold_lfg(N,P,Govern,Func,Role,Depend):-
+     assign_index(Id),
+     term_to_atom(Func-Role,FunR),
+     DepGr=..[FunR,P,Govern,Depend-Id],
+     asserta(dgrs(N,DepGr)),
+     !.
+
+anaphora_resolution(NoFr, Exts,Constituents, Out,NewRefs):-
+      Out=[Prons,NTops,Refs],
+      Refs\=[],
+      (NTops\=[],
+      evaluate_new_reftops(NTops,NRef),
+      eval_sort(Refs,NRef, [First|Rest]),
+      collect_allheads([First|Rest], Tops),
+      togli_doppi(Tops,SortTops),
+      resolve_pronominals(Refs,SortTops,Exts,Resolved,PrecTops,Constituents),
+      prune_doubles(PrecTops,PrecTopss),
+      assert_topicss(SortTops,PrecTopss,Resolved,Constituents),
+      newdiscorso(NoFr,Args)
+      ;
+      NTop=[],
+      Refs\=[],
+      resolve_pronominals(Refs,SortTops,Exts,Resolved,PrecTops,Constituents),
+      prune_doubles(PrecTops,PrecTopss),
+      assert_topicss([],PrecTopss,Resolved,Constituents),
+      newdiscorso(NoFr,Args)
+      ;
+      NTop=[],
+      asserttopics(Refs),
+      newdiscorso(NoFr,Args)),
+      !.
+anaphora_resolution(NoFr, Exts,Constituents, Out,NewRefs):-
+      !.
+
+
+dep_grs_rols(First,Ind,Lemma,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg):-
+     list(Ind), Ind=[Ind1,Ind2],
+     nonvar(Lemma),
+     Lemma=..[Pref,[Lemma1,Lemma2]],
+     assign_index(IndCoord),
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     dep_grs_rols(First,Ind1,Lemma1,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg1),
+     dep_grs_rols(First,Ind2,Lemma2,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg2),
+     dep_grs_rols(First,IndCoord,LCoord,Tab,Tratti,CatSem,Mod,Testa,coord/coord,Ruolo,Agg3),
+     append([Agg1],[Agg2],Aggg),
+     append(Aggg,[Agg3],Agg),
+     !.
+
+dep_grs_rols(First,Ind,Lemma,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg):-
+     atomic(Ind),
+     nonvar(Lemma),
+     Lemma=..[Pref,[Lemma1,Lemma2]],
+     assign_index(Ind2),
+     assign_index(IndCoord),
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     dep_grs_rols(First,Ind,Lemma1,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg1),
+     dep_grs_rols(First,Ind2,Lemma2,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg2),
+     dep_grs_rols(First,IndCoord,LCoord,Tab,Tratti,CatSem,Mod,Testa,coord/coord,Ruolo,Agg3),
+     append([Agg1],[Agg2],Aggg),
+     append(Aggg,[Agg3],Agg),
+     !.
+
+dep_grs_rols(First,Ind,Lemma,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg):-
+     First=[as-_-_|_],
+     atomic(Ind),
+     Agg=ref_ex(Ind,Lemma,Tab,Tratti,CatSem,Mod,xcomp/Ruolo),
+     asserta(ref_funcs(Fun, Ind, Lemma, First)),
+%     assert_dep_gram_rels(Fun,Ruolo,Lemma-Ind),
+     assert_dep_gram_rels_obl(as,xcomp,Ruolo,Lemma-Ind),
+     !.
+
+dep_grs_rols(First,Ind,Lemma,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg):-
+     atomic(Ind),
+     Agg=ref_ex(Ind,Lemma,Tab,Tratti,CatSem,Mod,Func/Ruolo),
+     asserta(ref_funcs(Fun, Ind, Lemma, First)),
+     assert_dep_gram_rels(Fun,Ruolo,Lemma-Ind),
+     !.
+
+dep_grs_rols_obl(Head,First,Ind,Lemma,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Arg):-
+     nonvar(Lemma),
+     Lemma=..[Pref,[Lemma1,Lemma2]],
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     find_role_obls(Head,CatSem,NCatSem,Rolo),
+     Arg=ref_ex(Ind,LCoord,Tab,Tratti,CatSem,Mod,Func/Rolo),
+     asserta(ref_funcs(Fun, Ind, LCoord, First)),
+     assert_dep_gram_rels_obl(Head,Fun,Rolo,LCoord-Ind),
+     !.
+
+dep_grs_rols_obl(by,First,Ind,Lemma,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Arg):-
+     passiv(on),
+     (CatSem\=nil, CatSem\=[],
+      find_role_obls(by,CatSem,NCatSem,Rolo), Funct=Func
+      ;
+      if_first_name(Lemma),NCatSem=[umano,animato,istituzione],Rolo=agent,Funct=arg_mod),
+     Arg=ref_ex(Ind,Lemma,Tab,Tratti,NCatSem,Mod,Funct/Rolo),
+     asserta(ref_funcs(Funct, Ind, Lemma, First)),
+     assert_dep_gram_rels_obl(by,Func,Rolo,Lemma-Ind),
+     !.
+
+dep_grs_rols_obl(Head,First,Ind,Lemma,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Arg):-
+     find_role_obls(Head,CatSem,NCatSem,Rolo),
+     Arg=ref_ex(Ind,Lemma,Tab,Tratti,CatSem,Mod,Func/Rolo),
+     asserta(ref_funcs(Fun, Ind, Lemma, First)),
+     assert_dep_gram_rels_obl(Head,Fun,Rolo,Lemma-Ind),
+     !.
+
+dep_grs_rols_vcomp(Head-Args,First,Sec,Ind,Lemma,Tab,Tratti,CatSem,Mod,Testa,Func/obl,Ruolo,Arg):-
+     nonvar(Lemma),
+     Lemma=..[Pref,[Lemma1,Lemma2]],
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     Arg=ref_ex(Ind,LCoord,Tab,Tratti,CatSem,Mod,Func/Ruolo),
+     asserta(ref_funcs(obl, Ind, LCoord, Sec)),
+     First=[Sem-_-_|_],
+     Sec=[Sem1-_-_|_],
+     assert_dep_gram_rels_vcomp_obl(Sem,Sem1,Head,Args,obl,Ruolo,LCoord-Ind),
+     !.
+
+dep_grs_rols_vcomp(Head-Args,First,Sec,Ind,Lemma,Tab,Tratti,CatSem,Mod,Testa,Func/obl,Ruolo,Arg):-
+     Arg=ref_ex(Ind,Lemma,Tab,Tratti,CatSem,Mod,Func/Ruolo),
+     asserta(ref_funcs(obl, Ind, Lemma, Sec)),
+     First=[Sem-_-_|_],
+     Sec=[Sem1-_-_|_],
+     assert_dep_gram_rels_vcomp_obl(Sem,Sem1,Head,Args,obl,Ruolo,Lemma-Ind),
+     !.
+dep_grs_rols_vcomp(Head-Args,First,Sec,Ind,Lemma,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Arg):-
+     nonvar(Lemma),
+     Lemma=..[Pref,[Lemma1,Lemma2]],
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     Arg=ref_ex(Ind,LCoord,Tab,Tratti,CatSem,Mod,Func/Ruolo),
+     asserta(ref_funcs(Fun, Ind, LCoord, Sec)),
+      First=[Prep-_-_|Rest],
+     (prepos(Prep),Sem=Prep;Sem=nil),
+     assert_dep_gram_rels_vcomp(Sem, Head,Args,Fun,Ruolo,LCoord-Ind),
+     !.
+
+dep_grs_rols_vcomp(Head-Args,First,Sec,Ind,Lemma,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Arg):-
+     Arg=ref_ex(Ind,Lemma,Tab,Tratti,CatSem,Mod,Func/Ruolo),
+     asserta(ref_funcs(Fun, Ind, Lemma, Sec)),
+      First=[Prep-_-_|Rest],
+     (prepos(Prep),Sem=Prep;Sem=nil),
+     assert_dep_gram_rels_vcomp(Sem, Head,Args,Fun,Ruolo,Lemma-Ind),
+     governor(N,Head1),
+     assert_dgrsibars(N,Head1,Rest),
+     !.
+
+check_ruolo_result(Govern,Ruolo,Role):-
+      Ruolo=result, 
+     (Govern=Head-Id;Govern=Head, Head\=A-B),
+      coml(Head,Subs),
+       Role=prop,!.
+check_ruolo_result(Govern,Ruolo,Role):-
+     (Govern=Head-Id;Govern=Head, Head\=A-B),
+     (cause_verb(Head), Role=result; Role=purpose),
+      !.
+check_ruolo_result(Govern,Ruolo,Role):-
+      Ruolo\=result, Role=Ruolo,!.
+
+assert_dep_gram_rels_vcomp_obl(Sem,Sem1,Head,Args,obl,Ruolo,Lemma):-
+     governor(N,Govern),
+     (var(N), N1=1; integer(N), N1 is N+1; N1=1),
+     current_governor(N1,Head),
+     governor(N1,Head1),
+     (pp_word_cat(Sem, pass, part, Lem),
+      Role=prop, Fun=xmod
+      ;
+      check_ruolo_result(Govern,Ruolo,Role),
+     (Role=result, Fun=xadj; Fun=xcomp)),
+     assert_gold_lfg1(N,Sem,Govern,Fun,Role,Head1),
+     assert_dep_gram_rels_obl(Sem1,obl,Ruolo,Lemma),
+     !.
+assert_dep_gram_rels_vcomp(Sem,Head,Args,obj,Ruolo,Lemma):-
+     governor(N,Govern),
+     (var(N), N1=1; integer(N), N1 is N+1; N1=1),
+     current_governor(N1,Head),
+     governor(N1,Head1),
+     (pp_word_cat(Sem, pass, part, Lem),
+      Rol=prop, Fun=xmod
+      ;
+      check_ruolo_result(Govern,Ruolo,Rol),
+     (Rol=result, Fun=xadj; Fun=xcomp)),
+     assert_gold_lfg1(N,Sem,Govern,Fun,Rol,Head1),
+     filter_roles(Ruolo,Role),
+     assert_dep_gram_rels(obj,Role,Lemma),
+     !.
+assert_dep_gram_rels_vcomp(Sem,Head,Args,Fun1,Ruolo,Lemma):-
+     governor(N,Govern),
+     (var(N), N1=1; integer(N), N1 is N+1; N1=1),
+     current_governor(N1,Head),
+     governor(N1,Head1),
+     (pp_word_cat(Sem, pass, part, Lem),
+      Rol=prop, Fun=xmod
+      ;
+      check_ruolo_result(Govern,Ruolo,Rol),
+     (Rol=result, Fun=xadj; Fun=xcomp)),
+     assert_gold_lfg1(N,Sem,Govern,Fun,Rol,Head1),
+     filter_roles(Ruolo,Role),
+     assert_dep_gram_rels(Fun1,Role,Lemma),
+     !.
+
+assert_dep_gram_rels(subj,Ruolo,Lemma-Ind):-     
+     nonvar(Lemma),
+     Lemma=..[Pref,[Lemma1,Lemma2]],
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     governor(N,Govern),
+     passiv(on),
+     dgrs(_, voice(passive, _, Govern)),
+     filter_roles(Ruolo,Role),
+     assign_index(Id),
+     term_to_atom(subj-Role,FunR),
+     DepGr=..[FunR,Govern,LCoord-Id,obj],
+     asserta(dgrs(N,DepGr)),
+     (atomic(Ind), 
+      assign_index(Ind2),
+       Ind1=Ind
+       ;
+     elimina(Ind1,Ind,Inds),
+     on(Ind2,Inds)),
+     assert_dep_gram_rels(subj,Role,Lemma1-Ind1),
+     assert_dep_gram_rels(subj,Role,Lemma2-Ind2),
+     !.
+
+assert_dep_gram_rels(obj,Ruolo,Lemma-Ind):-
+     nonvar(Lemma),
+     Lemma=..[Pref,[Lemma1,Lemma2]],
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     governor(N,Govern),
+     (atomic(Govern),Gov=Govern;Govern=Gov-I),
+     copl(Gov),
+    (nonvar(Ruolo),Role=Ruolo;var(Ruolo),Role=prop),
+     assign_index(Id),
+     term_to_atom(xcomp-Role,FunR),
+     DepGr=..[FunR,Govern,LCoord-Id],
+     asserta(dgrs(N,DepGr)),
+     (atomic(Ind), 
+      assign_index(Ind2),
+       Ind1=Ind
+       ;
+     elimina(Ind1,Ind,Inds),
+     on(Ind2,Inds)),
+     assert_dep_gram_rels(xcomp,Role,Lemma1-Ind1),
+     assert_dep_gram_rels(xcomp,Role,Lemma2-Ind2),
+     !.
+
+assert_dep_gram_rels(Fun,Ruolo,Lemma-Ind):-
+     nonvar(Lemma),
+     Lemma=..[Pref,[Lemma1,Lemma2]],
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     governor(N,Govern),
+     filter_roles(Ruolo,Role),
+     assign_index(Id),
+     term_to_atom(Fun-Role,FunR),
+     DepGr=..[FunR,Govern,LCoord-Id],
+     asserta(dgrs(N,DepGr)),
+     (atomic(Ind), 
+      assign_index(Ind2),
+       Ind1=Ind
+       ;
+     elimina(Ind1,Ind,Inds),
+     on(Ind2,Inds)),
+     assert_dep_gram_rels(Fun,Ruolo,Lemma1-Ind1),
+     assert_dep_gram_rels(Fun,Ruolo,Lemma2-Ind2),
+     !.
+
+assert_dep_gram_rels(subj,Ruolo,Lemma):-
+     governor(N,Govern),
+     passiv(on),
+     dgrs(_, voice(passive, _, Govern)),
+     filter_roles(Ruolo,Role),
+     term_to_atom(subj-Role,FunR),
+     DepGr=..[FunR,Govern,Lemma,obj],
+     asserta(dgrs(N,DepGr)),
+     !.
+
+assert_dep_gram_rels(obj,Ruolo,Lemma):-
+     governor(N,Govern),
+     (atomic(Govern),Gov=Govern;Govern=Gov-I),
+     copl(Gov),
+    (nonvar(Ruolo),Role=Ruolo;var(Ruolo),Role=prop),
+     term_to_atom(xcomp-Ruolo,FunR),
+     DepGr=..[FunR,Govern,Lemma],
+     asserta(dgrs(N,DepGr)),
+     !.
+
+assert_dep_gram_rels(Fun,Ruolo,Lemma):-
+     governor(N,Govern),
+     filter_roles(Ruolo,Role),
+     term_to_atom(Fun-Role,FunR),
+     DepGr=..[FunR,Govern,Lemma],
+     asserta(dgrs(N,DepGr)),
+     !.
+assert_dep_gram_rels_obl(P,Fun,Ruolo,Lemma-Ind):-
+     nonvar(Lemma),
+     Lemma=..[Pref,[Lemma1,Lemma2]],
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     nonvar(P), P=by,
+     governor(N,Govern),
+     assert_gold_lfg(N, P,Govern,arg_mod,agent,LCoord),
+     (atomic(Ind), 
+      assign_index(Ind2),
+       Ind1=Ind
+       ;
+     elimina(Ind1,Ind,Inds),
+     on(Ind2,Inds)),
+     assert_dep_gram_rels_obl(P,arg_mod,agent,Lemma1-Ind1),
+     assert_dep_gram_rels_obl(P,arg_mod,agent,Lemma2-Ind2),
+     !.
+
+assert_dep_gram_rels_obl(Head,Fun,Ruolo,Lemma-Ind):-
+     nonvar(Lemma),
+     Lemma=..[Pref,[Lemma1,Lemma2]],
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     governor(N,Govern),
+     iobj_ncmod(Govern,Head,Func,Ruol),
+     filter_roles(Ruol,Role),
+     assert_gold_lfg(N, Head,Govern,arg_mod,agent,LCoord),
+     (atomic(Ind), 
+      assign_index(Ind2),
+       Ind1=Ind
+       ;
+     elimina(Ind1,Ind,Inds),
+     on(Ind2,Inds)),
+     assert_dep_gram_rels_obl(Head,Fun,Ruolo,Lemma1-Ind1),
+     assert_dep_gram_rels_obl(Head,Fun,Ruolo,Lemma2-Ind2),
+     !.
+assert_dep_gram_rels_obl(P,Fun,Ruolo,Lemma):-
+     nonvar(P), P=by,
+     governor(N,Govern),
+     (nonvar(Ruolo), Ruolo\=agent, Ruolo\=agente, 
+      Role=Ruolo,
+      assert_gold_lfg1(N,P,Govern,iobj,Role,Lemma)
+      ;
+      nonvar(Ruolo), (Ruolo=agent; Ruolo=agente),
+      assert_gold_lfg1(N,P,Govern,arg_mod,agent,Lemma)
+      ;
+      var(Ruolo),
+      assert_gold_lfg1(N,P,Govern,arg_mod,agent,Lemma)
+      ),
+     !.
+assert_dep_gram_rels_obl(P,Fun,Ruolo,Lemma):-
+     nonvar(P), P=as,
+     governor(N,Govern),
+     assert_gold_lfg1(N,P,Govern,Fun,Ruolo,Lemma),
+     !.
+assert_dep_gram_rels_obl(Head,Fun,Ruolo,Lemma):-
+     governor(N,Govern),
+     iobj_ncmod(Govern,Head,Func,Ruol),
+     filter_roles(Ruol,Role),
+     (Func=iobj,
+      assert_gold_lfg1(N,Head,Govern,iobj,Role,Lemma)
+     ;
+      Func=obj2,
+      assert_gold_lfg1(N,Head,Govern,obj2,Role,Lemma)
+     ;
+      Func=ncmod,
+      assert_gold_lfg1(N,Head,Govern,ncmod,Ruolo,Lemma)
+      ),
+      (Lemma=Lemm-Ind,
+       asserta(ref_funcs(Func, Ind, Lemm, Head))
+       ;
+       true),
+     !.
+
+buildlemcoord(Lemma1,Lem1):-
+      atomic(Lemma1),Lem1=Lemma1
+      ;     
+      Lemma1=..[Pref1,[Lemm1,Lemm2]],
+      mcon(Lemm1,'_',Le1),
+      mcon(Le1,Lemm2,Lem1),
+     !.
+
+lookindeces(Ind,Id,Ind,Ind1,Ind2):-
+     atomic(Ind),
+     list(Id), 
+     elimina(Ind1,Id,Inds),
+     on(Ind2,Inds),
+     !.
+lookindeces(Id,Ind,Ind,Ind1,Ind2):-
+     atomic(Ind),
+     list(Id), 
+     elimina(Ind1,Id,Inds),
+     on(Ind2,Inds),
+     !.
+
+depgrsrols_obl(N1,P,Head,Id,[]-Ind,Tab,Tratti,CatSem,M,[],Func/Fun,Ruolo,[]):-
+     !.
+depgrsrols_obl(N1,P,Head,Id,[],Tab,Tratti,CatSem,M,[],Func/Fun,Ruolo,[]):-
+     !.
+depgrsrols_obl(N1,P,Head,Id,Lemma-Ind,Tab,Tratti,CatSem,M,Testa,Func/Fun,Ruolo,[Agg1,Agg2]):-
+     nonvar(Lemma),
+     Lemma=..[Pref,[Lemma1,Lemma2]],
+     (lookindeces(Ind,Id,HInd,Ind1,Ind2)
+      ;
+       lookindeces(Id,Ind,HInd,Ind1,Ind2)
+       ),
+     assign_index(IndCoord),
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     buildlemcoord(Lemma1,Lem1),
+     buildlemcoord(Lemma2,Lem2),
+     depgrsrols_obl(N1,P,Head,HInd,Lem1-Ind1,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg1),
+     depgrsrols_obl(N1,P,Head,HInd,Lem2-Ind2,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg2),
+     depgrsrols_obl(N1,P,Head,HInd,LCoord-IndCoord,Tab,Tratti,CatSem,Mod,Testa,coord/coord,Ruolo,Agg3),
+     !.
+depgrsrols_obl(N1,P,Head,Id,Lemma-Ind,Tab,Tratti,CatSem,M,Testa,Func/Fun,Ruolo,[Agg1,Agg2]):-
+     nonvar(Head),
+     Head=..[Pref,[Lemma1,Lemma2]],
+     (atomic(Id), 
+      assign_index(Ind2),
+      Ind1=Id
+      ;
+       atomic(Ind), 
+       assign_index(Ind2),
+       Ind1=Ind
+      ),
+     assign_index(IndCoord),
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     buildlemcoord(Lemma1,Lem1),
+     buildlemcoord(Lemma2,Lem2),
+     depgrsrols_obl(N1,P,Lem1-Ind1,Id,Lemma-Ind,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg1),
+     depgrsrols_obl(N1,P,Lem2-Ind2,Id,Lemma-Ind,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg2),
+     depgrsrols_obl(N1,P,LCoord-IndCoord,Id,Lemma-Ind,Tab,Tratti,CatSem,Mod,Testa,coord/coord,Ruolo,Agg3),
+     !.
+depgrsrols_obl(N1,P,Head,Id,Lemma-Ind,Tab,Tratti,CatSem,M,Testa,Func/Fun,Ruolo,[Agg1,Agg2]):-
+     nonvar(Head),
+     Head=..[Pref,[Lemma1,Lemma2]],
+     (lookindeces(Ind,Id,HInd,Ind1,Ind2)
+      ;
+       lookindeces(Id,Ind,HInd,Ind1,Ind2)
+       ),
+     assign_index(IndCoord),
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     buildlemcoord(Lemma1,Lem1),
+     buildlemcoord(Lemma2,Lem2),
+     depgrsrols_obl(N1,P,Lem1-Ind1,HInd,Lemma-Ind,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg1),
+     depgrsrols_obl(N1,P,Lem2-Ind2,HInd,Lemma-Ind,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg2),
+     depgrsrols_obl(N1,P,LCoord-IndCoord,HInd,Lemma-Ind,Tab,Tratti,CatSem,Mod,Testa,coord/coord,Ruolo,Agg3),
+     !.
+
+
+depgrsrols_obl(N1,P,Head,Id,Lemma-Ind,Tab,Tratti,CatSem,M,Testa,Func/Fun,Ruolo,[Agg1,Agg2]):-
+     nonvar(Head),
+     Head=..[Pref,[Lemma1,Lemma2]],
+     (atomic(Id), 
+      assign_index(Ind2),
+       Ind1=Id
+       ;
+      elimina(Ind1,Id,Inds),
+      on(Ind2,Inds)),
+     atomic(Ind),
+     assign_index(IndCoord),
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     buildlemcoord(Lemma1,Lem1),
+     buildlemcoord(Lemma2,Lem2),
+     depgrsrols_obl(N1,P,Lem1-Ind1,Ind,Lemma-Ind,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg1),
+     depgrsrols_obl(N1,P,Lem2-Ind2,Ind,Lemma-Ind,Tab,Tratti,CatSem,Mod,Testa,Func/Fun,Ruolo,Agg2),
+     depgrsrols_obl(N1,P,LCoord-IndCoord,Ind,Lemma-Ind,Tab,Tratti,CatSem,Mod,Testa,coord/coord,Ruolo,Agg3),
+     !.
+
+depgrsrols_obl(N1,P,Head-Id,Ind,Lemma,Tab,Tratti,CatSem,M,Testa,coord/coord,Ruolo,Agg):-
+     (atomic(Lemma),In=Ind, A=Lemma;Lemma=A-B, In=B),
+     Agg=ref_ex(In,A,Tab,Tratti,CatSem,M,coord/Ruolo),
+     asserta(ref_funcs(coord, Ind, Lemma, Testa)),
+     assert_gold_lfg1(N1,P,Head-Id,coord,Ruolo,A-In),
+     !.
+depgrsrols_obl(N1,P,Head-Id,Ind,Lemma,Tab,Tratti,CatSem,M,Testa,Func/Fun,Ruolo,Agg):-
+     (atomic(Lemma),In=Ind, A=Lemma;Lemma=A-B, In=B),
+     Agg=ref_ex(In,A,Tab,Tratti,CatSem,M,Func/Ruolo),
+     asserta(ref_funcs(Fun, Ind, Lemma, Testa)),
+%     check_subcn_role(Ruolo,Head,P,Role),
+    trova_CatSem(n, Head, NCatSem),
+    find_role_obls(P,CatSem,NCatSem,Role),
+    assert_gold_lfg1(N1,P,Head-Id,Fun,Role,A-In),
+     !.
+depgrsrols_obl(N1,P,Head,Id,Lemma-Ind,Tab,Tratti,CatSem,M,Testa,Func/Fun,Ruolo,Agg):-
+     nonvar(Id),
+     Agg=ref_ex(Ind,Lemma,Tab,Tratti,CatSem,M,Func/Ruolo),
+     asserta(ref_funcs(Fun, Ind, Lemma, Testa)),
+%     check_subcn_role(Ruolo,Head,P,Role),
+    trova_CatSem(n, Head, NCatSem),
+     find_role_obls(P,CatSem,NCatSem,Role),
+     assert_gold_lfg1(N1,P,Head-Id,Fun,Role,Lemma-Ind),
+     !.
+depgrsrols_obl(N1,P,Head,Id,Lemma,Tab,Tratti,CatSem,M,Testa,Func/Fun,Ruolo,Agg):-
+     var(Id),
+    (Lemma=Hea-_;atomic(Lemma),Hea=Lemma),
+     Head\=Hea, 
+     (nonvar(Tab),
+     assign_index(Ind),
+      Agg=ref_ex(Ind,Hea,Tab,Tratti,CatSem,M,Func/Ruolo),
+      asserta(ref_funcs(Fun, Ind, Hea, Testa))
+      ; var(Tab), Agg=[]),
+     check_subcn_role(Ruolo,Head,P,Role),
+     assert_gold_lfg1(N1,P,Head,Fun,Role,Hea),
+     !.
+
+prenoms(Mod):-
+     Mod=_-Cat-_,
+     nonvar(Cat),
+    (
+     Mod=_-art-_;
+     Mod=_-in-_;
+     Mod=_-poss-_;
+     Mod=_-grad-_),
+     !.
+find_deit(Head,Pred):-
+     filter_dim_ag(Head, Feats, Pred).
+find_deit(Pred,Pred).
+
+assert_dep_gram_rels_mods(SentNo,ncmod,Ind,Head,[],[]):-!.
+assert_dep_gram_rels_mods(SentNo,ncmod,Ind,Head,[Mod|Mods],Refs):-
+     atomic(Mod),
+     nonvar(Head),
+     Head=..[Pref,[Lemma1,Lemma2]],
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     (atomic(Ind), 
+      assign_index(Ind2),
+       Ind1=Ind
+       ;
+     elimina(Ind1,Ind,Inds),
+     on(Ind2,Inds)),
+     assign_index(IndCoord),
+     assert_gold_lfg2(SentNo,Lemma1-Ind1,mod,Mod),
+     assert_gold_lfg2(SentNo,Lemma2-Ind2,mod,Mod),
+    assert_dep_gram_rels_mods(SentNo, ncmod,IndCoord,LCoord,Mods,Refs),
+    !. 
+  
+assert_dep_gram_rels_mods(SentNo,ncmod,Ind,Head,[Mod|Mods],[Arg|Refs]):-
+     atomic(Mod),
+     ap_engl(Mod,_,_),
+     genera_tratti(Feats, Mod, Tratti, Lemma, ag),
+     pred_ap(Mod,CatSem,Sub),
+     assegna_tab(possessivo, Mod, Resto, Tab),
+     assign_index(Ind1),
+     Arg=ref_ex(Ind1,Mod,Tab,Tratti,CatSem,[],ncmod/poss),
+     asserta(ref_funcs(ncmod, Ind1, Mod, Mod)),
+     assert_gold_lfg2(SentNo,Head-Ind,ncmod-poss,Mod),
+     assert_dep_gram_rels_mods(SentNo, ncmod,Ind,Head,Mods,Refs),
+    !.    
+
+assert_dep_gram_rels_mods(SentNo,ncmod,Ind,Head,[Mod|Mods],Refs):-
+     atomic(Mod),
+     find_deit(Mod,Pred),
+     asserta(ref_funcs(ncmod, Ind, Pred, Mod)),
+     assert_gold_lfg2(SentNo,Head-Ind,mod,Pred),
+    assert_dep_gram_rels_mods(SentNo, ncmod,Ind,Head,Mods,Refs),
+    !.    
+assert_dep_gram_rels_mods(SentNo,ncmod,Ind,Head,[Mod|Mods],Refs):-
+     Mod=Testa-Cat-_,
+     arts(Testa),
+     DepGr1=..[det,Head-Ind,Testa],
+     asserta(ref_funcs(det, Ind, Testa, Testa)),
+     asserta(dgrs(SentNo,DepGr1)),
+    assert_dep_gram_rels_mods(SentNo, ncmod,Ind,Head,Mods,Refs),
+    !.    
+assert_dep_gram_rels_mods(SentNo,ncmod,Ind,Head,[Mod|Mods],Refs):-
+     Mod=Testa-Cat-_,
+     Cat=in,
+     DepGr1=..[det,Head-Ind,Testa],
+     asserta(ref_funcs(det, Ind, Testa, Testa)),
+     asserta(dgrs(SentNo,DepGr1)),
+    assert_dep_gram_rels_mods(SentNo, ncmod,Ind,Head,Mods,Refs),
+    !.    
+assert_dep_gram_rels_mods(SentNo,ncmod,Ind,Head,[Mod|Mods],[Arg|Refs]):-
+     Mod=Testa-Cat-_,
+     \+ prenoms(Mod),
+     \+ prepos(Testa),
+     nonvar(Head),
+     Head=..[Pref,[Lemma1,Lemma2]],
+     atomic(Ind),
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     assign_index(Ind2),
+     assign_index(IndCoord),
+     assert_gold_lfg2(SentNo,Testa,ncmod-specif,Lemma1-Ind),
+     assert_gold_lfg2(SentNo,Testa,ncmod-specif,Lemma2-Ind2),
+     assert_gold_lfg2(SentNo,Testa,ncmod-specif,LCoord-IndCoord),
+     (atomic(Cat), (list(Testa);atomic(Testa)),
+      genera_tratti(Feats, Testa, Tratti, Lemma, Cat),
+      trova_CatSem(Cat, Lemma, CatSem),
+      assegna_tab(Cat, Testa, Resto, Tab),
+      (fct(Testa),Lemm=Testa;Lemm=Lemma),
+      assignCat_roles(Cat,Fun/Rol)
+      ;
+      list(Testa), Cat=..[and,Tests],
+      genera_tratti(Feats, Tests, Tratti, Lemma, n),
+      trova_CatSem(n, Lemma, CatSem),
+      assegna_tab(n, Tests, Resto, Tab),
+      Lemm=Lemma,
+      assignCat_roles(n,Fun/Rol)
+      ),
+     Arg=ref_ex(Ind1,Lemm,Tab,Tratti,CatSem,[],Fun/Rol),
+     asserta(ref_funcs(Fun, Ind1, Lemm, Head)),
+     assert_dep_gram_rels_mods(SentNo, ncmod,Ind,Head,Mods,Refs),
+    !.    
+assert_dep_gram_rels_mods(SentNo,ncmod,Ind,Head,[Mod|Mods],[Arg|Refs]):-
+     Mod=Testa-Cat-_,
+     \+ prenoms(Mod),
+     \+ prepos(Testa),
+     nonvar(Head),
+     Head=..[Pref,[Lemma1,Lemma2]],
+     costruisci_coord_lems(Lemma1,Pref,Lemma2,LCoord),
+     elimina(Ind1,Ind,Inds),on(Ind2,Inds),
+     assign_index(IndCoord),
+     assert_gold_lfg2(SentNo,Testa,ncmod-specif,Lemma1-Ind1),
+     assert_gold_lfg2(SentNo,Testa,ncmod-specif,Lemma2-Ind2),
+     assert_gold_lfg2(SentNo,Testa,ncmod-specif,LCoord-IndCoord),
+     (atomic(Cat), (list(Testa);atomic(Testa)),
+      genera_tratti(Feats, Testa, Tratti, Lemma, Cat),
+      trova_CatSem(Cat, Lemma, CatSem),
+      assegna_tab(Cat, Testa, Resto, Tab),
+      (fct(Testa),Lemm=Testa;Lemm=Lemma),
+      assignCat_roles(Cat,Fun/Rol)
+      ;
+      list(Testa), Cat=..[and,Tests],
+      genera_tratti(Feats, Tests, Tratti, Lemma, n),
+      trova_CatSem(n, Lemma, CatSem),
+      assegna_tab(n, Tests, Resto, Tab),
+      Lemm=Lemma,
+      assignCat_roles(n,Fun/Rol)
+      ),
+     Arg=ref_ex(Ind1,Lemm,Tab,Tratti,CatSem,[],Fun/Rol),
+     asserta(ref_funcs(Fun, Ind1, Lemm, Head)),
+     assert_dep_gram_rels_mods(SentNo, ncmod,Ind,Head,Mods,Refs),
+    !.    
+assert_dep_gram_rels_mods(SentNo,ncmod,Ind,Head,[Mod|Mods],Refs):-
+     Mod=Mo-_-_,
+     j(Mo),
+     asserta(ref_funcs(ncmod, Ind, Mo, Mo)),
+     assert_gold_lfg2(SentNo,Head-Ind,ncmod-specif,Mo),
+     assert_dep_gram_rels_mods(SentNo, ncmod,Ind,Head,Mods,Refs),
+    !.    
+
+assert_dep_gram_rels_mods(SentNo,ncmod,Ind,Head,[Mod|Mods],[Arg|Refs]):-
+     Mod=Mo-_-_,
+     ap_engl(Mo,_,_),
+     genera_tratti(Feats, Mo, Tratti, Lemma, ag),
+     pred_ap(Mo,CatSem,Sub),
+     assegna_tab(possessivo, Mo, Resto, Tab),
+     assign_index(Ind1),
+     Arg=ref_ex(Ind1,Mo,Tab,Tratti,CatSem,[],ncmod/poss),
+     asserta(ref_funcs(ncmod, Ind1, Lemma, Mo)),
+     assert_gold_lfg2(SentNo,Head-Ind,ncmod-poss,Mo),
+     assert_dep_gram_rels_mods(SentNo, ncmod,Ind,Head,Mods,Refs),
+    !.    
+
+assert_dep_gram_rels_mods(SentNo,ncmod,Ind,Head,Mods,[Arg|Refs]):-
+     Mods=[Mod|Rest],
+     Mod=Testa-Cat-_,
+     atomic(Testa),
+     \+ prenoms(Mod),
+     \+ prepos(Testa),
+     (Cat=nt, Role=temp; Cat=num, integer(Testa), 1900<Testa, Role=temp; Role=specif),
+     findall(Testa,jj(Testa),Mos),Mos=[],
+     reverse(Rest,Revs),
+     Revs=[Tes-Ct-_|Rev], \+ detss1(Ct),
+     findall(Testa,jj(Tes),Mos),Mos=[],
+     genera_tratti(Feats, Testa, Tratti, Lemma, Cat),
+     trova_CatSem(Cat, Lemma, CatSem),
+     assegna_tab(Cat, Testa, Resto, Tab),
+     assign_index(Ind1),
+     (fct(Testa),Lemm=Testa;Lemm=Lemma),
+     assert_gold_lfg2(SentNo,Tes-Ind,ncmod-Role,Lemma),
+     assignCat_roles(Cat,Fun/Rol),
+     Arg=ref_ex(Ind1,Lemm,Tab,Tratti,CatSem,[],Fun/Rol),
+     asserta(ref_funcs(Fun, Ind1, Lemm, Testa)),
+     assert_dep_gram_rels_mods(SentNo, ncmod,Ind,Head,Rest,Refs),
+    !.    
+
+assert_dep_gram_rels_mods(SentNo,ncmod,Ind,Head,[Mod|Mods],[Arg|Refs]):-
+     Mod=Testa-Cat-_,
+     atomic(Testa),
+     \+ prenoms(Mod),
+     \+ prepos(Testa),
+     (Cat=nt, Role=temp; Cat=num, integer(Testa), 1900<Testa, Role=temp; Role=specif),
+     findall(Testa,jj(Testa),Mos),Mos=[],
+     genera_tratti(Feats, Testa, Tratti, Lemma, Cat),
+     trova_CatSem(Cat, Lemma, CatSem),
+     assegna_tab(Cat, Testa, Resto, Tab),
+     assign_index(Ind1),
+     (fct(Testa),Lemm=Testa;Lemm=Lemma),
+     assert_gold_lfg2(SentNo,Head-Ind,ncmod-Role,Lemma),
+     assignCat_roles(Cat,Fun/Rol),
+     Arg=ref_ex(Ind1,Lemm,Tab,Tratti,CatSem,[],Fun/Rol),
+     asserta(ref_funcs(Fun, Ind1, Lemm, Testa)),
+     assert_dep_gram_rels_mods(SentNo, ncmod,Ind,Head,Mods,Refs),
+    !.    
+assert_dep_gram_rels_mods(SentNo,ncmod,Ind,Head,[Mod|Mods],[Arg|Refs]):-
+     Mod=Testa-Hea-[],
+     is_list(Testa),
+     nonvar(Hea),
+     (Hea=..[Pref,Lems],
+      Lems=..[Pref,[Lemma1,Lemma2]]
+      ;
+      Hea=..[Pref,[Lemma1,Lemma2]]),
+     findall(Lemma1,jj(Lemma1),Mos),Mos=[],
+     genera_tratti(Feats, Lemma1, Tratti, Lemma, Cat),
+     trova_CatSem(Cat, Lemma, CatSem),
+     assegna_tab(Cat, Lemma1, Resto, Tab),
+     assign_index(Ind1),
+     (fct(Lemma1),Lemm=Lemma1;Lemm=Lemma1),
+     assignCat_roles(Cat,Fun/Rol),
+     assert_gold_lfg2(SentNo,Head-Ind,ncmod-Rol,Lemma1),
+     Arg=ref_ex(Ind1,Lemm,Tab,Tratti,CatSem,[],Fun/Rol),
+     asserta(ref_funcs(Fun, Ind1, Lemm, Testa)),
+     assert_dep_gram_rels_mods(SentNo, ncmod,Ind,Head,Mods,Refs),
+    !.    
+assert_dep_gram_rels_mods(SentNo,ncmod,Ind,Head,[Mod|Mods],Refs):-
+    assert_dep_gram_rels_mods(SentNo, ncmod,Ind,Head,Mods,Refs),
+    !.    
+
+/*
+assert_gold_lfg(N,P,Govern,Func,Role,Depend):-
+     assign_index(Id),
+     assign_index(Id1),
+     term_to_atom(pobject-Role,FunR),
+     DepGr=..[FunR,P-Id1,Depend-Id],
+     DepGr1=..[Func-Role,Govern,P-Id1],
+     asserta(dgrs(N,DepGr)),
+     asserta(dgrs(N,DepGr1)),
+     !.
+
+assert_gold_lfg1(N,nil,Govern,Func,Role,Depend):-
+     term_to_atom(Func-Role,FunR),
+     DepGr1=..[FunR,Govern,Depend],
+     asserta(dgrs(N,DepGr1)),
+     !.
+
+assert_gold_lfg1(N,P,Govern,Func,Role,Depend):-
+     assign_index(Id1),
+     term_to_atom(pobject-Role,FunR1),
+     DepGr=..[FunR1,P-Id1,Depend],
+     term_to_atom(Func-Role,FunR2),
+     DepGr1=..[FunR2,Govern,P-Id1],
+     asserta(dgrs(N,DepGr)),
+     asserta(dgrs(N,DepGr1)),
+     !.
+anaphora_resolution(NoFr, Exts,Constituents, Out,NewRefs):-!.
+
+
+for RTE and semantic processing
+*/
+
+assert_gold_lfg2(N,Lemma-Ind,mod,Depend):-
+     DepGr1=..[ncmod,Lemma-Ind,Depend],
+     asserta(dgrs(N,DepGr1)),
+     !.
+
+assert_gold_lfg2(N,Lemma-Ind,A-B,Depend):-
+     term_to_atom(A-B,FunR),
+     DepGr1=..[FunR,Lemma-Ind,Depend],
+     asserta(dgrs(N,DepGr1)),
+     !.
+
+assert_gold_lfg2(N,Lemma-Ind,Func,Depend):-
+     (atomic(Func), Fun=Func;
+         term_to_atom(Func,Fun)),
+     DepGr1=..[Fun,'_',Lemma-Ind,Depend],
+     asserta(dgrs(N,DepGr1)),
+     !.
+
+getibarsall(Ibars,Ibas):-
+   appiattisci(Ibars,Ibrs),
+   sort(Ibrs,Ibas),
+     !.
+
+t_up_wn(W, Cats):-
+   ht(W, SCats),
+   SCats\=[],
+   c_translwncats(SCats, Feat, Cats),
+   !.
+
+
+up_wn_pol(1, W, Feat, Cats):-
+   ht(W, SCats),
+   SCats\=[],
+   c_translwncats(SCats, Feat, Cats),
+   !.
+
+up_wn_pol(0, W, Feat, Cats):-
+   ht(W, SCats),
+   c_translwncats(SCats, Feat, Cats),
+   !.
+
+hm(W):-
+   ht(W, Cats),
+   Cats\=[],
+   (on(col, Cats);on(rel,Cats);on(sac,Cats);on(tit,Cats);on(nhm,Cats);on(nmf,Cats)),
+   !.
+
+hm(W):-
+  turn_up_wn(W, Cats),
+   (on(col, Cats);on(rel,Cats);on(sac,Cats);on(tit,Cats);on(nhm,Cats);on(nmf,Cats)),
+   !.
+
+search_wn_cats(Head,CatSem):-
+       atomic(Head),
+       nwn(Head,Cats),
+       translate_nwn_cats(Cats, CatSem),
+       CatSem\=[],!.
+search_wn_cats(Head,CatSem):-
+       atomic(Head),
+       ht(Head,Cats),
+       (atomic(Cats),Catss=[Cats]
+       ;
+       is_list(Cats),Catss=Cats),
+       (translate_nwn_cats(Catss, CatSem), CatSem\=[]
+       ;
+        translate_wn_cats(Catss, CatSem)
+        ),
+       !.
+search_wn_cats(Head,Cats):-
+       atomic(Head),
+       checkwnnot(Head),
+       findall(Cats, up_wn(Head,Cats,T),Catts),
+       appiattisci(Catts,Catt),
+       sort(Catt,Cats),
+       Cats\=[],!.
+       
+wn_search(Testa, Cats) :-
+   checkwnnot(Testa),
+   spy_lower(Testa, LowW, Pol),
+   tryhash(Testa, LowW, Pol,Cats).
+
+t_search(Testa, Cats) :-
+   t_up_wn(Testa, Cats).
+
+tryhash(Testa, LowW, Pol, Cats):-
+     Pol=0,
+     turn_up_wn(Testa, Cat), 
+     Cat\=[],
+     cc_transl_wn_cats(Cat, Cats)
+%     Cats=[n]
+     ;
+     Pol=1,
+     (up_wn(1, Testa, Cat), 
+      Cat\=[],
+     cc_transl_wn_cats(Cat, Cats)
+%       Cats=[np]
+      ;
+     up_wn(0, LowW, Cat), 
+      Cat\=[],
+     cc_transl_wn_cats(Cat, Cats)
+%      Cats=[n]
+      ),!.
+
+tryhash(Testa, LowW, Pol, []):-!.
+
+cc_transl_wn_cats(Cat, Cats):-
+   c_transl_wn_cats(Cat, Catss),
+    appiattisci(Catss, Catcc),
+    sort(Catcc, Cats),
+    !.
+
+cwn(W):-
+   ht(W, Cats),
+   Cats\=[],
+   (is_list(Cats),
+    on(col, Cats)
+    ;
+    atomic(Cats),
+    Cats=col),
+   !.
+
+cwn(W):-
+  turn_up_wn(W, Cats),
+   on(col, Cats),
+   !.
+
+locwn(W):-
+  turn_up_wn(W, Cats),
+  (is_list(Cats),
+     (on(loc, Cats);
+      on(tme, Cats))
+       ;
+   atomic(Cats),
+      Cats=loc;
+      Cats=tme
+   ),
+   !.
+locwn(W):-
+    place(W);
+    citiespreds(W,P);
+    temp(W),
+   !.
+
+tap_new_wn(Lemma, Feat, [n]):-
+    atomic(Lemma),
+    spy_lower(Lemma, LowW, Pol),
+    (Pol=0,
+     new_wn(Lemma, Feat)
+     ;
+     Pol=1,
+     (new_wn_up(Lemma, Feat)
+      ;
+      \+ if_first_name(Lemma),
+      new_wn_up(LowW, Feat)
+     )).
+
+new_wn(W,Cats):-
+   n_wn(W, Cats),
+   Cats\=[],
+   !.
+new_wn_up(W,Cats):-
+   n_wn(W, Cats),
+   Cats\=[],
+   !.
+
+up_wn_old(Lemma, Feat, SCats):-
+   dc(Lemma, SCats),
+   !.
+
+checkwnnot(W):-
+  \+ j(W), \+ fct(W), \+ r(W), \+ grammw(W,_),
+   !.
+
+up_wn(W, [], []):-
+     W\=[],
+     (j(W);fct(W);r(W);grammw(W,_)),
+   !.
+up_wn(Lemma, Feat, [np]):-
+   checkwnnot(Lemma),
+   atomic(Lemma),
+   stringof(Lem,Lemma),
+   reverse(Lem,['_'|Res]),
+   reverse(Res,Ress),
+   stringof(Ress,Lemm),
+   (
+    title(Lemm),Feat=[umano];
+    place(Lemm),Feat=[luogo];
+    citiespreds(Lemm,P),Feat=[luogo];
+    temp(Lemm),Feat=[time]
+   ),
+   !.
+
+up_wn(Lemma, Feat, Cats):-
+     Lemma\=[], atomic(Lemma),
+   checkwnnot(Lemma),
+    spy_lower(Lemma, LowW, Pol),
+    (Pol=0,
+     up_wn_pol(Pol, Lemma, Feat, Cats)
+     ;
+     Pol=1,
+     (up_wn_pol(Pol1, Lemma, Feat, Cats)
+      ;
+      \+ if_first_name(Lemma),
+      up_wn_pol(0, LowW, Feat, Cats)
+     )).
+
+up_wn(Lemma, CatSem, Cats):-
+     Lemma\=[],
+   checkwnnot(Lemma),
+   tap_new_wn(Lemma, Feat, Cats),
+   translate_nwn_cats(Feat, CatSem),!.
+
+up_wn(Lemma, Feat, Cats):-
+     Lemma\=[],
+   checkwnnot(Lemma),
+   ht(Lemma, SCats),
+   translate_wn_cats(SCats, Cats).
+%   c_translwncats(SCats, Feat, Cats).
+
+
+turn_up_wn(Lemma, Feats):-
+    atomic(Lemma),
+   checkwnnot(Lemma),
+    spy_lower(Lemma, LowW, Pol),
+    (nturnup_wn(Po, Lemma, Feats),
+     Feats\=[]
+     ;
+     Pol=1,
+      \+ if_first_name(Lemma),
+     nturnup_wn(Po, LowW, Feats),
+     Feats\=[]
+     ;
+     Pol=0,
+     check_mult_low(Lemma, ULem),
+     nturnup_wn(P, ULem, Feats),
+     Feats\=[]
+     ).
+
+check_mult_low(Sec, Sec):-
+   integer(Sec),!.
+check_mult_low(Sec, ULem):-
+   atomic(Sec),
+   stringof(MWord,Sec),
+   findall('_', nogen_member('_',MWord), P), P=[],
+   toupper(Sec, ULem),
+   !.
+
+wn(W, Cats):-
+   ht(W, SCats),
+   SCats\=[],
+   translate_wn_cats(SCats, Cats),
+%   c_translwncats(SCats, Feat, Cats),
+   !.
+
+wn(W, Cats):-
+  turn_up_wn(W, Cats),
+   !.
+
+nturn_up_wn(Lemma, Feats):-
+    atomic(Lemma),
+    spy_lower(Lemma, LowW, Pol),
+    (nturnup_wn(Po, Lemma, Feats),
+     Feats\=[]
+     ;
+     Pol=1,
+      \+ if_first_name(Lemma),
+     nturnup_wn(Po, LowW, Feats),
+     Feats\=[]
+     ).
+
+
+nturnup_wn(P, W, SCats):-
+   ht(W, SCats).
+nturnup_wn(P, W, Feat):-
+   ht(W, SCats),
+   SCats\=[],
+%   translate_wn_cats(SCats, Feat),
+   c_translwncats(SCats, Feat, Cats).
+%   !.
+
+nturnup_wn(P, W, Feat):-
+   ht(W, SCats),
+   SCats\=[],
+   translate_wn_cats(SCats, Feat),
+%   c_translwncats(SCats, Feat, Cats),
+   !.
+
+qmq(W):-
+ quanthead(W),!.
+
+qmq(W):-
+   nm(W, _, _),!.
+qmq(W):-
+   quant(W, _, _, _,_),!.
+qmq(W):-
+   integer(W),!.
+qmq(W):-
+    atomic(W),
+    stringof([I|Ints],W),
+    integer(I), 
+    (\+ on('/',Ints)
+    ;
+    on('/',Ints),
+    reverse(Ints,[A|Rev]),
+    (integer(A)
+    ;
+    A=h
+    ;
+    A='%'
+    ;
+    recover_descs(W,L),
+    on(Meas,L),
+    (convertmeas(Meas,_);
+      convertmeas(_,Meas);
+      integer(Meas)))
+    ), 
+   !.
+   
+qm(W):-
+ quanthead(W),!.
+
+qm(W):-
+   nm(W, _, _),!.
+qm(W):-
+   quant(W, _, _, _,_),!.
+qm(W):-
+   integer(W),!.
+qm(W):-
+    atomic(W),
+    stringof([I|Ints],W),
+    integer(I), 
+    (\+ on('/',Ints)
+    ;
+    on('/',Ints),
+    reverse(Ints,[A|Rev]),
+    integer(A)), 
+   !.
+qm(W):-
+   ht(W, Cats),
+   Cats\=[],
+  (is_list(Cats),
+   on(qua,Cats),
+   \+ on(lat,Cats)
+   ;
+   atomic(Cats),
+   Cats=qua),
+   !.
+
+qm(W):-
+  turn_up_wn(W, Cats),
+   on(qua,Cats),
+   \+ on(lat,Cats),
+   !.
+qm(W):-
+    atomic(W),
+   spy_lower(W,Low,Pol),
+   Pol=1,
+   qm(Low),!.
+   
+new_wnm(W, CatSem):-
+   spy_lower(W,Low,Pol),
+   new_mults_wn(Pol,Low,W, Cats),
+   translate_nwn_cats(Cats, CatSem),
+   !.
+
+new_hm(W, Feat):-
+   ht(W, SCats),
+   SCats\=[],
+   translate_wn_cats(SCats, Feat),
+%   c_translwncats(SCats, Feat, Cats),
+   !.
+
+new_hm(W, Cats):-
+  nturn_up_wn(W, Cats),
+   !.
+
+gwn(W):-
+   ht(W, Cats),
+   Cats\=[],
+   (is_list(Cats),
+   (on(rel,Cats);on(sac,Cats))
+   ;
+   atomic(Cats),
+   (Cats=rel;Cats=sac)
+   ),
+   !.
+
+gwn(W):-
+  turn_up_wn(W, Cats),
+   (on(rel,Cats);on(sac,Cats)),
+   !.
+
+turnup_wn(1, W, Feat):-
+   ht(W, SCats),
+   SCats\=[],
+   translate_wn_cats(SCats, Feat),
+%   c_translwncats(SCats, Feat, Cats),
+   !.
+
+turnup_wn(0, W, Feat):-
+   ht(W, SCats),
+   SCats\=[],
+   translate_wn_cats(SCats, Feat),
+%   c_translwncats(SCats, Feat, Cats),
+   !.
+
+name_new_hm(W, Cats):-
+   arb(W, Cat, Comm),
+  (Cat='Male', Cats=[nmm,sur]
+   ;
+   Cat='Female', Cats=[nmf,sur]).
+
+name_new_hm(W, Cats):-
+   ht(W, Cats),
+   Cats\=[],
+   spy_lower(W,Low,Pol), Pol=1,
+   \+ fct(Low), \+ grammw(Low,_), \+ r(Low), \+ jj(Low),
+   match_sem_cat(Cats),
+   (is_list(Cats), Catss=Cats
+    ;
+   atomic(Cats),
+    Catss=[Cats]),   
+   !.
+
+name_new_hm(W, CatSem):-
+   spy_lower(W,Low,Pol), Pol=1,
+   new_wn_up(W, Feat),
+   translate_nwn_cats(Feat, CatSem),
+   on(umano,CatSem),
+   !.
+   
+match_sem_cat(Cats):-
+   is_list(Cats),
+   nogen_member(Cat,Cats),
+   pn_cat(Cat),!.
+match_sem_cat(Cats):-
+   atomic(Cats),
+   pn_cat(Cats),!.
+
+%pn_cat(col).
+pn_cat(rel).
+pn_cat(sac).
+pn_cat(tit).
+pn_cat(nhm).
+pn_cat(nmf).
+pn_cat(nmm).
+%pn_cat(lcg).
+%pn_cat(lng).
+%pn_cat(loc).
+pn_cat(sur).
+
+if_first_name(A):-
+   lc3(A, Codes)
+   ;
+   lc4(A, Codes)
+   ;
+   spn(A)
+   ;
+   nb(A)
+   ;
+   name_new_hm(A, Cats),
+  !.
+
+search_verb_inference(V1, V2):-
+   wv_hierarchy(V1, V2),
+    !.
+search_noun_inference(V1, V2):-
+   wn_hierarchy(V1, V2),
+    !.
+
+wv_hierarchy(V1,V2):-
+   extract_code1(V1,Codes1),
+   extract_code1(V2,Codes2),
+   extract_codes(Codes2, Hyps2),
+   appiattisci(Hyps2,Hyps),
+   (extract_entail(Hyps, Codes2);
+   extract_inference(Hyps, Codes2);
+   on(V1,Hyps)),
+   !.
+
+wv_hierarchy(V1,V2):-
+   extract_code1(V1,Codes1),
+   extract_code1(V2,Codes2),
+   extract_codes(Codes1, Hyps2),
+   appiattisci(Hyps2,Hyps),
+   (extract_inference(Hyps, Codes1);
+   extract_entail(Hyps, Codes1);
+   on(V2,Hyps)),
+   !.
+wn_hierarchy(V1,V2):-
+   findall(Codes1-Codes2,(
+              extract_code3(V1,Codes1),
+              extract_code3(V2,Codes2),
+              atomic(Codes1),atomic(Codes2)),Codess),
+   findall(Code,(on(Codes1-Code,Codess),
+                (
+                cls(Codes1,_,Code,_,_); cls(Code,_,Codes1,_,_);
+                hyp(Codes1,Code); hyp(Code,Codes1);
+                mp(Codes1,Code); mp(Code,Codes1);
+                mm(Codes1,Code); mm(Code,Codes1);
+                ms(Codes1,Code); ms(Code,Codes1);
+                ins(Codes1,Code); ins(Code,Codes1))
+                ),Codes),
+   Codes\=[],
+   !.
+/*
+wn_hierarchy(V1,V2):-
+   extract_code3(V1,Codes2),
+   extract_code3(V2,Codes1),
+   atomic(Codes1),atomic(Codes2),
+   findall(Code,(
+                cls(Codes1,_,Code,_,_); cls(Code,_,Codes1,_,_);
+                hyp(Codes1,Code); hyp(Code,Codes1);
+                mp(Codes1,Code); mp(Code,Codes1);
+                mm(Codes1,Code); mm(Code,Codes1);
+                ms(Codes1,Code); ms(Code,Codes1);
+                ins(Codes1,Code); ins(Code,Codes1)),Codes),
+   on(Codes2,Codes),
+   !.
+*/
+extract_inference(Infers, Codes):-
+   is_list(Codes),
+   on(Code,Codes),
+   on(Inf,Infers),
+   pname(Cod,Code),
+   pname(CodeBit,Inf),
+   hy-Cod=CodeBit,
+   !.
+extract_inference(Infers, Codes):-
+   is_list(Codes),
+   on(Code,Codes),
+   on(Inf,Infers),
+   pname(Cod,Code),
+   pname(CodeBit,Inf),
+   cs-Cod=CodeBit,
+   !.
+extract_inference(Infers, Codes):-
+   atomic(Codes),
+   on(Inf,Infers),
+   hy-Codes=Inf,
+   !.
+extract_inference(Infers, Codes):-
+   atomic(Codes),
+   on(Inf,Infers),
+   cs-Codes=Inf,
+   !.
+
+extract_entail(Infers, Codes):-
+   is_list(Codes),
+   on(Code,Codes),
+   on(Inf,Infers),
+   pname(Cod,Code),
+   pname(CodeBit,Inf),
+   en-Cod=CodeBit,
+   !.
+extract_entail(Infers, Codes):-
+   is_list(Codes),
+   on(Code,Codes),
+   on(Inf,Infers),
+   pname(Cod,Code),
+   pname(CodeBit,Inf),
+   vg-Cod=CodeBit,
+   !.
+extract_entail(Infers, Codes):-
+   atomic(Codes),
+   on(Inf,Infers),
+   en-Codes=Inf,
+   !.
+extract_entail(Infers, Codes):-
+   atomic(Codes),
+   on(Inf,Infers),
+   vg-Codes=Inf,
+   !.
+
+extract_codes([], []):-!.
+extract_codes([Code|InfCodes], [Cod|Codes]):-
+   extract_code2(Code,Cod),
+   extract_codes(InfCodes, Codes),
+   !.
+extract_codes([Code|InfCodes], Codes):-
+   extract_codes(InfCodes, Codes),
+   !.
+extract_codes(InfCode, Cod):-
+   atomic(InfCode),
+   extract_code2(InfCode,Cod),
+   !.
+   
+
+extractssynset([], [], []):-!.
+extractssynset([Code|Codes], [Infer|Infs], [Syn|Syns]):-
+   sinf(Code,Synsets),
+   (Synsets=[Syn], Infer=[]
+     ;
+    Synsets=[Syn, Infer]
+     ;
+    Synsets=[Syn|Infer]),
+   extractssynset(Codes, Infs, Syns),
+   !.
+extractssynset([_-Code|Codes], [Infer|Infs], [Syn|Syns]):-
+   sinf(Code,Synsets),
+   (Synsets=[Syn], Infer=[]
+     ;
+    Synsets=[Syn, Infer]
+     ;
+    Synsets=[Syn|Infer]),
+   extractssynset(Codes, Infs, Syns),
+   !.
+extractssynset(Codes, [], []):-!.
+
+
+traverse_hierarchy([],[]):-!.
+traverse_hierarchy([P|Pros],[P|NewProp]):-
+   sinf(P,Codes),
+   extract_nominal_code(Codes,Co),
+   sinf(Co, [Infers,Hyps]),
+   traverse_hierarchy(Pros,NewProp),
+   !.
+
+traverse_hierarchy([P|Pros],[P|NewProp]):-
+   recover_description(P, Preds),
+   Preds\=P,
+   list(Preds),
+   on(Pre,Preds),
+   sinf(P,Codes),
+   extract_nominal_code(Codes,Co),
+   sinf(Co, [Infers,Hyps]),
+   traverse_hierarchy(Pros,NewProp),
+   !.
+
+traverse_hierarchy([P|Pros],NewProp):-
+   traverse_hierarchy(Pros,NewProp),
+   !.
+
+extract_code1(Root,Codes):-
+   nonvar(Root),
+   inf_v(Root,Codes).
+extract_code2(Code, Hyps):-
+   nonvar(Code),
+   hypv(Code, Hyps).
+extract_code3(Root, Codes):-
+   nonvar(Root),
+   sk(Root, Codes).
+
+cts(p1,port).
+cts(p2,port).
+cts(p3,port).
+cts(p4,port).
+cts(cotr,country).
+cts(prov,province).
+cts(ct,city).
+cts(c1,city).
+cts(c2,city).
+cts(c3,city).
+cts(c4,city).
+cts(prov1,province).
+cts(prov2,province).
+cts(il1,island).
+cts(il2,island).
+cts(il3,island).
+cts(il4,island).
+cts(il5,island).
+cts(il6,island).
+cts(isl,island).
+cts(islg,island_group).
+cts(airp1,airport).
+cts(airp2,airport).
+cts(airp3,airport).
+cts(airp4,airport).
+cts(airp5,airport).
+
+citiesinfer(X,Hyper,[]):-
+   lw4(X,Type,Hyper,Type1),
+   !.
+citiesinfer(X,Hyper,Super):-
+   lwc(X,Type,Hyper,Type1,Super,Type2),
+   !.
+citiesinfer(X,Hyper,[]):-
+   locwn(X),
+   locwn(Hyper),
+   is_in(Hyper,Cont),
+   (Cont='Asia';Cont='Africa'),
+   matcharts(X,Am,B),
+   (lw6(B,X,Type,Hyper,Type1)
+     ;
+    lw7(B,X,Type,Prov,Typ,Hyper,Type1)),
+   !.
+
+citiesinfer(X,Hyper,[]):-
+   locwn(X),
+   search_wn_cats(Hyper,K),on(luogo,K),
+   stabbr(State,Abbrs),
+   spy_lower(Hyper,Lw,P),
+   on(Lw,Abbrs),
+   state(Abbr,State),
+   spy_lower(X,Low,P),
+   city(Low,Abbr,_,_),
+   !.
+
+citiesinfer1(X,Hyper,[]):-
+   lw4(X,Type,Hyper,Type1),
+   cts(Type,Hyper),
+/*    ;
+    atomic(Type1),
+    cts(Type1,Hyper)
+    ;
+    is_list(Type1),
+    on(T,Type1),
+    cts(T,Hyper)
+    ),
+*/   !.
+citiesinfer1(X,Hyper,[]):-
+   lwc(X,Type,Hyper,Type1,Super,Type2),
+   cts(Type,Hyper),
+   !.
+   
+matcharts(X,B,'Al'):-
+   mcon('Al','_',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'Am'):-
+   mcon('Am','_',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'Ain'):-
+   mcon('Ain','_',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'Ain_ech'):-
+   mcon('Ain_ech','_',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'Ain_el'):-
+   mcon('Ain_el','_',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'Ait_el'):-
+   mcon('Ait_el','_',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'Ait'):-
+   mcon('Ait','_',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'Ak'):-
+   mcon('Ak','_',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'Ak'):-
+   mcon('Ak','-',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'Ali'):-
+   mcon('Ali','_',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'Ali'):-
+   mcon('Ali','-',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'An'):-
+   mcon('An','_',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'Ar'):-
+   mcon('Ar','_',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'As'):-
+   mcon('As','_',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'Ash'):-
+   mcon('Ash','_',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'At'):-
+   mcon('At','_',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'At'):-
+   mcon('At','-',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'Ath'):-
+   mcon('Ath','_',A),
+   mcon(A,X,B),
+   !.
+matcharts(X,B,'Az'):-
+   mcon('Az','_',A),
+   mcon(A,X,B),
+   !.

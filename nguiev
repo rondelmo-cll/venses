@@ -1,0 +1,443 @@
+﻿/*
+swipl -f nguiev -q -g main -- Claude Chabrol '(' born June 24 ',' 1930 ')' is a French movie director and has become well-known in the 40 years since his first film ',' Le Beau Serge ',' for his chilling tales of murder ',' including Le Boucher '.' Le Beau Serge was directed by Chabrol '.'
+*/
+
+/*
+swipl --goal=main -o myprog -c nguiev
+*/
+
+:- style_check(-singleton).
+
+:- [inits].
+:- make_all.
+
+eval :-
+        current_prolog_flag(argv, Argv),
+        append(_, [--|Args], Argv),
+%        concat_atom(Args, ' ', SingleArg),
+%        term_to_atom(Term, SingleArg),
+%        Val is Term,
+        sommat(Args).
+%        format('~w~n', [Val]).
+
+main :-
+        catch(eval, E, (print_message(error, E), fail)),
+        halt.
+main :-
+        halt(1).
+
+
+/*
+:- use_module(library(pce)).
+:- use_module(library(sgml)).
+:- pce_autoload(finder, library(find_file)).
+:- pce_global(@finder, new(finder)).
+:- include(inits).
+:- make_all.*/
+
+
+
+
+sommat(In) :-
+       retractall(statsfp(_,_,_,_,_)),
+       asserta(statsfp(0,0,0,0,0)),
+       retractall(tac(_,_)),
+       thopenonefile(In,Out).
+%       compute_ft_total(NFile,Stats),nl.
+
+thopenonefile(Text,Evals):-
+   retractall(current_num(_,_)),
+   callnewtager(N,Text,Output),
+   findall(Code,fp(Code,_), Codes),
+   length(Codes,L),
+   init_sems,
+%   composefilename1(N,File),
+   allparse_discourses(L,Input,Codes, 0, Nn, Evals),
+   evaluate_one_folder1(user,Evals, Stat),
+  !.
+
+somma1(In) :-
+       makeframe(Str), rteparseonetext1(In,Str).
+
+somma2(In) :-
+       makeframe(Str), rteparseonetext2(In,Str).
+
+somma3(In) :-
+       makeframe(Str), rteparseonetext3(In,Str).
+
+evaluate1(Dir,Files):-
+%       makeframe(Str),
+       tell('outs/evaluation'),
+       rte_all_texts1(Files,Str), told.
+
+evaluate2(Dir,Files):-
+%       makeframe(Str), 
+       tell('outs/evaluation'),
+       rte_all_texts2(Files,Str), told.
+
+evaluate3(Dir,Files):-
+%       makeframe(Str), 
+       tell('outs/evaluation'),
+       rte_all_texts3(Files,Str), told.
+
+geta(In) :-
+%       makeframe(Str),
+       tell(output),
+       getonetext(In,Str).
+
+getarun(Dir,Files):-
+       makeframe(Str), 
+       parseall_texts(Files,Str).
+
+getadm(In) :-
+       makeframe(Str), getdmonetext(In,Str).
+
+getarundm(Dir,Files):-
+       makeframe(Str), 
+       parseall_texts(Files,Str).
+       
+rtegetarun(Dir,Files):-
+       makeframe(Str), 
+       rteparseall_texts(Files,Str).
+
+thopenallfile(NoFr, [],[]):-
+   !.
+thopenallfile(NoFr, [N-T-Text-Hyp|Noms],[Eval|Evaluation]):-
+   retractall(current_num(_,_)),
+%     assert(fp(_,_)),
+%   extract_title(Text, Rest, Tops),
+   concat_atom(Txt,' ',Text),
+   callnewtager(N,Txt,Output),
+   concat_atom(Txth,' ',Hyp),
+   cnewtager(N,Txth,Outpu),
+   findall(Code,fp(Code,_), Codes),
+   length(Codes,L),
+   init_sems,
+%   composefilename(N,File),
+   composefilename1(N,File),
+   allparse_discourses(L,Input,Codes, 0, Nn, Evals),
+   evaluate_one_folder1(File,Evals, Stat),
+   NewNo is NoFr + 1,
+   thopenallfile(NewNo,Noms,Evaluation),
+   !.
+
+composefilename1(N,File):-
+   evl(N,True,Typ),
+   maketype(True,P),
+   mcon(id,'_',T),
+   mcon(T,N,T2),
+   mcon(T2,P,File),
+   !.
+ 
+ maketype(true,'T').
+ maketype(entailment,'T').
+ maketype(false,'F').
+ maketype(contradiction,'F').
+ maketype(unknown,'F').
+
+composefilename(N,File):-
+   random(I),
+   term_to_atom(I,K),
+   stringof(List,K),
+   List=[0,'.',S|_],
+   decideodd(S,P),
+   mcon(id,'_',T),
+   mcon(T,N,T2),
+   mcon(T2,P,File),
+   !.
+
+decideodd(S,'F'):-
+   S=1;S=3;S=5;S=7,
+   !.
+decideodd(S,'T'):-
+   !.
+   
+getonetext(Text,Output):-
+  retractall(current_num(_,_)),
+   extract_title(Text, Tops),
+  newtager(Text,Output),
+  findall(Code,fp(Code,_), Codes),
+  init_sems,
+   nstart,
+   start,
+   newopen_file('Macintosh HD:dumps', Codes, Stats,1,1),
+  findall(Sym-A-B-C-D-E-F-G-H, sd_structure(Sym,A,B,C,D,E,F,G,H), Stru),
+  subtract(Stru,[nil-nil-nil-nil-nil-nil-nil-nil-nil],Str),
+  nl,
+  writenl(_,'Discourse Relations'),
+  writeseqnl(Str), told.
+
+getdmonetext(Text,Output):-
+  retractall(current_num(_,_)),
+  newtager(Text,Output),
+  findall(Code,fp(Code,_), Codes),
+  init_sems,
+   nstart,
+   start,
+  dmnewopen_file(Codes, Stats,1,1),
+  findall(Sym-A-B-C-D-E-F-G-H, sd_structure(Sym,A,B,C,D,E,F,G,H), Stru),
+  subtract(Stru,[nil-nil-nil-nil-nil-nil-nil-nil-nil],Str),
+  nl,
+  writenl(_,'Discourse Relations'),
+  writeseqnl(Str), 
+  told,
+     makeframe2(Str1), 
+   write_model(Text,Co),
+   told.
+
+writealldrs:-
+  findall(Sym-A-B-C-D-E-F-G-H, sd_structure(Sym,A,B,C,D,E,F,G,H), Stru),
+  subtract(Stru,[nil-nil-nil-nil-nil-nil-nil-nil-nil],Str),
+  nl,
+  writenl(_,'Discourse Relations'),
+  writeseqnl(Str), 
+  !.
+  
+dmnewopen_file([], [], _, _):-!.
+
+dmnewopen_file([Text|Noms], [Stat|Stats], NoFr, NoCl):-
+   writenl(_,Text),
+   getcfilename(Text,Outs,Name),
+   fp(Text,Sent),
+   writeseqnl(_,Sent),
+   dmnewparse_discourse(Text, Sent, NoFr, NoCl, NewCl, Stat),
+   NewNo is NoFr + 1,
+   nl,nl,
+   garb_coll(NoFr),
+   dmnewopen_file(Noms, Stats, NewNo, NewCl),
+   !.
+
+dmnewparse_discourse(Code, Sent, NoFr, NoCl, NewNoCl, [Evaluation-Code|Evals]) :-
+  retractall(frase_corrente(_,_)),
+  dmnewhypo_parse(NoFr, Code, Sent, Out, NoCl, NewNoCl, Input, Evaluation),
+  !.
+
+dmnewhypo_parse(NoFr, Symb, Sent, [Tags,Scored], NoCl, NewNoCl, Input, Alls):-
+   dyn_ext_pron,
+   writesymb_assert(NoFr, Symb),
+   tagging_disamb(NoFr, Sent, Disambs, Tags,  Scored, Input,Output,Frase),
+   allparsers(NoFr, Frase, Input, Disambs, Tags, Ibars, Scored, Output, Out, No),
+   discourse(NoFr, Symb, Input, Scored, Out, WeightedRefs),
+   pasbuild_dsr(NoFr,Symb, Ibars, AllPAS, NoCl, NewCl),
+%   append([DSR],[WeightedRefs],Alls),
+   betterrelsrefs(AllPAS,[], [],WeightedRefs,AllRefss, PAS),
+   ntopic_stack(NoFr, Main-F, Sec-F1, Pot-F2, Antes),
+   historylist(NoFr,[Main-F, Sec-F1, Pot-F2, Antes],Mods,AllRefss,NRefs,Inds,RelCls),
+   recover_relative_clause(RelCls, PAS, NRefs, Aggs, Inds, NInds, AllRels, AllRef, AllAggs),
+   dmextract_properties(NoFr, AllRef, Out),
+   do_assertrels(AllRef,NoFr,AllRels, AllAggs,Control,NInds, RelIds),
+   nl,nl,write(' Discourse Model '), nl,nl,
+   nwrite_sentence_infons(model,NoFr),
+   findall(Symb-B-C-D-E-F-G-H, sd_structure(Symb,B,C,D,E,F,G,H,I), Stru),
+   updateCl(Stru,NoCl,NewNoCl),
+     !.
+
+parseall_texts(Files,Output):-
+   openallfile(Files,Output),
+   !.
+openallfile([],Output):-!.
+
+openallfile([outs|Noms],Output):-
+   openallfile(Noms,Output),
+   !.
+openallfile([Text|Noms],Output):-
+   parsetext(Text,Output,Out),
+   findall(Sym-A-B-C-D-E-F-G-H, sd_structure(Sym,A,B,C,D,E,F,G,H), Stru),
+   writeseqnl(Stru),
+   openallfile(Noms,Output),
+   !.
+
+rteparseall_texts(Files,Output):-
+   rteopenallfile(Files,Output,Evaluations,Sents),
+   cd(ipotesi),
+       expand_file_name(*,HFiles),
+   txtopenallfile(1,HFiles,Hypotheses),
+   match_text_hypoths(Sents,Evaluations,Hypotheses,Outs),
+   decomposeindices(Outs,Inds),
+   tell('outs/evaluation'),
+   writeseqnl(Inds), told,
+   !.
+
+txtopenallfile(N,[],[]):-!.
+
+txtopenallfile(NoFr, [outs|Noms],Evaluation):-
+   txtopenallfile(NoFr, Noms,Evaluation),
+   !.
+txtopenallfile(NoFr, [Text|Noms],[Eval|Evaluation]):-
+   newtager(Text,Output),
+   findall(Code,fp(Code,_), Codes),
+   init_sems,
+   nstart,
+   start,
+   writenl(_,Text),
+   fp(Code,Sent),
+   writeseqnl(_,Sent),
+   newparse_discourse(Logfile,Codes,NoFr, 0, NewCl, Eval),
+   NewNo is NoFr + 1,
+   txtopenallfile(NewNo,Noms,Evaluation),
+   !.
+
+rteopenallfile([],Output,[],[]):-!.
+
+rteopenallfile([ipotesi|Noms],Output,Evaluation,All):-
+   rteopenallfile(Noms,Output,Evaluation,All),
+   !.
+rteopenallfile([outs|Noms],Output,Evaluation,All):-
+   rteopenallfile(Noms,Output,Evaluation,All),
+   !.
+rteopenallfile([Text|Noms],Output,[Eval|Evaluation],[Sents|All]):-
+   extract_title(Text, Tops),
+   parsetext(Text,Output,Eval),
+   findall(Code-Sent,fp(Code,Sent), Sents),
+   rteopenallfile(Noms,Output,Evaluation,All),
+   !.
+
+evaluate_all_files(Dir,SubDirs,NFile):-
+   retractall(statsfp(_,_,_,_,_)),
+   asserta(statsfp(0,0,0,0,0)),
+   retractall(tac(_,_)),
+   tell(NFile),
+   open_rte_folders(Dir,NFile,SubDirs, Stats),
+   compute_ft_total(NFile,Stats),nl,
+   writealltac,
+   told,
+   !.
+open_rte_folders(Dir,NFile,[], []):-!.
+
+open_rte_folders(Dir,NFile,[Text|Noms], [Stat|Stats]):-
+       mcon(Dir,'/',NDir),
+       mcon(NDir,Text,NewDir),
+%       file_directory_name(NewDir,Dirs),       
+       working_directory(_, NewDir),
+       expand_file_name(*,Files),
+       evaluate_one_folder(Text,NFile, Files,Stat),
+   open_rte_folders(Dir,NFile,Noms, Stats),
+   !.
+
+
+/* helpa/0: Apre la finestra di aiuto */
+
+helpa :-
+   new(F, frame('Venses - Help')),
+   send(F, append(new(V, view))),
+   send(V,font, normal),
+   send(F, open),
+   pce_open(V, append, Str),
+   tell(Str),
+   writea.
+
+writea :- write('VENSES\nVenses is a text understanding system for the English language which produces semantic interpretation and discourse relation automatic classification under the menu Analyze_DRs. It produces DRs and a Discourse Model which encompasses all entities and their properties and relations under the menu Analyze_DM. It also produces semantic evaluation under the menu Rte, according to the protocol introduced by the RTE Challenge where a sequence of sentences identified as the Text is followed by one or two sentences identified as Hypothesis: the system has to evaluate whether the Hypothesis is entailed or not by the Text. The versions of the evaluator are three:\n Deep - which uses semantic structure and measures semantic similarity trying inferences on the basis of WordNet, Roget\'s Thesaurus and other similar resources;\n Quantitative - which measures the quantity of common syntactic and semantic information shared on the basis of structural information and semantic roles;\n Hybrid - uses a light Logical Form derived from syntactic structure and checks semantic non contradictoriness at propositional level.'),nl.	
+
+/* info/0: Apre la finestra di info */
+
+info :-
+   new(FA, frame('Venses - Info')),
+   send(FA, append(new(DA,dialog))),
+   send(DA, append(new(TA,text('Venses v. alpha (4/2005)',center,bold)))),
+   send(new(TA1,text('Laboratory of Computational Linguistics\nUniversit� Ca\' Foscari - Venezia\nemail: delmont@unive.it',center)),below,TA),
+   send(FA, open).
+
+
+/*
+new(@demo, dialog(√ïDemo Window√ï)),
+    send(@772024, x(15)),
+    send(@demo, append(text_item(name))),
+    send(@demo, open),
+    get(@demo, display, D),
+    get(@772024, distance(point(100,100)), Distance),
+    get(@display, size, Size),
+    get(Size, width, W),
+    get(Size, height, H),
+    get(@demo, member(name), TextItem),
+    get(TextItem, selection, Text).
+    
+free(@772024).
+free(@demo).
+free(@display).
+
+new(X, style(@default, @default, @default, @default, @on)).
+new(X, style(underline := @on)).
+area->set: x=[int], y=[int], width=[int], height=[int]
+new(A, area),
+send(A, set(y := 10, height := 50)).
+send(Box, colour(colour(red))),
+send(Box, x(√ï10√ï)), % atom --> int
+send(Box, selected(true)), % atom --> boolean
+send(Text, font(bold)), % atom --> font
+send(Text, string(10)), % int --> string
+send(Box, width(100)) = send(Box, width, 100)
+get(Point, distance(point(10,10), D) = get(Point, distance, point(10,1), D)
+
+wysiwyg(File) :-
+	new(Fr, frame(File)),
+	send(Fr, append, new(D, dialog)),
+	send(new(V, view), below, D),
+	send(V, font, normal),
+	send(D, append,
+	button(define_style,
+		message(@prolog, define_style, Fr))),
+	send(D, append,
+		menu(style, toggle,
+		and(message(@prolog, set_style, Fr, @arg1),
+		message(V, selection, 0, 0),
+		message(@receiver, clear_selection))),
+	right),
+	append_style(Fr, bold, style(font := bold)),
+	append_style(Fr, italic, style(font := italic)),
+	send(V, load, File),
+	send(Fr, open).
+	
+	
+set_style(Fr, Style) :-
+	get(Fr, member, view, V),
+	get(V, selection, point(Start, End)),
+	( Start == End
+		-> send(Fr, report, warning, √ïNo selection√ï)
+		; get(V, text_buffer, TB),
+		new(_, fragment(TB, Start, End-Start, Style))
+	).
+
+Define a new style and add it to the menu and the view.
+
+define_style(Fr) :-
+	ask_style(Fr, Name, Style),
+	append_style(Fr, Name, Style).
+	append_style(Fr, Name, Style) :-
+	get(Fr, member, dialog, D),
+	get(D, member, style, Menu),
+	send(Menu, append, Name),
+	send(Menu, active, @on),
+	get(Fr, member, view, View),
+	send(View, style, Name, Style).
+
+ask_style(Fr, Name, Style) :-
+	new(D, dialog(√ïDefine Style√ï)),
+	      send(D, append,
+		new(N, text_item(name, √ï√ï))),
+	send(D, append,
+		new(S, style_item(style))),
+	send(D, append,
+		button(ok, message(D, return, ok))),
+	send(D, append,
+		button(cancel, message(D, return, cancel))),
+	send(D, default_button, ok),
+	send(D, transient_for, Fr),
+	repeat,
+	get(D, confirm_centered, Fr?area?center, Answer),
+	( Answer == ok
+	-> get(N, selection, Name),
+	( Name == √ï√ï
+	-> send(D, report, error,
+	√ïPlease enter a name√ï),
+	fail
+	; !,
+	get(S, selection, Style),
+	send(Style, lock_object, @on),
+	send(D, destroy)
+	)
+	; !,
+	send(D, destroy),
+	fail
+	).
+
+*/

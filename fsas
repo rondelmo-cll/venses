@@ -1,0 +1,2395 @@
+:- style_check(-singleton).
+
+/* 6 elementi */
+fsa1(N-[p-D], N3-[d-P], N1-[a-M, d-M, n-M], N2-[n-V,v-V], N4-[x-B], N5-[e-C], N-[p-D], N3-[d-P], N1-[d-M], N2-[n-V], N4-[x-B], N5-[e-C]):-
+     qm(M), qm(V).
+fsa1(N-[d-D], N3-[n-P,v-P], N1-[n-M, v-M], N2-[n-V], N4-[n-B], N5-[e-C,p-C,s-C], N-[d-D], N3-[n-P], N1-[v-M], N2-[n-V], N4-[n-B], N5-[p-C]):-
+     lemmatize_dic_v(M, Lemma, S1),
+     cat_gramm(Lemma, CatGr, CatV, LArgsV),
+     appiattisci(LArgsV,LArgs),
+     subcat_on(sp/Obl/_/Prep/_, LArgs),
+     on(C,Prep).
+fsa1(N-[d-D], N3-[n-P], N1-[n-M, v-M], N2-[n-V], N4-[n-B], N5-[e-C,p-C,s-C], N-[d-D], N3-[n-P], N1-[v-M], N2-[n-V], N4-[n-B], N5-[p-C]):-
+     lemmatize_dic_v(M, Lemma, S1),
+     cat_gramm(Lemma, CatGr, CatV, LArgsV),
+     appiattisci(LArgsV,LArgs),
+     subcat_on(sp/Obl/_/Prep/_, LArgs),
+     on(C,Prep).
+fsa1(N-[d-C], N4-[n-Q], N2-[av-M,n-M,v-M], N1-[ng-D], N3-[n-K,v-K], N0-[x-P], N-[d-C], N4-[n-Q], N2-[v-M], N1-[ng-D], N3-[n-K], N0-[x-P]):-
+     select_bestgg(M,Best1),
+     transl_tags(M,Best1,Tags1),
+     on(Tag1,Tags1), Tag1=v.
+fsa1(N-[n-D], N3-[n-P], N1-[n-M, v-M], N2-[p-V], N4-[n-B], N5-[x-C], N-[n-D], N3-[n-P], N1-[v-M], N2-[p-V], N4-[n-B], N5-[x-C]):-
+     spy_lower(D,Low,Po),
+     spy_lower(B,Low1,Po1),
+     Po=Po1, Po=0.
+fsa1(N-[a-P], N0-[n-X], N3-[n-W,v-W], N2-[e-D,p-D,s-D], N1-[n-H], N5-[n-C], N-[a-P], N0-[n-X], N3-[v-W], N2-[p-D], N1-[n-H], N5-[n-C]):-
+        findall_poss(Si),
+        length(Si,L),
+        L=<9.
+fsa1(N4-[v-D], N0-[a-X,n-X], N3-[e-W], N5-[d-C], N2-[n-P,nt-P], N1-[a-Q,n-Q,v-Q], N4-[v-D], N0-[a-X], N3-[e-W], N5-[d-C], N2-[n-P], N1-[a-Q]):-
+            coplbh(D).
+fsa1(N-[v-P], N0-[d-X], N3-[n-W,v-W], N2-[v-D], N1-[n-H], N5-[n-C,v-C], N-[v-P], N0-[d-X], N3-[n-W], N2-[v-D], N1-[n-H], N5-[n-C]):-
+notinterrogative.
+fsa1(N-[n-P], N0-[n-X], N3-[a-W,v-W], N2-[p-D], N1-[d-H], N5-[x-'?'], N-[n-P], N0-[n-X], N3-[n-W], N2-[p-D], N1-[d-H], N5-[x-'?']):-
+           mcon(P,'_',P1),
+           mcon(P1,W,Mult),
+            nwn(Mult,K).
+fsa1(N5-[r-C], N0-[v-K], N2-[v-P], N-[a-D,c-D,r-D], N1-[r-M,w-M], N3-[v-V], N5-[r-C], N0-[v-K], N2-[v-P], N-[r-D], N1-[r-M], N3-[v-V]).
+fsa1(0-[av-P,p-P,r-P,s-P,w-P], N0-[v-X], N1-M, N2-D, N5-F, N3-[n-T, v-T], 0-[r-P,w-P], N0-[v-X], N1-M, N2-D, N5-F, N3-[v-T]):-
+            supporto(X);
+            coplbh(X).
+fsa1(0-[p-D], N0-[d-X,r-X], N3-[d-W], N5-[n-C], N2-[n-P,v-P], N1-[p-Q], 0-[p-D], N0-[d-X], N3-[d-W], N5-[n-C], N2-[n-P], N1-[p-Q]).
+
+fsa1(N-[n-P], N0-[n-X], N3-[n-W,v-W], N2-[n-D,nt-D,v-D], N1-[n-H,v-H], N5-[x-C], N-[n-P], N0-[n-X], N3-[v-W], N2-[n-D], N1-[n-H], N5-[x-C]):-
+            disaccess_wsj(H,Bes), (Bes=nn;Bes=nns).
+fsa1(N5-[d-O], N-[n-P], N0-[av-X], N3-[n-W,v-W], N2-[a-D,v-D], N1-[n-H|G], N5-[d-P], N-[n-P], N0-[av-X], N3-[v-W], N2-[a-D], N1-[n-H]):-
+   verbgerund(D).
+fsa1(N-[v-D], N3-[d-P], N1-[n-M, v-M], N2-[p-to], N4-[n-B,v-B], N5-[n-C, v-C], N-[v-D], N3-[d-P], N1-[n-M], N2-[p-to], N4-[v-B], N5-[n-C]).
+fsa1(N-[p-D, s-D], N0-[d-X], N3-[n-W,v-W], N2-[d-P], N1-[n-H], N5-[v-C], N-[p-D], N0-[d-X], N3-[n-W], N2-[d-P], N1-[n-H], N5-[v-C]).
+
+fsa1(N-[n-P], N0-[v-X], N3-[n-W,v-W], N2-[p-D], N1-[av-H,n-H], N5-[a-that, c-that, r-that], N-[n-P], N0-[v-X], N3-[n-W], N2-[p-D], N1-[n-H], N5-[c-that]):-
+   coml_n(W,Subs),
+   remove(subc-Sub, Subs,_),
+   member(_/that/fcomp,Sub).
+fsa1(N-[nh-P], N0-[a-X,q-X,v-X], N3-[n-W], N2-[e-D], N1-[a-H,r-H], N5-[v-C], N-[nh-P], N0-[v-X], N3-[n-W], N2-[e-D], N1-[r-H], N5-[v-C]).
+
+fsa1(N-[n-P], N0-[q-X,v-X], N3-[d-W], N2-[n-D,v-D], N1-[e-H], N5-[q-C,v-C], N-[n-P], N0-[v-X], N3-[d-W], N2-[n-D], N1-[e-H], N5-[v-C]).
+fsa1(N-[n-P], N0-[v-X], N3-[d-W], N2-[n-D,v-D], N1-[e-H], N5-[q-C,v-C], N-[n-P], N0-[v-X], N3-[d-W], N2-[n-D], N1-[e-H], N5-[v-C]).
+fsa1(N-[r-P], N0-[v-X], N1-[n-M, v-M], N2-[n-D], N5-[n-F, v-F], N3-[a-that, c-that, r-that], N-[r-P], N0-[v-X], N1-[v-M], N2-[n-D], N5-[n-F], N3-[c-that]):-
+            supporto(X);
+            coplbh(X).
+fsa1(N-[x-P], N0-[p-X,s-X], N3-[n-W], N2-[n-D], N1-[a-H,n-H,q-H,v-H], N5-[n-C,v-C], N-[x-P], N0-[s-X], N3-[n-W], N2-[n-D], N1-[v-H], N5-[n-C]).
+fsa1(N-[x-P], N0-[a-X,v-X], N3-[ng-W], N2-[a-D], N1-[n-H,v-H], N5-[e-C], N-[x-P], N0-[v-X], N3-[a-W], N2-[ng-D], N1-[n-H], N5-[e-C]).
+fsa1(N-[v-P], N0-[a-X], N3-[ng-W], N2-[n-D], N1-[e-H], N5-[n-C,v-C], N-[v-P], N0-[a-X], N3-[ng-W], N2-[n-D], N1-[e-H], N5-[v-C]).
+fsa1(N-[n-D], N2-[p-X,s-X], N1-[d-M], N3-[n-P], N4-[p-to], N5-[v-B], N-[n-D], N2-[s-X], N1-[d-M], N3-[n-P], N4-[p-to], N5-[v-B]).
+fsa1(N-[n-D], N2-[av-X,e-X,n-X,s-X], N1-[n-M, v-M], N3-[a-P,n-P], N4-[n-Q], N5-[x-B], N-[n-D], N2-[av-X], N1-[v-M], N3-[a-P], N4-[n-Q], N5-[x-B]).
+fsa1(N-[c-D], N1-[n-M], N2-[n-K], N3-[n-P,v-P], N4-[p-to], N5-[v-C], N-[c-D], N1-[n-M], N2-[n-K], N3-[v-P], N4-[p-to], N5-[v-C]).
+fsa1(N-[e-P], N0-[a-X,d-X,n-X], N3-[n-W], N2-[a-D,n-D], N1-[n-H], N5-[n-C,v-C], N-[e-P], N0-[a-X], N3-[n-W], N2-[a-D], N1-[n-H], N5-[v-C]).
+fsa1(N-[x-P], N0-[n-X,v-X], N3-[n-W], N2-[x-D], N1-[n-H], N5-[n-C], N-[x-P], N0-[v-X], N3-[n-W], N2-[x-D], N1-[n-H], N5-[n-C]).
+fsa1(N-[v-D], N1-[r-M], N2-[a-K], N3-[p-for,s-for], N4-[d-even,e-even], N5-[d-C], N-[v-D], N1-[r-M], N2-[a-K], N3-[p-for], N4-[d-even], N5-[d-C]).
+fsa1(N0-[n-D, v-D], N-[n-X], N1-[n-G], N2-[n-M], N3-[n-P, v-P], N4-[p-A, s-A], N0-[v-D], N-[n-X], N1-[n-G], N2-[n-M], N3-[n-P], N4-[p-A]):-
+     lemmatize_dic_v(D, Lemma, S1),
+       vsp(Lemma,Preps), on(A,Preps).
+fsa1(N0-[n-D], N-[p-of], N1-[d-G], N2-[n-M], N3-[n-P, v-P], N4-[p-A], N0-[n-D], N-[p-of], N1-[d-G], N2-[n-M], N3-[v-P], N4-[p-A]):-
+     lemmatize_dic_v(P, Lemma, S1),
+       vsp(Lemma,Preps), on(A,Preps).
+fsa1(N-[n-D], N2-[e-X,p-X,s-X], N1-[n-M], N3-[p-P], N4-C, N5-[x-B], N-[n-D], N2-[p-X], N1-[n-M], N3-[p-P], N4-C, N5-[x-B]).
+fsa1(N-P, N0-[n-X,v-X], N3-[a-that, c-that, r-that], N1-[n-M, v-M], N2-[d-D, r-D], N5-[p-of], N-P, N0-[n-X], N3-[c-that], N1-[v-M], N2-[r-D], N5-[p-of]).
+fsa1(N-[x-P], N0-[n-X,v-X], N3-[a-W, n-W, q-W, v-W], N2-[n-D], N1-[p-of], N5-[n-C,v-C], N-[x-P], N0-[n-X], N3-[v-W], N2-[n-D], N1-[p-of], N5-[n-C]):-
+     lemmatize_dic(D, Lemma, S1),
+      nm(Lemma,_,_).
+fsa1(N-[d-D], N1-[n-M], N2-[n-K,v-K], N3-[a-P,n-P], N4-[a-B], N5-[n-C], N-[d-D], N1-[n-M], N2-[v-K], N3-[a-P], N4-[a-B], N5-[n-C]).
+fsa1(N-[v-D], N1-[d-M], N2-[n-K], N3-[n-P], N4-[n-B,v-B], N5-[x-C], N-[v-D], N1-[d-M], N2-[n-K], N3-[n-P], N4-[n-B], N5-[x-C]).
+fsa1(N-[d-D], N1-[n-M], N2-[n-K,v-K], N3-[e-P], N4-[d-B], N5-[n-C], N-[d-D], N1-[n-M], N2-[n-K], N3-[e-P], N4-[d-B], N5-[n-C]).
+fsa1(N-[n-D], N2-[x-X], N1-[n-M, v-M], N3-[p-P], N4-[n-C,v-C], N5-[a-B,c-B,r-B], N-[n-D], N2-[x-X], N1-[v-M], N3-[p-P], N4-[v-C], N5-[c-B]).
+fsa1(N-[a-D, v-D], N1-[n-M, v-M], N2-[p-of], N3-[d-P], N4-[n-B,v-B], N5-[x-C], N-[v-D], N1-[n-M], N2-[p-of], N3-[d-P], N4-[n-B], N5-[x-C]).
+fsa1(N-[v-D], N1-[av-M,p-M], N2-[n-K], N3-[e-P], N4-[n-B,v-B], N5-[n-C,v-C], N-[v-D], N1-[av-M], N2-[n-K], N3-[e-P], N4-[v-B], N5-[n-C]):-
+   verbgerund(D),
+   verbgerund(B).
+fsa1(N-[v-D], N1-[v-M], N2-[x-K], N3-[e-P], N4-[a-B,c-B,r-B], N5-[v-C], N-[v-D], N1-[v-M], N2-[x-K], N3-[e-P], N4-[r-B], N5-[v-C]).
+fsa1(N-[v-D], N1-[r-M], N2-[av-K,p-K], N3-[e-P], N4-[n-B,q-B,v-B], N5-[r-C], N-[v-D], N1-[r-M], N2-[av-K], N3-[e-P], N4-[v-B], N5-[r-C]).
+fsa1(N-[c-D], N1-[a-M,q-M,v-M], N2-[n-K], N3-[n-P,v-P], N4-[e-B], N5-[a-C,n-C,v-C], N-[c-D], N1-[v-M], N2-[n-K], N3-[n-P], N4-[e-B], N5-[n-C]).
+fsa1(N-[d-D], N1-[a-M,n-M], N2-[a-K], N3-[n-P], N4-[n-B], N5-[n-C,v-C], N-[d-D], N1-[a-M], N2-[a-K], N3-[n-P], N4-[n-B], N5-[n-C]).
+fsa1(N-[d-D], N1-[a-M], N2-[a-K, n-K], N3-[a-P, n-P, v-P], N4-[x-B], N5-[n-C], N-[d-D], N1-[a-M], N2-[a-K], N3-[n-P], N4-[x-B], N5-[n-C]).
+fsa1(N0-[n-D], N-[x-X], N1-[n-M, v-M], N2-[x-X], N3-[n-P, v-P], N4-[x-X], N0-[n-D], N-[x-X], N1-[n-M], N2-[x-X], N3-[n-P], N4-[x-X]).
+fsa1(0-[av-W, p-W, r-W|_], N1-[d-V], N2-[A], N3-[n-P,v-P], N4-[n-Q,v-Q], N-[x-X], 0-[s-W], N1-[d-V], N2-[A], N3-[n-P], N4-[v-Q], N-[x-X]).
+fsa1(N-[d-D], N1-[a-M, n-M, v-M], N2-[a-Q], N3-[n-L, v-L], N0-[n-P, v-P], N4-[x-X], N-[d-D], N1-[a-M], N2-[a-Q], N3-[n-L], N0-[n-P], N4-[x-X]):-
+    \+ verbs_of_saying(P).
+fsa1(N-[r-D, s-D, w-D], N1-[d-M], N2-[n-K], N3-[n-P, v-P], N4-[a-that, c-that, r-that], N0-[n-Q], N-[r-D, w-D], N1-[d-M], N2-[n-K], N3-[v-P], N4-[a-that], N0-[n-Q]):-
+    \+ verbs_of_saying(P).
+fsa1(N0-[n-D], N-[x-X], N1-[e-since, p-since, s-since], N2-[d-M], N3-[n-P, v-P], N4-[p-of], N0-[n-D], N-[x-X], N1-[s-since], N2-[d-M], N3-[n-P], N4-[p-of]).
+fsa1(N-[p-D], N1-[d-M], N2-[n-K, v-K], N3-[n-P, v-P], N4-[n-B], N5-[x-C], N-[p-D], N1-[d-M], N2-[v-K], N3-[n-P], N4-[n-B], N5-[x-C]):-
+   (M=the;M=a;M=an), 
+   verbgerund(K).
+fsa1(N-[v-D], N1-[v-M], N2-[n-K,v-K], N3-[p-to], N4-[n-B,v-B], N5-[n-C,v-C], N-[v-D], N1-[v-M], N2-[n-K], N3-[p-to], N4-[v-B], N5-[n-C]):-
+   verbgerund(M),
+       coplbh(D).
+fsa1(N-[d-D], N1-[n-M], N2-[p-K,s-K], N3-[n-P], N4-[n-B,q-B,v-B], N5-[p-C], N-[d-D], N1-[n-M], N2-[p-K], N3-[n-P], N4-[v-B], N5-[p-C]).
+fsa1(N-[av-D,n-D], N1-[n-M], N2-[v-K], N3-[d-P], N4-[n-B], N5-[n-C,v-C], N-[n-D], N1-[n-M], N2-[v-K], N3-[d-P], N4-[n-B], N5-[n-C]):-
+   nt(D),
+   coplbh(K).
+fsa1(N0-[d-all, r-all], N-[d-X], N1-[a-D,n-D], N3-[n-P, v-P], N2-[n-A, v-A], N4-[x-W], N0-[d-all], N-[d-X], N1-[a-D], N3-[n-P], N2-[n-A], N4-[x-W]).
+fsa1(N0-[n-Z, v-Z], N-[a-X, n-X], N1-[n-D], N3-[p-P], N2-[n-A], N4-[x-W], N0-[v-Z], N-[a-X], N1-[n-D], N3-[p-P], N2-[n-A], N4-[x-W]).
+fsa1(N0-[n-A,v-A], N-[p-D], N1-[n-R], N2-[p-M], N3-[n-K], N4-[x-X], N0-[v-A], N-[p-D], N1-[n-R], N2-[p-M], N3-[n-K], N4-[x-X]).
+fsa1(N0-[n-D], N-[x-X], N1-[d-G], N2-[x-M], N3-[n-P, v-P], N4-[a-A|_], N0-[n-D], N-[x-X], N1-[d-G], N2-[x-M], N3-[v-P], N4-[a-A|_]).
+fsa1(N0-[n-D], N-[d-X,e-X,p-X,s-X], N1-[d-G], N2-[n-M,v-M], N3-[n-P,v-P], N4-[p-A], N0-[n-D], N-[p-X], N1-[d-G], N2-[n-M], N3-[n-P], N4-[p-A]).
+fsa1(N0-[n-D], N-[n-X], N1-[n-G], N2-[x-M], N3-[n-P,v-P], N4-[p-A], N0-[n-D], N-[n-X], N1-[n-G], N2-[x-M], N3-[v-P], N4-[p-A]):-
+    5<N0.
+fsa1(N0-[x-X],N-[d-D], N1-[n-M, v-M], N2-[ n-K, v-K], N3-[n-L], N4-[n-B], N0-[x-X], N-[d-D], N1-[n-M], N2-[v-K], N3-[n-L], N4-[n-B]):-
+   \+ coplbh(M), \+ support(M).
+fsa1(N-[a-D], N1-[n-M], N0-[x-X], N2-[av-K, e-K], N3-[x-L], N4-[a-B,c-B,r-B], N-[a-D], N1-[n-M], N0-[x-X], N2-[e-K], N3-[x-L], N4-[c-B]):-
+     lemmatize_dic(M, Lemma, S1),
+     coml(Lemma,Sub).
+fsa1(0-[n-D], N1-[n-M,v-M], N2-[p-K], N3-[n-P, v-P], N0-[n-W], N4-[n-G], 0-[n-D], N1-[v-M], N2-[p-K], N3-[v-P], N0-[n-W], N4-[n-G]).
+fsa1(0-[av-D,v-D], N1-[v-M], N2-[d-K], N3-[n-P], N4-[n-B,v-B], N5-[p-C], 0-[av-D], N1-[v-M], N2-[d-K], N3-[n-P], N4-[n-B], N5-[p-C]).
+fsa1(0-[n-D], N1-[q-M, v-M], N2-[n-K], N3-[n-P,v-P], N4-[p-B], N5-[n-C], 0-[n-D], N1-[v-M], N2-[n-K], N3-[n-P], N4-[p-B], N5-[n-C]).
+fsa1(0-[n-D], N1-[n-M, v-M], N2-[d-K], N3-[n-P], N4-[n-B,v-B], N5-[x-C], 0-[n-D], N1-[v-M], N2-[d-K], N3-[n-P], N4-[n-B], N5-[x-C]).
+fsa1(0-[n-D], N1-[n-M, v-M], N2-[n-K], N3-[d-P], N4-[n-B], N5-[x-C], 0-[n-D], N1-[v-M], N2-[n-K], N3-[d-P], N4-[n-B], N5-[x-C]).
+fsa1(N-[d-X,e-X,p-X,s-X], N1-[s-if], N2-[r-M], N3-[v-P], N4-[n-A, v-A], N0-[x-D], N-[p-X], N1-[s-if], N2-[r-M], N3-[v-P], N4-[n-A], N0-[x-D]).
+fsa1(N0-[n-D], N5-[x-C], N1-[n-M, v-M], N2-[n-K], N3-[e-P], N4-[n-B], N0-[n-D], N5-[x-C], N1-[n-M], N2-[n-K], N3-[e-P], N4-[n-B]).
+fsa1(N4-[a-A], N3-[n-Q,v-Q], N2-[e-P], N0-[n-D, v-D], N-[v-M], N1-[a-V,v-V], N4-[a-A],N3-[n-Q], N2-[e-P], N0-[v-D], N-[v-M], N1-[v-V]):-
+            supporto(D),
+            coplbh(M).
+fsa1(N0-[p-to], N5-[v-C], N1-[d-M], N2-[n-K], N3-[n-P,v-P], N4-[p-to], N0-[p-to], N5-[v-C], N1-[d-M], N2-[n-K], N3-[n-P], N4-[p-to]):-
+     coml(C,Sub),
+     on(vcomp/_/_,Sub).
+fsa1(N-[d-X,e-X,p-X,s-X], N0-[n-D,v-D], N1-[a-G,n-G,q-G,v-G], N2-M, N3-[n-P,v-P], N4-[a-K,c-K,r-K], N-[s-X], N0-[n-D], N1-[v-G], N2-M, N3-[n-P], N4-[c-K]):-
+     (M=[a-L,d-L,r-L];M=[d-L,i-L];M=[d-L]),
+     lemmatize_dic(P, Lemma, S1),
+     coml(Lemma,Sub),
+     on(fcomp/_,Sub).
+fsa1(0-[n-D], N1-[n-M, v-M], N2-[p-K,s-K], N3-[d-P], N4-[a-B, n-B], N5-[x-C], 0-[n-D], N1-[v-M], N2-[p-K], N3-[d-P], N4-[n-B], N5-[x-C]):-
+     lemmatize_dic(M, Lemma, S1),
+     vsp(Lemma,Sub),
+     on(K,Sub).
+fsa1(N0-[v-D], N5-[v-C], N1-[d-M], N2-[a-K], N3-[n-P], N4-[a-B,v-B], N0-[v-D], N5-[v-C], N1-[d-M], N2-[a-K], N3-[n-P], N4-[a-B]):-
+     disaccess_wsj(B,Best), Best=vbn.
+fsa1(0-[a-D, n-D1], N1-[n-M, v-M], N2-[n-C, v-C], N3-[a-P], N4-[n-B,v-B], N5-[x-X], 0-[a-D], N1-[n-M], N2-[v-C], N3-[a-P], N4-[n-B], N5-[x-X]).
+
+
+/* 2 elementi */
+fsa4(N-[n-D,v-D], N1-[r-M,w-M], N-[n-D], N1-[r-M,w-M]):-
+   M=whose.
+fsa4(N0-[num-D], N1-[av-M,n-M], N0-[num-D], N1-[av-M]):-
+   M='PM';M='AM';M=pm;M=am.
+fsa4(N0-[n-D], N1-[av-M,n-M], N0-[n-D], N1-[n-M]):-
+   M='PM';M='AM';M=pm;M=am.
+fsa4(N0-[r-D,w-D], N1-[a-M,av-M,n-M,v-M], N0-[r-D], N1-[v-M]).
+fsa4(N0-[d-D,n-D,r-D], N1-[a-M,c-M,r-M], N0-[r-D], N1-[c-M]).
+fsa4(N-[av-D,nt-D], N1-[d-M], N-[nt-D], N1-[d-M]).
+fsa4(N1-[a-M,c-M,r-M], N0-[x-D], N1-[r-M], N0-[x-D]).
+fsa4(0-[v-D], N1-[a-M,c-M,r-M], 0-[v-D], N1-[r-M]):-
+            supporto(D);
+            coplbh(D).
+fsa4(N0-[v-D], N1-[a-M,v-M], N0-[v-D], N1-[v-M]):-
+            (supporto(D);
+            coplbh(D)),
+            stringof(PastPart,M),
+       reverse(PastPart, [T|R]),
+       (T=d;T=n;T=t).
+fsa4(N-[a-D,av-D,d-D], N1-[d-M], N-[av-D], N1-[d-M]).
+fsa4(N1-[v-M|_], N-[d-M,n-M,p-M,v-M], N1-[v-M], N-[p-D]):-
+     lemmatize_dic_v(M, Lemma, S1),
+      vsp(Lemma,Preps), on(D,Preps).
+fsa4(N-[d-D,n-D,r-D], N1-[v-M|_], N-[r-D], N1-[v-M]).
+fsa4(N-[d-D,n-D,r-D], N1-[a-M,v-M], N-[r-D], N1-[v-M]).
+fsa4(N-[a-D,d-D,n-D], N1-[a-M,v-M], N-[r-D], N1-[v-M]).
+fsa4(N-[av-D,d-D,e-D,s-D], N1-[d-M], N-[d-D], N1-[d-M]):-
+   sub_w_sn(D,_).
+fsa4(N-[av-D,d-D,e-D,s-D], N1-[d-M], N-[d-D], N1-[d-M]):-
+   integer(M).
+fsa4(N-[e-D,_-D,s-D], N1-[x-M], N-[av-D], N1-[x-M]).
+fsa4(N3-[e-P, p-P, s-P], N0-[r-W], N3-[p-P], N0-[r-W]):-
+    objprons(W).
+fsa4(N-[av-D,i-D,n-D,r-D|_], N1-[v-M|_], N-[r-D,w-D], N1-[v-M]).
+fsa4(N-[d-D,n-D,r-D], N1-[a-M,av-M,n-M], N-[r-D], N1-[a-M]).
+fsa4(N-[a-D,c-D,r-D], N1-[r-M,w-M], N-[r-D], N1-[r-M]).
+fsa4(N-[av-D,d-D,e-D,n-D], N1-[v-M|_], N-[av-D], N1-[v-M]).
+fsa4(N-[av-D,d-D,e-D,n-D], N1-[p-M], N-[av-D], N1-[p-M]).
+fsa4(N1-[a-M,av-M,n-M,v-M], N-[p-D], N1-[av-D], N-[p-M]).
+fsa4(N1-[a-M,av-M,n-M,v-M], N-[v-D|_], N1-[av-D], N-[v-M]).
+fsa4(0-[q-D,v-D], N1-[p-M], 0-[vppin-D], N1-[p-M]).
+fsa4(N-[n-D,v-D], N1-[x-M], N-[v-D], N1-[x-M]):- M=':'.
+fsa4(N-[n-D,v-D], N1-[d-M,n-M,r-M], N-[v-D], N1-[d-M,r-M]).
+fsa4(N-[av-D,d-D,e-D,n-D], N1-[n-M], N-[a-D], N1-[n-M]).
+fsa4(N-[av-D,r-D,s-D,w-D], N1-[a-M,av-M,n-M,v-M], N-[r-D, w-D], N1-[a-M,av-M]).
+fsa4(N-[av-D,r-D,s-D,w-D], N1-M, N-[r-D, w-D], N1-M).
+fsa4(N-[n-M], N1-[a-D,n-D,v-D], N-[n-M], N1-[n-D]):-
+   mcon(M,'_',M1),
+   mcon(M1,D,D1),
+   ht(D1,_).
+fsa4(N-[a-M,n-M,q-M,v-M], N1-[a-D,av-D,n-D,p-D,v-D], N-[v-M], N1-[av-D]):-
+   mcon(M,'_',M1),
+   mcon(M1,D,D1),
+   v(D1,_).
+fsa4(N0-[av-H,d-H,e-H,n-H], N-[a-X,n-X], N0-[d-H], N-[a-X,n-X]).
+fsa4(N-[n-M], N1-[i-D,n-D,v-D], N-[n-M], N1-[n-D]).
+fsa4(N0-[av-H,d-H], N-[a-X,n-X,v-X], N0-[d-H], N-[a-X]).
+fsa4(N1-[p-D], N-[d-M,n-M,p-M,v-M], N-[p-M], N1-[d-D]):-
+    M='About';M=about.
+fsa4(N-[d-M,p-M], N1-[a-D,c-D,r-D], N-[p-M], N1-[r-D]):-
+    M='About';M=about.
+fsa4(0-[av-H|_], N-[n-X], 0-Ambs, N-[n-X]):-
+    excep(H,Cats),
+    buildcats(H,Cats,Ambs).
+fsa4(N0-[av-H,d-H], N-[a-X,n-X,v-X], N0-[d-H], N-[a-X]).
+fsa4(N1-[p-D], N-[d-M,n-M,p-M,v-M], N-[p-M], N1-[d-D]):-
+    M='About';M=about.
+fsa4(N-[d-M,n-M,p-M,v-M], N1-[d-D], N-[d-M], N1-[d-D]):-
+    M='About';M=about.
+fsa4(N-[n-M,v-M], N1-[d-D], N-[v-M], N1-[d-D]).
+fsa4(N0-[a-H], N-[v-see], N0-[a-H], N-[n-see]):-
+    ap_engl(H,_,_).
+fsa4(N0-[a-H,av-H], N-[p-X], N0-[av-H], N-[p-X]).
+fsa4(N0-[av-H,v-H], N-[x-X], N0-[av-H], N-[x-X]).
+fsa4(N0-[r-H], N-[n-X,v-X], N0-[r-H], N-[n-X]):-
+    ap_engl(H,_,_).
+fsa4(N0-[a-H,r-H], N-[r-X], N0-[r-H], N-[r-X]).
+fsa4(N0-[intj-H,n-H], N-[x-X], N0-[n-H], N-[x-X]).
+fsa4(N0-[i-H,n-H], N-[x-X], N0-[n-H], N-[x-X]).
+fsa4(N0-[d-H,p-H], N-[x-'$'], N0-[d-H], N-[d-'$']).
+fsa4(N0-[a-H,av-H,n-H], N-[x-X], N0-[av-H], N-[x-X]).
+fsa4(0-[a-P,v-P], N0-[s-X], 0-[v-P], N0-[s-X]):-
+     lemmatize_dic_v(P, Lemma, S1),
+     coml(Lemma, LArgsV), on(fcomp/_, LArgsV).
+fsa4(N2-[a-P,v-P], N0-[a-X,c-X,r-X], N2-[v-P], N0-[c-X]):-
+     lemmatize_dic_v(P, Lemma, S1),
+     coml(Lemma, LArgsV), on(fcomp/prop, LArgsV).
+fsa4(N0-[av-H,p-H], N-[x-'$'], N0-[p-H], N-[d-'$']).
+fsa4(N2-[a-P,n-P,v-P], N0-[r-X], N2-[v-P], N0-[r-X]):-
+   verbgerund(P).
+fsa4(N2-[a-P,n-P,v-P], N0-[d-X], N2-[v-P], N0-[d-X]):-
+   verbgerund(P).
+fsa4(N2-[a-P,n-P,v-P], N0-[n-X|R], N2-[v-P], N0-[n-X]):-
+   verbgerund(P).
+fsa4(N0-[v-X], N2-[a-P,n-P,v-P], N0-[v-X], N2-[v-P]):-
+   verbgerund(P),
+     lemmatize_dic_v(X, Lemma, S1),
+     vpcs(Lemma).
+fsa4(N-[a-M,conjl-M,d-M,e-M,s-M], N0-[d-H], N-[e-M], N0-[d-H]).
+fsa4(N-[conjl-M,e-M,p-M,s-M], N0-[d-H], N-[p-M], N0-[d-H]).
+fsa4(N-[conjl-M,e-M,p-M,s-M], N0-[n-H], N-[p-M], N0-[n-H]).
+fsa4(N0-[v-H], N-[av-M,conjl-M,e-M], N0-[v-H], N-[av-M]).
+fsa4(N0-[d-H], N-[n-M,nt-M], N0-[d-H], N-[n-M]):-
+    \+ integer(H).
+fsa4(N0-[d-H], N-[a-M,av-M,e-M,p-M,pk-M,s-M], N0-[d-H], N-[a-M]).
+fsa4(N0-[v-H], N-[a-M,av-M,e-M,p-M,pk-M,s-M], N0-[v-H], N-[av-M]).
+fsa4(N-[av-M,d-M], N1-[a-D,v-D], N-[av-M], N1-[a-D]).
+fsa4(N0-[p-H,s-H], N-[d-M], N0-[p-H], N-[d-M]):-
+        integer(M).
+fsa4(N-[av-M,p-M], N1-[n-D|K], N-[p-M], N1-[n-D|K]).
+fsa4(N-[av-M,p-M], N1-[d-D|K], N-[p-M], N1-[d-D|K]).
+fsa4(N-[av-M,p-M], N1-[r-D|K], N-[p-M], N1-[r-D|K]).
+fsa4(N0-[p-H], N-[n-M|Res], N0-[p-H], N-[np-M]):-
+      spy_lower(M,Low,J),
+      (J=1,
+       on(np-Low,Res);
+       J=0,
+       on(np-M,Res)).
+fsa4(N-[n-M,v-M], N1-[a-D,v-D], N-[v-M], N1-[v-D]):-
+   supporto(M); coplbh(M).
+fsa4(N-[av-M,n-M], N1-[p-to], N-[n-M], N1-[p-to]).
+fsa4(N-[a-M, v-M], N1-[d-D,p-D], N-[v-M], N1-[p-D]):-
+   lemmatize_dic_v(M, Lemma, S1),
+    vsp(Lemma,Ps),
+    on(D,Ps).
+fsa4(N-[n-M,v-M], N1-[a-D,av-D,p-D], N-[v-M], N1-[av-D]).
+fsa4(N-[a-M,av-M], N1-[v-D], N-[av-M], N1-[v-D]).
+fsa4(N-[a-M], N1-[a-D,c-D,r-D], N-[a-M], N1-[c-D]):-
+   pred_a(M,Cat,Subs),
+   on(Sub,Subs),
+   on(fcomp/Ro/Cont,Sub).
+fsa4(N-[v-M], N1-[a-D,n-D, v-D], N-[v-M], N1-[v-D]):-
+   supporto(M); coplbh(M),checklength.
+
+fsa4(N0-[d-H], N-[a-M,v-M], N0-[d-H], N-[a-M]).
+fsa4(N1-[a-H,n-H,v-H], N-[n-M,v-M], N1-[v-H], N-[v-M]):-
+   coplbh(H);support(H).
+fsa4(N1-[e-H,s-H,v-H], N-[n-M,v-M], N1-[s-H], N-[v-M]):-
+   verbgerund(M).
+fsa4(N0-[p-H,s-H], N-[r-M], N0-[s-H], N-[r-M]):-
+    filter_pers(M, Fea, M).
+fsa4(N1-[a-H,av-H,d-H], N-[v-M], N1-[av-H], N-[v-M]).
+fsa4(N1-[a-H,av-H,d-H], N-[a-M,v-M], N1-[av-H], N-[v-M]).
+fsa4(N1-[a-H,av-H,p-H], N-[a-M,n-M], N1-[p-H], N-[a-M,n-M]).
+fsa4(N0-[d-H], N-[a-that,c-M,r-M], N0-[d-H], N-[c-M]).
+fsa4(N0-[d-H,r-H], N-[n-M,v-M], N0-[d-H], N-[n-M]):-
+     disaccess_wsj(M,Best), Best=nn.
+fsa4(N0-[d-H,i-H], N-[x-M], N0-[i-H], N-[x-M]).
+fsa4(N0-[d-H,i-H], N-[C-M], N0-[d-H], N-[C-M]):-C\=i.
+fsa4(N0-[d-H,i-H], N-[C-M|R], N0-[d-H], N-[C-M|R]):-C\=i.
+fsa4(N-[v-H], N1-[n-M, v-M], N-[v-H], N1-[n-M]):-
+      coplbh(H),
+      stringof(Gerund,M),
+   reverse(Gerund, [s|_]).
+fsa4(N1-[a-H,n-H,v-H], N-[av-M,d-M,r-M], N1-[v-H], N-[d-M,r-M]).
+fsa4(N1-[a-H,n-H,v-H], N-[p-of], N1-[n-H], N-[p-of]).
+fsa4(N0-[n-H,v-H], N-[a-X, av-X, n-X, v-X], N0-[v-H], N-[v-X]):-
+   coplbh(H);support(H).
+fsa4(N1-[n-H,v-H], N-[av-M, e-M, n-M, v-M], N1-[v-H], N-[av-M]):-
+   coplbh(H);support(H).
+fsa4(N0-[v-D], N-[a-X, n-X, v-X], N0-[v-D], N-[v-X]):-
+     coplbh(D), v(X,_),checklength.
+
+fsa4(N0-D, N-[a-X, av-X, n-X, v-X], N0-[in-right], N-[av-X]):-
+    on(_-right,D).
+fsa4(N0-[r-D], N-[a-X, n-X, v-X], N0-[r-D], N-[v-X]).
+fsa4(0-[av-H,s-H], N-[d-M], 0-[s-H], N-[d-M]).
+fsa4(0-[av-H,s-H], N-[n-M], 0-[s-H], N-[n-M]).
+fsa4(N1-[a-H,av-H,n-H,v-H], N-[av-M], N1-[av-H], N-[av-M]).
+fsa4(N-[n-H,v-H], N-[v-M], N1-[n-H], N-[v-M]):-
+   coplbh(M);support(M).
+fsa4(N1-[a-H,c-H,r-H], N-[r-M], N1-[c-H], N-[r-M]).
+fsa4(N1-[av-H,n-H,nt-H], N-[x-M], N1-[av-H], N-[x-M]).
+fsa4(N1-[a-H,v-H], N-[d-M], N1-[v-H], N-[d-M]).
+fsa4(N1-[a-H,n-H,v-H], N-[v-M], N1-[v-H], N-[v-M]):-
+   supporto(H).
+fsa4(N-[v-M], N1-[a-H,n-H,v-H], N-[v-M], N1-[v-H]):-
+   coplbh(M),
+   verbgerund(H),checklength.
+fsa4(N1-[v-M], N0-[a-D,q-D,v-D], N1-[v-M], N0-[a-D]):-
+   \+coplbh(M),\+support(M),
+   lemmatize_dic_v(D, Lemma, S1),
+   (S1=d;S1=t;S1=n).
+fsa4(N0-[d-D,e-D,i-D,s-D], N1-[x-M], N0-[av-D], N1-[x-M]).
+fsa4(N0-[d-D,e-D,p-D,s-D], N1-[a-M], N0-[s-D], N1-[a-M]).
+fsa4(N1-[p-M], N0-[e-D,r-D,s-D,w-D], N1-[p-M], N0-[r-D,w-D]).
+fsa4(N1-[n-M], N0-[a-ago,av-ago], N1-[n-M], N0-[av-ago]).
+fsa4(N-[a-V,v-V], N1-[a-D], N-[v-V],N1-[a-D]):-
+   verbgerund(V).
+fsa4(N-[n-V], N1-[n-D,v-D], N-[n-V],N1-[n-D]):-
+   stringof(Gerund,V),
+   reverse(Gerund, [_,s,-|_]).
+fsa4(N-[p-V], N1-[n-D,v-D], N-[p-V],N1-[v-D]):-
+    V\=to,V\=in_order_to,
+   verbgerund(D).
+fsa4(N-[p-V], N1-[n-D,v-D], N-[p-V],N1-[n-D]):-
+    V\=to,V\=in_order_to.
+fsa4(N-[q-M,v-M], N1-[a-H,q-H,v-H], N-[q-M,v-M], N1-[q-H,v-H]):-
+   coplbh(M);support(M).
+fsa4(N1-[n-M], N0-[e-D,r-D,s-D,w-D], N1-[n-M], N0-[r-D,w-D]).
+fsa4(N1-[n-M], N0-[p-D,r-D,s-D,w-D], N1-[n-M], N0-[r-D,w-D]):-
+   lemmatize_dic(M, Lemma, S1),
+   trova_CatSem(Cat, Lemma, CatSem),
+   pred_p(pro, D, _, Cat, []),
+   controlla_cats(Cat,CatSem).
+fsa4(N1-[n-M], N0-[p-D,r-D,s-D,w-D], N1-[n-M], N0-[s-D]).
+fsa4(N-[n-V], N1-[n-D,v-D], N-[n-V],N1-[v-D]):-
+   verbgerund(D).
+fsa4(N1-[a-D, n-D], N0-[n-P], N1-[n-D], N0-[n-P]):-
+   checkab(D);checkt(D).
+fsa4(N-[n-M,q-M,v-M], N1-[r-D], N-[q-M,v-M], N1-[r-D]).
+fsa4(N-[a-M], N1-[a-D,v-D], N-[a-M], N1-[a-D]):-  
+  ap_engl(M,_,_).
+fsa4(N-[av-M,n-M], N1-[p-D], N-[av-M], N1-[p-D]).
+fsa4(N-[av-M,n-M], N1-[q-D, v-D], N-[n-M], N1-[v-D]).
+fsa4(N-[d-M,e-M,p-M,s-M], N1-[a-D], N-[s-M], N1-[a-D]):-  
+  ap_engl(D,_,_).
+fsa4(N-[d-M,r-M], N1-[a-D, q-D, v-D], N-[d-M], N1-[a-D]).
+fsa4(N-[r-M], N1-[d-D, e-D, i-D, s-D], N-[r-M], N1-[d-D]).
+fsa4(N-[v-M], N1-[d-D, e-D, i-D, s-D], N-[v-M], N1-[d-D]).
+fsa4(N-[v-V], N1-[a-D,av-D,n-D,v-D], N-[v-V],N1-[a-D]):-
+    coplbh(V).
+fsa4(N-[v-V], N1-[a-D,av-D,q-D,v-D], N-[v-V],N1-[v-D]):-
+    coplbh(V).
+fsa4(N-[v-V], N1-[av-D,p-D,s-D], N-[v-V],N1-[av-D]).
+fsa4(N-[n-V], N1-[av-D,p-D,s-D], N-[n-V],N1-[p-D,s-D]).
+fsa4(N-[v-V], N1-[p-D,s-D], N-[v-V],N1-[p-D]).
+fsa4(N-[n-M, v-M], N1-[e-D, g-D], N-[v-M], N1-[g-D]).
+fsa4(N1-[p-in_order_to], N-[n-M, v-M], N1-[p-in_order_to], N-[v-M]).
+fsa4(N-[r-M], N1-[r-D, w-D], N-[r-M], N1-[r-D]):-
+    M\=him, M\=her.
+fsa4(N-[n-M, v-M], N1-[d-D, p-D], N-[v-M], N1-[p-D]).
+fsa4(N-[a-M, v-M], N1-[v-D], N-[a-M], N1-[v-D]):-
+    coplbh(D).
+fsa4(N-[x-V], N1-[a-D,q-D,v-D], N-[x-V],N1-[q-D,v-D]).
+fsa4(N-[av-V], N1-[a-D,q-D,v-D], N-[av-V],N1-[v-D]).
+fsa4(N-[av-V, n-V], N1-[x-D], N-[av-V],N1-[x-D]).
+fsa4(N-[av-but, s-but], N1-D, N-[s-but], N1-D).
+fsa4(N-[v-M], N1-[a-D, n-D, q-D, v-D], N-[v-M], N1-[q-D]):-
+    coplbh(M).
+fsa4(N0-[av-but, s-but], N1-[n-M, v-M], N0-[s-but], N1-[v-M]).
+fsa4(N0-[av-X, e-X, n-X, s-X], N1-[n-M, v-M], N0-[av-X], N1-[n-M, v-M]).
+fsa4(N0-[av-X, e-X, n-X, s-X], N1-[v-M], N0-[av-X], N1-[v-M]).
+fsa4(N0-[av-X, e-X, n-X, s-X], N1, N0-[av-X], N1).
+fsa4(0-[d-X, e-X, r-X], N1-[v-M], 0-[d-X, r-X], N1-[v-M]).
+fsa4(N-[r-M], N1-[a-D, av-D], N-[r-M], N1-[a-D]).
+fsa4(N1-[d-D, p-D], N-[r-M], N1-[p-D], N-[r-M]).
+fsa4(N0-[a-X, av-X, d-X], N1-[r-M, w-M], N0-[av-X], N1-[r-M, w-M]).
+fsa4(N-[v-M], N1-[e-D, g-D], N-[v-M], N1-[g-D]).
+fsa4(N1-[g-D], N-[a-left, v-M], N1-[g-D], N-[v-M]).
+fsa4(N1-[p-D], N-[a-left, n-M, q-M, v-M], N1-[p-D], N-[n-M]).
+fsa4(N-[n-M, v-M], N1-[r-D, w-D], N-[v-M], N1-[r-D, w-D]).
+fsa4(N-[n-M, v-M], N1-[r-D], N-[v-M], N1-[r-D]).
+fsa4(N1-[ng-D], N-[n-M, v-M], N1-[ng-D], N-[n-M]).
+fsa4(N1-[av-there,v-there], N-[v-M], N1-[av-there], N-[v-M]).
+%    coplbh(M).
+fsa4(N1-[x-D], N-[av-M, d-M, p-M], N1-[x-D], N-[d-M, p-M]).
+fsa4(N1-[x-D], N-[av-M, s-M], N1-[x-D], N-[s-M]).
+fsa4(N-[e-M, p-M], N1-[r-D], N-[e-M], N1-[r-D]).
+fsa4(N0-[a-X, av-X, n-X], N1-[n-M], N0-[a-X], N1-[n-M]).
+fsa4(N0-[a-X, av-X, n-X, v-X], N1-[n-M], N0-[a-X], N1-[n-M]):-
+    nt(M).
+fsa4(N-[av-M, e-M, n-M, s-M], N1-[d-D], N-[av-M], N1-[d-D]).
+fsa4(N-[av-M, e-M, n-M, s-M], N1-[v-D], N-[av-M], N1-[v-D]).
+fsa4(N-[n-M, v-M], N1-[a-D, v-D], N-[v-M], N1-[v-D]):-
+   supporto(M).
+fsa4(N-[v-M], N1-[s-D, v-D], N-[v-M], N1-[v-D]):-
+   supporto(M).
+fsa4(0-[d-X, e-X, s-X], N1-[d-M], 0-[d-X], N1-[d-M]).
+fsa4(0-[d-X, r-X], N1-[n-M, v-M], 0-[d-X], N1-[v-M]).
+fsa4(N-[n-M, v-M], N1-[a-left, n-W, q-W, v-W], N-[n-M], N1-[a-W]):-
+    \+ supporto(M), \+ coplbh(M).
+fsa4(N-[r-M], N1-[a-W, n-W, q-W, v-W], N-[r-M], N1-[v-W]).
+fsa4(0-[r-M], N-[a-W, n-W, v-W], 0-[r-M], N-[v-W]).
+fsa4(0-[p-P, r-P, s-P, w-P], N0-[r-W], 0-[r-P, w-P], N0-[r-W]).
+fsa4(0-[p-P, r-P, s-P, w-P], N0-[v-W], 0-[r-P, w-P], N0-[v-W]).
+fsa4(0-[p-P, r-P, s-P, w-P], N0-[n-W], 0-[r-P, w-P], N0-[n-W]).
+fsa4(N3-[p-P, r-P, s-P, w-P], N0-[r-W], N3-[s-P], N0-[r-W]).
+fsa4(N3-[p-P, r-P, s-P, w-P], N0-[v-W], N3-[s-P], N0-[v-W]).
+fsa4(N3-[p-P, r-P, s-P, w-P], N0-[n-W], N3-[s-P], N0-[n-W]).
+fsa4(0-[n-D, v-D], N1-[v-V], 0-[n-D], N1-[v-V]):-
+   spy_lower(D,Low, 1).
+fsa4(0-[d-D, s-D], N1-M, 0-[s-D], N1-M).
+fsa4(N3-[n-P, q-P, v-P], N0-[v-W], N3-[n-P], N0-[v-W]):-
+    coplbh(W).
+fsa4(N3-[a-P, n-P, v-P], N0-[v-W], N3-[n-P], N0-[v-W]).
+fsa4(N-[v-D], N2-[n-K, v-K], N-[v-D], N2-[v-K]):-
+    supporto(D);coplbh(D).
+fsa4(N-[v-D], N2-[a-K, n-K, v-K], N-[v-D], N2-[V-K]):-
+    supporto(D);coplbh(D),(
+                            checklength, V=v;V=a).
+fsa4(N-[C-D|_], N2-[a-K, q-K, v-K], N-[v-D], N2-[v-K]):-
+    supporto(D);coplbh(D).
+fsa4(N-[C-D], N2-[a-K, q-K, v-K], N-[v-D], N2-[v-K]):-
+    supporto(D);coplbh(D).
+fsa4(N-[C-D|_], N2-[q-K, v-K], N-[v-D], N2-[v-K]):-
+    supporto(D);coplbh(D).
+fsa4(N-[C-D|_], N2-[n-K, q-K, v-K], N-[v-D], N2-[v-K]):-
+    supporto(D);coplbh(D).
+fsa4(N-[C-D], N2-[n-K, q-K, v-K], N-[v-D], N2-[v-K]):-
+    supporto(D);coplbh(D).
+fsa4(N-[C-D], N2-[q-K, v-K], N-[v-D], N2-[v-K]):-
+    supporto(D);coplbh(D).
+fsa4(N-[C-D], N2-[a-K, v-K], N-[v-D], N2-[Tag-K]):-
+     (supporto(D);coplbh(D)),
+     disaccess_wsj(K,Best),
+     transl_tags(K,Best,Tags),
+     (on(v,Tags),Tag=v;on(Tag,Tags)).
+fsa4(N-[n-D, v-D], N2-[s-K, v-K], N-[v-D], N2-[v-K]):-
+    supporto(D);coplbh(D).
+fsa4(N-[n-D, v-D], N2-[q-K], N-[v-D], N2-[q-K]).
+fsa4(N-[n-D, v-D], N2-[v-K], N-[v-D], N2-[v-K]):-
+    supporto(D);coplbh(D).
+fsa4(N-[av-W, p-W, r-W, s-W, w-W], N1-[r-D], N-[s-W], N1-[r-D]).
+fsa4(N1-[a-M, q-M, v-M], N2-[d-P], N1-[v-M], N2-[d-P]).
+fsa4(N-[a-D], N1-[n-M, v-M], N-[a-D], N1-[n-M]):-
+    \+ supporto(M), \+ coplbh(M).
+fsa4(N-[a-D], N1-[av-M, r-M, s-M, w-M], N-[a-D], N1-[s-M]).
+fsa4(N-[a-M, r-M], N1-[v-D], N-[r-M], N1-[v-D]).
+fsa4(N-[n-M, v-M], N1-[d-D], N-[n-M], N1-[d-D]):-
+   integer(D).
+fsa4(N-[n-M, v-M], N1-[d-D], N-[v-M], N1-[d-D]).
+fsa4(N-[a-M, p-M], N1-[d-D], N-[p-M], N1-[d-D]).
+fsa4(N-[d-M, r-M], N1-[a-D], N-[d-M], N1-[a-D]).
+fsa4(N-[n-M, v-M], N1-[q-D, v-D], N-[v-M], N1-[v-D]):-
+   coplbh(M).
+fsa4(N-[d-M, s-M], N1-[d-D], N-[d-M], N1-[d-D]):-
+   intn(M).
+fsa4(N-[d-M, s-M], N1-[d-D], N-[s-M], N1-[d-D]):-
+   high_rank(D).
+fsa4(N1-[a-M, q-M, v-M], N2-[a-D], N1-[v-M], N2-[a-D]).
+fsa4(N-[a-that, c-that|_], N1-[a-X], N-[c-that], N1-[a-X]):-
+  ap_engl(X,_,_).
+fsa4(N-[a-that, c-that|_], N1-[d-X, r-X], N-[c-that], N1-[r-X]).
+fsa4(N-[a-that, c-that|_], N1-[a-M, q-M, v-M], N-[c-that], N1-[v-M]).
+fsa4(N-[d-X, r-X], N1-[n-M, v-M], N-[d-X], N1-[n-M]):- X\=one.
+fsa4(N-[d-X, r-X], N1-[n-M, v-M], N-[r-X], N1-[v-M]):- X=one.
+fsa4(N0-[d-D, r-D], N1-[v-M], N0-[r-D], N1-[v-M]).
+fsa4(N0-[d-D, r-D], N1-[p-M], N0-[r-D], N1-[p-M]).
+fsa4(N-[av-D, p-D], N1-[x-M], N-[av-D], N1-[x-M]).
+fsa4(N-[av-D, p-D], N1-[p-M], N-[av-D], N1-[p-M]).
+fsa4(N-[av-D, p-D], N1-[X-M], N-[p-D], N1-[X-M]).
+fsa4(N-[a-D, q-D, v-D], N1-[x-M], N-[v-D], N1-[x-M]).
+fsa4(N-[a-D, q-D, v-D], N1-[r-M], N-[v-D], N1-[r-M]).
+fsa4(N-[a-D, q-D, v-D], N1-[d-M, r-M], N-[v-D], N1-[d-M, r-M]).
+fsa4(N-[n-M, v-M], N1-[x-D], N-[n-M], N1-[x-D]):-
+  spy_lower(M,Atom,1).
+fsa4(N-[r-D], N1-[n-M, v-M|_], N-[r-D], N1-[v-M]):-
+   stringof([W,H|_],D),
+   mcon(W,H,Wh), Wh\=wh.
+fsa4(N-[r-D], N1-[n-M, v-M], N-[r-D], N1-[v-M]):-
+   stringof([W,H|_],D),
+   mcon(W,H,Wh), Wh\=wh.
+fsa4(N-[r-D], N1-[n-M, v-M|_], N-[r-D], N1-[v-M]).
+fsa4(N-[r-D], N1-[n-M, v-M], N-[r-D], N1-[v-M]).
+fsa4(N-[s-D, v-D], N1-[d-M], N-[s-D], N1-[d-M]):-
+   supporto(D).
+fsa4(N-[s-D, v-D], N1-[n-M, v-M], N-[v-D], N1-[v-M]):-
+   supporto(D).
+fsa4(N0-P, N-[s-D, v-D], N0-P, N-[v-D]):-
+   supporto(D).
+fsa4(N-[av-D,v-D], N1-[v-V], N-[v-D], N1-[v-V]):-
+   coplbh(V).
+fsa4(N-[r-D], N1-[a-M, q-M, v-M|_], N-[r-D], N1-[v-M]).
+fsa4(N1-[a-M, q-M, v-M], N-[d-D], N1-[v-M], N-[d-D]).
+fsa4(N1-[a-M, n-M, q-M, v-M], N-[d-D], N1-[v-M], N-[d-D]).
+fsa4(N1-[a-M, n-M, q-M, v-M], N-[r-D], N1-[v-M], N-[r-D]).
+fsa4(N-[r-D], N1-[a-M, v-M], N-[r-D], N1-[v-M]).
+fsa4(N-[d-D], N1-[av-M, d-M, e-M], N-[d-D], N1-[d-M]).
+fsa4(N-[d-D], N1-[n-M, v-M|_], N-[d-D], N1-[n-M]):-
+   \+ supporto(M).
+fsa4(N-[d-D], N1-[a-M, d-M, r-M], N-[d-D], N1-[d-M]):-
+   quanthead(M).
+fsa4(N-[C-D|R], N1-[d-about,n-M,p-M,v-M], N-[C-D|R], N1-[p-about]):-
+    check_subcn(D,about),!.
+fsa4(N0-[q-D, v-D], N-[a-that, c-that|_], N0-[q-D, v-D], N-[c-that]).
+fsa4(N0-[n-D], N-[a-that, c-that|_], N0-[n-D], N-[c-that]):-
+   check_nf(D).
+fsa4(N1-[a-M, c-M, r-M], N2-[d-K],  N1-[c-M], N2-[d-K]):-
+   K=the;K=a;K=an.
+fsa4(N1-[d-K], N2-[av-M, n-M, v-M],  N1-[d-K], N2-[n-M]).
+fsa4(N-[v-D], N1-[a-M, c-M, r-M], N-[v-D], N1-[c-M]).
+fsa4(N0-[i-D, v-D], N-[x-X], N0-[i-D], N-[x-X]).
+fsa4(N-[n-M, v-M], N1-[p-of], N-[n-M], N1-[p-of]):-
+   stringof(Gerund,M),
+   \+ on('_',Gerund).
+fsa4(N-[n-M, v-M], N1-[p-D], N-[v-M], N1-[p-D]):-
+   stringof(Gerund,M),
+   reverse(Gerund, [g,n,i|R]),
+   length(R,L),
+   2<L.
+fsa4(0-[v-M], N1-[p-of], 0-[n-M], N1-[p-of]).
+fsa4(0-[n-M, v-M], N1-[a-D, c-D, r-D], 0-[n-M], N1-[c-D]):-
+     lemmatize_dic_v(M, Lemma, S1),
+     coml_n(Lemma, LArgsV),
+     on(subc-Subs,LArgsV),
+     on(_/that/fcomp, Subs).
+fsa4(0-[n-M, v-M], N1-[a-D, c-D, r-D], 0-[v-M], N1-[c-D]).
+fsa4(N-[x-D], N1-[p-M, s-M], N-[x-D], N1-[s-M]).
+fsa4(0-[p-D, s-D], N-[A-X], 0-[s-D], N-[A-X]).
+fsa4(N0-[r-D, w-D], N-[n-X, v-X], N0-[r-D], N-[A-X]):-
+   disaccess_wsj(X, Best),
+   rev_transl_tags(W, Best, Tags),
+   on(Tag, Tags), stringof([A|T], Tag).
+fsa4(N0-[r-D, w-D], N-[a-X, v-X], N0-[r-D], N-[v-X]).
+fsa4(N0-[r-D, w-D], N-[a-X, q-X, v-X], N0-[r-D, w-D], N-[v-X]).
+fsa4(0-[n-D], N1-[a-M, q-M, v-M], 0-[n-D], N1-[v-M]).
+fsa4(0-[d-D,e-D,p-D,s-D], N1-[a-M], 0-[s-D], N1-[a-M]).
+fsa4(0-[d-D,e-D,p-D,s-D], N1-[d-M], 0-[s-D], N1-[d-M]).
+fsa4(N0-[d-D,e-D,p-D,s-D], N1-[d-M], N0-[s-D], N1-[d-M]):-
+   high_rank(M).
+fsa4(0-[d-D,e-D,p-D,s-D], N1-[n-M], 0-[s-D], N1-[n-M]).
+fsa4(0-[d-D,e-D,p-D,s-D], N1-[r-M], 0-[s-D], N1-[r-M]).
+fsa4(N-[a-D, r-D], N1-[n-M, v-M], N-[a-D], N1-[n-M]):-
+   \+ supporto(M), \+ coplbh(M), M\=means.
+fsa4(N-[d-D], N1-[a-M, av-M, n-M, v-M], N-[d-D], N1-[a-M, n-M]).
+fsa4(N-[n-M], N1-[n-D, v-D], N-[n-M], N1-[n-D]):-
+   stringof(Gerund,M),
+   reverse(Gerund, [_,s,-|_]).
+fsa4(0-[a-M, c-M, r-M], N2-[v-K],  0-[r-M], N2-[v-K]).
+fsa4(0-[a-M, c-M, r-M], N2-[d-K],  0-[c-M], N2-[d-K]).
+%fsa4(N2-[n-K],  N0-[a-M, c-M, r-M], N2-[n-K],  N0-[r-M]).
+fsa4(N-[n-M, v-M], N1-[n-D, v-D], N-[v-M], N1-[v-D]):-
+   supporto(M); coplbh(M).
+fsa4(N2-[x-K],  N0-[av-M, s-M], N2-[x-K],  N0-[s-M]).
+fsa4(N0-[n-M, v-M], N1-[a-D, v-D], N0-[n-M], N1-[v-D]).
+fsa4(N0-[q-D, v-D], N-[n-M, v-M], N0-[q-D, v-D], N-[n-M]).
+fsa4(N1-[a-M, q-M, v-M], N-[a-K, c-K, r-K], N1-[v-M], N-[c-K]).
+fsa4(N0-[n-D], N1-[av-M, n-M], N0-[n-D], N1-[av-M]).
+fsa4(0-[p-D,r-D,s-D,w-D], N1-[d-M], 0-[s-D,w-D], N1-[d-M]).
+fsa4(N0-[e-D,p-D,s-D], N1-[r-M], N0-[s-D], N1-[r-M]).
+fsa4(N1-[a-X], N-[a-A, av-A, n-A|_], N1-[a-X], N-[a-A]):-
+  ap_engl(X,_,_).
+fsa4(N0-[p-D, s-D], N-[A-X], N0-[p-D], N-[A-X]).
+fsa4(N0-[s-M, v-M], N1-[a-D, c-D, r-D], N0-[s-M], N1-[r-D]).
+fsa4(N0-[q-D, v-D], N-[n-M], N0-[a-D], N-[n-M]):-
+   spy_lower(D, LowD, 1),
+   spy_lower(M, LowM, 1).
+fsa4(N-[a-A, av-A, d-A], N1-[v-X], N-[av-A], N1-[v-X]).
+fsa4(0-[n-M, v-M], N2-[n-K],  0-[v-M], N2-[n-K]):-
+   supporto(M); coplbh(M).
+fsa4(N-[n-M, v-M], N2-K,  N-[n-M], N2-K):-
+   tpl(M,_).
+fsa4(N0-[d-D], N1-[v-am], N0-[d-D], N1-[n-am]).
+fsa4(0-[d-D], N1-[x-X], 0-[n-D], N1-[x-X]):-
+   nturn_up_wn(D, Cats), Cats\=[], on(sur,Cats).
+fsa4(0-[d-D], N1-[v-X], 0-[n-D], N1-[v-X]):-
+   nturn_up_wn(D, Cats), Cats\=[], on(sur,Cats).
+fsa4(N-[v-M], N1-[a-D,av-D,n-D, v-D], N-[v-M], N1-[v-D]):-
+   supporto(M); coplbh(M).
+fsa4(N1-[v-X], N-[a-A, av-A, n-A|_], N1-[v-X], N-[av-A]).
+fsa4(N0-[n-M, v-index], N2-[a-K,q-K,v-K],  N0-[n-M], N2-[v-K]).
+fsa4(N0-[p-D], N-[v-may], N0-[p-D], N-[n-may]).
+fsa4(N0-[d-D], N-[av-out], N0-[d-D], N-[n-out]).
+fsa4(N-[v-may], N0-[d-D], N-[n-may], N0-[d-D]).
+fsa4(N0-[d-D,i-D], N1-[n-X], N0-[d-D], N1-[n-X]).
+fsa4(N0-[a-D,av-D,n-D,v-D], N1-[av-M,n-M], N0-[a-D], N1-[n-M]).
+fsa4(N0-[d-D], N1-[a-X,av-X], N0-[d-D], N1-[a-X]).
+fsa4(N0-[p-D, s-D], N-[d-X,e-X,r-X], N0-[p-D], N-[r-X]).
+fsa4(N-[a-X, av-X, n-X, v-X], N0-[ng-D], N-[a-X], N0-[ng-D]).
+fsa4(N-[a-X], N0-[av-D, n-D], N-[a-X], N0-[n-D]):-
+   nt(D).
+fsa4(N-[av-X, d-X, p-X], N0-[d-D], N-[d-X], N0-[d-D]).
+fsa4(N0-[d-D], N-[av-S,n-S], N0-[d-D], N-[n-S]):- nt(S).
+fsa4(N-[av-X, e-X], N0-[av-there,v-there], N-[e-X], N0-[av-there]).
+fsa4(N-[d-X, n-X, p-X, v-X], N0-[x-D], N-[d-X], N0-[x-D]):-
+         money_simb(D).
+fsa4(N2-[v-V], N3-[a-M,av-M,e-M,n-M,p-M,s-M,v-M], N2-[v-V], N3-[v-M]):-
+       soggcontr(V, Cat, W1, W2).
+fsa4(N2-[v-V], N3-[a-M,av-M,e-M,n-M,p-M,s-M,v-M], N2-[v-V], N3-[v-M]):-
+        supporto(V).
+fsa4(N-[d-X, i-X, n-X], N0-[n-D|_], N-[d-X], N0-[n-D]).
+fsa4(N0-[e-D,v-D], N1-[p-to], N0-[v-D], N1-[p-to]).
+fsa4(N3-[a-M,n-M,p-M,v-M], N2-[a-V], N3-[v-M], N2-[a-V]):-
+       stringof(Gerund,M),
+       reverse(Gerund, [g,n,i|_]),
+       !.
+fsa4(N2-[n-V],N3-[a-M,n-M,v-M], N2-[n-V], N3-[v-M]):-
+     disaccess_wsj(M,Best),
+     transl_tags(M,Best,Tags),
+     on(v,Tags).
+fsa4(N-[av-M, in-M, p-M], N1-[d-D], N-[in-M], N1-[d-D]).
+fsa4(N-[av-M, in-M, p-M], N1-[_-D], N-[in-M], N1-[d-D]):-
+     integer(D).
+fsa4(N-[av-M, n-M, v-M], N1-[p-of], N-[n-M], N1-[p-of]).
+fsa4(N-[d-D], N1-[n-M, nt-M, v-M], N-[d-D], N1-[n-M]).
+
+/* 3 elementi */
+fsa(N0-[p-P],  N-[a-D,v-D], N1-[p-B], N0-[n-P], N-[v-D], N1-[p-B]):-
+       stringof(Gerund,D),
+       reverse(Gerund, [g,n,i|_]).
+fsa(N0-[e-P], N-[a-D,v-D], N1-[a-M,r-M], N0-[e-P], N-[v-D], N1-[a-M,r-M]).
+fsa(N0-[n-P,v-P], N-[a-D,av-D], N1-[e-R,p-R,s-R], N0-[n-P], N-[av-D], N1-[p-R]):-
+ check_subcn(P,R).
+fsa(N0-[a-P,d-P,n-P], N-[a-D,n-D,v-D], N1-[n-R], N0-[d-P], N-[a-D], N1-[n-R]).
+fsa(N0-[p-P], N-[a-D,n-D,v-D], N1-[n-Nt], N0-[p-P], N-[v-D], N1-[n-Nt]):-
+       stringof(Gerund,D),
+       reverse(Gerund, [g,n,i|_]),
+       nt(Nt).
+fsa(N0-[d-P,i-P,n-P], N-[a-D,n-D,v-D], N1-[p-to], N0-[d-P], N-[n-D], N1-[p-to]).
+fsa(N0-[av-P,d-P,e-P,i-P,s-P], N-[a-D,av-D,n-D,v-D], N1-[a-M,c-M,r-M], N0-[d-P], N-[a-D], N1-[c-M]).
+fsa(N0-[av-P,d-P,e-P,i-P,s-P], N-[a-D,av-D,n-D,v-D], N1-[c-M], N0-[d-P], N-[a-D], N1-[c-M]).
+fsa(N0-[a-P,v-P], N-[a-D,r-D], N1-[a-M], N0-[v-P], N-[r-D], N1-[a-M]):-
+    ap_engl(D,_,_).
+fsa(N0-[n-P],  N1-[p-of], N-[a-D,n-D,v-D], N0-[n-P], N1-[p-of], N-[n-D]):-
+       stringof(Gerund,D),
+       reverse(Gerund, [g,n,i|_]).
+fsa(N0-[e-P], N-[a-D,v-D], N1-[a-M,r-M], N0-[e-P], N-[v-D], N1-[a-M,r-M]).
+fsa(N0-[n-P], N-[a-D,v-D], N1-[p-M], N0-[n-P], N-[v-D], N1-[p-M]):-
+        findall_poss(Si),
+        length(Si,L),
+        L=<9.
+fsa(N0-[n-P], N-[a-D,v-D], N1-[e-M,p-M,s-M], N0-[n-P], N-[v-D], N1-[p-M]):-
+        findall_poss(Si),
+        length(Si,L),
+        L=<9.
+fsa(N0-[d-P], N-[v-D], N1-[n-M,nt-M], N0-[d-P], N-[a-D], N1-[nt-M]):-
+       stringof(PastPart,D),
+       reverse(PastPart, [T|R]),
+       (T=d;T=n;T=t).
+fsa(N0-[d-P,r-P], N-[v-D], N1-[n-M,nt-M], N0-[d-P], N-[a-D], N1-[nt-M]):-
+       stringof(PastPart,D),
+       reverse(PastPart, [T|R]),
+       (T=d;T=n;T=t).
+fsa(N2-[n-V,nt-V], N1-[a-M,c-M,r-M], N0-[n-D], N2-[nt-V], N1-[r-M], N0-[n-D]).
+fsa(N0-[n-P], N-[av-D,d-D,e-D], N1-[v-M], N0-[n-P], N-[av-D], N1-[v-M]).
+fsa(N0-[r-P], N-[av-D,d-D,e-D], N1-[v-M], N0-[r-P], N-[av-D], N1-[v-M]).
+fsa(N0-[d-P], N-[a-D,n-D,q-D,v-D], N1-[n-M], N0-[d-P], N-[a-D], N1-[n-M]).
+fsa(N2-[v-V], N1-[a-M,c-M,r-M], N0-[x-D], N2-[v-V], N1-[r-M], N0-[x-D]).
+fsa(N-[a-D,c-D,r-D], N1-[a-M,av-M,i-M,n-M,v-M], N0-[n-P], N-[a-D], N1-[a-M], N0-[n-P]).
+fsa(N-[av-D,d-D,e-D,r-D], N1-[p-M], N0-[r-P,w-P], N-[e-D], N1-[p-M], N0-[r-P,w-P]).
+fsa(N0-[r-P], N2-[v-V], N3-[a-M,av-M,e-M,n-M,p-M,s-M,v-M], N0-[r-P], N2-[v-V], N3-[v-M]):-
+       soggcontr(V, Cat, W1, W2).
+fsa(N0-[r-P], N2-[v-V], N3-[a-M,av-M,e-M,n-M,p-M,s-M,v-M], N0-[r-P], N2-[v-V], N3-[v-M]):-
+        supporto(V).
+
+fsa(N-[av-D,i-D,r-D,s-D,w-D], N0-[e-P,g-P], N1-[v-M], N-[w-D], N0-[g-P], N1-[v-M]):-
+   notinterrogative.
+fsa(N-[c-D], N1-[e-M,n-M,s-M,v-M], N0-[n-P], N-[c-D], N1-[s-M], N0-[n-P]).
+fsa(N-[a-D,c-D,r-D], N1-[e-M,n-M,s-M,v-M], N0-[n-P], N-[c-D], N1-[s-M], N0-[n-P]).
+fsa(N-[av-D,nt-D], N1-[e-M], N0-[av-P,n-P,nt-P,v-P], N-[nt-D], N1-[e-M], N0-[nt-P]).
+fsa(N0-[v-P], N-[p-M],N1-[a-D,n-D,v-D], N0-[v-P], N-[p-M], N1-[v-D]):-
+       stringof(Gerund,D),
+       reverse(Gerund, [g,n,i|_]),
+       lemmatize_dic_v(P, Lemma, S1),
+       vsp(Lemma,Ps),
+       on(M,Ps).
+fsa(N-[a-D,c-D,r-D], N1-[x-M], N0-[s-P], N-[r-D], N1-[x-M], N0-[s-P]).
+fsa(N-[e-D,p-D,s-D], N1-[r-M], N0-[x-P], N-[p-D], N1-[r-M], N0-[x-P]).
+fsa(N0-[n-P], N-[av-D,e-D,n-D,v-D], N1-[v-M], N0-[n-P], N-[av-D], N1-[v-M]).
+fsa(N-[n-P], N0-[n-X], N3-[a-W,v-W], N-[n-P], N0-[n-X], N3-[n-W]):-
+           mcon(P,'_',P1),
+           mcon(P1,W,Mult),
+            nwn(Mult,K).
+fsa(N0-[v-P], N-[a-M,n-M],N1-[n-D,v-D], N0-[v-P], N-[a-M], N1-[n-D]):-
+       stringof(Gerund,D),
+       reverse(Gerund, [g,n,i|_]).
+fsa(N0-[av-P,n-there,v-P], N-[v-M],N1-[n-D,v-D], N0-[av-P], N-[v-M], N1-[n-D]):-
+      coplbh(M).
+fsa(N0-[v-P], N-[a-D,c-D,r-D], N1-[r-M,w-M], N0-[v-P], N-[r-D], N1-[r-M]).
+fsa(N0-[a-P,v-P], N-[a-M,n-M],N1-[a-D,n-D], N0-[v-P], N-[a-M], N1-[n-D]):-
+       stringof(Gerund,P),
+       (reverse(Gerund, [g,n,i|_]);
+       reverse(Gerund, [d,e|_])).
+fsa(N0-[r-P], N2-[a-V,av-V,d-V], N3-[n-M,nt-M,v-M], N0-[r-P], N2-[av-V], N3-[v-M]):-
+   soggcontr(P, Cat, W1, W2),
+       stringof(Gerund,M),
+       reverse(Gerund, [g,n,i|_]).
+fsa(N0-[r-P], N2-[a-V,av-V,d-V], N3-[a-M,n-M,v-M], N0-[r-P], N2-[av-V], N3-[v-M]):-
+   soggcontr(P, Cat, W1, W2),
+       stringof(Gerund,M),
+       reverse(Gerund, [g,n,i|_]).
+fsa(N0-[d-P,e-P,r-P], N2-[a-X,r-X], N1-[n-D, v-D], N0-[d-P], N2-[a-X], N1-[n-D]).
+fsa(N2-[e-X], N1-[a-D, n-D, v-D], N0-[r-P], N2-[e-X], N1-[v-D], N0-[r-P]).
+fsa(N2-[e-X], N1-[a-D, n-D, v-D], N0-[n-P], N2-[e-X], N1-[v-D], N0-[n-P]).
+fsa(N2-[e-X], N1-[a-D, n-D, v-D], N0-[d-P], N2-[e-X], N1-[v-D], N0-[d-P]).
+fsa(N0-[a-P,n-P,v-P], N-[a-M,n-M,q-M,v-M],N1-[a-D,av-D,n-D,p-D,v-D], N0-[n-P], N-[v-M], N1-[av-D]):-
+   mcon(M,'_',M1),
+   mcon(M1,D,D1),
+   v(D1,_).
+fsa(N0-[n-P], N-[a-M,n-M,q-M,v-M],N1-[a-D,av-D,n-D,p-D,v-D], N0-[n-P], N-[v-M], N1-[av-D]):-
+   mcon(M,'_',M1),
+   mcon(M1,D,D1),
+   v(D1,_).
+fsa(N0-[v-P], N1-[a-D, av-D, n-D, v-D], N2-[a-X, v-X], N0-[v-P], N1-[av-D], N2-[a-X]):-
+      coplbh(P).
+fsa(N0-[x-P], N1-[a-D, av-D], N2-[r-X], N0-[x-P], N1-[av-D], N2-[r-X]).
+fsa(N0-[n-P], N1-[a-D, av-D, n-D, v-D], N2-[x-'?'], N0-[n-P], N1-[v-D], N2-[x-'?']):-
+   notmainverb.
+fsa(N0-[x-P], N1-[r-D, w-D], N2-[n-X], N0-[x-P], N1-[w-D], N2-[n-X]):-
+   notinterrogative, N0=<6.
+fsa(N0-[p-P], N1-[r-D, w-D], N2-[n-X|_], N0-[p-P], N1-[w-D], N2-[n-X]):-
+   notinterrogative, N0=<6.
+fsa(N0-[n-P], N1-[n-D, v-D], N2-[v-X], N0-[n-P], N1-[n-D], N2-[v-X]):-
+      \+ coplbh(D), \+ supporto(D).
+fsa(0-[r-P,w-P], N1-[n-D, v-D], N2-[n-X], 0-[r-P,w-P], N1-[n-D], N2-[n-X]):-
+      P\=who, P\='Who', \+ coplbh(D), \+ supporto(D).
+fsa(N0-[v-P], N1-[a-D, av-D], N2-[p-to], N0-[v-P], N1-[a-D], N2-[p-to]):-
+      coplbh(P).
+fsa(N0-[n-P], N1-[a-D, n-D], N2-[r-X,w-X], N0-[n-P], N1-[n-D], N2-[r-X,w-X]).
+fsa(N0-[p-P], N1-[n-D, v-D], N2-[p-of], N0-[p-P], N1-[n-D], N2-[p-of]).
+fsa(N2-[a-X,c-X,r-X], N0-[n-P, v-P], N1-[a-D, av-D], N2-[c-X], N0-[v-P], N1-[av-D]):-
+      stringof(Gerund,P),
+      reverse(Gerund, [s|_]),
+      !.
+fsa(N-[a-M,v-M], N1-[a-D,av-D], N0-[av-R,p-R], N-[v-M], N1-[av-D], N0-[p-R]):-
+      stringof(Gerund,M),
+      reverse(Gerund, [g,n,i|_]),
+      !.
+fsa(N-[a-M,v-M], N1-[a-D,av-D], N0-[p-R], N-[v-M], N1-[av-D], N0-[p-R]):-
+      stringof(Gerund,M),
+      reverse(Gerund, [g,n,i|_]),
+      !.
+fsa(N2-[a-X,c-X,r-X], N0-[n-P, v-P], N1-[r-D], N2-[c-X], N0-[v-P], N1-[r-D]).
+fsa(N0-[n-P], N1-[a-D, av-D, v-D], N2-[a-X], N0-[n-P], N1-[v-D], N2-[a-X]).
+fsa(N0-[n-P], N1-[a-D, n-D, v-D], N2-[p-X], N0-[n-P], N1-[v-D], N2-[p-X]):- 
+      X \= of.
+fsa(N2-[e-X], N1-[a-D, v-D], N0-[n-P], N2-[e-X], N1-[v-D], N0-[n-P]).
+fsa(N0-[n-P], N1-[a-D, v-D], N2-[e-X], N0-[n-P], N1-[v-D], N2-[e-X]).
+fsa(N0-[a-P], N1-[a-D, n-D], N2-[p-X], N0-[a-P], N1-[n-D], N2-[p-X]).
+fsa(N0-[n-P], N2-[av-X], N1-[a-D, v-D], N0-[n-P], N2-[av-X], N1-[v-D]).
+fsa(N0-[n-P], N1-[a-D, v-D], N2-[a-X], N0-[n-P], N1-[v-D], N2-[a-X]).
+fsa(N0-[n-P], N1-[a-D, av-D, n-D, v-D], N2-[n-X|Res], N0-[n-P], N1-[n-D], N2-[n-X|Res]):-
+      lemmatize_dic(X,Lem,K),
+      mcon(D,'_',P1),
+      mcon(P1,Lem,W),
+      lemmatize_dic(W,Le,Ke).
+fsa(N0-[n-P], N1-[a-D, av-D, n-D, v-D], N2-[n-X|Res], N0-[n-P], N1-[v-D], N2-[n-X|Res]).
+fsa(N0-[v-P], N1-[a-D, d-D, r-D], N2-[n-X,v-X], N0-[v-P], N1-[a-D], N2-[n-X]).
+fsa(N-[av-M,n-M], N1-[a-D,v-D], N0-[r-R], N-[n-M], N1-[v-D], N0-[r-R]).
+fsa(N0-[d-P], N2-[a-X], N1-[a-D, c-D, r-D], N0-[d-P], N2-[a-X], N1-[c-D]).
+fsa(N0-[d-P,e-P,i-P,s-P], N2-[a-X], N1-[a-D, c-D, r-D], N0-[d-P], N2-[a-X], N1-[c-D]).
+fsa(N0-[n-P], N1-[av-D, d-D, p-D], N2-[n-X], N0-[n-P], N1-[p-D], N2-[n-X]).
+fsa(N-[a-M,av-M,d-M], N1-[a-D,av-D,n-D], N0-[p-of], N-[d-M], N1-[n-D], N0-[p-of]).
+fsa(N0-[d-P], N1-[n-D], N2-[n-X, v-X], N0-[d-P], N1-[n-D], N2-[n-X]):-
+    integer(P), qm(D), qm(X).
+fsa(N0-[p-to], N1-[a-D,n-D,v-D], N2-[n-P,v-P], N0-[p-to], N1-[v-D], N2-[n-P]):-
+      \+ coplbh(D).
+fsa(N0-[p-to], N1-[v-D], N2-[n-P,v-P], N0-[p-to], N1-[v-D], N2-[v-P]):-
+      coplbh(D).
+fsa(N0-[p-P], N1-[a-D, n-D, v-D], N2-[a-X,c-X,r-X], N0-[p-P], N1-[v-D], N2-[c-X]):-
+      stringof(Gerund,D),
+      reverse(Gerund, [g,n,i|_]),
+      lemmatize_dic_v(D, Lemma, S1),
+      coml(Lemma, LArgsV), on(fcomp/_, LArgsV).
+fsa(N0-[p-P,s-P], N1-[n-D, v-D], N2-[a-X], N0-[p-P], N1-[v-D], N2-[a-X]):-
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N0-[n-P], N1-[av-D, e-D, n-D, s-D], N2-[n-X,v-X], N0-[n-P], N1-[av-D], N2-[v-X]).
+fsa(N0-[x-P], N1-[s-D, v-D], N2-[d-X], N0-[x-P], N1-[s-D], N2-[d-X]).
+fsa(N0-[p-P,s-P], N1-[a-D, c-D, r-D], N2-[x-X], N0-[p-P], N1-[r-D], N2-[x-X]).
+fsa(N0-[r-P], N1-[a-D, av-D], N2-[n-X, v-X], N0-[r-P], N1-[av-D], N2-[v-X]).
+fsa(N0-[r-P], N1-[av-D], N2-[a-X, n-X, v-X], N0-[r-P], N1-[av-D], N2-[v-X]).
+fsa(0-[n-P], N1-[a-D, av-D], N2-[n-X, v-X], 0-[n-P], N1-[av-D], N2-[v-X]).
+fsa(N0-[n-P], N1-[a-D, av-D, p-D], N2-[a-X], N0-[n-P], N1-[p-D], N2-[a-X]).
+fsa(N0-[n-P], N1-[a-D, av-D, p-D], N2-[d-X], N0-[n-P], N1-[p-D], N2-[d-X]).
+fsa(N0-[e-P], N1-[n-D, v-D], N2-[a-X], N0-[e-P], N1-[v-D], N2-[a-X]).
+fsa(N0-[n-P], N1-[a-D, v-D], N2-[p-X], N0-[n-P], N1-[v-D], N2-[p-X]).
+fsa(N0-[n-P], N1-[ag-D,av-D,p-D,v-D], N-[d-X], N0-[n-P], N1-[p-D], N-[d-X]):-
+     disaccess_wsj(D,Best),
+     transl_tags(D,Best,Tags),
+     on(p,Tags).
+
+fsa(N0-[n-P], N1-[n-D], N-[n-X, v-X], N0-[n-P], N1-[a-D], N-[n-X]):-
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]),
+     disaccess_wsj(X,Best),
+     transl_tags(X,Best,Tags),
+     on(n,Tags).
+fsa(N0-[n-P], N1-[a-D,n-D,v-D], N-[n-X, v-X], N0-[n-P], N1-[a-D], N-[n-X]):-
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]),
+     disaccess_wsj(X,Best),
+     transl_tags(X,Best,Tags),
+     on(n,Tags).
+fsa(N0-[n-P], N1-[a-D,n-D,v-D], N-[p-to], N0-[n-P], N1-[n-D], N-[p-to]):-
+     disaccess_wsj(X,Best),
+     transl_tags(X,Best,Tags),
+     on(n,Tags).
+fsa(N1-[a-D, n-D, v-D], N2-[p-to], N0-[n-A,v-A], N1-[v-D], N2-[p-to], N0-[v-A]):-
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N0-[r-P], N1-[v-D], N2-[n-V,v-V], N0-[r-P], N1-[v-D], N2-[v-V]):-
+    supporto(D);coplbh(D).
+fsa(N0-[p-P], N1-[a-D, r-D], N2-[x-X], N0-[p-P], N1-[r-D], N2-[x-X]).
+fsa(N0-[p-to], N1-[a-D, n-D, v-D], N2-[p-P], N0-[p-to], N1-[v-D], N2-[p-P]).
+fsa(N0-[p-to], N1-[n-D, v-D], N2-[d-P], N0-[p-to], N1-[v-D], N2-[d-P]).
+fsa(N0-[p-to], N1-[n-D, v-D], N2-[x-P], N0-[p-to], N1-[v-D], N2-[x-P]).
+fsa(N0-[av-A], N1-[n-D, v-D], N2-[a-P], N0-[av-A], N1-[v-D], N2-[a-P]):-
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N0-[v-P], N1-[d-D, i-D], N2-[n-V,v-V], N0-[v-P], N1-[d-D], N2-[n-V]).
+fsa(N0-[v-P], N1-[a-D, av-D, n-D, v-D], N2-[r-V], N0-[v-P], N1-[v-D], N2-[r-V]):-
+    supporto(P);coplbh(P).
+fsa(N0-[v-P], N1-[r-D], N2-[n-V,q-V,v-V], N0-[v-P], N1-[r-D], N2-[v-V]):-
+    supporto(P);coplbh(P).
+fsa(N0-[p-P], N1-[a-D, av-D, v-D], N2-[a-V,n-V,v-V], N0-[p-P], N1-[a-D], N2-[n-V]).
+fsa(N0-[p-of], N1-[a-D, v-D], N2-[n-P, v-P], N0-[p-of], N1-[a-D], N2-[n-P]):-
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N0-[n-P], N1-[v-D], N-[a-X, n-X, v-X], N0-[n-P], N1-[v-D], N-[v-X]):-
+     coplbh(D), 
+     lemmatize_dic_v(X, Lemma, S1),
+     v(Lemma,_),
+     disaccess_wsj(Lemma,Best),
+     transl_tags(Lemma,Best,Tags),
+     on(v,Tags).
+fsa(N0-[v-X], N1-[p-to], N2-[n-P,v-P], N0-[v-X], N1-[p-to], N2-[v-P]):-
+     lemmatize_dic_v(X, Lemma, S1),
+     coml(Lemma,Sub),
+     on(vcomp/_/_,Sub).
+fsa(N0-[v-X], N1-[p-to], N2-[n-P,v-P], N0-[v-X], N1-[p-to], N2-[n-P]):-
+    wsj(P,Cats,N),
+    on(Cat-S,Cats),
+    (on(nns,Cat);on(nn,Cat)).
+fsa(N0-[v-X], N1-[p-to], N2-[n-P,v-P], N0-[v-X], N1-[p-to], N2-[v-P]):-
+     lemmatize_dic_v(X, Lemma, S1),
+     vpcs(Lemma).
+fsa(N0-[x-X], N1-[r-D], N2-[a-P,av-P,n-P,v-P], N0-[x-X], N1-[r-D], N2-[v-P]).
+fsa(N0-[p-to], N1-[a-D, av-D, n-D, v-D], N2-[a-P], N0-[p-to], N1-[v-D], N2-[a-P]).
+fsa(N0-[p-to], N1-[a-D, av-D, n-D, v-D], N2-[n-P], N0-[p-to], N1-[v-D], N2-[n-P]).
+fsa(N0-[x-X], N1-[d-D, e-D, p-D, s-D], N2-[v-P], N0-[x-X], N1-[s-D], N2-[v-P]).
+fsa(N0-[x-X], N1-[d-D, e-D, p-D, s-D], N2-[a-P, v-P], N0-[x-X], N1-[s-D], N2-[v-P]).
+fsa(N-[n-X,v-X], N0-[av-S], N1-[v-D], N-[v-X], N0-[av-S], N1-[v-D]):-
+    supporto(X);coplbh(X).
+fsa(N-[n-X,v-X], N0-[av-S], N1-[n-D,v-D], N-[v-X], N0-[av-S], N1-[v-D]):-
+    supporto(X);coplbh(X).
+fsa(N0-[x-X], N1-[a-D, v-D], N2-[x-P], N0-[x-X], N1-[v-D], N2-[x-P]):-
+    verbs_of_saying(D).
+fsa(N0-[x-X], N1-[a-D, n-D, v-D], N2-[d-P], N0-[x-X], N1-[v-D], N2-[d-P]):-
+    verbs_of_saying(D).
+fsa(N0-[n-X], N1-[n-D, v-D], N2-[x-P], N0-[n-X], N1-[n-D], N2-[x-P]):-
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N-[n-X,v-X], N0-[a-S,c-S,r-S], N1-[n-D], N-[n-X], N0-[c-S], N1-[n-D]):-
+     lemmatize_dic_v(X, Lemma, S1),
+     coml_n(Lemma, LArgsV),
+     on(subc-Subs,LArgsV),
+     on(_/that/fcomp, Subs).
+fsa(N0-[n-P], N2-[n-W, v-W], N1-[a-M,c-M,r-M], N0-[n-P], N2-[v-W], N1-[c-M]):-
+    verbs_of_saying(W).
+fsa(N0-[r-X], N1-[a-D, c-D, r-D], N2-[r-P], N0-[r-X], N1-[c-D], N2-[r-P]).
+fsa(N0-[s-P], N-[e-M,r-M], N1-V, N0-[s-P], N-[r-M], N1-V):-
+    on(v-_,V).
+fsa(N0-[a-P], N-[n-M,v-M], N1-[p-of], N0-[a-P], N-[n-M], N1-[p-of]).
+fsa(N0-[n-P], N-[n-M,v-M], N1-[p-of], N0-[n-P], N-[n-M], N1-[p-of]).
+fsa(N0-[x-X], N1-[a-D, n-D, v-D], N2-[d-P], N0-[x-X], N1-[v-D], N2-[d-P]):-
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N0-[x-X], N1-[a-D, n-D, v-D], N2-[n-P], N0-[x-X], N1-[v-D], N2-[n-P]):-
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N0-[x-X], N1-[a-D, n-D, v-D], N2-[r-P], N0-[x-X], N1-[v-D], N2-[r-P]):-
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N0-[v-X], N-[d-D,p-D], N1-[d-M], N0-[v-X],  N-[d-D], N1-[d-M]):-
+      vsp(X,Preps), \+ on(D,Preps).
+fsa(N0-[r-P], N2-[a-W, q-W, v-W], N1-[a-M,q-M,v-M], N0-[r-P], N2-[v-W], N1-[q-M,v-M]):-
+    verbs_of_saying(W).
+fsa(N0-[n-P], N2-[a-W, av-W], N1-[n-M,v-M], N0-[n-P], N2-[av-W], N1-[v-M]):-
+    supporto(M);coplbh(M).
+fsa(N0-[d-D,e-D,p-D,s-D], N1-[r-M], N-[v-F], N0-[s-D], N1-[r-M], N-[v-F]).
+fsa(N0-[d-D,e-D,p-D,s-D], N1-[n-M], N-[v-F], N0-[s-D], N1-[n-M], N-[v-F]).
+fsa(N0-[n-P], N-[v-M], N1-[a-H,n-H,v-H], N0-[n-P], N-[v-M], N1-[v-H]):-
+   coplbh(M),
+   stringof(Gerund,H),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N0-[n-P], N2-[a-W, e-W], N1-[a-M,q-M,v-M], N0-[n-P], N2-[e-W], N1-[q-M,v-M]):-
+    verbs_of_saying(M).
+fsa(N0-[n-P], N2-[av-W, d-W, p-W], N1-[d-M], N0-[n-P], N2-[p-W], N1-[d-M]):-
+   high_rank(M).
+fsa(N2-[av-K], N-[e-D,q-D,v-D], N1-[p-M], N2-[av-K], N-[q-D,v-D], N1-[p-M]).
+fsa(N0-[d-D,e-D,s-D], N1-[n-M], N-[n-F], N0-[s-D], N1-[n-M], N-[n-F]).
+fsa(N0-[d-D,r-D], N1-[n-M,v-M], N-[n-F], N0-[d-D], N1-[n-M], N-[n-F]).
+fsa(N0-[v-X], N-[av-D,d-D], N1-[n-M,v-M], N0-[v-X],  N-[av-D], N1-[v-M]):-
+    supporto(X);coplbh(X).
+fsa(N0-[v-X], N-[d-D,e-D,i-D,s-D], N1-[x-M], N0-[v-X],  N-[av-D], N1-[x-M]).
+fsa(N2-[av-K,e-K,s-K], N-[x-D], N1-[a-M, c-M , r-M], N2-[av-K], N-[x-D], N1-[c-M]).
+fsa(N2-[e-K], N-[n-D,v-D], N1-[av-M, p-M], N2-[e-K], N-[v-D], N1-[av-M]).
+fsa(N0-[p-X], N1-[d-D, e-D], N2-[a-P], N0-[p-X], N1-[d-D], N2-[a-P]).
+fsa(N0-[v-X], N1-[d-D, e-D], N2-[a-P], N0-[v-X], N1-[av-D], N2-[a-P]).
+fsa(N0-[x-X], N1-[n-D, q-D, v-D], N2-[d-P], N0-[x-X], N1-[v-D], N2-[d-P]).
+fsa(N0-[d-D,e-D,p-D,s-D], N1-[r-M], N-[q-F,v-F], N0-[s-D], N1-[r-M], N-[q-F,v-F]).
+fsa(N0-[d-D,e-D,p-D,s-D], N1-[n-M], N-[q-F,v-F], N0-[s-D], N1-[n-M], N-[q-F,v-F]).
+fsa(N0-[x-X], N1-[av-D, p-D, s-D], N2-[v-P], N0-[x-X], N1-[s-D], N2-[v-P]).
+fsa(N0-[v-W], N1-[a-M, av-M, n-M], N3-[n-P], N0-[v-W], N1-[a-M], N3-[n-P]).
+fsa(N0-[d-D,e-D,p-D,s-D], N1-[n-M], N-[n-F], N0-[s-D], N1-[n-M], N-[n-F]).
+fsa(N0-[n-P], N2-[e-W, p-W, x-W], N1-[n-M], N0-[n-P], N2-[p-W], N1-[n-M]).
+fsa(N0-[n-W], N1-[a-M, n-M, v-M], N3-[n-P], N0-[n-W], N1-[v-M], N3-[n-P]):-
+   stringof(Gerund,M),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N0-[av-W,s-W], N1-[a-M, q-M, v-M], N3-[p-P,s-P], N0-[s-W], N1-[v-M], N3-[p-P]):-
+     lemmatize_dic_v(M, Lemma, S1),
+     vsp(Lemma,Preps), on(P,Preps).
+fsa(N0-[v-W], N1-[n-M, v-M], N3-[n-P, v-P], N0-[v-W], N1-[a-M], N3-[n-P]):-
+   stringof(Gerund,M),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N0-[c-W], N1-[a-M, q-M, v-M], N3-[p-P], N0-[c-W], N1-[v-M], N3-[p-P]).
+fsa(N0-[n-W], N-[e-D,p-D,s-D], N1-[d-M], N0-[n-W],N-[p-D], N1-[d-M]).
+fsa(0-[n-P], N2-[n-W, v-W], N1-[q-M,v-M], 0-[n-P], N2-[n-W], N1-[v-M]).
+fsa(N0-[d-D,e-D,p-D,s-D], N1-[a-M,av-M,n-M], N-[d-F,e-F,p-F,s-F], N0-[s-D], N1-[a-M], N-[s-F]).
+fsa(N-[n-D], N2-[e-K], N1-[av-M, n-M], N-[n-D], N2-[e-K], N1-[n-M]).
+fsa(N2-[v-K], N-[d-D,e-D,s-D], N1-[n-M], N2-[v-K], N-[d-D], N1-[n-M]).
+fsa(N0-[a-S,q-S,v-S], N-[p-to], N1-[n-D,v-D], N0-[v-S], N-[p-to], N1-[v-D]):-
+     lemmatize_dic_v(S, Lemma, S1),
+     coml(Lemma, LArgsV), on(vcomp/prop/_, LArgsV).
+fsa(N0-[v-S], N-[p-to], N1-[n-D,v-D], N0-[v-S], N-[p-to], N1-[v-D]):-
+     lemmatize_dic_v(S, Lemma, S1),
+     coml(Lemma, LArgsV), on(vcomp/prop/_, LArgsV).
+fsa(0-[n-W, v-W], N1-[n-M,v-M], N3-[d-P], 0-[n-W], N1-[v-M], N3-[d-P]).
+fsa(N0-[n-W, v-W], N1-[e-M], N3-[n-P, v-P], 0-[v-W], N1-[e-M], N3-[v-P]):-
+   N0\=0.
+fsa(N0-[n-W, v-W], N1-[av-M], N3-[e-P], 0-[v-W], N1-[av-M], N3-[e-P]):-
+   N0\=0.
+fsa(N0-[n-W, v-W], N1-[p-M], N3-[d-P], 0-[v-W], N1-[p-M], N3-[d-P]):-
+   stringof(Gerund,M),
+   reverse(Gerund, [N,O|_]), N\=n, O\=o,
+   N0\=0.
+fsa(N0-[n-W, v-W], N1-[p-to], N3-[n-P, v-P], 0-[v-W], N1-[p-to], N3-[v-P]):-
+   N0\=0.
+fsa(N0-[x-X], N1-[n-D, v-D], N2-[n-P], 0-[x-X], N1-[v-D], N2-[n-P]):-
+   N0\=0.
+fsa(N0-[p-W], N1-[av-M, n-M, v-M], N3-[d-P], N0-[p-W], N1-[v-M], N3-[d-P]).
+fsa(N0-[n-W, v-W], N1-[av-M, n-M, v-M], N3-[d-P], N0-[v-W], N1-[v-M], N3-[d-P]):-
+    supporto(W);coplbh(W).
+fsa(N0-[v-W], N1-[a-M, n-M, v-M], N3-[p-P], N0-[v-W], N1-[v-M], N3-[p-P]):-
+    (supporto(W);coplbh(W)),
+     lemmatize_dic_v(M, Lemma, S1),
+     vsp(Lemma,Preps), on(P,Preps).
+fsa(N0-[v-W], N1-[a-M, q-M, v-M], N3-[p-P], N0-[v-W], N1-[v-M], N3-[p-P]):-
+    supporto(W);coplbh(W),
+     lemmatize_dic_v(M, Lemma, S1),
+     vsp(Lemma,Preps), on(P,Preps).
+fsa(N0-[n-W, v-W], N1-[a-M, av-M, n-M, v-M], N3-[d-P], N0-[v-W], N1-[v-M], N3-[d-P]):-
+    supporto(W);coplbh(W).
+fsa(0-[n-W, v-W], N1-[n-M], N3-[a-P,n-P], 0-[a-W], N1-[n-M], N3-[a-P]).
+fsa(0-[a-W, av-W, v-W], N1-[n-M], N3-[p-P,s-P], 0-[a-W], N1-[n-M], N3-[p-P]).
+fsa(N2-[n-K], N-[x-D], N1-[e-M,r-M,s-M,w-M], N2-[n-K], N-[x-D], N1-[r-M,w-M]).
+fsa(N2-[n-K], N-[p-D, s-D], N1-[d-M,r-M], N2-[n-K], N-[p-D], N1-[d-M,r-M]).
+fsa(N0-[r-D, w-D], N-[n-X, v-X], N3-[p-P], N0-[r-D], N-[v-X], N3-[p-P]):-
+    D\=whose, D\=which.
+fsa(N0-[v-W], N1-[av-M, d-M], N3-[n-P,q-P,v-P], N0-[v-W], N1-[av-M], N3-[v-P]):-
+    supporto(W);coplbh(W).
+fsa(N0-[v-W], N1-[av-M], N3-[n-P,q-P,v-P], N0-[v-W], N1-[av-M], N3-[v-P]):-
+    supporto(W);coplbh(W).
+fsa(N0-[v-W], N1-[av-M], N3-[n-P,v-P], N0-[v-W], N1-[av-M], N3-[v-P]):-
+    supporto(W);coplbh(W).
+fsa(N0-[n-M], N1-[a-M, n-M, q-M, v-M], N-[n-D], N0-[n-M], N1-[v-M], N-[n-D]).
+fsa(N-[d-D,e-D,p-D,s-D], N1-[n-M], N0-[v-W], N-[d-D, e-D, s-D], N1-[n-M], N0-[v-W]).
+fsa(N-[n-M], N1-[av-D, p-D], N0-[d-S], N-[n-M], N1-[p-D], N0-[d-S]).
+fsa(N0-[e-S], N-[av-M], N1-[a-D, n-D, v-D], N0-[e-S], N-[av-M], N1-[a-D]).
+fsa(N-[r-D], N1-[n-M, v-M], N2-[n-P, v-P], N-[r-D], N1-[v-M], N2-[v-P]):-
+   supporto(M).
+fsa(N0-[n-W], N1-[n-M, v-M], N3-[x-P], N0-[a-W], N1-[n-M], N3-[x-P]):-
+         tpl(W,Cat), nogen_member(nadj,Cat).
+fsa(N-[p-X], N3-[n-P], N1-[n-M,v-M], N-[p-X], N3-[n-P], N1-[n-M]):-
+   stringof([A|Gerund],P),
+   money_simb(A).
+fsa(N0-[d-W], N1-[av-M, p-M], N3-[n-P], N0-[d-W], N1-[av-M], N3-[n-P]).
+fsa(0-[n-W, v-W], N1-[q-M, v-M], N3-[d-P], 0-[n-W], N1-[v-M], N3-[d-P]).
+fsa(0-[n-W, v-W], N1-[n-M], N3-[a-P,q-P,v-P], 0-[n-W], N1-[n-M], N3-[v-P]).
+fsa(N0-[r-W, w-W], N1-[n-M, v-M], N3-[n-P], N0-[r-W, w-W], N1-[v-M], N3-[n-P]).
+fsa(N0-[r-W, w-W], N1-[n-M, v-M], N3-[a-P], N0-[r-W], N1-[v-M], N3-[a-P]).
+fsa(N0-[n-W], N1-[n-M, v-M], N3-[av-P], N0-[n-W], N1-[v-M], N3-[av-P]):-
+    supporto(M);coplbh(M).
+fsa(N0-[n-W, v-W], N1-[d-M, e-M], N3-[v-P], N0-[v-W], N1-[e-M], N3-[v-P]):-
+    supporto(W);coplbh(W).
+fsa(N-[x-X], N1-[a-D, q-D, v-D], N2-[av-P, n-P], N-[x-X], N1-[v-D], N2-[av-P, n-P]):-
+    verbs_of_saying(D).
+fsa(N0-[v-W], N1-[a-M, n-M], N3-[n-P], N0-[v-W], N1-[a-M], N3-[n-P]).
+fsa(N0-[n-W], N1-[r-M, w-M], N3-[n-P, v-P], N0-[n-W], N1-[r-M, w-M], N3-[v-P]):-
+          M\=whose.
+fsa(N-[x-X], N1-[a-D, q-D, v-D], N2-[a-that, c-that, r-that], N-[x-X], N1-[v-D], N2-[c-that]):-
+    verbs_of_saying(D).
+fsa(N1-[a-M, n-M, v-M], N-[e-D], N2-[v-P], N1-[v-M], N-[e-D], N2-[v-P]).
+fsa(N1-[r-M, w-M], N3-[n-P, v-P], N0-[x-W], N1-[r-M, w-M], N3-[v-P], N0-[x-W]).
+fsa(N-[n-D], N3-[n-P, v-P], N1-[r-M, w-M], N-[n-D], N3-[n-P], N1-[r-M, w-M]):-
+      \+ verbs_of_saying(P).
+fsa(N-[d-D, s-D], N1-M, N2-[x-K], N-[d-D], N1-M, N2-[x-K]).
+fsa(N2-[x-K], N-[d-D, s-D], N1-M, N2-[x-K], N-[s-D], N1-M).
+fsa(N-[n-D], N1-Vs, N2-[x-P], N-[n-D], N1-[v-K], N2-[x-P]):-
+    Vs\=[A], reverse(Vs, [v-K|_]), excepts(K),
+     \+ on(av-_,Vs),
+     verbs_of_saying(K).
+fsa(N-[n-D], N1-Vs, N2-[n-P], N-[n-D], N1-[v-K], N2-[n-P]):-
+    Vs\=[A], reverse(Vs, [v-K|_]), verbs_of_saying(K).
+fsa(N-[n-D], N1-Vs, N2-[ext-P], N-[n-D], N1-[v-K], N2-[ext-P]):-
+    Vs\=[A], reverse(Vs, [v-K|_]), verbs_of_saying(K).
+fsa(N-[n-D], N1-Vs, N2-[av-P], N-[n-D], N1-[v-K], N2-[av-P]):-
+    Vs\=[A], reverse(Vs, [v-K|_]), verbs_of_saying(K).
+fsa(N-[x-D], N1-Vs, N2-[r-P], N-[x-D], N1-[v-K], N2-[r-P]):-
+    Vs\=[A], reverse(Vs, [v-K|_]), verbs_of_saying(K).
+fsa(N-[x-D], N1-Vs, N2-[d-P], N-[x-D], N1-[v-K], N2-[d-P]):-
+    Vs\=[A], reverse(Vs, [v-K|_]), verbs_of_saying(K).
+fsa(N2-[x-K], N-[av-D, i-D, n-D, v-D], N1-[n-P], N2-[x-K], N-[av-D, i-D], N1-[n-P]).
+fsa(N-[x-D], N1-Vs, N2-[n-P], N-[x-D], N1-[v-K], N2-[n-P]):-
+    Vs\=[A], reverse(Vs, [v-K|_]), verbs_of_saying(K), \+ vos_amb(K).
+fsa(N-[x-D], N1-[a-L,av-L,p-L,v-L], N2-[n-P], N-[x-D], N1-[p-L], N2-[n-P]).
+fsa(N-[x-D], N1-Vs, N2-[n-P], N-[x-D], N1-[v-K], N2-[n-P]):-
+    3<N, Vs\=[A], reverse(Vs, [v-K|_]),
+    length(Vs,L), L=<3,
+     disaccess_wsj(K,Best),
+     transl_tags(K,Best,Tags),
+     on(v,Tags).
+fsa(N-[C-D|_], N1-[av-P], N2-[a-K, q-K, v-K], N-[v-D], N1-[av-P], N2-[v-K]):-
+    (supporto(D);coplbh(D)),verbs_of_saying(K).
+fsa(N-[C-D|_], N1-[av-P], N2-[q-K, v-K], N-[v-D], N1-[av-P], N2-[v-K]):-
+    (supporto(D);coplbh(D)),verbs_of_saying(K).
+fsa(N-[C-D], N1-[av-P], N2-[q-K, v-K], N-[v-D], N1-[av-P], N2-[v-K]):-
+    (supporto(D);coplbh(D)),verbs_of_saying(K).
+fsa(N-[C-D|_], N1-[av-P], N2-[a-K, q-K, v-K], N-[v-D], N1-[av-P], N2-[v-K]):-
+    supporto(D);coplbh(D).
+fsa(N-[C-D], N1-[av-P], N2-[a-K, q-K, v-K], N-[v-D], N1-[av-P], N2-[v-K]):-
+    supporto(D);coplbh(D).
+fsa(N-[C-D|_], N1-[av-P], N2-[q-K, v-K], N-[v-D], N1-[av-P], N2-[v-K]):-
+    supporto(D);coplbh(D).
+fsa(N-[C-D], N1-[av-P], N2-[q-K, v-K], N-[v-D], N1-[av-P], N2-[v-K]):-
+    supporto(D);coplbh(D).
+fsa(N-[C-D], N1-[av-P], N2-[a-K, v-K], N-[v-D], N1-[av-P], N2-[v-K]):-
+    supporto(D);coplbh(D).
+fsa(N-[n-D, v-D], N1-[av-K, d-K], N2-[v-V], N-[v-D], N1-[av-K], N2-[v-V]).
+fsa(N-[n-D, v-D], N1-[av-K|_], N2-[v-V], N-[v-D], N1-[av-K], N2-[v-V]):-
+    supporto(D);coplbh(D).
+
+/* that disambiguation */
+fsa(N-[p-Q], N1-[n-D, v-D], N2-[a-that, c-that, r-that], N-[p-Q], N1-[v-D], N2-[c-that]):-
+    verbs_of_saying(D),
+    (Q=to;Q=in_order_to).
+fsa(N-[p-Q], N1-VerbNoun, N2-[a-that, c-that, r-that], N-[p-Q], N1-[v-V], N2-[a-that]):-
+    VerbNoun\=[A], reverse(VerbNoun,[v-V|_]),
+    (Q=to;Q=in_order_to).
+fsa(N-[n-D], N1-[a-M, c-M, r-M], N2-[av-P], N-[n-D], N1-[c-M], N2-[av-P]).
+fsa(N-[q-D, v-D|_], N1-[a-that, c-that|_], N2-[r-P], N-[q-D, v-D], N1-[c-that], N2-[r-P]).
+fsa(N-[v-D|R], N1-[a-that, c-that|_], N2-[r-P], N-[v-D|R], N1-[c-that], N2-[r-P]).
+fsa(N-[n-D], N1-[a-that, c-that|_], N2-[r-P], N-[n-D], N1-[c-that], N2-[r-P]).
+fsa(N-[s-D], N1-[a-that, c-that|_], N2-[r-P], N-[s-D], N1-[c-that], N2-[r-P]).
+fsa(N-[a-D], N1-[a-that, c-that|_], N2-[d-P], N-[a-D], N1-[c-that], N2-[d-P]).
+fsa(N-[a-D], N1-[a-that, c-that|_], N2-[n-P], N-[a-D], N1-[c-that], N2-[n-P]).
+fsa(N-[a-D], N1-[a-that, c-that|_], N2-[n-P|_], N-[a-D], N1-[c-that], N2-[n-P]).
+fsa(N-[n-D], N1-[a-that, c-that|_], N2-[d-P], N-[n-D], N1-[c-that], N2-[d-P]):-
+     verbs_of_saying(D).
+fsa(N-[n-D], N1-[a-that, c-that|_], N2-[d-P], N-[n-D], N1-[c-that], N2-[d-P]):-
+     check_subcn_factive(D).
+fsa(N-[a-that, c-that|_], N1-[d-X, r-X], N2-[a-M, q-M, v-M], N-[c-that], N1-[r-X], N2-[v-M]).
+fsa(N-[a-that, c-that|_], N1-[a-M, q-M, v-M], N2-[x-X], N-[r-that], N1-[v-M], N2-[x-X]).
+/*
+fsa(N0-[n-D], N-[a-that, c-that|_], N1-[a-P], N0-[n-D], N-[r-that], N1-[a-P]):-
+   filter_pos_ag(P, Fe, Lem).
+*/
+fsa(N0-[v-V], N-[a-D], N1-[a-that, c-that|_], N0-[v-V], N-[a-D], N1-[c-that]):-
+   coplbh(V).
+fsa(N-[v-M], N1-[a-D, q-D, v-D], N0-[a-that, c-that|_], N-[v-M], N1-[a-D], N0-[c-that]):-
+   coplbh(M),
+   pred_a(D,_,LArgsV), 
+     (subcat_on(fcomp/prop/_, LArgsV);subcat_on(f/fcomp/prop/_, LArgsV)).
+fsa(N-[r-M], N1-[a-D, q-D, v-D], N0-[a-that, c-that|_], N-[r-M], N1-[a-D], N0-[c-that]):-
+   soggcontr(M, Cat, W1, W2),
+   pred_a(D,_,LArgsV), 
+     (subcat_on(fcomp/prop/_, LArgsV);subcat_on(f/fcomp/prop/_, LArgsV)).
+fsa(N-[d-W, r-M], N1-[a-that, c-that|_], N0-[r-S], N-[r-M], N1-[c-that], N0-[r-S]).
+fsa(N0-[v-S], N-[a-that, c-that|_], N1-[a-D], N0-[v-S], N-[c-that], N1-[a-D]):-
+   ap_engl(D,_,_).
+fsa(N0-[v-S], N-[a-that, c-that|_], N1-[a-D], N0-[v-S], N-[c-that], N1-[a-D]):-
+     lemmatize_dic_v(S, Lemma, S1),
+     cat_gramm(Lemma, trans, CatV, LArgsV), 
+     (subcat_on(fcomp/prop/_, LArgsV);subcat_on(f/fcomp/prop/_, LArgsV)).
+fsa(N0-[v-S], N-[a-that, c-that|_], N1-[a-D], N0-[v-S], N-[d-that], N1-[a-D]).
+fsa(N0-[p-S], N-[a-that, c-that|_], N1-[n-D, v-D], N0-[p-S], N-[a-that], N1-[n-D]).
+fsa(N-[p-M], N1-[a-D, c-D, r-D], N2-[n-P], N-[p-M], N1-[a-D], N2-[n-P]).
+fsa(N0-[d-P, r-P], N3-[a-D, c-D, r-D], N-[n-W], N0-[r-P], N3-[c-D], N-[n-W]).
+fsa(N-[d-M], N1-[n-H], N2-[a-D, c-D, r-D], N-[d-M], N1-[n-H], N2-[c-D]).
+fsa(N-[r-M], N2-[a-D, c-D, r-D], N1-[n-H], N-[r-M], N2-[c-D], N1-[n-H]).
+fsa(N-[x-M], N1-[a-D, c-D, r-D], N2-[s-P], N-[x-M], N1-[c-D], N2-[s-P]).
+fsa(N0-[q-V,v-V], N-[av-P,n-P], N1-[a-D, c-D, r-D], N0-[v-D], N-[av-P], N1-[c-M]):-
+     lemmatize_dic_v(V, Lemma, S1),
+     cat_gramm(Lemma, CatGr, CatV, LArgsV), 
+     (subcat_on(fcomp/prop/_, LArgsV);subcat_on(f/fcomp/prop/_, LArgsV)).
+fsa(N0-[d-M], N-[a-X, n-X], N1-[a-D, c-D, r-D], N0-[d-M], N-[n-X], N1-[c-D]).   
+
+fsa(N-[d-D], N1-[n-M, q-M, v-M], N2-[p-P], N-[d-D], N1-[n-M], N2-[p-P]).
+fsa(N-[d-D], N1-[a-M, n-M, v-M], N2-[x-P], N-[d-D], N1-[n-M], N2-[x-P]).
+fsa(N-[d-D], N1-[a-M, n-M, v-M], N2-[v-P], N-[d-D], N1-[n-M], N2-[v-P]).
+fsa(N-[d-D], N1-[a-M, n-M, v-M], N2-[p-P], N-[d-D], N1-[a-M], N2-[p-P]):-
+   pred_a(M,_,_).
+fsa(N-[d-D], N1-[a-M, n-M, v-M], N2-[p-P], N-[d-D], N1-[n-M], N2-[p-P]).
+fsa(N-[n-D], N1-[a-M, n-M, v-M], N2-[p-of], N-[n-D], N1-[n-M], N2-[p-of]).
+fsa(N-[v-D], N1-[a-M, n-M, v-M], N2-[p-to], N-[v-D], N1-[v-M], N2-[p-to]):-
+   (supporto(D);coplbh(D)),
+    stringof(Gerund,M),
+    reverse(Gerund, [g,n,i|_]).
+fsa(N-[v-D], N1-[a-M, n-M, v-M], N2-[p-to], N-[v-D], N1-[a-M], N2-[p-to]):-
+   supporto(D);coplbh(D).
+fsa(N-[d-D], N1-[a-M, n-M, v-M], N2-[x-P], N-[d-D], N1-[n-M], N2-[x-P]).
+fsa(N-[d-D], N1-[n-M, v-M], N2-[p-P], N-[d-D], N1-[n-M], N2-[p-P]).
+%fsa(N-[d-D], N1-[q-M, v-M|_], N2-[d-P], N-[d-D], N1-[a-M], N2-[d-P]).
+fsa(N-[n-D], N1-[a-M, q-M, v-M|_], N2-[d-P], N-[n-D], N1-[v-M], N2-[d-P]).
+fsa(N-[n-D], N1-[a-M, q-M, v-M], N2-[d-P], N-[n-D], N1-[v-M], N2-[d-P]).
+fsa(N-[n-D], N1-[a-M, n-V, q-M, v-M|_], N2-[p-P], N-[n-D], N1-[v-M], N2-[p-P]).
+fsa(N-[r-D], N1-[a-M, q-M, v-M], N2-[n-P], N-[r-D], N1-[v-M], N2-[n-P]).
+fsa(N-[r-D], N1-[a-M, q-M, v-M|_], N2-[n-P], N-[r-D], N1-[v-M], N2-[n-P]).
+fsa(N-[d-D], N1-[a-M, n-M, q-M], N2-[n-P], N-[d-D], N1-[a-M], N2-[n-P]).
+fsa(N-[n-D], N1-[v-M], N2-[n-P, v-P], N-[n-D], N1-[v-M], N2-[v-P]):-
+   supporto(M);coplbh(M).
+fsa(N-[n-D], N1-[v-M], N2-[n-P, v-P|_], N-[n-D], N1-[v-M], N2-[v-P]):-
+   supporto(M);coplbh(M).
+fsa(N-[v-M], N1-[n-D, v-D], N2-[p-of], N-[v-M], N1-[n-D], N2-[p-of]):-
+   supporto(M); coplbh(M).
+fsa(N-[v-M], N1-[n-D, v-D], N2-[p-P], N-[v-M], N1-[v-D], N2-[p-P]):-
+   supporto(M).
+fsa(N-[v-M], N1-[n-D, v-D], N2-[p-P], N-[v-M], N1-[v-D], N2-[p-P]):-
+   coplbh(M),
+   stringof(PastPart,D),
+   reverse(PastPart, [d|R]).
+fsa(N-[v-M], N1-[n-D, v-D], N2-[v-P], N-[v-M], N1-[n-D], N2-[v-P]):-
+   supporto(M); coplbh(M).
+fsa(N-[v-M], N1-[n-D, v-D], N2-[C-P], N-[v-M], N1-[v-D], N2-[C-P]):-
+   (supporto(M); coplbh(M)), C\=v.
+fsa(N-[n-D], N1-[n-M, v-M], N2-[v-P], N-[n-D], N1-[v-M], N2-[v-P]):-
+   supporto(M);coplbh(M).
+fsa(N-[n-D], N1-[n-M, v-M], N2-[v-P], N-[n-D], N1-[n-M], N2-[v-P]):-
+   \+ supporto(M), \+ coplbh(M).
+fsa(N-[p-D], N1-[n-M, v-M], N2-[d-P,e-P,r-P], N-[p-D], N1-[v-M], N2-[d-P]).
+fsa(N-[p-D], N1-[n-M, v-M], N2-[a-P], N-[p-D], N1-[v-M], N2-[a-P]).
+fsa(N-[p-D], N1-[n-M, v-M], N2-[v-P], N-[p-D], N1-[n-M], N2-[v-P]):-
+   \+ supporto(M), \+ coplbh(M).
+fsa(N-[n-D], N1-[n-M, v-M], N2-[v-P], N-[n-D], N1-[v-M], N2-[v-P]):-
+   supporto(M); coplbh(M).
+fsa(N-[n-D], N1-[n-M, v-M], N2-[n-P, v-P], N-[n-D], N1-[v-M], N2-[v-P]):-
+   supporto(M); coplbh(M).
+fsa(N-[p-D|R], N1-[n-M, v-M], N2-[q-K, v-K], N-[p-D|R], N1-[v-M], N2-[q-K, v-K]):-
+   coplbh(M).
+fsa(N-[p-of], N1-[n-M, v-M], N2-[q-K, v-K], N-[p-of], N1-[n-M], N2-[q-K, v-K]).
+fsa(N-[p-of], N1-[n-M, v-M], N2-[n-K, v-K], N-[p-of], N1-[n-M], N2-[v-K]):-
+   supporto(K); coplbh(K).
+fsa(N-[p-D], N1-[a-M, n-M, q-M|_], N2-[p-P], N-[p-D], N1-[n-M], N2-[p-P]).
+fsa(N-[n-D], N1-[a-M, n-M, v-M|_], N2-[d-P], N-[n-D], N1-[v-M], N2-[d-P]).
+fsa(N-[p-D], N1-[a-M, n-M, q-M], N2-[p-P], N-[p-D], N1-[n-M], N2-[p-P]).
+fsa(N-[n-D], N1-[a-M, n-M, v-M], N2-[d-P], N-[n-D], N1-[v-M], N2-[d-P]).
+fsa(N-[a-D, r-D], N1-[a-M, n-M], N2-[v-P], N-[a-D], N1-[n-M], N2-[v-P]).
+fsa(N-[a-D], N1-[n-M, v-M], N2-[v-P], N-[a-D], N1-[n-M], N2-[v-P]):-
+    \+ supporto(M), \+ coplbh(M).
+fsa(N-[n-D], N1-Ms, N2-[d-P], N-[n-D], N1-[n-M], N2-[d-P]):-
+   Ms\=[A],
+   reverse(Ms, [v-M|Mm]),
+   qmq(D).
+fsa(N-[n-D], N1-Ms, N2-[d-P], N-[n-D], N1-[v-M], N2-[d-P]):-
+   Ms\=[A],
+   reverse(Ms, [v-M|Mm]),
+   (disaccess_wsj(M,Best1)
+    ;
+    select_bestgg(M,Best1)
+    ),
+    transl_tags(M,Best1,Tags1),
+    on(Tag1,Tags1), 
+    Tag1=v.
+fsa(N-[n-D], N1-Vs, N2-[p-P], N-[n-D], N1-[v-K], N2-[p-P]):-
+    Vs\=[A], reverse(Vs, [v-K|_]), verbs_of_saying(K).
+fsa(N-[d-D], N1-[v-M], N3-G, N-[d-D], N1-[n-M], N3-G):-
+   (D=the;D=a;D=an), 
+   (G=[X], X=Z-_, Z\=n;
+    G=[X|_], X=Z-_, Z\=n),
+   stringof(Gerund,M),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N-[r-W, s-W, w-W], N1-[p-Q], N2-[n-V, v-V], N-[r-W], N1-[p-Q], N2-[v-V]):-
+    (Q=to;Q=in_order_to).
+fsa(N-[r-what, p-what], N1-[p-to], N2-[v-do], N-[r-what], N1-[p-to], N2-[v-do]).
+fsa(N-[e-D], N1-[n-M, v-M], N2-[q-P, v-P], N-[e-D], N1-[n-M], N2-[v-P]).
+fsa(N-[n-M, v-M], N1-[a-D], N2-[n-P], N-[v-M], N1-[a-D], N2-[n-P]).
+fsa(N-[x-X], N1-[a-M, q-M, v-M], N2-[d-D], N-[x-X], N1-[v-M], N2-[d-D]).
+fsa(N-[d-X, r-X], N1-[q-M, v-M], N2-[n-D], N-[r-X], N1-[v-M], N2-[n-D]).
+fsa(N-[d-X, r-X], N1-[q-M, v-M], N2-[n-D|_], N-[r-X], N1-[v-M], N2-[n-D]).
+fsa(N-[d-X, r-X], N1-[a-M, q-M, v-M], N2-[d-D], N-[r-X], N1-[v-M], N2-[d-D]).
+fsa(N-[d-X, r-X], N1-[a-M, q-M, v-M], N2-[p-D], N-[r-X], N1-[v-M], N2-[p-D]).
+fsa(N-[d-X, r-X], N1-[a-M, q-M, v-M], N2-[av-D], N-[r-X], N1-[v-M], N2-[av-D]).
+fsa(N-[d-X, r-X], N1-[n-M, v-M], N2-[a-D], N-[r-X], N1-[v-M], N2-[a-D]).
+fsa(N-[n-M], N1-[n-D, v-D], N2-[x-P], N-[n-M], N1-[v-D], N2-[x-P]):-
+   stringof(Gerund,M),
+   reverse(Gerund, [C|R]),
+   stringof(VerbNoun,D),
+   reverse(VerbNoun, [S|Res]),
+   (C\=s, S=s; C=s, S\=s),
+     lemmatize_dic_v(D, Lemma, S1),
+     verbs_of_saying(Lemma).
+fsa(N-[v-M], N1-[g-D], N2-Ms, N-[v-M], N1-[g-D], N2-[v-V]):-
+   (supporto(M);coplbh(M)),
+   Ms\=[A],
+   reverse(Ms, [v-V|Mm]).
+fsa(N0-[d-D, r-D], N-[a-K, n-K], N1-[x-M], N0-[d-D], N-[n-K], N1-[x-M]).
+fsa(N-[n-M, v-M], N1-[e-D], N2-[n-V], N-[n-M], N1-[e-D], N2-[n-V]).
+fsa(N-[n-M], N1-[e-D], N2-[n-V, v-V], N-[n-M], N1-[e-D], N2-[n-V]):-
+   stringof(Gerund,M),
+   reverse(Gerund, [C|R]),
+   stringof(VerbNoun,V),
+   reverse(VerbNoun, [S|Res]),
+   (C=s, S=s; C\=s, S\=s),
+   disaccess_wsj(V,Bes), (Bes=nn;Bes=nns).
+fsa(N-[r-D, w-D], N1-[n-M, v-M], N2-[n-P, v-P], N-[r-D], N1-[v-M], N2-[v-P]):-
+   supporto(M).
+fsa(N-[n-D], N1-[v-V], N2-[a-M, n-M, v-M], N-[n-D], N1-[v-V], N2-[a-M]):-
+   coplbh(V).
+fsa(N-[d-D], N1-[a-M, av-M, n-M, v-M], N2-[n-K], N-[d-D], N1-[a-M], N2-[n-K]).
+fsa(N-[v-D], N1-[a-M, av-M, n-M, v-M], N2-[p-K], N-[v-D], N1-[v-M], N2-[p-K]):-
+   supporto(D);
+   coplbh(D).
+fsa(N-[n-D, v-D], N2-[x-'"'], N1-[n-M, v-M],  N-[v-D], N2-[x-'"'], N1-[v-M]):-
+   supporto(D);
+   coplbh(D).
+fsa(N-[v-D], N1-[a-M, n-M, v-M], N2-[n-K], N-[v-D], N1-[v-M], N2-[n-K]):-
+   stringof(Gerund,M),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N-[v-D], N1-[a-M, n-M, v-M], N2-[n-K], N-[v-D], N1-[a-M], N2-[n-K]):-
+     lemmatize_dic_v(D, Lemma, S1),
+   \+  vpcs(Lemma),
+   \+ supporto(D),
+   \+ coplbh(D).
+fsa(N-[v-D], N1-[a-M, n-M], N2-[p-of], N-[v-D], N1-[a-M], N2-[p-of]):-
+    coplbh(D).
+fsa(N-[v-D], N1-[a-M, d-M, r-M], N2-[n-K],  N-[v-D], N1-[d-M], N2-[n-K]).
+fsa(N-[v-D], N1-[n-M, v-M], N2-[x-K],  N-[v-D], N1-[n-M], N2-[x-K]).
+fsa(N-[v-D], N1-[n-M, v-M], N2-[v-K],  N-[v-D], N1-[n-M], N2-[v-K]).
+fsa(N-[n-M, v-M], N1-[d-D, e-D, p-D, s-D], N0-[d-R, r-R], N-[v-M], N1-[d-D], N0-[d-R]).
+fsa(0-[d-W, p-W], N1-[d-V], N2-[n-M], 0-[d-W], N1-[d-V], N2-[n-M]).
+fsa(0-[a-W, n-W, v-W], N1-[n-V], N2-[p-M], 0-[n-W], N1-[n-V], N2-[p-M]).
+fsa(N-[n-M], N1-[a-D, n-D], N2-[p-P], N-[n-M], N1-[n-D], N2-[p-P]).
+fsa(N0-[p-D, s-D], N-[d-X], N1-[n-V], N0-[p-D], N-[d-X], N1-[n-V]).
+fsa(N0-[p-D, s-D], N-[a-X, n-X], N1-[n-V], N0-[p-D], N-[a-X], N1-[n-V]).
+fsa(N-[n-M], N1-[p-D, s-D], N2-[n-P, v-P], N-[n-M], N1-[p-D], N2-[n-P, v-P]).
+fsa(N-[p-M], N1-[a-D, av-D], N2-[n-P], N-[p-M], N1-[a-D], N2-[n-P]).
+fsa(N-[n-M, v-M], N1-[n-D, v-D], N2-[v-V], N-[n-M], N1-[v-D], N2-[v-V]):-
+   supporto(D);
+   coplbh(D).
+fsa(N-[n-M, v-M], N1-[n-D, v-D], N2-[v-V], N-[n-M], N1-[n-D], N2-[v-V]):-
+   supporto(V);
+   coplbh(V).
+fsa(N-[n-M, v-M], N1-[n-D, v-D], N2-[q-V, v-V], N-[n-M], N1-[n-D], N2-[v-V]):-
+   supporto(V);
+   coplbh(V).
+fsa(N-[n-M, v-M], N1-[x-D], N0-[r-R], N-[n-M], N1-[x-D], N0-[r-R]).
+fsa(N-[d-M], N1-[a-D, av-D,n-D,v-D], N0-[p-of], N-[d-M], N1-[n-D], N0-[p-of]).
+fsa(N-[v-M], N1-[d-D, e-D, v-D], N0-[n-P,v-P], N-[v-M], N1-[e-D], N0-[v-P]):-
+   contr(M, Cat, W1, W2).
+fsa(N-[v-M], N1-[a-D, q-D, v-D], N0-[p-P], N-[v-M], N1-[a-D], N0-[p-P]):-
+   coplbh(M),
+   pred_a(D,_,_).
+fsa(N-[r-M], N1-[a-D, q-D, v-D], N0-[p-P], N-[r-M], N1-[a-D], N0-[p-P]):-
+   soggcontr(M, Cat, W1, W2),
+   pred_a(D,_,_).
+fsa(N-[d-M,e-M,p-M,s-M], N1-[r-D], N0-[av-P], N-[s-M], N1-[r-D], N0-[av-P]):-
+   soggcontr(D, Cat, W1, W2).
+fsa(N-[p-M], N1-[n-D, v-D], N2-[av-P], N-[p-M], N1-[v-D], N2-[av-P]):-
+    M\=of.
+fsa(N-[e-M, p-M, s-M], N1-[a-D, r-D], N0-[v-R], N-[s-M], N1-[r-D], N0-[v-R]).
+fsa(N-[e-M, p-M, s-M], N1-[n-D], N0-[v-R], N-[s-M], N1-[n-D], N0-[v-R]).
+fsa(N-[a-M, av-M, n-M, v-M], N1-[n-D, v-D], N0-[v-R], N-[a-M], N1-[n-D], N0-[v-R]).
+fsa(N-[p-to], N1-[a-D, v-D], N2-[n-P], N-[p-to], N1-[v-D], N2-[n-P]).
+fsa(N-[p-M], N1-[a-D, v-D], N2-[n-P], N-[p-M], N1-[a-D], N2-[n-P]).
+fsa(N-[p-M], N1-[n-D, v-D], N2-[x-P], N-[p-M], N1-[n-D], N2-[x-P]).
+fsa(N-[d-M], N1-[n-D, q-D, v-D], N0-[s-S], N-[d-M], N1-[n-D], N0-[s-S]).
+fsa(N-[v-M], N1-[a-D, av-D], N0-[n-S], N-[v-M], N1-[a-D], N0-[n-S]).
+fsa(N-[n-M], N1-[n-D, v-D], N0-[r-S,s-S,w-S], N-[n-M], N1-[v-D], N0-[r-S,s-S,w-S]).
+fsa(N-[n-M], N1-[a-D, q-D, v-D], N0-[p-S], N-[n-M], N1-[v-D], N0-[p-S]).
+fsa(N-[r-M], N1-[a-D, av-D], N0-[a-S,v-S], N-[r-M], N1-[av-D], N0-[v-S]).
+fsa(N-[n-M], N1-[a-D, av-D], N0-[a-S,v-S], N-[n-M], N1-[av-D], N0-[v-S]).
+fsa(N-[r-M, w-M], N1-[n-D, v-D], N0-[d-S], N-[r-M, w-M], N1-[v-D], N0-[d-S]).
+fsa(N-[v-M], N1-[a-D, av-D], N0-[p-of], N-[v-M], N1-[a-D], N0-[p-of]):-
+    coplbh(M).
+fsa(N-[d-M], N1-[d-D, r-D], N0-[n-S, v-S], N-[d-M], N1-[d-D], N0-[n-S]):-
+   high_rank(M).
+fsa(N-[d-M], N1-[a-D, v-D], N0-[q-S, v-S], N-[d-M], N1-[a-D], N0-[v-S]).
+fsa(N-[a-M, n-M, v-M], N1-[e-and], N0-[n-S], N-[n-M], N1-[e-and], N0-[n-S]).
+fsa(N0-[x-S], N-[a-M, av-M, v-M], N1-[a-D], N0-[x-S], N-[a-M], N1-[a-D]).
+fsa(N0-[v-S], N-[a-M, d-M], N1-[p-D], N0-[v-S], N-[a-M], N1-[p-D]).
+fsa(N0-[ng-S], N-[n-M, v-M], N1-[v-D], N0-[ng-S], N-[n-M], N1-[v-D]).
+fsa(N0-[n-S], N-[d-M, p-M], N1-[a-D], N0-[n-S], N-[p-M], N1-[a-D]).
+fsa(N0-[x-S], N-[a-M, av-M, q-M, v-M], N1-[p-D], N0-[x-S], N-[q-M, v-M], N1-[p-D]).
+fsa(N0-[v-S], N-[p-Q], N1-[a-D, n-D, v-D], N0-[v-S], N-[p-Q], N1-[v-D]):-
+     lemmatize_dic_v(S, Lemma, S1),
+     cat_gramm(Lemma, CatGr, CatV, LArgsV), 
+     subcat_on(vcomp/prop/_/_, LArgsV),
+    (Q=to;Q=in_order_to).
+fsa(N0-[v-S], N-[av-M, e-M], N1-[a-D, v-D], N0-[v-S], N-[av-M], N1-[v-D]):-
+    coplbh(S).
+fsa(N-[a-M, n-M], N1-[a-D, n-D, v-D], N0-[p-S], N-[n-M], N1-[a-D], N0-[p-S]):-
+    S\=of.
+fsa(N-[s-S], N0-[a-X, av-X, n-X, v-X], N1-[n-M], N-[s-S], N0-[a-X], N1-[n-M]).
+fsa(N-[p-S], N0-[a-X, av-X, n-X, v-X], N1-[p-M], N-[p-S], N0-[av-X], N1-[p-M]).
+fsa(N0-[d-X, r-X], N1-[av-M, d-M, p-M], N-[r-S], N0-[d-X, r-X], N1-[p-M], N-[r-S]).
+fsa(N0-[q-S], N-[p-Q], N1-[n-D, v-D], N0-[v-S], N-[p-Q], N1-[v-D]):-
+    (Q=to;Q=in_order_to).
+fsa(N0-[d-S], N-[a-M], N1-[a-D, n-D, v-D], N0-[d-S], N-[a-M], N1-[n-D]).
+fsa(N0-[p-S], N-[a-M, n-M, v-M], N1-[d-D], N0-[p-S], N-[v-M], N1-[d-D]).
+fsa(N0-[d-D,e-D,p-D,s-D], N1-[a-M], N-[d-D,e-D,p-D,s-K], N0-[s-D], N1-[a-M], N0-[s-D]).
+fsa(N0-[d-D,e-D,p-D,s-D], N1-[a-M, av-M], N-[d-D,e-D,p-D,s-K], N0-[s-D], N1-[av-M], N0-[s-D]).
+fsa(N-[p-M], N1-[n-D, v-D], N2-[n-P], N-[p-M], N1-[v-D], N2-[n-P]):-
+   M\=to, M\=in_order_to,
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N-[p-M], N1-[n-D, v-D], N2-[n-P], N-[p-M], N1-[n-D], N2-[n-P]):-
+   M\=to, M\=in_order_to.
+fsa(N-[p-M], N1-[n-D, v-D], N2-[a-P, r-P], N-[p-M], N1-[v-D], N2-[a-P, r-P]):-
+   (M=to;M=in_order_to).
+fsa(N-[p-M], N1-[a-D, n-D, v-D], N2-[n-P], N-[p-M], N1-[a-D], N2-[n-P]):-
+    M\=to,M\=in_order_to.
+fsa(N0-[s-S], N-[n-M, v-M], N1-[p-D], N0-[s-S], N-[v-M], N1-[p-D]):-
+     lemmatize_dic_v(M, Lemma, S1),
+     cat_gramm(Lemma, CatGr, CatV, LArgsV), subcat_on(sp/obl/_/Prep/_, LArgsV),
+     on(D,Prep).
+fsa(N1-[d-D, p-D], N-[d-M], N0-[p-S], N1-[d-D], N-[d-M], N0-[p-S]).
+fsa(N0-[d-D, r-D], N-[d-X, p-X], N1-[d-M], N0-[r-D], N-[p-X], N1-[d-M]).
+fsa(N0-[a-D, v-D], N-[e-X], N1-[a-M], N0-[a-D], N-[e-X], N1-[a-M]).
+fsa(N0-[v-D], N-[d-X, p-X], N1-[d-M], N0-[v-D], N-[p-X], N1-[d-M]):-     
+     lemmatize_dic_v(D, Lemma, S1),
+     cat_gramm(Lemma, CatGr, CatV, LArgsV), subcat_on(sp/obl/_/Prep/_, LArgsV),
+     on(X,Prep).
+fsa(N0-[v-D], N-[d-X, p-X], N1-[d-M], N0-[v-D], N-[d-X], N1-[d-M]).   
+fsa(N0-[n-D], N-[a-X, q-X, v-X], N1-[n-M], N0-[n-D], N-[v-X], N1-[n-M]).   
+fsa(N0-[d-D], N-[a-X, q-X, v-X], N1-[n-M], N0-[d-D], N-[a-X], N1-[n-M]).   
+fsa(N0-[d-D], N-[a-X, q-X, v-X], N1-[n-M, v-M], N0-[d-D], N-[a-X], N1-[n-M]).   
+fsa(N0-[d-D], N-[a-X, n-X, v-X], N1-[n-M], N0-[d-D], N-[a-X], N1-[n-M]).   
+fsa(N0-[d-D], N-[a-X, av-X], N1-[n-M,v-M], N0-[d-D], N-[a-X], N1-[n-M]).   
+fsa(N0-[a-D, q-D, v-D], N-[e-X], N1-[v-M], N0-[v-D], N-[e-X], N1-[v-M]).
+fsa(N0-[a-D, av-D], N-[e-X], N1-[a-M], N0-[a-D], N-[e-X], N1-[a-M]).
+fsa(N0-[r-D, w-D], N-[n-X, v-X], N1-[n-M, v-M], N0-[r-D, w-D], N-[v-X], N1-[n-M]).
+fsa(N0-[r-D, w-D], N-[n-X, v-X], N1-[n-M], N0-[r-D, w-D], N-[v-X], N1-[n-M]).
+fsa(N0-[n-D], N3-[p-P, r-P, s-P, w-P], N-[n-W], N0-[n-D], N3-[r-P, s-P, w-P], N-[n-W]).
+fsa(N0-[d-D], N-[a-X, n-X, v-X], N1-[a-M,n-M,v-M], N0-[d-D], N-[a-X], N1-[n-M]).   
+fsa(N0-[v-D], N-[p-X], N1-[n-M,v-M], N0-[v-D], N-[p-X], N1-[v-M]):-
+   (X=to; X=in_order_to),
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N0-[v-D], N-[v-X], N1-[n-M,v-M], N0-[v-D], N-[v-X], N1-[v-M]):-
+    coplbh(D),
+   stringof(Gerund,M),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N0-[a-X, av-X, n-X, v-X], N-[s-D], N1-[n-M], N0-[n-X], N-[s-D], N1-[n-M]).
+fsa(N0-[a-X], N-[av-D,d-D,e-D,n-D], N1-[n-M], N0-[a-X], N-[a-D], N1-[n-M]):-
+  ap_engl(X,_,_).
+fsa(N0-[a-X], N-[x-D], N1-[n-M,v-M], N0-[a-X], N-[x-D], N1-[n-M]):-
+  ap_engl(X,_,_).
+fsa(N0-[n-X, v-X], N-[n-D,v-D], N1-[q-M,v-M], N0-[v-X], N-[n-D], N1-[q-M,v-M]):-
+  \+ coplbh(D).
+fsa(N0-[v-D], N-[d-about,n-M,p-M,v-M], N1-[p-to], N0-[v-D], N-[av-about], N1-[p-to]):-
+   coplbh(D).
+fsa(N-[p-M], N1-[a-D, av-D, n-D, v-D], N2-[n-P], N-[p-M], N1-[a-D], N2-[n-P]):-
+    M\=to,M\=in_order_to.
+fsa(N0-[a-X, i-X, n-X], N-[e-D], N1-[a-M], N0-[a-X], N-[e-D], N1-[a-M]).
+fsa(N-[x-M], N1-[a-D, v-D], N2-[d-P], N-[x-M], N1-[v-D], N2-[d-P]):-
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]).
+fsa(N-[p-M], N1-[a-D, n-D], N2-[p-P], N-[p-M], N1-[n-D], N2-[p-P]).
+fsa(N-[d-M], N1-[a-D, n-D], N2-[p-P], N-[d-M], N1-[n-D], N2-[p-P]).
+fsa(N-[d-M], N1-[a-D, n-D], N2-[x-P], N-[d-M], N1-[n-D], N2-[x-P]).
+fsa(N0-[q-D,v-D], N-[a-P,av-P,d-P], N1-[n-M,v-M], N0-[v-D], N-[av-P], N1-[v-M]):-
+   coplbh(D).
+fsa(N0-[n-D], N3-[d-P, p-P], N-[n-W], N0-[n-D], N3-[p-P], N-[n-W]).
+fsa(N-[ng-M], N1-[a-D, n-D], N0-[p-P], N-[ng-M], N1-[n-D], N0-[p-P]).
+fsa(N1-[a-D, n-D], N0-[n-P], N-[n-M], N1-[n-D], N0-[n-P], N-[n-M]):-
+   checkab(D);checkt(D).
+fsa(N0-[x-D], N-[v-X], N1-[n-M,v-M], N0-[x-D], N-[v-X], N1-[n-M]):-
+   \+ coplbh(X),
+   stringof(Gerund,X),
+   reverse(Gerund, [g,n,i|_]),
+   stringof(Ger,M),
+   reverse(Ger, [g,n,i|_]).
+fsa(N0-[v-D], N-[r-X, s-X, w-X], N1-[d-M], N0-[v-D], N-[r-X, w-X], N1-[d-M]):-     
+   coplbh(D).
+fsa(N0-[av-D], N3-[a-P, q-P, v-P], N-[n-W], N0-[av-D], N3-[a-P], N-[n-W]).
+fsa(N0-[v-D], N3-[av-P, p-P, s-P], N-[C-W], N0-[v-D], N3-[s-P], N-[C-W]):-
+    C=r;C=d;C=n.
+fsa(N0-[v-D], N-[a-A,av-A], N1-[n-V,v-V], N0-[v-D], N-[av-A], N1-[v-V]):-
+   coplbh(D);support(D).
+fsa(N0-[v-D], N-[a-A,v-A], N1-[p-by], N0-[v-D], N-[v-A], N1-[p-by]):-
+   coplbh(D).
+fsa(N0-[v-D], N-[a-A,av-A], N1-[a-V,v-V], N0-[v-D], N-[av-A], N1-[v-V]):-
+   coplbh(D);support(D).
+fsa(N0-[q-D,v-D], N-[av-P,v-P], N1-[v-M], N0-[v-D], N-[av-P], N1-[v-M]):-
+   coplbh(M);support(M).
+fsa(0-[a-D, n-D, v-D], N0-[n-P], N-[a-M,q-M,v-M], 0-[a-D], N0-[n-P], N-[v-M]).
+fsa(N0-[a-D,av-D,n-D], N3-[n-P, v-P], N-[r-W,w-W], N0-[a-D], N3-[n-P], N-[r-W,w-W]).
+fsa(N-[n-M], N1-[a-H,n-H], N2-[x-D], N-[n-M], N1-[n-H], N2-[x-D]).
+fsa(N1-[v-D], N2-[x-V], N3-[n-C,v-C], N1-[v-D], N2-[x-V], N3-[v-C]):-
+              coplbh(D).
+fsa(N1-[v-D], N2-[n-V], N3-[a-C,n-C,v-C], N1-[v-D], N2-[d-V], N3-[n-C]):-
+              coplbh(D),nm(V,_,_).
+fsa(N1-[v-D], N2-[n-V], N3-[n-C,v-C], N1-[v-D], N2-[n-V], N3-[v-C]):-
+   (coplbh(D);support(D)), notinterrogative.
+fsa(0-[nh-M|_], N1-[n-D,v-D], N3-[p-P], 0-[nh-M], N1-[v-D], N3-[p-P]):-
+   P\=of.
+fsa(N3-[v-X], N0-[d-P,i-P,n-P], N2-[n-W, v-W], N3-[v-X], N0-[d-P], N2-[n-W]).
+fsa(N3-[av-now], N0-[a-P,c-P,r-P], N2-[n-W], N3-[av-now], N0-[c-P], N2-[n-W]).
+
+fsa(A,B,C,D,E,F):-
+    fsac(A,B,C,D,E,F),!.
+fsac(N-[n-M,v-M], N1-[av-H,e-H,n-H,s-H], N2-[n-D,v-D], N-[v-M], N1-[av-H], N2-[v-D]):-
+   coplbh(M);support(M).
+fsac(N-[x-M], N1-[d-D, e-D, p-D, s-D], N2-[n-P], N-[x-M], N1-[s-D], N2-[n-P]).
+fsac(N-[p-M,s-M], N1-[a-D, n-D, v-D], N2-[p-P], N-[p-M], N1-[v-D], N2-[p-P]):-
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]).
+fsac(N0-[n-D], N3-[n-P, v-P], N-[av-W, e-W], N0-[n-D], N3-[v-P], N-[av-W]):-
+    support(P).
+fsac(N-[v-M], N2-[p-to], N1-[n-P, v-P], N-[v-M], N2-[p-to], N1-[v-P]):-
+   coplbh(M).
+fsac(N0-[p-to], N3-[n-P, v-P], N-[d-W,e-W,p-W,s-W], N0-[p-to], N3-[v-P], N-[p-W]).
+fsac(N-[x-M], N1-[p-D, s-D], N2-[r-P,w-P], N-[x-M], N1-[p-D], N2-[r-P,w-P]).
+fsac(N0-[a-D,q-D,v-D], N3-[p-to], N-[a-W,n-W,q-W,v-W], N0-[q-D,v-D], N3-[p-to], N-[v-W]).
+fsac(N0-[a-D,q-D,v-D], N3-[p-to], N-[n-W,v-W], N0-[q-D,v-D], N3-[p-to], N-[v-W]):-
+     lemmatize_dic_v(D, Lemma, S1),
+     coml(Lemma,_).
+fsac(N0-[q-D,v-D], N3-[p-to], N-[n-W,v-W], N0-[q-D,v-D], N3-[p-to], N-[v-W]):-
+     lemmatize_dic_v(D, Lemma, S1),
+     coml(Lemma,_).
+fsac(N-[n-M], N1-[n-H], N2-[a-D,q-D,v-D], N-[n-M], N1-[n-H], N2-[v-D]):-
+     lemmatize_dic_v(D, Lemma, S1),
+     sy(Lemma).
+fsac(N0-[av-D,p-D,s-D], N3-[av-there, v-there], N-[q-W,v-W], N0-[s-D], N3-[av-there, v-there], N-[v-W]).
+fsac(N0-[a-D], N3-[av-P, d-P], N-[n-W], N0-[a-D], N3-[d-P], N-[n-W]).
+fsac(N0-[p-D], N3-[a-P, v-P], N-[a-W], N0-[p-D], N3-[a-P], N-[a-W]):-D\=to.
+fsac(N-[a-M,av-M], N1-[a-D, r-D], N2-[n-P,nt-P], N-[av-M], N1-[a-D], N2-[nt-P]).
+fsac(N-[a-M,av-M], N1-[a-D, c-D, r-D], N2-[n-P], N-[a-M], N1-[c-D], N2-[n-P]).
+fsac(N-[p-M,r-M,s-M,w-M], N1-[v-D], N2-[n-P,v-P], N-[r-M,w-M], N1-[v-D], N2-[n-P]):-
+              coplbh(D).
+
+
+/* 4 elementi */
+fsa3(N2-[p-R], N0-[d-P], N-[n-D], N1-[a-M,v-M], N2-[p-R], N0-[d-P], N-[n-D], N1-[v-M]):-
+       stringof(PastPart,M),
+       reverse(PastPart, [T|R]),
+       (T=d;T=t).
+fsa3(N2-[p-R,s-R], N0-[d-P], N-[n-D], N1-[a-M,v-M], N2-[p-R], N0-[d-P], N-[n-D], N1-[v-M]):-
+       stringof(PastPart,M),
+       reverse(PastPart, [T|R]),
+       (T=d;T=t).
+fsa3(N2-[av-M,n-M,v-M], N1-[ng-D], N3-[n-K,v-K], N0-[x-P], N2-[v-M], N1-[ng-D], N3-[n-K], N0-[x-P]):-
+     select_bestgg(M,Best1),
+     transl_tags(P,Best1,Tags1),
+     on(Tag1,Tags1), Tag1=v.
+fsa3(N2-[d-M], N1-[d-D], N3-[n-K,v-K], N0-[av-P,n-P,v-P], N2-[d-M], N1-[d-D], N3-[n-K], N0-[v-P]):-
+     select_bestgg(P,Best1),
+     transl_tags(P,Best1,Tags1),
+     on(Tag1,Tags1), Tag1=v.
+fsa3(0-[n-M,v-M], N1-[n-D,v-D], N3-[n-K,v-K], N0-[x-P], 0-[n-M], N1-[n-D], N3-[v-K], N0-[x-P]):-
+     disaccess_wsj(M,Best1),
+     transl_tags(M,Best1,Tags1),
+     on(Tag1,Tags1), Tag1=n,
+     disaccess_wsj(D,Best),
+     transl_tags(D,Best,Tags),
+     on(Tag2,Tags), Tag2=n.
+fsa3(N2-[x-M], N1-[a-D,v-D], N3-[n-K], N0-[p-of], N2-[x-M], N1-[v-D], N3-[n-K], N0-[p-of]):-
+     disaccess_wsj(D,Best1),
+     transl_tags(D,Best1,Tags1),
+     on(Tag1,Tags1), Tag1=v.
+fsa3(N2-[x-M], N1-[a-D,v-D], N3-[n-K,v-K], N0-[p-of], N2-[x-M], N1-[v-D], N3-[n-K], N0-[p-of]):-
+     disaccess_wsj(D,Best1),
+     transl_tags(D,Best1,Tags1),
+     on(Tag1,Tags1), Tag1=v.
+fsa3(N-[a-D,n-D], N0-[n-P,v-P], N1-[a-T,c-T,r-T], N3-[v-V], N-[a-D], N0-[n-P], N1-[c-T], N3-[v-V]).
+fsa3(N2-[v-X], N-[a-D,c-D,r-D], N1-[a-M,av-M,i-M,n-M,v-M], N0-[n-P], N2-[v-X], N-[a-D], N1-[a-M], N0-[n-P]).
+fsa3(N0-[v-P], N-[a-D,n-D,v-D], N1-[e-M], N3-[a-V], N0-[v-P], N-[a-D], N1-[e-M], N3-[a-V]):-
+              coplbh(P).
+
+fsa3(N2-[a-V,v-V], N-[a-D,c-D,r-D], N1-[x-M], N0-[s-P], N2-[v-V], N-[r-D], N1-[x-M], N0-[s-P]):-
+     lemmatize_dic_v(V, Lemma, S1),
+     sy(Lemma).
+fsa3(N0-[p-to], N1-[n-D,v-D], N2-[n-V,v-V], N3-[v-M], N0-[p-to], N1-[v-D], N2-[n-V], N3-[v-M]).
+fsa3(N-[n-P], N0-[n-X], N3-[a-W,v-W], N2-[p-D], N-[n-P], N0-[n-X], N3-[n-W], N2-[p-D]):-
+           mcon(P,'_',P1),
+           mcon(P1,W,Mult),
+            nwn(Mult,K).
+fsa3(N-[e-D, p-D, s-D], N2-[n-K], N1-[av-M, d-M, e-M, n-M], N0-[v-V], N-[s-D], N2-[n-K], N1-[av-M], N0-[v-V]).
+fsa3(0-[a-X,v-X], N0-[p-P], N-[n-M], N1-[x-V], N2-[v-X], N0-[p-P], N-[n-M], N1-[x-V]).
+fsa3(N0-[v-P], N-[a-D,c-D,r-D], N1-[r-M,w-M], N3-[v-V], N0-[v-P], N-[r-D], N1-[r-M], N3-[v-V]).
+fsa3(N0-[r-P], N1-[v-D], N2-[a-V,av-V,d-V], N3-[a-M,n-M,v-M], N0-[r-P], N1-[v-D], N2-[av-V], N3-[v-M]):-
+    (supporto(D);coplbh(D)),
+       stringof(Gerund,M),
+       reverse(Gerund, [g,n,i|_]).
+fsa3(N2-[x-X], N0-[r-P,w-P], N-[n-M,v-M], N1-[p-V], N2-[x-X], N0-[r-P,w-P], N-[v-M], N1-[p-V]).
+fsa3(N0-[n-P], N1-[v-D], N2-[av-V,p-V,s-V], N3-[n-M], N0-[n-P], N1-[v-D], N2-[p-V], N3-[n-M]):-
+     lemmatize_dic_v(D, Lemma, S1),
+     v(Lemma,Subs),
+     (on(i,Subs);on(ti,Subs)).
+fsa3(N0-[v-P], N1-[n-D,v-D], N2-[n-V], N3-[x-'?'], N0-[v-P], N1-[n-D], N2-[n-V], N3-[x-'?']):-
+              coplbh(P),
+              mcon(D,'_',M1),
+              mcon(M1,V,D1),
+              (ht(D1,_);sk(D1,_);nwn(D1,_);wsd(D1,_,_)).
+fsa3(N0-[v-P], N1-[n-D], N2-[a-V,v-V], N3-[x-'?'], N0-[v-P], N1-[n-D], N2-[v-V], N3-[x-'?']):-
+    supporto(P);coplbh(P).
+fsa3(N0-[v-P], N1-[a-D,n-D,nh-D], N2-[n-V,q-V,v-V], N3-[n-C,v-C], N0-[v-P], N1-[a-D], N2-[n-V], N3-[v-C]):-
+    supporto(P);coplbh(P).
+fsa3(N0-[v-P], N1-[d-D,n-D,r-D], N2-[a-V,n-V,v-V], N3-[p-C], N0-[v-P], N1-[r-D], N2-[a-V], N3-[p-C]):-
+     quant(D,_,_,_,_).
+fsa3(N2-[x-X], N0-[n-P], N-[n-M,v-M], N1-[v-V], N2-[x-X], N0-[n-P], N-[v-M], N1-[v-V]):-
+    supporto(M);coplbh(M).
+fsa3(N0-[v-P], N1-[a-D,c-D,r-D], N2-[n-V,v-V], N3-[x-C], N0-[v-P], N1-[a-D], N2-[n-V], N3-[x-C]).
+fsa3(N2-[av-P,p-P,r-P,s-P,w-P], N0-[v-V], N-[n-M,v-M], N1-[a-C,v-C], N2-[r-P,w-P], N0-[v-V], N-[n-M], N1-[v-C]):-
+              coplbh(V).
+fsa3(N2-[d-D], N0-[n-P], N-[n-M,v-M], N1-[d-K,pron-K,r-K], N2-[d-D], N0-[n-P], N-[v-M], N1-[d-K,r-K]).
+fsa3(N0-[v-P], N1-[n-D], N2-[p-to], N3-[n-C,v-C], N0-[v-P], N1-[n-D], N2-[p-to], N3-[v-C]):-
+     lemmatize_dic_v(P, Lemma, S1),
+     coml(Lemma,_).
+fsa3(N2-[d-P], N0-[a-P], N-[n-M,v-M], N1-[p-of], N2-[d-P], N0-[a-P], N-[n-M], N1-[p-of]).
+fsa3(N2-[d-P], N0-[n-P], N-[n-M,v-M], N1-[p-of], N2-[d-P], N0-[n-P], N-[n-M], N1-[p-of]).
+fsa3(N2-[x-P], N0-[a-P], N-[n-M,v-M], N1-[p-of], N2-[x-P], N0-[a-P], N-[n-M], N1-[p-of]).
+fsa3(N3-[d-Q], N0-[n-P], N1-[a-D, n-D, v-D], N2-[p-X], N3-[d-Q], N0-[n-P], N1-[v-D], N2-[p-X]):- 
+   mcon(P,'_',M1),
+   mcon(M1,D,D1),
+   \+ ht(D1,_),
+      X \= of,
+    disaccess_wsj(D, Best),
+     transl_tags(D, Best, Tags),
+     on(Tag, Tags),
+     Tag=v.
+fsa3(N0-[n-P], N1-[a-D, n-D, v-D], N2-[p-X], N3-[d-Q], N0-[n-P], N1-[v-D], N2-[p-X], N3-[d-Q]):- 
+   mcon(P,'_',M1),
+   mcon(M1,D,D1),
+   \+ ht(D1,_),
+      X \= of.
+fsa3(N0-[v-P], N1-[n-D,v-D], N2-[x-V], N3-[n-C,v-C], N0-[v-P], N1-[v-D], N2-[x-V], N3-[v-C]):-
+              coplbh(D).
+fsa3(N0-[v-P], N1-[n-D], N2-[n-V,v-V], N3-[d-C,e-C,p-C,s-C], N0-[v-P], N1-[n-D], N2-[n-V], N3-[p-C]):-
+              coplbh(P).
+fsa3(N0-[p-P], N1-[v-D], N2-[n-V,v-V], N3-[p-C], N0-[p-P], N1-[v-D], N2-[v-V], N3-[p-C]):-
+              coplbh(D).
+fsa3(N0-[p-P], N1-[a-D,n-D,v-D], N2-[d-V], N3-[v-C], N0-[p-P], N1-[n-D], N2-[a-V], N3-[v-C]):-
+        integer(V).
+fsa3(N3-[d-P], N-[n-M,n-M1], N1-[n-D,v-D], N0-[d-K], N3-[d-P], N-[n-M], N1-[Tag-D], N0-[d-K]):-
+     spy_lower(M, LowW, 1),
+      hm(M),
+     disaccess_wsj(D, Best),
+     transl_tags(D, Best, Tags),
+     on(Tag, Tags),
+     !.
+fsa3(N0-[v-P], N1-[a-D,av-D,v-D], N2-[a-V,v-V], N3-[a-C], N0-[v-P], N1-[av-D], N2-[v-V], N3-[a-C]):-
+    supporto(P);coplbh(P).
+fsa3(N0-[v-P], N1-[a-D,av-D,v-D], N2-[a-V,v-V], N3-[d-C], N0-[v-P], N1-[av-D], N2-[v-V], N3-[d-C]):-
+    supporto(P);coplbh(P).
+fsa3(N0-[v-P], N1-[a-D,av-D,v-D], N2-[a-V,v-V], N3-[n-C], N0-[v-P], N1-[av-D], N2-[v-V], N3-[n-C]):-
+    supporto(P);coplbh(P).
+fsa3(N0-[x-X], N-[n-M,v-M], N1-[a-D, c-D, r-D], N3-[d-V|K], N0-[x-X], N-[v-M], N1-[c-D], N3-[d-V|K]):-
+     lemmatize_dic_v(M, Lemma, S1),
+     coml(Lemma, LArgsV), on(fcomp/Pro, LArgsV).
+fsa3(N0-[n-P,v-P], N1-[v-D], N2-[a-V,n-V,v-V], N3-[p-C], N0-[v-P], N1-[v-D], N2-[v-V], N3-[p-C]):-
+    (supporto(P);coplbh(P)),
+    (supporto(D);coplbh(D)).
+fsa3(N0-[v-P], N1-[v-D], N2-[a-V,n-V,v-V], N3-[p-C], N0-[v-P], N1-[v-D], N2-[v-V], N3-[p-C]):-
+    (supporto(P);coplbh(P)),
+    (supporto(D);coplbh(D)).
+fsa3(N0-[e-P], N1-[p-D, s-D], N2-[n-X], N3-[v-C], N0-[e-P], N1-[s-D], N2-[n-X], N3-[v-C]).
+fsa3(0-[p-P,s-P], N2-[a-X], N1-[n-D, v-D], N3-[x-C], 0-[p-P], N2-[a-X], N1-[n-D], N3-[x-C]).
+fsa3(0-[p-P,s-P], N2-[d-X], N1-[n-D, v-D], N3-[x-C], 0-[p-P], N2-[d-X], N1-[n-D], N3-[x-C]).
+fsa3(N0-[n-P], N1-[a-D, v-D], N2-[p-X], N3-[d-C], N0-[n-P], N1-[v-D], N2-[p-X], N3-[d-C]).
+fsa3(N0-[n-P], N1-[a-D, v-D], N2-[n-X], N3-[x-C], N0-[n-P], N1-[v-D], N2-[n-X], N3-[x-C]).
+fsa3(N3-[v-P], N-[n-M,v-M], N1-[p-to], N0-[n-K,v-K], N3-[v-P], N-[v-M], N1-[p-to], N0-[v-K]):-
+             coplbh(P),
+       stringof(Gerund,M),
+       reverse(Gerund, [g,n,i|_]).
+fsa3(N3-[v-P], N-[n-M,v-M], N1-[p-to], N0-[v-K], N3-[v-P], N-[v-M], N1-[p-to], N0-[v-K]):-
+             coplbh(P),
+       stringof(Gerund,M),
+       reverse(Gerund, [g,n,i|_]).
+fsa3(N3-[n-P], N-[v-M], N1-[n-D,v-D], N0-[x-K], N3-[n-P], N-[v-M], N1-[n-D], N0-[x-K]):-
+             coplbh(M),
+      stringof(Gerund,D),
+      reverse(Gerund, [s|_]).
+fsa3(N3-[v-P], N-[a-M,n-M], N1-[d-D,e-D,i-D,s-D], N0-[av-K,d-K], N3-[v-P], N-[a-M], N1-[s-D], N0-[d-K]):-
+             coplbh(P).
+fsa3(N3-[v-P], N-[a-M], N1-[d-D,e-D,i-D,s-D], N0-[av-K,d-K], N3-[v-P], N-[a-M], N1-[s-D], N0-[d-K]).
+fsa3(N3-[d-P], N-[a-M], N1-[v-D], N0-[v-K], N3-[d-P], N-[n-M], N1-[n-D], N0-[v-K]):-
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]).
+fsa3(N0-[v-S], N-[d-W], N1-[a-D,v-D], N2-[n-M,v-M], N0-[v-S], N-[d-W], N1-[a-D], N2-[Tag-M]):-
+     disaccess_wsj(M,Best),
+     transl_tags(M,Best,Tags),
+     on(Tag,Tags),!.
+fsa3(N-[n-M], N1-[n-D, v-D], N0-[x-'"'], N3-[p-to], N-[n-M], N1-[v-D], N0-[x-'"'], N3-[p-to]):-
+     lemmatize_dic_v(D, Lemma, S1),
+     coml(Lemma, LArgsV), on(vcomp/prop/_, LArgsV).
+fsa3(N3-[d-P], N-[n-M], N1-[n-D, v-D], N0-[d-K,r-K], N3-[d-P], N-[n-M], N1-[v-D], N0-[d-K]).
+fsa3(N-[n-M], N1-[n-D, v-D], N0-[p-K], N3-[d-P], N-[n-M], N1-[v-D], N0-[p-K], N3-[d-P]).
+fsa3(N-[n-M], N1-[n-D, v-D], N0-[p-K], N3-[n-P], N-[n-M], N1-[n-D], N0-[p-K], N3-[n-P]):-
+     lemmatize_dic(D, Lemma, S1),
+      check_subcn(Lemma,K).
+fsa3(N-[n-M], N1-[n-D, v-D], N0-[p-K], N3-[n-P], N-[n-M], N1-[v-D], N0-[p-K], N3-[n-P]).
+fsa3(N-[n-M, v-M], N1-[av-D, e-D, n-D, s-D], N0-[n-K, v-K], N3-[x-P], N-[v-M], N1-[av-D], N0-[v-K], N3-[x-P]):-
+              supporto(M);coplbh(M).
+fsa3(N-[n-M, v-M], N1-[s-like, v-D], N0-[a-this, r-K], N3-[n-P, v-P], N-[n-M], N1-[s-D], N0-[r-K], N3-[v-P]).
+fsa3(N-[n-M], N1-[s-like, v-D], N0-[a-this, r-K], N3-[n-P, v-P], N-[n-M], N1-[s-D], N0-[r-K], N3-[v-P]).
+fsa3(N-[n-M], N1-[n-D, v-D], N0-[e-K], N3-[v-P], N-[n-M], N1-[v-D], N0-[e-K], N3-[v-P]).
+fsa3(N0-[v-S], N-[n-W,v-W], N1-[p-to], N2-[n-M,v-M], N0-[v-S], N-[n-W], N1-[p-to], N2-[v-M]).
+fsa3(N-[p-S], N0-[a-X], N1-[q-D, v-D], N2-[n-P], N-[p-S], N0-[a-X], N1-[a-D], N2-[n-P]).
+fsa3(N-[p-S], N0-[d-X], N1-[q-D, v-D], N2-[n-P], N-[p-S], N0-[d-X], N1-[a-D], N2-[n-P]).
+fsa3(N-[p-S], N0-[a-X,r-X], N1-[q-D, v-D], N2-[n-P], N-[p-S], N0-[a-X], N1-[a-D], N2-[n-P]).
+fsa3(N-[p-S], N0-[v-X], N1-[a-D, av-D, n-D], N2-[n-P,v-P], N-[p-S], N0-[v-X], N1-[a-D], N2-[n-P]).
+fsa3(N0-[p-S], N-[v-W], N1-[e-D], N2-[a-M,v-M], N0-[p-S], N-[v-W], N1-[e-D], N2-[v-M]).
+fsa3(N0-[av-W,p-W,s-W], N1-[a-M, n-M], N3-[n-P,v-P], N2-[p-K], N0-[p-W], N1-[a-M], N3-[n-P], N2-[p-K]).
+fsa3(N-[e-D, p-D, s-D], N2-[d-K], N1-[n-M, v-M], N0-[v-V], N-[s-D], N2-[d-K], N1-[n-M], N0-[v-V]).
+fsa3(N0-[p-D, s-D], N-[d-X,e-X,r-X], N1-[av-M, n-M], N2-[e-S], N0-[p-D], N-[d-X], N1-[n-M], N2-[e-S]).
+fsa3(N0-[v-S], N-[d-W,e-W,p-W,s-W], N1-[n-D], N2-[v-M], N0-[v-S], N-[s-W], N1-[n-D], N2-[v-M]).
+fsa3(N2-[n-M], N0-[a-S,q-S,v-S], N-[p-to], N1-[n-D,v-D], N2-[n-M], N0-[v-S], N-[p-to], N1-[v-D]):-
+     lemmatize_dic_v(S, Lemma, S1),
+     coml(Lemma, LArgsV), on(vcomp/prop/_, LArgsV).
+fsa3(N2-[n-M], N0-[v-S], N-[p-to], N1-[n-D,v-D], N2-[n-M], N0-[v-S], N-[p-to], N1-[v-D]):-
+     lemmatize_dic_v(S, Lemma, S1),
+     coml(Lemma, LArgsV), on(vcomp/prop/_, LArgsV).
+fsa3(N-[n-M], N1-[av-C], N0-[a-K,q-K,v-K], N3-[n-P], N-[n-M], N1-[av-C], N0-[v-K], N3-[n-P]).
+fsa3(N-[n-M], N1-[c-C], N0-[a-K,q-K,v-K], N3-[av-P,p-P], N-[n-M], N1-[c-C], N0-[v-K], N3-[p-P]).
+fsa3(N-[n-M], N1-[a-D, n-D], N0-[a-K,p-K], N3-[n-P], N-[n-M], N1-[n-D], N0-[p-K], N3-[n-P]).
+fsa3(N-[n-M], N1-[v-D], N0-[a-K,n-K,v-K], N3-[p-P,s-P], N-[n-M], N1-[v-D], N0-[v-K], N3-[p-P]):-
+          coplbh(D),
+   stringof(Gerund,K),
+   reverse(Gerund, [g,n,i|_]).
+fsa3(N-[n-M], N1-[n-D, v-D], N0-[a-K,n-K,v-K], N3-[p-P], N-[n-M], N1-[v-D], N0-[v-K], N3-[p-P]):-
+          supporto(D);coplbh(D).
+fsa3(N-[c-D], N1-[n-M,v-M], N2-[v-P], N3-[d-C], N-[c-D], N1-[v-M], N2-[v-P], N3-[d-C]).
+fsa3(N-[n-M], N1-[a-D, q-D, v-D], N0-[av-K,n-K], N3-[x-P], N-[n-M], N1-[v-D], N0-[av-K], N3-[x-P]):-
+       verbs_of_saying(D).
+fsa3(N-[n-M,v-M], N1-[n-D, v-D], N2-[n-P], N0-[n-percent], N-[n-M], N1-[v-D], N2-[n-P], N0-[n-percent]).
+fsa3(N-[n-M], N1-[p-D], N0-[n-K,v-K], N3-[a-P,q-P,v-P], N-[n-M], N1-[p-D], N0-[v-K], N3-[v-P]):-
+   stringof(Gerund,K),
+   reverse(Gerund, [g,n,i|_]).
+fsa3(N-[a-M], N1-[q-D,v-D], N2-[n-P,v-P], N3-[x-X], N-[a-M], N1-[a-D], N2-[n-P], N3-[x-X]).
+fsa3(N-[a-M], N1-[v-D], N2-[a-P,n-P], N3-[n-W], N-[a-M], N1-[a-D], N2-[a-P], N3-[n-W]):-
+   stringof(Gerund,D),
+   reverse(Gerund, [g,n,i|_]).
+fsa3(N0-[a-V,q-V,v-V], N2-[a-D, c-D, r-D], N1-[n-H,v-H], N-[x-M], N0-[v-V], N2-[a-D], N1-[n-H], N-[x-M]).
+fsa3(N-[d-P], N1-[a-D, n-D], N2-[a-M,c-M,r-M], N3-[v-V], N-[d-P], N1-[n-D], N2-[c-M], N3-[v-V]).
+fsa3(N-[p-M], N1-[av-D,d-D,p-D], N2-[d-P], N0-[d-H], N-[p-M], N1-[d-D], N2-[d-P], N0-[d-H]).
+fsa3(N-[x-M], N1-[n-D, v-D], N2-[d-P, r-P], N0-[p-A], N-[x-M], N1-[v-D], N2-[r-P], N0-[p-A]).
+fsa3(N-[p-M], N1-[d-D], N2-[a-P,n-P,v-P], N0-[p-of], N-[p-M], N1-[d-D], N2-[n-P], N0-[p-of]).
+fsa3(N-[n-M], N1-[av-D], N0-[n-K,v-K], N3-[p-P], N-[n-M], N1-[av-D], N0-[v-K], N3-[p-P]).
+fsa3(N-[n-M], N1-[a-D, q-D, v-D], N0-[av-K,n-K], N3-[d-P], N-[n-M], N1-[v-D], N0-[av-K], N3-[d-P]).
+fsa3(0-[a-X], N-[n-M], N1-[n-D, v-D], N2-[x-P], 0-[a-X], N-[n-M], N1-[v-D], N2-[x-P]).
+fsa3(N0-[p-X], N-[n-M], N1-[x-D], N2-[d-P, p-P], N0-[p-X], N-[n-M], N1-[x-D], N2-[d-P]).
+fsa3(N0-[p-A], N-[v-M], N1-[n-D, v-D], N2-[p-P], N0-[p-A], N-[v-M], N1-[n-D], N2-[p-P]).
+fsa3(N2-[d-P], N0-[n-D, v-D], N-[n-X, v-X], N1-[n-V], N2-[d-P], N0-[n-D], N-[n-X], N1-[n-V]):-
+   P=a;P=an;P=the.
+fsa3(N-[n-M], N1-[a-D, q-D, v-D], N0-[av-K,n-K], N3-[d-P], N-[n-M], N1-[v-D], N0-[av-K], N3-[d-P]).
+
+fsa3(N0-[v-X], N-[a-M,c-M,r-M], N1-[a-D, n-D], N2-[x-P], N0-[v-X], N-[a-M], N1-[n-D], N2-[x-P]).
+fsa3(N2-[d-P], N0-[a-D,n-D], N-[n-X, v-X], N1-[x-V], N2-[d-P], N0-[a-D], N-[n-X], N1-[x-V]).
+fsa3(N0-[p-X], N-[d-M], N1-[a-D, q-D, v-D], N2-[d-P], N0-[p-X], N-[d-M], N1-[a-D], N2-[d-P]).
+fsa3(N0-[x-X], N1-[e-M], N-[a-D, c-D, r-D], N2-[r-P], N0-[x-X], N1-[e-M], N-[c-D], N2-[r-P]).
+fsa3(N0-[v-D], N-[d-X, e-X], N1-[n-M, v-M], N2-[n-P, v-P], N0-[v-D], N-[e-X], N1-[v-M], N2-[n-P]):-
+       coplbh(D).
+fsa3(N0-[av-D], N-[n-X, v-X], N1-[n-M], N2-[x-P], N0-[av-D], N-[v-X], N1-[n-M], N2-[x-P]).  
+fsa3(N2-[x-P], N0-[s-D, v-D], N-[n-X, v-X], N1-[x-V], N2-[x-P], N0-[s-D], N-[n-X], N1-[x-V]).
+fsa3(N2-[v-P], N0-[d-D], N-[n-X], N1-[n-V,v-V], N2-[v-P], N0-[d-D], N-[n-X], N1-[v-V]):-
+   supporto(P);coplbh(P), 
+    stringof(Gerund,V),
+   (reverse(Gerund, [d|R]);reverse(Gerund, [g|R])).
+fsa3(N2-[e-P], N0-[n-D, v-D], N-[n-X], N1-[x-V], N2-[e-P], N0-[v-D], N-[n-X], N1-[x-V]).
+fsa3(N-[n-M], N1-[a-left], N0-[p-to], N2-[n-V, v-V], N-[n-M], N1-[a-left], N0-[p-to], N2-[v-V]).
+fsa3(N0-[a-D, n-D], N-[v-X], N1-[n-V], N2-[n-P, v-P], N0-[a-D], N-[v-X], N1-[n-V], N2-[v-P]):-
+   (supporto(P);coplbh(P)),    
+    stringof(Gerund,X),
+   reverse(Gerund, [d|R]).
+fsa3(N-[n-M], N0-[p-K], N1-[a-D, n-D, q-D, v-D], N3-[x-P], N-[n-M], N0-[p-K], N1-[n-D], N3-[x-P]).
+fsa3(N2-[d-P, r-P], N0-[v-D], N-[n-X, v-X], N1-[x-V], N2-[r-P], N0-[v-D], N-[n-X], N1-[x-V]):-
+       coplbh(D).
+fsa3(N2-[d-P], N0-[n-D], N-[p-X, s-X], N1-[n-V, v-V], N2-[d-P], N0-[n-D], N-[p-X], N1-[n-V]).
+fsa3(N0-[a-D, p-D], N-[n-X], N1-[n-V, v-V], N2-[x-P], N0-[a-D], N-[n-X], N1-[n-V], N2-[x-P]).
+fsa3(N2-[x-P], N0-[a-D, v-D], N-[n-X], N1-[v-V], N2-[x-P], N0-[a-D], N-[n-X], N1-[v-V]).
+fsa3(N2-[p-P], N0-[a-D, n-D], N-[e-X], N1-[n-V, v-V], N2-[p-P], N0-[n-D], N-[e-X], N1-[n-V]).
+fsa3(N-[d-D], N1-[n-M], N2-[a-K, n-K, v-K], N3-[p-E], N-[d-D], N1-[n-M], N2-[a-K], N3-[p-E]):-
+    subcat_agg(K,E).
+fsa3(0-[d-X], N1-[n-M], N3-[n-P,v-P], N2-[x-D], 0-[d-X], N1-[n-M], N3-[v-P], N2-[x-D]):-
+   stringof(Gerund,M),
+   reverse(Gerund, [C|R]),
+   stringof(VerbNoun,P),
+   reverse(VerbNoun, [S|Res]),
+   (C\=s, S\=s; C\=s, S=s),
+     lemmatize_dic_v(P, Lemma, S1),
+     verbs_of_saying(Lemma).
+fsa3(0-[a-that, c-that|_], N1-[v-V], N2-[a-M, n-M, v-M|_], N3-[p-P], 0-[r-that], N1-[v-V], N2-[v-M], N3-[p-P]):-
+       coplbh(V).
+fsa3(0-[a-that, c-that|_], N1-[v-V], N2-[av-M, r-M, s-M, w-M], N3-[d-P], 0-[r-that], N1-[v-V], N2-[r-M], N3-[d-P]):-
+       coplbh(V).      
+fsa3(N2-[x-P], N0-[p-D, s-D], N-[d-X], N1-[n-V], N2-[x-P], N0-[p-D], N-[d-X], N1-[n-V]).
+fsa3(N2-[x-P], N0-[p-D, s-D], N-[a-X, n-X], N1-[n-V], N2-[x-P], N0-[p-D], N-[a-X], N1-[n-V]).
+fsa3(N-[a-M], N1-[p-D, s-D], N2-[n-P, v-P], N3-[q-E, v-E], N-[n-M], N1-[p-D], N2-[n-P], N3-[v-E]).
+fsa3(N-[a-D], N1-[a-that, c-that, r-that], N2-[r-M], N3-[v-L], N-[a-D], N1-[c-that], N2-[r-M], N3-[v-L]).
+fsa3(N-[d-D], N1-[n-M], N2-[n-K, v-K], N3-[q-E, v-E], N-[d-D], N1-[n-M], N2-[n-K], N3-[v-E]):-
+   \+ supporto(K), \+ coplbh(K).
+fsa3(N-[p-D, s-D], N1-[n-M, q-M, v-M], N2-[a-K, r-K], N3-[n-P, v-P], N-[p-D], N1-[v-M], N2-[a-K], N3-[n-P]).
+fsa3(N1-[a-D, n-D], N0-[n-P], N-[n-M,v-M], N3-[x-X], N1-[n-D], N0-[n-P], N-[n-M], N3-[x-X]):-
+   checkab(D);checkt(D).
+fsa3(N-[a-D, n-D], N1-[n-M], N2-[n-K, v-K], N3-[x-P], N-[a-D], N1-[n-M], N2-[n-K], N3-[x-P]).
+fsa3(N-[a-D, n-D], N1-[a-M], N2-[n-K, v-K|_], N3-[x-P], N-[a-D], N1-[a-M], N2-[n-K], N3-[x-P]).
+fsa3(N-[d-D], N1-[n-M], N2-[a-K, av-K, n-K, v-K], N3-[x-P], N-[d-D], N1-[n-M], N2-[n-K], N3-[x-P]).
+fsa3(N-[d-D], N1-[n-M], N2-Vs, N3-[x-P], N-[d-D], N1-[n-M], N2-[n-K], N3-[x-P]):-
+    Vs\=[A], 3<N, on(n-K, Vs), \+ nt(K).
+fsa3(N-[d-D], N1-[n-M], N2-Vs, N3-[x-P], N-[d-D], N1-[n-M], N2-[Tag-K], N3-[x-P]):-
+    Vs\=[A], N=<3, on(n-K, Vs), on(v-K, Vs),
+     disaccess_wsj(K,Best),
+     transl_tags(K,Best,Tags),
+     on(Tag,Tags).
+fsa3(N-[d-D], N1-[n-M], N2-[a-K, n-K, v-K], N3-[p-P], N-[d-D], N1-[n-M], N2-[n-K], N3-[p-P]).
+fsa3(N-[x-D], N1-[n-K, v-K], N2-[n-P], N3-[n-M], N-[x-D], N1-[n-K], N2-[n-P], N3-[n-M]).
+fsa3(N-[d-D], N1-[n-M], N2-[n-K, v-K], N3-[p-of], N-[d-D], N1-[n-M], N2-[n-K], N3-[p-of]).
+fsa3(N-[d-D], N1-[n-M], N2-[n-K, v-K], N3-[a-that, c-that, r-that], N-[d-D], N1-[n-M], N2-[n-K], N3-[c-that]):-
+    cwn(K),
+    !.
+fsa3(N-[d-D], N1-[n-M], N2-[n-K, v-K], N3-[a-that, c-that, r-that], N-[d-D], N1-[n-M], N2-[Tag-K], N3-[c-that]):-
+     disaccess_wsj(K,Best),
+     transl_tags(K,Best,Tags),
+     on(Tag,Tags),
+    !.
+fsa3(N-[d-D], N1-[n-M], N2-[n-K, v-K], N3-[a-that, c-that, r-that], N-[d-D], N1-[n-M], N2-[v-K], N3-[c-that]).
+fsa3(N-[n-D], N1-[n-K, v-K], N2-[a-that, c-that, r-that], N3-[P-L], N-[n-D], N1-[n-K], N2-[c-that], N3-[P-L]):-
+   stringof(Gerund,D),
+   reverse(Gerund, [_,s,-|_]).
+
+fsa3(N-[n-D], N1-Ms, N2-[a-that, c-that, r-that], N3-[P-L], N-[n-D], N1-[v-M], N2-[c-that], N3-[P-L]):-
+   (P=d;P=n),
+   Ms\=[A],
+   (reverse(Ms, [v-M|Mm]);Ms=[v-M|Mm]),
+    verbs_of_saying(M).
+fsa3(N-[p-to], N1-[a-M, n-M, v-M], N2-[p-P], N3-[n-L], N-[p-to], N1-[v-M], N2-[p-P], N3-[n-L]).
+fsa3(N-[p-D], N1-[a-M, n-M, v-M], N2-[p-P], N3-[n-L], N-[p-D], N1-[n-M], N2-[p-P], N3-[n-L]).
+fsa3(N-[p-D], N1-[a-M, av-M, n-M, v-M], N2-[n-P, v-P], N3-[n-L], N-[p-D], N1-[a-M], N2-[n-P], N3-[n-L]).
+fsa3(N0-[n-Q], N-[p-Q], N1-[a-M, n-M, v-M], N2-[x-P], N0-[n-Q], N-[p-Q], N1-[v-M], N2-[x-P]):-
+     Q=to;Q=in_order_to.
+fsa3(N-[n-D], N1-[v-M], N2-[n-P, v-P], N3-[p-of], N-[n-D], N1-[v-M], N2-[n-P], N3-[p-of]):-
+   supporto(M);coplbh(M).
+fsa3(N-[ng-D], N1-[n-M, v-M], N2-[n-P, v-P], N3-[n-Q], N-[ng-D], N1-[n-M], N2-[n-P], N3-[n-Q]).
+fsa3(N-[v-D], N1-[r-L], N2-[a-that, c-that|_], N3-[n-P], N-[v-D], N1-[r-L], N2-[c-that], N3-[n-P]).
+fsa3(N-[d-D], N1-[n-M], N2-[n-K, v-K], N3-[p-P], N-[d-D], N1-[n-M], N2-[v-K], N3-[p-P]):-
+    \+ integer(D); \+ qm(K).
+fsa3(N-[x-X], N1-[n-M, v-M], N2-[av-D], N3-[n-P], N-[x-X], N1-[v-M], N2-[av-D], N3-[n-P]).
+fsa3(N0-[q-X], N1-[p-Q], N2-[n-M, v-M], N3-[a-P], N0-[q-X], N1-[p-Q], N2-[v-M], N3-[a-P]):-
+     Q=to;Q=in_order_to.
+fsa3(N-[x-X], N1-[i-M, v-M], N2-[n-D, v-D], N3-[a-P], N-[x-X], N1-[i-M], N2-[v-D], N3-[a-P]).
+fsa3(N-[x-X], N3-[e-P], N1-[a-M, q-M, v-M], N2-[p-D], N-[x-X], N3-[e-P], N1-[v-M], N2-[p-D]).
+fsa3(N-[n-X], N1-[a-M, q-M, v-M], N2-[av-D|_], N3-[a-that, c-that|_], N-[n-X], N1-[v-M], N2-[av-D], N3-[c-that]).
+fsa3(N0-[d-D], N-[a-M, n-M], N1-[n-P, v-P], N2-[p-V], N0-[d-D], N-[a-M], N1-[n-P], N2-[p-V]).
+fsa3(N0-[d-D], N-[a-M, n-M], N1-[a-P, n-P], N2-[p-V], N0-[d-D], N-[a-M], N1-[n-P], N2-[p-V]).
+fsa3(N0-[d-D], N-[a-M], N1-[a-P, n-P], N2-[p-V], N0-[d-D], N-[a-M], N1-[n-P], N2-[p-V]).
+fsa3(N-[r-D], N1-[n-M, v-M], N2-[n-P], N3-[v-Q], N-[r-D], N1-[n-M], N2-[n-P], N3-[v-Q]).
+fsa3(N0-[n-D], N-[x-X], N1-[n-M, v-M], N2-[x-X], N0-[n-D], N-[x-X], N1-[n-M], N2-[x-X]).
+fsa3(N0-[n-D], N-[a-that, c-that|_], N1-[a-P, r-P], N2-[n-K], N0-[n-D], N-[c-that], N1-[a-P], N2-[n-K]):-
+   check_nf(D).
+fsa3(N-[d-D], N1-[a-M, n-M, v-M], N2-[v-K|_], N3-[x-E], N-[d-D], N1-[n-M], N2-[v-K], N3-[x-E]).
+fsa3(N-[d-D], N1-[a-M, n-M, v-M], N2-[d-K, p-K, s-K], N3-[r-P], N-[d-D], N1-[n-M], N2-[s-K], N3-[r-P]).
+fsa3(N-[n-D], N1-[q-M, v-M], N2-[d-K, e-K, p-K, s-K], N3-[d-P], N-[n-D], N1-[v-M], N2-[s-K], N3-[d-P]):-
+   P\=a,P\=an.
+fsa3(N-[d-D], N1-[a-M, n-M, v-M], N2-K, N3-[v-P], N-[d-D], N1-[n-M], N2-K, N3-[v-P]):-
+      K\=[],
+   reverse(K, [v-V|Mm]).
+fsa3(N-[a-D, r-D], N1-[a-M, n-M, v-M], N2-[n-K, v-K], N3-[v-E], N-[a-D], N1-[a-M], N2-[n-K], N3-[v-E]).
+fsa3(N-[r-D, w-D], N1-[n-M, v-M], N2-[n-P], N3-[v-Q], N-[r-D, w-D], N1-[v-M], N2-[n-P], N3-[v-Q]):-
+   supporto(M);coplbh(M).
+fsa3(N-[r-D, w-D], N1-[n-M, v-M], N2-[n-P], N3-[v-Q], N-[r-D, w-D], N1-[n-M], N2-[n-P], N3-[v-Q]).
+fsa3(N-[r-D, w-D], N1-[v-M], N2-[n-P,v-P], N3-[a-Q,n-Q,q-Q,v-Q], N-[r-D, w-D], N1-[v-M], N2-[n-P], N3-[v-Q]):-
+   supporto(M);coplbh(M).
+fsa3(N-[r-D, w-D], N1-[v-M], N2-[n-P,v-P], N3-[n-Q,q-Q,v-Q], N-[r-D, w-D], N1-[v-M], N2-[n-P], N3-[v-Q]):-
+   supporto(M);coplbh(M).
+fsa3(N-[p-D], N1-[d-M], N2-[a-K, n-K, q-K, v-K], N3-[n-L, v-L], N-[p-D], N1-[d-M], N2-[a-K], N3-[n-L]).
+fsa3(N0-[r-D, w-D], N-[n-X, v-X], N1-[a-M, q-M, v-M], N2-[p-P], N0-[r-D], N-[n-X], N1-[v-M], N2-[p-P]).
+fsa3(N-[x-X], N3-[d-P,p-P], N1-[d-M], N2-[n-D], N-[x-X], N3-[d-P], N1-[d-M], N2-[n-D]).
+fsa3(N-[n-X], N3-[n-P,v-P], N1-[x-M], N2-[n-D], N-[n-X], N3-[n-P], N1-[x-M], N2-[n-D]).
+fsa3(N-[v-X], N3-[d-P,r-P], N1-[n-M,v-M], N2-[q-D], N-[v-X], N3-[r-P], N1-[v-M], N2-[q-D]).
+fsa3(N-[x-X], N3-[p-P,s-P], N1-[n-M], N2-[p-D], N-[x-X], N3-[p-P], N1-[n-M], N2-[p-D]).
+fsa3(N-[p-D], N1-[av-M, d-M, r-M], N2-[q-K, v-K], N3-[n-L], N-[p-D], N1-[d-M], N2-[a-K], N3-[n-L]).
+fsa3(N-[e-D], N1-[a-M, q-M, v-M], N2-[d-K, r-K], N3-[r-L], N-[e-D], N1-[v-M], N2-[r-K], N3-[r-L]).
+fsa3(N-[v-X], N1-[n-D, v-D], N2-[a-that, c-that, r-that], N3-[a-L], N-[v-X], N1-[v-D], N2-[a-that], N3-[a-L]):-
+    supporto(X);coplbh(X).
+fsa3(N-[n-D], N1-[n-M, v-M], N2-[r-K], N3-[x-L], N-[n-D], N1-[v-M], N2-[r-K], N3-[x-L]).
+fsa3(N-[x-D], N1-[p-M, s-M], N2-[d-K, r-K], N3-[x-L], N-[x-D], N1-[p-M], N2-[r-K], N3-[x-L]).
+fsa3(N-[q-D, v-D], N1-[a-that, c-that|_], N2-[n-P], N0-[e-K], N-[v-D], N1-[c-that], N2-[n-P], N0-[e-K]):-
+    cat_gramm(D, cop, CatV, LArgsV).
+fsa3(N-[n-D], N3-[p-P, s-P], N1-[n-M, v-M], N2-[v-K], N-[n-D], N3-[p-P], N1-[n-M], N2-[v-K]):-
+   stringof(Gerund,M),
+   reverse(Gerund, [C|R]),
+   stringof(VerbNoun,K),
+   reverse(VerbNoun, [S|Res]),
+   (C\=s, S\=s; C=s, S=s).
+fsa3(N-[n-M], N0-[p-of], N1-[n-D, v-D], N3-[p-P, s-P], N-[n-M], N0-[p-of], N1-[n-D], N3-[p-P]).
+fsa3(N-[n-M], N0-[p-of], N1-[n-D, v-D], N3-[q-P], N-[n-M], N0-[p-of], N1-[n-D], N3-[q-P]):-
+    \+ supporto(D), \+ coplbh(D).
+fsa3(N-[n-M], N0-[p-of], N1-[n-D, v-D], N3-[p-P], N-[n-M], N0-[p-of], N1-[n-D], N3-[p-P]).
+fsa3(N-[d-M], N0-[n-K], N1-[n-D, v-D], N3-[a-P, av-P], N-[d-M], N0-[n-K], N1-[v-D], N3-[a-P, av-P]):-
+     disaccess_wsj(D,Best),
+     transl_tags(D,Best,Tags),
+     on(v,Best).
+fsa3(0-[n-W], N1-[a-M, n-M], N3-[n-P, v-P], N0-[n-K], 0-[n-W], N1-[n-M], N3-[v-P], N0-[n-K]).
+fsa3(N-[d-M], N0-[a-K, n-K], N1-[n-D, v-D], N3-[a-that, c-that, r-that], N-[d-M], N0-[a-K], N1-[n-D], N3-[c-that]):-
+    \+ verbs_of_saying(D).
+fsa3(N-[x-X], N3-[n-P,v-P], N1-[n-M,v-M], N2-[p-D,s-D], N-[x-X], N3-[v-P], N1-[n-M], N2-[p-D]).
+fsa3(N-[x-X], N3-[n-P,v-P], N1-[n-M,v-M], N2-[p-D], N-[x-X], N3-[v-P], N1-[n-M], N2-[p-D]).
+fsa3(N-[p-X], N3-[n-P], N1-[n-M,v-M], N2-[x-D], N-[p-X], N3-[n-P], N1-[n-M], N2-[x-D]).
+fsa3(N-[a-M,av-M,n-M], N0-[n-K], N1-[n-D, v-D], N3-[x-P], N-[a-M], N0-[a-K], N1-[n-D], N3-[x-P]):-
+   stringof(Gerund,K),
+   on('_',Gerund).
+
+fsa3(N0-[a-D], N-[q-X,v-X], N1-[n-V, v-V], N2-[x-P], N0-[a-D], N-[q-X], N1-[n-V], N2-[x-P]):-
+    ap_engl(D,_,_).
+fsa3(N-[x-X], N3-[n-P,v-P], N1-[n-M], N2-[x-D], N-[x-X], N3-[n-P], N1-[n-M], N2-[x-D]):-
+  D\='.'.
+fsa3(N-[p-from], N3-[n-P,v-P], N1-[p-to], N2-[n-D, v-D], N-[p-from], N3-[n-P], N1-[p-to], N2-[n-D]).
+fsa3(N-[p-of], N3-[n-P,v-P], N1-[e-A], N2-[a-D, n-D], N-[p-of], N3-[n-P], N1-[e-A], N2-[n-D]).
+fsa3(N-[n-M], N1-[n-D, v-D], N0-[n-S], N2-[x-X], N-[n-M], N1-[v-D], N0-[n-S], N2-[x-X]).
+fsa3(N-[a-M], N1-[a-D, v-D], N0-[n-S, v-S], N2-[p-X], N-[a-M], N1-[a-D], N0-[n-S], N2-[p-X]):-
+   X\=to.
+fsa3(N1-[a-D, n-D], N0-[a-S,n-S,v-S], N2-[a-X,q-X,v-X], N-[a-M], N1-[a-D], N0-[n-S], N2-[v-X], N-[a-M]).
+fsa3(N-[n-X], N3-[e-P], N1-[n-M, v-M], N2-[r-D], N-[n-X], N3-[e-P], N1-[v-M], N2-[r-D]).
+fsa3(N-[a-X,v-X], N3-[p-to], N1-[av-M], N2-[n-D, v-D], N-[v-X], N3-[p-to], N1-[av-M], N2-[v-D]):-
+     lemmatize_dic_v(X, Lemma, S1),
+     cat_gramm(Lemma, CatGr, CatV, LArgsV),
+     appiattisci(LArgsV,LArgs),
+     on(vcomp/prop/Prep/_, LArgs).
+
+fsa3(N-[c-X], N3-[n-P,v-P], N1-[n-M], N2-[x-D], N-[c-X], N3-[v-P], N1-[n-M], N2-[x-D]).
+fsa3(N-[av-X,n-X], N3-[n-P,v-P], N1-[av-M], N2-[p-D], N-[av-X], N3-[v-P], N1-[av-M], N2-[p-D]).
+fsa3(0-[n-X,v-X], N3-[n-P], N1-[n-M, v-M], N2-[x-D], 0-[n-X], N3-[n-P], N1-[v-M], N2-[x-D]).
+fsa3(N3-[a-that, c-that, r-that], N1-[n-M, v-M], N2-[d-D, r-D], N5-[p-of], N3-[c-that], N1-[v-M], N2-[r-D], N5-[p-of]).
+fsa3(N3-[a-W, n-W, q-W, v-W], N2-[n-D], N1-[p-of], N5-[n-C,v-C], N3-[v-W], N2-[n-D], N1-[p-of], N5-[n-C]):-
+     lemmatize_dic(D, Lemma, S1),
+      nm(Lemma,_,_).
+fsa3(N3-[c-that], N1-[n-M, v-M], N2-[d-D, r-D], N5-[p-of], N3-[c-that], N1-[v-M], N2-[r-D], N5-[p-of]).
+fsa3(N-[n-X], N3-[n-P,v-P], N1-[p-M], N2-[d-D], N-[n-X], N3-[n-P], N1-[p-M], N2-[d-D]).
+fsa3(0-[n-X], N3-[n-P,v-P], N1-[n-M], N2-[n-D], 0-[n-X], N3-[v-P], N1-[n-M], N2-[n-D]).
+fsa3(N2-[x-P], N0-[n-D, v-D], N-[a-that, c-that, r-that], N1-[a-V], N2-[x-P], N0-[v-D], N-[c-that], N1-[a-V]):-
+       lemmatize_dic_v(D, Lemma, S1),
+       verbs_of_saying(Lemma),
+       ap_engl(V,_,_).
+fsa3(N-[e-X], N3-[a-that, c-that, r-that], N1-[n-M], N2-[v-D], N-[e-X], N3-[c-that], N1-[n-M], N2-[v-D]).
+fsa3(N2-[v-S], N0-[d-D], N1-[n-M], N-[n-F,v-F], N2-[v-S], N0-[d-D], N1-[n-M], N-[n-F]):-
+    cwn(F).
+fsa3(N-[d-M], N0-[n-K], N1-[a-D, q-D, v-D], N3-[av-there], N-[d-M], N0-[n-K], N1-[v-D], N3-[av-there]).
+fsa3(N-[d-M], N0-[n-K], N1-[a-D, q-D, v-D], N3-[av-there,v-there], N-[d-M], N0-[n-K], N1-[v-D], N3-[av-there]).
+fsa3(N-[a-M], N1-[a-that, c-that, r-that], N0-[n-K], N3-[x-X], N-[a-M], N1-[a-that], N0-[n-K], N3-[x-X]).
+fsa3(N-[d-M, r-M], N0-[n-K,v-K], N1-[n-D, v-D], N3-[v-V], N-[d-M], N0-[n-K], N1-[v-D], N3-[v-V]):-
+    supporto(D);coplbh(D).
+fsa3(N-[p-P], N3-[x-'"'], N1-[a-A,q-A,v-A], N2-[n-D], N-[p-P], N3-[x-'"'], N1-[a-A], N2-[n-D]).
+fsa3(N-[p-of], N3-[x-'"'], N1-[v-A], N2-[n-D], N-[p-of], N3-[x-'"'], N1-[a-A], N2-[n-D]).
+fsa3(N-[a-P,r-P], N1-[r-A,w-A], N3-[n-D, v-D], N2-[n-M], N-[r-P], N1-[r-A,w-A], N3-[v-D], N2-[n-M]).
+fsa3(N-[v-P], N1-[a-A,v-A], N3-[x-D], N2-[a-M], N-[v-P], N1-[a-A], N3-[x-D], N2-[a-M]):-
+    coplbh(P).
+fsa3(N-[r-M, w-M], N0-[n-K,q-K,v-K], N1-[d-D], N3-[n-V], N-[r-M, w-M], N0-[v-K], N1-[d-D], N3-[n-V]).
+fsa3(N2-[x-P], N0-[a-D, v-D], N-[p-M], N1-[n-V], N2-[x-P], N0-[v-D], N-[p-M], N1-[n-V]).
+fsa3(N-[n-X], N3-[n-P,q-P,v-P], N1-[av-M,p-M], N2-[n-D], N-[n-X], N3-[v-P], N1-[av-M], N2-[d-D]):-
+       lemmatize_dic_v(P, Lemma, S1),
+       mcon(Lemma,'_',D1),
+       mcon(D1,M,Lem),
+       v(Lem,_).
+fsa3(N3-[ng-X], N0-[n-P,v-P], N2-[av-W, d-W, p-W], N1-[d-M], N3-[ng-X], N0-[n-P], N2-[p-W], N1-[d-M]).
+fsa3(N3-[v-X], N0-[d-P,r-P], N2-[a-W, c-W, r-W], N1-[v-M], N3-[v-X], N0-[r-P], N2-[c-W], N1-[v-M]).
+fsa3(N3-[v-X], N0-[c-P], N2-[n-W, v-W], N1-[r-M, w-M], N3-[v-X], N0-[c-P], N2-[n-W], N1-[r-M, w-M]).
+fsa3(N0-[x-X], N1-[p-D, s-D], N2-[n-P|R], N3-[x-X], N0-[x-X], N1-[p-D], N2-[n-P|R], N3-[x-X]).
+fsa3(N0-[x-X], N1-[p-D, s-D], N2-[N-P], N3-[x-X], N0-[x-X], N1-[p-D], N2-[N-P], N3-[x-X]):-
+  N=n;N=nt;N=nh;N=np.
+fsa3(N-[r-D], N2-[v-P], N1-[a-M, v-M], N3-[n-Q], N-[r-D], N2-[v-P], N1-[a-M], N3-[n-Q]):-
+     coplb(P),
+     \+ predicpbf(M).
+  
+fsa3(0-[n-X,v-X], N1-[n-D, v-D], N2-[n-P|R], N3-[x-Q], 0-[n-X], N1-[v-D], N2-[n-P|R], N3-[x-Q]).
+fsa3(N0-[n-X,v-X], N1-[n-D, v-D], N2-[a-P|R], N3-[n-Q,v-Q], N0-[n-X], N1-[v-D], N2-[a-P|R], N3-[n-Q]).
+fsa3(N0-[n-X], N1-[n-D, v-D], N2-[a-P|R], N3-[n-Q], N0-[n-X], N1-[v-D], N2-[a-P|R], N3-[n-Q]).
+fsa3(N0-[n-P], N-[av-D,e-D,n-D,v-D], N1-[n-M,v-M], N3-[d-Q], N0-[n-P], N-[av-D], N1-[v-M], N3-[d-Q]).
+fsa3(N0-[r-X,w-X], N1-[n-D, v-D], N2-[n-P|R], N3-[x-Q], N0-[r-X,w-X], N1-[v-D], N2-[n-P|R], N3-[x-Q]).
+fsa3(N0-[a-X], N1-[e-D], N2-[av-P|R], N3-[a-Q,n-Q,v-Q], N0-[a-X], N1-[e-D], N2-[av-P|R], N3-[a-Q]).
+fsa3(N0-[n-X], N1-[n-D, v-D], N2-[d-P,e-P,p-P|R], N3-[d-Q], N0-[n-X], N1-[v-D], N2-[p-P], N3-[d-Q]).
+
+predicpbf(M):-
+       lemmatize_dic_v(M, Lemma, S1),
+       pbf(Lemma,Def,Sub),
+       on(N-Role-Pre,Sub),
+       Pre=predicate,!.
+
+excepts(K):-
+  K\=share,!.
+money_simb('$').
+money_simb('£').
+money_simb('Û').
+
+
+
+/* 5 elementi */
+fsa2(N4-[n-Q], N2-[av-M,n-M,v-M], N1-[ng-D], N3-[n-K,v-K], N0-[x-P], N4-[n-Q], N2-[v-M], N1-[ng-D], N3-[n-K], N0-[x-P]):-
+     select_bestgg(M,Best1),
+     transl_tags(M,Best1,Tags1),
+     on(Tag1,Tags1), Tag1=v.
+fsa2(N0-[v-X], N1-[d-M], N2-[n-P], N3-[n-Q,v-Q], N-[x-D], N0-[v-X], N1-[d-M], N2-[n-P], N3-[n-Q], N-[x-D]).
+fsa2(N0-[p-X], N1-[d-a], N2-[n-P], N3-[n-Q,v-Q], N-[p-D], N0-[p-X], N1-[d-a], N2-[n-P], N3-[n-Q], N-[p-D]).
+fsa2(N-[n-D], N1-[n-M,v-M], N2-[n-K,q-K,v-K], N3-[n-B, v-B], N4-[x-P], N-[n-D], N1-[v-M], N2-[n-K], N3-[n-B], N4-[x-P]):-
+   \+ coplbh(M), \+ support(M).
+fsa2(N-[d-D], N1-[a-M, av-M, v-M], N2-[n-K], N3-[a-P,c-P,r-P], N4-[n-B, v-B], N-[d-D], N1-[a-M], N2-[n-K], N3-[c-P], N4-[v-B]).
+fsa2(N-[p-D], N1-[av-M,d-M,e-M,r-both], N2-[v-K], N3-[e-P], N0-[v-W], N-[p-D], N1-[q-M], N2-[a-K], N3-[e-P], N0-[a-W]).
+fsa2(N-[n-D], N1-[x-M], N2-[n-K,v-K], N3-[e-B], N4-[a-P,n-P,v-P], N-[n-D], N1-[x-M], N2-[n-K], N3-[e-B], N4-[n-P]).
+fsa2(N-[n-D], N1-[x-M], N2-[n-K,v-K], N3-[e-B], N4-[n-P,v-P], N-[n-D], N1-[x-M], N2-[n-K], N3-[e-B], N4-[n-P]).
+fsa2(N2-[n-X], N0-[v-P], N-[a-D,n-D,v-D], N1-[e-M], N3-[a-V], N2-[n-X], N0-[v-P], N-[a-D], N1-[e-M], N3-[a-V]):-
+              coplbh(P).
+fsa2(N-[n-P], N0-[n-X], N3-[a-W,v-W], N2-[p-D], N1-[d-H], N-[n-P], N0-[n-X], N3-[n-W], N2-[p-D], N1-[d-H]):-
+           mcon(P,'_',P1),
+           mcon(P1,W,Mult),
+            nwn(Mult,K).
+fsa2(N0-[v-K], N2-[v-P], N-[a-D,c-D,r-D], N1-[r-M,w-M], N3-[v-V], N0-[v-K], N2-[v-P], N-[r-D], N1-[r-M], N3-[v-V]).
+fsa2(N-[p-to], N1-[v-M], N2-[a-K,v-K], N3-[n-P], N0-[n-W], N-[p-to], N1-[v-M], N2-[a-K], N3-[n-P], N0-[n-W]):-
+   stringof(Gerund,K),
+   (reverse(Gerund, [g,n,i|_]);
+   reverse(Gerund, [d,e|_])).
+fsa2(N-[p-D], N1-[a-M,q-M,v-M], N2-[a-K,n-K,v-K], N3-[n-P, v-P], N0-[a-W,c-W,r-W], N-[p-D], N1-[a-M], N2-[a-K], N3-[n-P], N0-[a-W,c-W,r-W]):-
+   stringof(Gerun,M),
+   (reverse(Gerun, [g,n,i|_]);
+   reverse(Gerun, [d,e|_])),
+   stringof(Gerund,K),
+   (reverse(Gerund, [g,n,i|_]);
+   reverse(Gerund, [d,e|_])).
+fsa2(N-[n-D], N1-[x-M], N2-[av-K,n-K], N3-[n-B, v-B], N4-[a-P,c-P,r-P], N-[n-D], N1-[x-M], N2-[n-K], N3-[n-B], N4-[c-P]):-
+   par_puna(M).
+fsa2(N-[n-D], N1-[n-M,v-M], N2-[n-K,v-K], N3-[s-B, v-like], N4-[x-P], N-[n-D], N1-[n-M], N2-[v-K], N3-[s-like], N4-[x-P]):-
+   \+ coplbh(M), \+ support(M).
+fsa2(N-[c-D], N1-[d-M], N2-[n-K], N3-[n-B, v-B], N4-[x-P], N-[d-D], N1-[d-M], N2-[n-K], N3-[v-B], N4-[x-P]).
+fsa2(N-[d-D], N1-[d-M], N2-[a-K, n-K, v-K], N3-[q-B, v-B], N4-[d-P], N-[d-D], N1-[d-M], N2-[n-K], N3-[v-B], N4-[d-P]).
+fsa2(N-[d-D], N1-[a-M, n-M], N2-[a-K, av-K, n-K, v-K], N3-[p-of], N4-[n-B, v-B], N-[d-D], N1-[a-M], N2-[n-K], N3-[p-of], N4-[n-B]).
+fsa2(N4-[n-D], N1-[n-M,v-M], N2-[p-to], N3-[n-P,v-P], N0-[n-W,v-W], N4-[n-D], N1-[v-M], N2-[p-to], N3-[v-P], N0-[v-W]):-
+   stringof(Gerund,W),
+   reverse(Gerund, [g,n,i|_]).
+fsa2(0-[n-S], N0-[n-X,v-X], N1-[n-D, v-D], N2-[a-P|R], N3-[n-Q,v-Q], 0-[a-S], N0-[n-X], N1-[v-D], N2-[a-P|R], N3-[n-Q]):-
+   tolower(S,K),
+   j(K).
+fsa2(N0-[a-W,n-W], N1-[a-M,n-M,v-M], N3-[n-P,v-P], N2-[n-K,v-K], N5-[av-C,d-C], N0-[a-W], N1-[n-M], N3-[n-P], N2-[v-K], N5-[d-C]).
+fsa2(N1-[p-D,s-D], N0-[d-X], N3-[n-W,v-W], N5-[s-C,v-C], N2-[n-P], N1-[p-D], N0-[d-X], N3-[n-W], N5-[p-C,s-C], N2-[n-P]):-
+        disaccess_wsj(C,K),
+        transl_tags(C,K,Tags),
+        on(Tag,Tags),
+        (on(p,Tags);on(s,Tags)).
+fsa2(N0-[v-P], N1-[a-D,n-D,nh-D], N2-[n-V,q-V,v-V], N3-[n-C,v-C], N5-[p-Q], N0-[v-P], N1-[a-D], N2-[n-V], N3-[v-C], N5-[p-Q]):-
+    supporto(P);coplbh(P).
+fsa2(N2-[v-P], N0-[d-D], N-[n-X], N1-[n-V,v-V], N5-[v-C], N2-[v-P], N0-[d-D], N-[n-X], N1-[n-V], N5-[v-C]):-
+   supporto(P);coplbh(P). 
+fsa2(N0-[av-W,r-W,s-W,w-W], N1-[v-M], N3-[d-P], N2-[n-K,v-K], N5-[a-C,v-C], N0-[r-W,w-W], N1-[v-M], N3-[d-P], N2-[n-K], N5-[v-C]).
+fsa2(0-[n-D], N1-[n-M], N2-[a-K,v-K], N3-[n-P,v-P], N0-[x-W], 0-[n-D], N1-[n-M], N2-[v-K], N3-[n-P], N0-[x-W]).
+fsa2(N0-[a-W,c-W,r-W], N1-[d-M], N3-[n-P,v-P], N2-[n-K,v-K], N5-[x-C], N0-[c-W], N1-[d-M], N3-[n-P], N2-[v-K], N5-[x-C]).
+fsa2(0-[n-D], N1-[n-M,v-M], N2-[d-K,r-K], N3-[n-P], N0-[x-W], 0-[n-D], N1-[v-M], N2-[d-K], N3-[n-P], N0-[x-W]).
+fsa2(N-[a-D, r-D], N0-[n-X,v-X], N3-[n-W,v-W], N5-[v-C], N2-[v-P], N-[r-D], N0-[v-X], N3-[n-W], N5-[v-C], N2-[v-P]):-
+    stringof(Gerund,X),
+    reverse(Gerund, [g,n,i|R]).
+fsa2(N-[p-D, s-D], N0-[d-X], N3-[n-W,v-W], N5-[x-C], N2-[d-P], N-[p-D], N0-[d-X], N3-[n-W], N5-[x-C], N2-[d-P]).
+fsa2(N0-[p-W,s-W], N1-[d-M], N3-[a-P,n-P,v-P], N2-[v-K], N5-[x-C], N0-[s-W], N1-[d-M], N3-[n-P], N2-[v-K], N5-[x-C]).
+fsa2(N0-[p-W,s-W], N1-[d-M], N3-[a-P,n-P,v-P], N2-[v-K], N5-[v-C], N0-[s-W], N1-[d-M], N3-[n-P], N2-[v-K], N5-[v-C]).
+fsa2(N0-[av-W,p-W,s-W], N1-[d-M], N3-[a-P,n-P,v-P], N2-[v-K], N5-[v-C], N0-[s-W], N1-[d-M], N3-[n-P], N2-[v-K], N5-[v-C]).
+fsa2(N-[v-D], N1-[n-M], N2-[p-to], N3-[n-P, v-P], N4-[n-B,v-B], N-[v-D], N1-[n-M], N2-[p-to], N3-[v-P], N4-[n-B]):-
+       lemmatize_dic_v(D, Lemma, S1),
+        coml(Lemma,Sub).
+
+fsa2(N-[n-D], N1-[n-M,v-M], N2-[p-K], N3-[nh-P], N0-[x-W], N-[n-D], N1-[v-M], N2-[p-K], N3-[nh-P], N0-[x-W]):-
+       lemmatize_dic_v(M, Lemma, S1),
+       vsp(Lemma,Preps), on(A,Preps).
+fsa2(N-[e-D], N1-[av-M], N2-[n-K, v-K], N3-[d-W,e-W,p-W,s-W], N4-[d-P], N-[e-D], N1-[av-M], N2-[v-K], N3-[s-W], N4-[d-P]).
+fsa2(N-[n-D], N1-[v-M], N2-[a-K,c-K,r-K], N3-[a-P], N0-[n-W], N-[n-D], N1-[v-M], N2-[c-K], N3-[a-P], N0-[n-W]):-
+            coplb(M).
+fsa2(N-[n-D], N1-[n-M], N2-[n-K], N3-[a-P,n-P,q-P,v-P], N0-[n-W], N-[n-D], N1-[n-M], N2-[n-K], N3-[v-P], N0-[n-W]).
+fsa2(N-[n-D], N1-[e-M], N2-[a-K,n-K], N3-[n-P,v-P], N0-[q-W,v-W], N-[n-D], N1-[e-M], N2-[a-K], N3-[n-P], N0-[v-W]).
+fsa2(N0-[n-D], N-[n-X], N1-[n-G,v-G], N2-[n-M], N4-[p-A, s-A], N0-[n-D], N-[n-X], N1-[v-G], N2-[n-M], N4-[p-A]):-
+     lemmatize_dic_v(G, Lemma, S1),
+       vsp(Lemma,Preps), on(A,Preps).
+fsa2(N-[x-'"'], N1-[n-M], N2-[a-K,q-K,v-K], N3-[p-P], N0-[d-W], N-[x-'"'], N1-[n-M], N2-[v-K], N3-[p-P], N0-[d-W]).
+fsa2(N-[x-'"'], N1-[n-M,v-M], N2-[a-K,q-K,v-K], N3-[p-P], N0-[d-W], N-[x-'"'], N1-[n-M], N2-[v-K], N3-[p-P], N0-[d-W]).
+fsa2(N-[n-D], N1-[n-M], N2-[a-K,q-K,v-K], N3-[av-P,p-P], N0-[d-W], N-[n-D], N1-[n-M], N2-[v-K], N3-[p-P], N0-[d-W]).
+fsa2(N-[n-D], N1-[a-M,q-M,v-M], N2-[n-K,v-K], N3-[e-P], N0-[a-W], N-[n-D], N1-[v-M], N2-[n-K], N3-[e-P], N0-[a-W]).
+fsa2(N-[n-D], N1-[a-M,n-M], N2-[n-K,v-K], N3-[n-P, v-P], N0-[x-W], N-[n-D], N1-[a-M], N2-[n-K], N3-[v-P], N0-[x-W]).
+fsa2(N-[a-D,av-D,n-D], N1-[n-M,v-M], N2-[n-K,v-K], N3-[n-P, v-P], N0-[e-W], N-[a-D], N1-[n-M], N2-[n-K], N3-[n-P], N0-[e-W]):-
+   \+ coplbh(M), \+ support(M).
+fsa2(N-[c-D], N1-[a-M], N2-[n-K,v-K], N3-[n-B, v-B], N4-[v-P], N-[c-D], N1-[a-M], N2-[n-K], N3-[v-B], N4-[v-P]):-
+     lemmatize_dic_v(B, Lemma, S1),
+     coml(Lemma,Sub).
+fsa2(N-[p-D], N1-[a-M], N2-[n-K], N3-[a-P,n-P, v-P], N0-[x-W], N-[p-D], N1-[a-M], N2-[n-K], N3-[n-P], N0-[x-W]).
+fsa2(N-[n-D], N1-[x-M], N2-[av-K,n-K], N3-[n-B, v-B], N4-[a-P,c-P,r-P], N-[n-D], N1-[x-M], N2-[n-K], N3-[n-B], N4-[c-P]):-
+   par_puna(M).
+fsa2(N-[n-D], N1-[n-M,v-M], N2-[n-K,v-K], N3-[s-B, v-like], N4-[x-P], N-[n-D], N1-[n-M], N2-[v-K], N3-[s-like], N4-[x-P]):-
+   \+ coplbh(M), \+ support(M).
+fsa2(N-[c-D], N1-[d-M], N2-[n-K], N3-[n-B, v-B], N4-[x-P], N-[d-D], N1-[d-M], N2-[n-K], N3-[v-B], N4-[x-P]).
+fsa2(N-[d-D], N1-[d-M], N2-[a-K, n-K, v-K], N3-[q-B, v-B], N4-[d-P], N-[d-D], N1-[d-M], N2-[n-K], N3-[v-B], N4-[d-P]).
+fsa2(N-[d-D], N1-[a-M, n-M], N2-[a-K, av-K, n-K, v-K], N3-[p-of], N4-[n-B, v-B], N-[d-D], N1-[a-M], N2-[n-K], N3-[p-of], N4-[n-B]).
+fsa2(N-[v-D], N1-[d-M], N2-[n-K], N3-[n-P, v-P], N4-[d-B], N-[v-D], N1-[d-M], N2-[n-K], N3-[n-P], N4-[d-B]):-
+   high_rank(M),high_rank(B), \+ supporto(D).
+fsa2(N-[d-D], N1-[av-M], N2-[q-K, v-K], N3-[a-P, n-P, v-P], N4-[n-B, v-B], N-[d-D], N1-[av-M], N2-[q-K], N3-[a-P], N4-[n-B]).
+fsa2(N-[v-D], N1-[d-M], N2-[a-K, n-K, v-K|_], N3-[n-P, v-P|_], N4-[p-B], N-[v-D], N1-[d-M], N2-[a-K], N3-[n-P], N4-[p-B]).
+fsa2(N-[p-D], N1-[a-M, n-M], N2-[n-K, v-K], N3-[n-P, q-P, v-P], N0-[v-W], N-[p-D], N1-[a-M], N2-[n-K], N3-[n-P], N0-[v-W]).
+fsa2(N-[p-D], N1-[a-M, n-M], N2-[n-K, v-K], N3-[n-P, v-P], N0-[v-W], N-[p-D], N1-[a-M], N2-[n-K], N3-[n-P], N0-[v-W]):-
+   \+ coplbh(K), \+ support(K).
+fsa2(N0-[r-W], N-[d-D], N1-[n-M], N2-Vs, N3-[x-P], N0-[r-W], N-[d-D], N1-[n-M], N2-[v-K], N3-[x-P]):-
+    Vs\=[A], 3=<N, on(v-K, Vs).
+fsa2(N-[v-D], N1-[a-M, r-M], N2-[a-K, r-K], N3-[n-P|_], N4-[p-Q], N-[v-D], N1-[r-M], N2-[a-K], N3-[n-P], N4-[p-Q]).
+fsa2(N-[n-J], N0-[p-P], N1-[n-M], N2-[a-K, v-K|_], N3-[n-L], N-[n-J], N0-[p-P], N1-[n-M], N2-[v-K], N3-[n-L]).
+fsa2(N-[n-J], N0-[p-P], N1-[n-M], N2-[a-K, q-K, v-K|_], N3-[n-L], N-[n-J], N0-[p-P], N1-[n-M], N2-[v-K], N3-[n-L]).
+fsa2(N-[n-J], N0-[p-P], N1-[n-M], N2-[a-K, q-K, v-K], N3-[n-L], N-[n-J], N0-[p-P], N1-[n-M], N2-[v-K], N3-[n-L]).
+fsa2(N-[n-J], N0-[p-P], N1-[n-M], N2-[a-K, q-K, v-K], N3-[p-L], N-[n-J], N0-[p-P], N1-[n-M], N2-[v-K], N3-[p-L]).
+fsa2(N-[x-D], N1-[a-M, n-M, q-M, v-M], N2-[p-from], N3-[n-L, v-L], N0-[p-to], N-[x-D], N1-[q-M], N2-[p-from], N3-[n-L], N0-[p-to]).
+fsa2(N-[x-D], N1-[a-M, n-M, v-M], N2-[p-from], N3-[n-L, v-L], N0-[p-to], N-[x-D], N1-[a-M], N2-[p-from], N3-[n-L], N0-[p-to]).
+fsa2(N-[d-D], N1-[a-M, av-M, n-M, v-M], N2-[n-K], N3-[n-E, v-E], N4-[p-P], N-[d-D], N1-[a-M], N2-[n-K], N3-[n-E], N4-[p-P]).
+fsa2(N0-[n-A], N-[p-D], N1-[a-R, v-R], N2-[a-M, n-M, v-M], N3-[e-K], N0-[n-A], N-[p-D], N1-[a-R], N2-[n-M], N3-[e-K]).
+fsa2(N-[x-X], N1-[p-M, s-M], N2-[d-Q], N3-[n-P], N4-[r-R], N-[x-X], N1-[p-M], N2-[d-Q], N3-[n-P], N4-[r-R]).
+fsa2(N-[d-D], N1-[n-M], N2-[n-K, v-K], N3-[q-E, v-E], N4-[d-P], N-[d-D], N1-[n-M], N2-[n-K], N3-[v-E], N4-[d-P]).
+fsa2(N-[v-D], N1-[a-M, c-M, r-M], N2-[n-K, v-K], N3-[p-E], N4-[d-P], N-[v-D], N1-[a-M], N2-[n-K], N3-[p-E], N4-[d-P]).
+fsa2(N-[d-D], N1-[a-M], N2-[n-K, v-K], N3-[n-E, v-E], N4-[p-P], N-[d-D], N1-[a-M], N2-[n-K], N3-[n-E], N4-[p-P]):-
+   \+ coplbh(K), \+ support(K).
+fsa2(N3-[x-F], N0-[p-D, s-D], N-[d-X], N1-[av-V, d-V, e-V], N2-[n-P], N3-[x-F], N0-[p-D], N-[d-X], N1-[d-V], N2-[n-P]).
+fsa2(N0-[p-A], N-[d-D], N1-[n-M], N2-[n-K, v-K], N3-[p-P], N0-[p-A], N-[d-D], N1-[n-M], N2-[n-K], N3-[p-P]).
+fsa2(N-[ng-D], N1-[a-M], N2-[n-K, v-K], N3-[a-E, n-E, v-E], N4-[x-P], N-[ng-D], N1-[a-M], N2-[n-K], N3-[n-E], N4-[x-P]).
+fsa2(N-[a-X, n-X, v-X], N3-[a-P, n-P, v-P], N1-[n-M], N2-[n-D, v-D], N0-[x-E], N-[a-X], N3-[a-P], N1-[n-M], N2-[n-D], N0-[x-E]):-
+    \+ verbs_of_saying(D).
+fsa2(N-[ng-M], N0-[n-K], N1-[n-D, v-D], N3-[av-P], N2-[p-A], N-[ng-M], N0-[n-K], N1-[v-D], N3-[av-P], N2-[p-A]).
+fsa2(N-[n-M], N0-[n-K], N1-[n-D, v-D], N3-[d-P], N2-[x-A], N-[n-M], N0-[n-K], N1-[n-D], N3-[d-P], N2-[x-A]).
+fsa2(N-[n-M], N1-[n-D, v-D], N3-[p-P, s-P], N2-[n-A], N0-[n-K, v-K], N-[n-M], N1-[v-D], N3-[p-P], N2-[n-A], N0-[n-K]).
+fsa2(N-[n-M], N1-[a-that, c-that, r-that], N3-[n-P], N0-[n-K, v-K], N2-[v-A], N-[n-M], N1-[c-that], N3-[n-P], N0-[v-K], N2-[v-A]).
+fsa2(N-[n-M], N1-[e-D], N3-[a-P, av-P, n-P, v-P], N2-[a-A,n-A,v-A], N0-[n-K], N-[n-M], N1-[e-D], N3-[a-P], N2-[a-A], N0-[n-K]).
+fsa2(N-[r-M,s-M,w-M], N1-[n-D], N3-[n-P], N2-[n-A,v-A], N0-[x-K], N-[r-M,s-M,w-M], N1-[n-D], N3-[n-P], N2-[v-A], N0-[x-K]).
+fsa2(N0-[p-of], N-[d-X,r-X], N1-[n-D, v-D], N3-[a-P, n-P, v-P], N2-[av-A,d-A], N0-[p-of], N-[r-X], N1-[v-D], N3-[a-P], N2-[av-A]).
+fsa2(N0-[p-of], N-[ng-X], N1-[n-D,v-D], N3-[n-P, v-P], N2-[e-A], N0-[p-of], N-[ng-X], N1-[n-D], N3-[n-P], N2-[e-A]).
+fsa2(N0-[p-Q], N-[n-X,v-X], N1-[n-D,v-D], N3-[q-P, v-P], N2-[p-A], N0-[p-Q], N-[n-X], N1-[n-D], N3-[q-P, v-P], N2-[p-A]):-
+    stringof(Gerund,X),
+    reverse(Gerund, [G,N,I|R]),
+    mcon(I,N,In),
+    mcon(In,G,Ing), Ing\=ing.
+fsa2(N-[d-D], N1-[n-M], N2-[n-P, v-P], N3-[a-C,c-C,r-C], N4-[v-B], N-[d-D], N1-[n-M], N2-[n-P], N3-[c-C], N4-[v-B]).
+fsa2(N2-[d-P], N0-[n-D, v-D], N-[n-X, v-X], N1-[n-V], N3-[n-W], N2-[d-P], N0-[n-D], N-[v-X], N1-[n-V], N3-[n-W]):-
+   P=a;P=an;P=the.
+fsa2(N-[d-D], N1-[n-M], N2-[a-K, n-K, q-K, v-K], N3-[n-E], N4-[p-P], N-[d-D], N1-[n-M], N2-[v-K], N3-[n-E], N4-[p-P]).
+fsa2(N0-[q-S], N-[d-W,e-W,p-W,s-W], N1-[d-D], N2-[n-M], N3-[x-A], N0-[q-S], N-[p-W], N1-[d-D], N2-[n-M], N3-[x-A]).
+fsa2(N0-[q-S,v-S], N-[d-W,e-W,p-W,s-W], N1-[d-D], N2-[n-M], N3-[x-A], N0-[q-S,v-S], N-[p-W], N1-[d-D], N2-[n-M], N3-[x-A]).
+fsa2(N0-[v-X], N3-[d-W], N2-[n-D], N1-[e-H], N5-[q-C,v-C], N0-[v-X], N3-[d-W], N2-[n-D], N1-[e-H], N5-[v-C]).
+fsa2(N0-[v-X], N3-[n-W,v-W], N2-[a-C,c-C,r-C], N1-[n-H], N5-[v-D], N0-[v-X], N3-[n-W], N2-[c-C], N1-[n-H], N5-[v-D]):-
+     lemmatize_dic_v(W, Lemma, S1),
+     coml_n(Lemma, LArgsV), 
+     on(subc-Args, LArgsV),
+     on(f/that/fcomp, Args).
+
+fsa2(N0-[v-X], N3-[n-W], N2-[a-C,c-C,r-C], N1-[n-H], N5-[v-D], N0-[v-X], N3-[n-W], N2-[c-C], N1-[n-H], N5-[v-D]):-
+     lemmatize_dic_v(W, Lemma, S1),
+     coml_n(Lemma, LArgsV), 
+     on(subc-Args, LArgsV),
+     on(f/that/fcomp, Args).
+fsa2(N0-[v-X], N3-[d-W], N2-[n-D], N1-[e-H], N5-[a-C,v-C], N0-[v-X], N3-[d-W], N2-[n-D], N1-[e-H], N5-[v-C]).
+fsa2(N3-[n-W,v-W], N0-[x-X], N2-[e-C], N1-[av-H], N5-[v-D], N3-[v-W], N0-[x-X], N2-[e-C], N1-[av-H], N5-[v-D]).
+fsa2(N2-[x-P], N0-[p-D, s-D], N-[a-M], N1-[av-V, n-V, v-V], N3-[x-P], N2-[x-P], N0-[p-D], N-[a-M], N1-[n-V], N3-[x-P]).
+fsa2(N0-[v-X], N3-[av-W], N2-[a-D,v-D], N1-[n-H,v-H], N5-[r-C,w-C], N0-[v-X], N3-[av-W], N2-[a-D], N1-[n-H], N5-[r-C]).
+fsa2(N0-[r-X], N3-[v-W], N2-[v-D], N1-[r-H], N5-[n-C,v-C], N0-[r-X], N3-[v-W], N2-[v-D], N1-[r-H], N5-[n-C]).
+fsa2(N0-[d-X], N3-[n-W,v-W], N2-[n-D,v-D], N1-[a-H], N5-[n-C,v-C], N0-[d-X], N3-[n-W], N2-[v-D], N1-[a-H], N5-[n-C]).
+fsa2(N0-[d-X], N3-[n-W], N2-[n-D,v-D], N1-[a-H], N5-[n-C,v-C], N0-[d-X], N3-[n-W], N2-[v-D], N1-[a-H], N5-[n-C]).
+fsa2(N3-[d-P], N-[a-M,v-M], N1-[a-D, v-D], N0-[n-K,v-K], N5-[v-C], N3-[d-P], N-[a-M], N1-[a-D], N0-[n-K], N5-[v-C]).
+fsa2(N-[n-M], N1-[a-D,n-D,v-D], N3-[n-P, v-P], N2-[a-A], N0-[n-K,v-K], N-[n-M], N1-[v-D], N3-[v-P], N2-[a-A], N0-[n-K]):-
+              supporto(D);coplbh(D).
+fsa2(0-[n-M], N1-[n-D,v-D], N3-[p-P], N0-[n-K,v-K], N2-[x-A], 0-[n-M], N1-[v-D], N3-[p-P], N0-[n-K], N2-[x-A]).
+fsa2(0-[n-M|_], N1-[n-D,v-D], N3-[p-P], N0-[n-K,v-K], N2-[x-A], 0-[n-M], N1-[v-D], N3-[p-P], N0-[n-K], N2-[x-A]).
+fsa2(0-[n-M|_], N1-[n-D,v-D], N3-[p-P], N0-[n-K], N2-[x-A], 0-[n-M], N1-[v-D], N3-[p-P], N0-[n-K], N2-[x-A]).
+fsa2(N0-[v-P], N1-[d-D], N2-[n-V], N3-[a-C,av-C,p-C], N-X, N0-[v-P], N1-[d-D], N2-[n-V], N3-[av-C], N-X):-
+    \+ on(d-_,X), \+ on(n-_,X).
+fsa2(N-[d-M], N0-[a-P], N2-[e-V], N1-[a-D,v-D], N3-[n-C,v-C], N-[d-M], N0-[a-P], N2-[e-V], N1-[a-D], N3-[n-C]).
+fsa2(N-[d-M,r-M], N0-[p-of], N2-[a-V,d-V,r-V], N1-[a-D,n-D,v-D], N3-[n-C], N-[r-M], N0-[p-of], N2-[d-V], N1-[a-D], N3-[n-C]).
+
+subcat_agg(K,E):-
+   pred_a(K,_,Sub),
+   Sub\=[],
+   on(sp/_/_/P/_,Sub),
+   (atomic(P), P=E; list(P), on(E,P)).
+checklength:-
+   findall_poss(Si),
+   length(Si,L),
+   (5=<L
+   ;
+   Si=[I-X|_],
+   nogen_member(P-Head,X),
+   (P\=r;P=r, Head\=it,Head\='It')
+   ),
+  !.
+   
+vpcs(begin).
+vpcs(start).
+vpcs(stop).
+vpcs(continue).
+vpcs(interrupt).
+vpcs(finish).
+vpcs(begin).
+
+verbgerund(P):-
+   stringof(Gerund,P),
+   reverse(Gerund, [g,n,i|_]),
+   lemmatize_dic_v(P,Verb,S),
+   (
+   once(inf_v(Verb,I))
+   ;
+   v(Verb,L)
+   ),
+   !.
+
+objprons(him).
+objprons(her).
+objprons(them).
+objprons(us).
+objprons(himself).
+objprons(herself).
+
+selectambs(Head,Tags,Tag):-
+     Tags=[Tag],
+     !.
+selectambs(Head,Tags,Best):-
+     Tags\=[Tag],
+     on(n,Tags),on(v,Tags),
+     select_bestgg(Head,Best),
+     !.
+disambiguate([],[]):-!.
+disambiguate([N-A,N1-B|NuoFrase],NuovaFrase):-
+    A=[W], W=v-D,
+    v(D,_),
+    change_verbph(D,B,A1,A2),
+    N2 is N + 1,
+    change_numbs([N1-B|NuoFrase],NuFrase),
+    disambiguate([N-A1,N2-A2|NuFrase],NuovaFrase),
+    !.
+disambiguate([N-A,N1-B|NuoFrase],[N-A,N1-A2|NuovaFrase]):-
+    A=[x-Punct],
+    punct(Punct), Punct\='"',
+    B=[n-V,v-V],
+    verbs_of_saying(V),
+    A2=[v-V],
+    length(NuoFrase,L),
+    L=<5,
+    disambiguate(NuoFrase,NuovaFrase),
+    !.
+disambiguate([B,N-K, N1-K1|NuoFrase],NuovaFrase):-
+      K\=[],
+      K\=[A],
+      on(n-D,K),   
+      on(v-D,K),
+      \+fct(D),
+      \+r(D),
+      \+ check_subcn_fact(N),
+     (N=0, spy_lower(D,Low,Pol), 
+     (Pol=1, Dd=Low; Pol=0, Dd=D);
+      N\=0, Dd=D),
+     \+ verbgerund(D),
+     weigh_length([B,N-K, N1-K1|NuoFrase]),
+     disaccess_wsj(Dd,Best),
+     transl_tags(Dd,Best,Tags),
+     selectambs(Dd,Tags,WTag),
+      transl_tags(D,WTag,NTag),
+     on(Tag,NTag),
+     checkwsj_dis(D,B,Tag,K1),
+    disambiguate([B,N-[Tag-D], N1-K1|NuoFrase],NuovaFrase),
+    !.
+disambiguate([B,N1-K1,N-K|NuoFrase],NuovaFrase):-
+      K\=[],
+      K\=[A],
+      on(n-D,K),   
+      on(v-D,K),
+      \+fct(D),
+      \+r(D),
+      B=_-[v-D1|_],
+      (supporto(D1);coplbh(D1)),
+     (N=0, spy_lower(D,Low,Pol), 
+     (Pol=1, Dd=Low; Pol=0, Dd=D);
+      N\=0, Dd=D),
+     \+ verbgerund(D),
+     weigh_length([B,N-K, N1-K1|NuoFrase]),
+     disaccess_wsj(Dd,Best),
+     transl_tags(Dd,Best,Tags),
+     selectambs(Dd,Tags,WTag),
+     transl_tags(D,WTag,NTag),
+     on(Tag,NTag),
+     newcheckwsj_dis(D,B,Tag,K1),
+    disambiguate([B, N1-K1,N-[Tag-D]|NuoFrase],NuovaFrase),
+    !.
+  
+disambiguate([A,B,C,D,E,F|NuoFrase],NuovaFrase):-
+    fsa1(A,B,C,D,E,F,G,H,I,L,M,N),
+    disambiguate([G,H,I,L,M,N|NuoFrase],NuovaFrase),
+    !.
+disambiguate([A,B,C,D,E|NuoFrase],NuovaFrase):-
+    fsa2(A,B,C,D,E,F,G,H,I,L),
+    disambiguate([F,G,H,I,L|NuoFrase],NuovaFrase),
+    !.
+disambiguate([A,B,C,D|NuoFrase],NuovaFrase):-
+    fsa3(A,B,C,D,E,F,G,H),
+    disambiguate([E,F,G,H|NuoFrase],NuovaFrase),
+    !.
+disambiguate([A,B,C|NuoFrase],NuovaFrase):-
+    fsa(A,B,C,D,E,F),
+    disambiguate([D,E,F|NuoFrase],NuovaFrase),
+    !.
+disambiguate([A,B|NuoFrase],NuovaFrase):-
+    fsa4(A,B,D,E),
+    disambiguate([D,E|NuoFrase],NuovaFrase),
+    !.
+disambiguate([N-K|NuoFrase],[N-[Ca-D]|NuovaFrase]):-
+      K\=[],
+      K\=[A],
+    (on(n-D,K),   
+     spy_lower(D, LowW, 1),
+     hm(D), Ca=n
+    ;
+    on(nh-D,K),   
+     \+ on(a-D,K),   
+     spy_lower(D, LowW, 1), Ca=nh
+    ;
+    on(a-D,K),   
+    spy_lower(D, LowW, 1),
+    on(a-LowW,K), Ca=a
+    ),   
+    disambiguate(NuoFrase,NuovaFrase),
+    !.
+disambiguate([A|NuoFrase],[B|NuovaFrase]):-
+    change_morf_cats(A,B),
+    disambiguate(NuoFrase,NuovaFrase),
+    !.
+
+disambiguate([A|NuoFrase],[A|NuovaFrase]):-
+    disambiguate(NuoFrase,NuovaFrase),
+    !.
+
+exceptss(A):-
+    A\=work_with,!.
+change_verbph(A,B,[v-A1],[p-A2]):-
+     exceptss(A),
+     on(C-D,B),
+     (nouncats(C);detss(C);C=d),
+     stringof(List,A), on('_',List),
+     recover_descs(A,Descs),
+     Descs=[A1,A2],
+     prepos(A2),
+     !.
+change_morf_cats([A],[B]):-
+    cmcats(A,B),!.
+change_morf_cats(A,A).
+cmcats(phl-W,p-W).
+cmcats(php-W,p-W).
+cmcats(pt-W,p-W).
+
+checkwsj_dis(D,B,Tag,K1):-
+     Tag=a,
+     K1=[A],
+     on(T-P,K1),
+     (T=n;T=ag),
+     !.
+checkwsj_dis(D,B,Tag,K1):-
+     Tag=n, 
+     (B=_-[n-V,v-V],
+      !,
+      \+ contrs(V, C, N)
+      ;
+      on(T-P,K1),
+      contrs(P, C, N)),
+     !.
+checkwsj_dis(S,B,Tag,K1):-
+    (Tag=n, 
+      B\=_-[p-to], B\=_-[r-_|_],
+      K1 \= [a-D, c-D, r-D],
+     (B=_-[v-V|_], 
+      \+supporto(V), 
+      \+coplbh(V)
+      ;
+      K1=[a-V,av-V,n-V,p-V|_],
+      mcon(S,'_',D1),
+      mcon(D1,V,V1),
+      \+ v(V1,_)
+      ;
+      B\=_-[v-V|_],
+      K1\=[a-V,av-V,n-V,p-V|_]
+      )
+      ;
+     Tag=nt, B\=_-[p-to];
+     Tag=v, B\=_-[d-_], B\=_-[a-_], B\=_-[p-of]; 
+     (B=_-[p-to];B=_-[r-_|_]), Tag\=n,Tag\=nt;
+     B=_-[d-Nu], 
+     (Tag\=v; integer(Nu))
+      ),
+     checkK1(Tag,K1),
+     !.
+
+checkwsj_dis(S,B,Tag,K1):-
+     Tag=n, 
+     B=_-[p-to],
+     stringof(List,S),
+     reverse(List,[s|_]),
+     !.
+
+newcheckwsj_dis(D,B,Tag,K1):-
+     Tag=n, 
+     B=_-[n-V,v-V],
+     !,
+     \+ contrs(V, C, N),
+     !.
+newcheckwsj_dis(S,B,Tag,K1):-
+    (Tag=n, 
+      B\=_-[p-to], B\=_-[r-_|_],
+      K1 \= [a-D, c-D, r-D],
+     (B=_-[v-V|_], 
+       (supporto(V);
+         coplbh(V)), \+ contrs(V, C, N),
+         on(v-_,K1)
+      ;
+      K1=[a-V,av-V,n-V,p-V|_],
+      mcon(S,'_',D1),
+      mcon(D1,V,V1),
+      \+ v(V1,_)
+      ;
+      B\=_-[v-V|_],
+      K1\=[a-V,av-V,n-V,p-V|_]
+      )
+      ;
+     Tag=nt, B\=_-[p-to]
+     ;
+     Tag=v, B\=_-[d-_], B\=_-[a-_],
+            K1\=[d-_], K1\=[a-_],
+            on(D2-_,K1), \+ dets(D2)
+     ; 
+     (B=_-[p-to]
+      ;
+      B=_-[r-_|_]), Tag\=n,Tag\=nt
+     ;
+     B=_-[d-Nu], 
+     (Tag\=v; integer(Nu))
+      ),
+     checkK1(Tag,K1),
+     !.
+
+checkK1(Tag,K1):-
+     on(T-P,K1),
+     (Tag=n,P\=to,P\='?';Tag\=n),
+     alt(Tag,T),
+     !.
+alt(n,V):-check_vcat(V).
+alt(n,av).
+alt(n,D):-D=x.
+alt(n,D):-D=p.
+alt(n,D):-D=c.
+alt(n,D):-D=e.
+alt(n,D):-D=r.
+alt(n,D):-D=s.
+alt(n,N):-nouncats(N).
+alt(v,av).
+alt(v,N):-nouncats(N).
+alt(v,D):-proncat(D).
+alt(v,D):-dets(D).
+alt(v,D):-D=d.
+alt(v,D):-D=x.
+alt(v,D):-D=p.
+alt(v,D):-D=av.
+alt(v,D):-D=c.
+alt(v,D):-D=e.
+alt(v,D):-D=s.
+alt(_,a).

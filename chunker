@@ -1,0 +1,6112 @@
+:- style_check(-singleton).
+
+/***************
+RETE compt
+***************/
+
+arc(compt, 1, push, dirsp, 9).
+arc(compt, 1, push, savv, 1).
+arc(compt, 1, push, fp, 1).
+arc(compt, 1, push, sp, 5).
+arc(compt, 1, push, spd, 5).
+arc(compt, 1, push, spda, 5).
+arc(compt, 1, push, sn, 3).
+arc(compt, 1, push, fac, 3).
+arc(compt, 1, push, sv2, 3).
+arc(compt, 1, push, fint, 5).
+arc(compt, 1, cat, clit, 1).
+arc(compt, 1, cat, clitac, 1).
+arc(compt, 1, cat, clitabl, 1).
+arc(compt, 1, cat, clitdat, 1).
+arc(compt, 1, jmp, [], 4).
+
+arc(compt, 2, push, ibar, 3).
+arc(compt, 2, push, ir_infl, 3).
+
+arc(compt, 3, cat, congf, 2).
+arc(compt, 3, jmp, [], 4).
+
+arc(compt, 4, cat, in, 4).
+arc(compt, 4, push, sv2, 5).
+arc(compt, 4, push, sp, 5).
+arc(compt, 4, push, spd, 5).
+arc(compt, 4, push, fint, 5).
+arc(compt, 4, push, sa, 6).
+arc(compt, 4, push, savv, 4).
+arc(compt, 4, push, sq, 4).
+arc(compt, 4, pop, [], []).
+
+arc(compt, 5, cat, congf, 2).
+arc(compt, 5, push, fac, 9).
+arc(compt, 5, jmp, [], 6).
+
+arc(compt, 6, push, sn, 7).
+arc(compt, 6, push, sp, 7).
+arc(compt, 6, pop, [], []).
+
+arc(compt, 7, pop, [], []).
+
+arc(compt, 8, pop, [], []).
+arc(compt, 8, push, sv2, 5).
+
+arc(compt, 9, pop, [], []).
+
+
+/***************
+RETE compin
+***************/
+
+arc(compin, 1, push, sp, 2).
+arc(compin, 1, push, spda, 2).
+arc(compin, 1, push, sv2, 2).
+arc(compin, 1, cat, clit, 1).
+arc(compin, 1, cat, clitac, 1).
+arc(compin, 1, cat, clitabl, 1).
+arc(compin, 1, cat, clitdat, 1).
+arc(compin, 1, jmp, [], 2).
+arc(compin, 1, pop, [], []).
+
+arc(compin, 2, push, fc, 5).
+arc(compin, 2, jmp, [], 3).
+arc(compin, 2, pop, [], []).
+
+arc(compin, 3, push, sv2, 4).
+arc(compin, 3, push, sp, 4).
+arc(compin, 3, push, spda, 4).
+arc(compin, 3, push, sa, 4).
+arc(compin, 3, push, savv, 3).
+arc(compin, 3, push, fac, 4).
+arc(compin, 3, push, fint, 4).
+arc(compin, 3, pop, [], []).
+
+arc(compin, 4, push, fc, 5).
+arc(compin, 4, pop, [], []).
+
+arc(compin, 5, pop, [], []).
+
+/***************
+RETE comppas
+***************/
+
+arc(comppas, 1, push, sp, 2).
+arc(comppas, 1, push, spd, 2).
+arc(comppas, 1, push, spda, 2).
+arc(comppas, 1, push, sv2, 2).
+arc(comppas, 1, jmp, [], 2).
+arc(comppas, 1, pop, [], []).
+
+arc(comppas, 2, push, sp, 2).
+arc(comppas, 2, push, fc, 5).
+arc(comppas, 2, jmp, [], 3).
+arc(comppas, 2, pop, [], []).
+
+arc(comppas, 3, push, sv2, 4).
+arc(comppas, 3, push, sp, 4).
+arc(comppas, 3, push, spda, 4).
+arc(comppas, 3, push, sa, 4).
+arc(comppas, 3, push, savv, 4).
+arc(comppas, 3, push, fac, 4).
+arc(comppas, 3, push, fint, 4).
+arc(comppas, 3, pop, [], []).
+
+arc(comppas, 4, push, fc, 5).
+arc(comppas, 4, pop, [], []).
+
+arc(comppas, 5, pop, [], []).
+
+/***************
+RETE compc
+***************/
+arc(compc, 3, push, savv, 4).
+arc(compc, 1, push, sa, 2).
+arc(compc, 1, cat, ccom, 4).
+arc(compc, 1, cat, clit, 1).
+arc(compc, 1, cat, clitac, 1).
+arc(compc, 1, cat, clitabl, 1).
+arc(compc, 1, cat, clitdat, 1).
+arc(compc, 1, push, sn, 8).
+arc(compc, 1, push, spd, 3).
+arc(compc, 1, push, sp, 9).
+arc(compc, 1, push, fp, 1).
+arc(compc, 1, push, fac, 5).
+
+arc(compc, 2, push, sv2, 3).
+arc(compc, 2, push, spd, 3).
+arc(compc, 2, jmp, [], 4).
+
+arc(compc, 3, pop, [], []).
+
+arc(compc, 4, cat, ccom, 4).
+arc(compc, 4, push, sn, 4).
+arc(compc, 4, push, fac, 5).
+arc(compc, 4, push, sv2, 8).
+arc(compc, 4, jmp, [], 8).
+
+arc(compc, 5, pop, [], []).
+
+arc(compc, 8, cat, cong, 8).
+arc(compc, 8, push, sa, 9).
+arc(compc, 8, push, sp, 9).
+arc(compc, 8, push, fc, 9).
+arc(compc, 8, jmp, [], 9).
+
+arc(compc, 9, pop, [], []).
+
+/***************
+RETE cp
+***************/
+arc(cp, 1, cat, fine, 4).
+arc(cp, 1, cat, puntint, 4).
+arc(cp, 1, cat, punto, 4).
+arc(cp, 1, push, sp, 2).
+arc(cp, 1, push, savv, 2).
+arc(cp, 1, push, f2, 2).
+arc(cp, 1, push, fint, 2).
+arc(cp, 1, push, fs, 2).
+arc(cp, 1, push, fc, 2).
+arc(cp, 1, push, sv2, 2).
+arc(cp, 1, push, sv3, 2).
+arc(cp, 1, push, sv5, 2).
+arc(cp, 1, push, fp, 1).
+arc(cp, 1, push, saa, 2).
+arc(cp, 1, jmp, [], 2).
+
+arc(cp, 2, push, fp, 2).
+arc(cp, 2, push, fs, 2).
+arc(cp, 2, push, fint, 2).
+arc(cp, 2, push, f, 1).
+arc(cp, 2, push, f2, 2).
+arc(cp, 2, push, fc, 3).
+arc(cp, 2, jmp, [], 3).
+
+arc(cp, 3, cat, punto, 4).
+arc(cp, 3, cat, puntint, 4).
+arc(cp, 3, cat, punt, 4).
+arc(cp, 3, jmp, [], 4).
+
+arc(cp, 4, pop, [], []).
+
+/***************
+RETE f
+***************/
+
+arc(f, 1, push, sn, 2).
+arc(f, 1, push, ibar, 16).
+arc(f, 1, push, ir_infl, 16).
+arc(f, 1, cat, punto, 17).
+arc(f, 1, cat, puntint, 17).
+%arc(f, 1, cat, par, 17).
+
+
+arc(f, 2, push, savv, 2).
+arc(f, 2, push, sv2, 3).
+arc(f, 2, push, fac, 3).
+arc(f, 2, push, sp, 2).
+arc(f, 2, push, spd, 2).
+arc(f, 2, jmp, [], 3).
+arc(f, 2, push, fp, 3).
+
+arc(f, 3, push, ibar, 4).
+arc(f, 3, push, ir_infl, 4).
+
+arc(f, 3, push, sn, 4).
+arc(f, 3, push, sp, 3).
+arc(f, 3, push, spd, 3).
+arc(f, 3, push, sv5, 4).
+arc(f, 3, push, savv, 3).
+arc(f, 3, push, sv2, 3).
+arc(f, 3, push, sp, 4).
+arc(f, 3, jmp, [], 16).
+
+arc(f, 4, push, ibar, 5).
+arc(f, 4, push, ir_infl, 5).
+arc(f, 4, push, sp, 4).
+arc(f, 4, push, savv, 4).
+arc(f, 4, push, sv2, 5).
+arc(f, 4, push, sn, 5).
+arc(f, 4, jmp, [], 16).
+arc(f, 4, jmp, [], 10).
+
+arc(f, 5, jmp, [], 16).
+
+arc(f, 6, push, savv, 6).
+arc(f, 6, push, sn, 3).
+arc(f, 6, jmp, [], 16).
+
+arc(f, 7, push, savv, 7).
+arc(f, 7, push, sp, 7).
+arc(f, 7, push, sn, 7).
+arc(f, 7, push, sp, 8).
+arc(f, 7, push, sv3, 8).
+arc(f, 7, push, sv2, 8).
+arc(f, 7, push, fp, 7).
+arc(f, 7, jmp, [], 16).
+
+arc(f, 8, push, sp, 8).
+arc(f, 8, jmp, [], 16).
+arc(f, 8, push, fac, 9).
+arc(f, 8, jmp, [], 9).
+arc(f, 8, push, savv, 9).
+
+arc(f, 9, push, sn, 9).
+arc(f, 9, push, sp, 9).
+arc(f, 9, push, f2, 10).
+
+arc(f, 10, push, ibar, 11).
+arc(f, 10, push, ir_infl, 11).
+
+arc(f, 11, push, sn, 13).
+arc(f, 11, push, savv, 13).
+arc(f, 11, push, sv2, 12).
+arc(f, 11, jmp, [], 15).
+
+arc(f, 13, push, sn, 14).
+arc(f, 13, jmp, [], 27).
+
+arc(f, 14, push, sv5, 15).
+arc(f, 14, jmp, [], 16).
+
+arc(f, 15, push, sp, 15).
+arc(f, 15, jmp, [], 16).
+
+arc(f, 16, cat, punto, 17).
+arc(f, 16, cat, puntint, 17).
+arc(f, 16, pop, [], []).
+
+arc(f, 17, push, cp, 16).
+
+
+/***************
+RETE sn
+***************/
+arc(sn, 1, cat, in, 1).
+arc(sn, 1, cat, neg, 1).
+arc(sn, 1, cat, d, 4).
+arc(sn, 1, cat, art, 4).
+arc(sn, 1, cat, ccom, 1).
+arc(sn, 1, cat, abbr, 4).
+arc(sn, 1, cat, qc, 13).
+arc(sn, 1, cat, qp, 4).
+arc(sn, 1, cat, poss, 10).
+arc(sn, 1, cat, per_cento, 4).
+arc(sn, 1, cat, num, 5).
+arc(sn, 1, cat, date, 17).
+arc(sn, 1, cat, expl, 17).
+arc(sn, 1, cat, ind, 4).
+arc(sn, 1, cat, qp, 5).
+arc(sn, 1, cat, inta, 4).
+arc(sn, 1, cat, intal, 4).
+arc(sn, 1, cat, intn, 4).
+arc(sn, 1, cat, intnl, 4).
+arc(sn, 1, cat, qd, 4).
+arc(sn, 1, cat, q, 5).
+arc(sn, 1, cat, noun, 14).
+arc(sn, 1, cat, pers, 14).
+arc(sn, 1, cat, dim, 5).
+arc(sn, 1, cat, deit, 5).
+arc(sn, 1, cat, pron, 2).
+arc(sn, 1, cat, pronm, 2).
+arc(sn, 1, cat, prone, 2).
+arc(sn, 1, cat, prona, 2).
+arc(sn, 1, cat, pronl, 2).
+arc(sn, 1, cat, equal, 2).
+arc(sn, 1, cat, doll, 1).
+arc(sn, 1, cat, euro, 1).
+arc(sn, 1, cat, pound, 1).
+arc(sn, 1, cat, slash, 2).
+arc(sn, 1, cat, parag, 2).
+arc(sn, 1, cat, n, 7).
+arc(sn, 1, cat, nc, 7).
+arc(sn, 1, cat, nf, 7).
+arc(sn, 1, cat, nh, 3).
+arc(sn, 1, cat, fw, 3).
+arc(sn, 1, cat, nw, 3).
+arc(sn, 1, cat, nt, 4).
+arc(sn, 1, cat, ng, 3).
+arc(sn, 1, cat, np, 3).
+arc(sn, 1, cat, npro, 3).
+arc(sn, 1, cat, agn, 5).
+
+arc(sn, 2, push, f2, 17).
+arc(sn, 2, push, sv3, 17).
+arc(sn, 2, pop, [], []).
+arc(sn, 2, jmp, [], 14).
+
+arc(sn, 3, cat, n, 5).
+arc(sn, 3, cat, nw, 5).
+arc(sn, 3, cat, fw, 5).
+arc(sn, 3, cat, nc, 5).
+arc(sn, 3, cat, nh, 5).
+arc(sn, 3, cat, nt, 5).
+arc(sn, 3, cat, np, 5).
+arc(sn, 3, cat, npro, 5).
+arc(sn, 3, jmp, [], 5).
+
+arc(sn, 4, cat, nf, 11).
+arc(sn, 4, cat, num, 4).
+arc(sn, 4, cat, date, 4).
+arc(sn, 4, cat, in, 4).
+arc(sn, 4, cat, ppas, 4).
+arc(sn, 4, cat, abbr, 5).
+arc(sn, 4, push, fp, 14).
+arc(sn, 4, push, sq, 4).
+arc(sn, 4, cat, poss, 10).
+arc(sn, 4, cat, ag, 5).
+arc(sn, 4, push, sa, 5).
+arc(sn, 4, cat, n, 5).
+arc(sn, 4, cat, nh, 3).
+arc(sn, 4, cat, nc, 5).
+arc(sn, 4, cat, nt, 5).
+arc(sn, 4, cat, ng, 3).
+arc(sn, 4, cat, np, 3).
+arc(sn, 4, cat, npro, 3).
+arc(sn, 4, cat, agn, 5).
+arc(sn, 4, cat, pron, 6).
+arc(sn, 4, cat, cong, 18).
+arc(sn, 4, jmp, [], 5).
+
+arc(sn, 5, push, spd, 8).
+arc(sn, 5, cat, ag, 5).
+arc(sn, 5, cat, agn, 5).
+arc(sn, 5, cat, date, 5).
+arc(sn, 5, cat, abbr, 5).
+arc(sn, 5, push, sa, 11).
+arc(sn, 5, push, f2, 8).
+arc(sn, 5, cat, ng, 6).
+arc(sn, 5, cat, np, 6).
+arc(sn, 5, cat, npro, 6).
+arc(sn, 5, cat, nt, 6).
+arc(sn, 5, cat, n, 6).
+arc(sn, 5, cat, num, 7).
+arc(sn, 5, push, sv3, 8).
+arc(sn, 5, push, sv2, 14).
+arc(sn, 5, cat, cong, 18).
+arc(sn, 5, push, fp, 14).
+arc(sn, 5, cat, avvl, 17).
+arc(sn, 5, jmp, [], 7). %
+
+arc(sn, 6, push, spd, 8).
+arc(sn, 6, push, f2, 15).
+arc(sn, 6, push, f3, 15).
+arc(sn, 6, cat, ag, 6).
+arc(sn, 6, push, sv3, 6).
+arc(sn, 6, jmp, [], 11).
+arc(sn, 6, pop, [], []).
+
+arc(sn, 7, cat, n, 6). %
+arc(sn, 7, cat, num, 8).
+arc(sn, 7, push, sv3, 8).
+arc(sn, 7, push, sv2, 14).
+arc(sn, 7, push, sa, 11).
+arc(sn, 7, cat, nc, 6). %
+arc(sn, 7, cat, ng, 6). %
+arc(sn, 7, cat, np, 6). %
+arc(sn, 7, cat, nf, 6). %
+arc(sn, 7, cat, nh, 6).
+arc(sn, 7, cat, nt, 6).
+arc(sn, 7, cat, abbr, 5).
+arc(sn, 7, cat, avvl, 17).
+arc(sn, 7, jmp, [], 11).
+
+arc(sn, 8, push, sa, 8).
+arc(sn, 8, push, spd, 8).
+arc(sn, 8, pop, [], []).
+
+arc(sn, 9, jmp, [], 11).
+
+arc(sn, 10, cat, poss, 10).
+arc(sn, 10, cat, ag, 10).
+arc(sn, 10, cat, n, 11).
+arc(sn, 10, cat, nf, 11).
+arc(sn, 10, cat, nh, 11).
+arc(sn, 10, cat, nt, 11).
+arc(sn, 10, cat, pron, 12).
+arc(sn, 10, push, f2, 15).
+arc(sn, 10, jmp, [], 11).
+
+% arc(sn, 11, cat, num, 10).
+arc(sn, 11, push, sa, 14).
+arc(sn, 11, push, spd, 14).
+arc(sn, 11, push, sv2, 14).
+arc(sn, 11, push, f2, 15).
+arc(sn, 11, push, fac, 14).
+arc(sn, 11, jmp, [], 14).
+arc(sn, 11, push, fp, 14).
+
+arc(sn, 12, cat, num, 14).
+arc(sn, 12, push, spd, 12).
+arc(sn, 12, pop, [], []).
+arc(sn, 12, cat, n, 16).
+arc(sn, 12, jmp, [], 14).
+
+arc(sn, 13, cat, art, 10).
+arc(sn, 13, cat, deit, 11).
+arc(sn, 13, jmp, [], 11).
+
+arc(sn, 14, cat, ag, 14).
+arc(sn, 14, push, spd, 14).
+arc(sn, 14, push, f2, 15).
+arc(sn, 14, push, f3, 15).
+arc(sn, 14, pop, [], []).
+arc(sn, 14, jmp, [], 16).
+arc(sn, 14, push, sv3, 15).
+
+arc(sn, 15, push, spd, 17).
+arc(sn, 15, pop, [], []).
+
+arc(sn, 16, push, sv3, 17).
+arc(sn, 16, push, sv2, 17).
+arc(sn, 16, pop, [], []).
+
+arc(sn, 17, pop, [], []).
+
+arc(sn, 18, cat, n, 17). 
+arc(sn, 18, cat, num, 17).
+arc(sn, 18, cat, nc, 17). 
+arc(sn, 18, cat, np, 17). 
+arc(sn, 18, cat, nf, 17). 
+arc(sn, 18, cat, nh, 17).
+arc(sn, 18, cat, nt, 17).
+
+
+/***************
+RETE sp
+***************/
+arc(sp, 1, cat, in, 1).
+arc(sp, 1, cat, p, 2).
+arc(sp, 1, cat, phl, 2).
+arc(sp, 1, cat, php, 2).
+arc(sp, 1, cat, part, 4).
+
+arc(sp, 2, cat, p, 3).
+arc(sp, 2, cat, part, 3).
+arc(sp, 2, cat, avvl, 7).
+arc(sp, 2, cat, conjl, 7).
+arc(sp, 2, push, f2, 6).
+arc(sp, 2, push, sv2, 6).
+arc(sp, 2, push, sn, 5).
+arc(sp, 2, jmp, [], 4).
+
+arc(sp, 3, push, f2, 6).
+arc(sp, 3, push, sn, 3).
+arc(sp, 3, push, sv3, 7).
+arc(sp, 3, pop, [], []).
+
+arc(sp, 4, push, f2, 6).
+arc(sp, 4, push, sn, 5).
+arc(sp, 4, push, sa, 4).
+
+arc(sp, 5, push, sv2, 6).
+arc(sp, 5, push, f2, 6).
+arc(sp, 5, push, fint, 6).
+arc(sp, 5, push, sv3, 6).
+arc(sp, 5, push, sp, 6).
+arc(sp, 5, pop, [], []).
+
+arc(sp, 6, push, fc, 6).
+arc(sp, 6, push, fp, 6).
+arc(sp, 6, pop, [], []).
+
+arc(sp, 7, pop, [], []).
+
+
+/***************
+RETE spd
+***************/
+arc(spd, 1, cat, in, 1).
+arc(spd, 1, cat, pd, 2).
+arc(spd, 1, cat, partd, 4).
+
+arc(spd, 2, cat, p, 3).
+arc(spd, 2, push, f2, 6).
+arc(spd, 2, push, sn, 5).
+arc(spd, 2, push, sq, 5).
+arc(spd, 2, jmp, [], 4).
+
+arc(spd, 3, push, f2, 6).
+arc(spd, 3, push, sn, 3).
+arc(spd, 3, push, sq, 3).
+arc(spd, 3, push, sv3, 7).
+arc(spd, 3, pop, [], []).
+
+arc(spd, 4, push, f2, 6).
+arc(spd, 4, push, sn, 5).
+arc(spd, 4, push, sq, 5).
+arc(spd, 4, push, sa, 4).
+arc(spd, 4, jmp, [], 5).
+
+arc(spd, 5, push, sv2, 6).
+arc(spd, 5, push, f2, 6).
+arc(spd, 5, push, fint, 6).
+arc(spd, 5, push, sv3, 6).
+arc(spd, 5, pop, [], []).
+
+arc(spd, 6, push, fc, 6).
+arc(spd, 6, push, fp, 6).
+arc(spd, 6, pop, [], []).
+
+arc(spd, 7, pop, [], []).
+
+/***************
+RETE spda
+***************/
+arc(spda, 1, cat, in, 1).
+arc(spda, 1, cat, pda, 2).
+arc(spda, 1, cat, partda, 4).
+
+arc(spda, 2, cat, p, 3).
+arc(spda, 2, push, f2, 6).
+arc(spda, 2, push, sn, 5).
+arc(spda, 2, push, sq, 5).
+arc(spda, 2, jmp, [], 4).
+
+arc(spda, 3, push, f2, 6).
+arc(spda, 3, push, sn, 3).
+arc(spda, 3, push, sq, 3).
+arc(spda, 3, push, sv3, 7).
+arc(spda, 3, pop, [], []).
+
+arc(spda, 4, push, f2, 6).
+arc(spda, 4, push, sn, 5).
+arc(spda, 4, push, sq, 5).
+arc(spda, 4, push, sa, 4).
+arc(spda, 4, jmp, [], 5).
+
+arc(spda, 5, push, sv2, 6).
+arc(spda, 5, push, f2, 6).
+arc(spda, 5, push, fint, 6).
+arc(spda, 5, push, sv3, 6).
+arc(spda, 5, pop, [], []).
+
+arc(spda, 6, push, fc, 6).
+arc(spda, 6, push, fp, 6).
+arc(spda, 6, pop, [], []).
+
+arc(spda, 7, pop, [], []).
+
+/***************
+RETE sa
+***************/
+arc(sa, 1, cat, neg, 2).
+arc(sa, 1, cat, ind, 4).
+arc(sa, 1, cat, ccom, 4).
+arc(sa, 1, cat, avv, 4).
+arc(sa, 1, cat, in, 2).
+arc(sa, 1, cat, pref, 2).
+arc(sa, 1, cat, grad, 2).
+arc(sa, 1, cat, ag, 5).
+arc(sa, 1, cat, agn, 6).
+arc(sa, 1, cat, ag, 5).
+
+arc(sa, 2, cat, ag, 3).
+
+arc(sa, 3, pop, [], []).
+
+arc(sa, 4, cat, in, 4).
+arc(sa, 4, cat, ag, 5).
+arc(sa, 4, cat, agn, 6).
+arc(sa, 4, cat, num, 5).
+
+arc(sa, 5, cat, cong, 7).
+arc(sa, 5, cat, ag, 6).
+arc(sa, 5, push, sa, 6).
+arc(sa, 5, push, sn, 6).
+arc(sa, 5, push, fac, 6).
+arc(sa, 5, push, spd, 6).
+arc(sa, 5, push, spda, 6).
+arc(sa, 5, push, sp, 6).
+arc(sa, 5, pop, [], []).
+
+arc(sa, 6, pop, [], []).
+
+arc(sa, 7, cat, ag, 6).
+
+/***************
+RETE ibar
+***************/
+arc(ibar, 1, cat, neg, 1).
+arc(ibar, 1, cat, vprog, 12).
+arc(ibar, 1, cat, ausa, 2).
+arc(ibar, 1, cat, ausan, 2).
+arc(ibar, 1, cat, ausa3, 2).
+arc(ibar, 1, cat, ausae3, 2).
+arc(ibar, 1, cat, ausa3n, 2).
+arc(ibar, 1, cat, ausd, 14).
+arc(ibar, 1, cat, ausdn, 14).
+arc(ibar, 1, cat, ausd3, 14).
+arc(ibar, 1, cat, ausd3n, 14).
+arc(ibar, 1, cat, ause, 3).
+arc(ibar, 1, cat, ausen, 3).
+arc(ibar, 1, cat, ause3, 3).
+arc(ibar, 1, cat, ause3n, 3).
+arc(ibar, 1, cat, vsup, 14).
+arc(ibar, 1, cat, vsupn, 14).
+arc(ibar, 1, cat, v, 5).
+arc(ibar, 1, cat, vb, 5).
+arc(ibar, 1, cat, vt, 6).
+arc(ibar, 1, cat, vin, 7).
+arc(ibar, 1, cat, vbt, 6).
+arc(ibar, 1, cat, vbin, 7).
+arc(ibar, 1, cat, vc, 8).
+arc(ibar, 1, cat, in, 1).
+
+arc(ibar, 2, cat, neg, 2).
+arc(ibar, 2, cat, avv, 2).
+arc(ibar, 2, cat, avvl, 2).
+arc(ibar, 2, cat, in, 2).
+arc(ibar, 2, cat, cong, 2).
+arc(ibar, 2, cat, congf, 2).
+arc(ibar, 2, push, fp, 2).
+arc(ibar, 2, push, spda, 2).
+arc(ibar, 2, push, sp, 2).
+arc(ibar, 2, cat, vsup, 14).
+arc(ibar, 2, cat, vsupn, 14).
+arc(ibar, 2, cat, vgt, 6).
+arc(ibar, 2, cat, vbt, 6).
+arc(ibar, 2, cat, vppt, 6).
+arc(ibar, 2, cat, vprt, 6).
+arc(ibar, 2, cat, vppc, 8).
+arc(ibar, 2, cat, vbin, 7).
+arc(ibar, 2, cat, vin, 7).
+arc(ibar, 2, cat, vt, 6).
+arc(ibar, 2, cat, vppin, 7).
+arc(ibar, 2, cat, vbc, 8).
+arc(ibar, 2, cat, v, 8).
+arc(ibar, 2, cat, vb, 8).
+arc(ibar, 2, cat, ausep, 4).
+arc(ibar, 2, cat, ausa, 8).
+arc(ibar, 2, cat, vc, 8).
+
+arc(ibar, 3, cat, neg, 3).
+arc(ibar, 3, wrd, goint_to, 3).
+arc(ibar, 3, cat, avv, 3).
+arc(ibar, 3, cat, in, 3).
+arc(ibar, 3, cat, cong, 2).
+arc(ibar, 3, cat, congf, 2).
+arc(ibar, 3, cat, ccong, 2).
+arc(ibar, 3, cat, vin, 7).
+arc(ibar, 3, cat, ausei, 4).
+arc(ibar, 3, cat, vbin, 7).
+arc(ibar, 3, cat, aueg, 10).
+arc(ibar, 3, cat, auag, 7).
+arc(ibar, 3, cat, vgin, 7).
+arc(ibar, 3, cat, vppc, 8).
+arc(ibar, 3, cat, vppin, 7).
+arc(ibar, 3, cat, vppt, 6).
+arc(ibar, 3, cat, vprin, 7).
+arc(ibar, 3, cat, vprt, 7).
+arc(ibar, 3, cat, vb, 8).
+arc(ibar, 3, cat, v, 8).
+
+arc(ibar, 4, cat, aueg, 10).
+arc(ibar, 4, cat, neg, 4).
+arc(ibar, 4, cat, ausep, 10).
+arc(ibar, 4, cat, avv, 4).
+arc(ibar, 4, cat, in, 4).
+arc(ibar, 4, push, spda, 4).
+arc(ibar, 4, push, sp, 4).
+arc(ibar, 4, cat, qc, 4).
+arc(ibar, 4, cat, qp, 4).
+arc(ibar, 4, cat, in, 4).
+arc(ibar, 4, cat, cong, 4).
+arc(ibar, 4, cat, vgin, 7).
+arc(ibar, 4, cat, vgt, 6).
+arc(ibar, 4, cat, vgc, 6).
+arc(ibar, 4, cat, vprt, 6).
+arc(ibar, 4, cat, vppc, 8).
+arc(ibar, 4, cat, vppin, 7).
+arc(ibar, 4, cat, vppt, 6).
+arc(ibar, 4, cat, vsup, 14).
+arc(ibar, 4, cat, vsupn, 14).
+arc(ibar, 4, cat, v, 8).
+arc(ibar, 4, cat, vb, 8).
+arc(ibar, 4, cat, vin, 8).
+arc(ibar, 4, cat, vt, 8).
+
+arc(ibar, 5, cat, cong, 6).
+arc(ibar, 5, cat, congf, 5).
+arc(ibar, 5, cat, in, 5).
+arc(ibar, 5, cat, avv, 5).
+arc(ibar, 5, cat, avvl, 5).
+arc(ibar, 5, cat, neg, 5).
+arc(ibar, 5, cat, vit, 6).
+arc(ibar, 5, cat, viin, 7).
+arc(ibar, 5, cat, vin, 7).
+arc(ibar, 5, cat, v, 7).
+arc(ibar, 5, cat, vb, 7).
+arc(ibar, 5, cat, vbt, 6).
+arc(ibar, 5, cat, vbin, 7).
+arc(ibar, 5, cat, vsf, 2).
+arc(ibar, 5, cat, vbc, 8).
+arc(ibar, 5, cat, vci, 8).
+arc(ibar, 5, cat, vt, 7).
+arc(ibar, 5, cat, vprog, 12).
+%arc(ibar, 5, cat, punt, 11).
+
+%arc(ibar, 6, cat, cong, 9).
+arc(ibar, 6, pop, [], []).
+arc(ibar, 6, push, compt, 9).
+
+arc(ibar, 7, pop, [], []).
+arc(ibar, 7, push, compin, 9).
+
+arc(ibar, 8, cat, ausep, 12).
+arc(ibar, 8, cat, vppc, 12).
+arc(ibar, 8, cat, ausei, 4).
+arc(ibar, 8, pop, [], []).
+arc(ibar, 8, push, compc, 9).
+
+arc(ibar, 9, pop, [], []).
+
+arc(ibar, 10, cat, avv, 10).
+arc(ibar, 10, cat, cong, 10).
+arc(ibar, 10, cat, in, 10).
+arc(ibar, 10, cat, ppas, 13).
+arc(ibar, 10, cat, vppt, 13).
+arc(ibar, 10, cat, vppc, 13).
+arc(ibar, 10, cat, vppin, 13).
+arc(ibar, 10, cat, vt, 13).
+arc(ibar, 10, cat, vc, 13).
+arc(ibar, 10, cat, v, 13).
+arc(ibar, 10, cat, vb, 13).
+arc(ibar, 10, cat, vin, 13).
+
+%arc(ibar, 11, cat, cosu, 11).
+arc(ibar, 11, cat, vsup, 11).
+%arc(ibar, 11, cat, punt, 5).
+arc(ibar, 11, pop, [], []).
+
+arc(ibar, 12, wrd, per, 5).
+arc(ibar, 12, cat, pt, 5).
+arc(ibar, 12, cat, vgc, 6).
+arc(ibar, 12, cat, vgt, 6).
+arc(ibar, 12, cat, vgin, 7).
+arc(ibar, 12, cat, vgsf, 5).
+arc(ibar, 12, cat, vppc, 7).
+arc(ibar, 12, cat, vppin, 7).
+arc(ibar, 12, cat, vppt, 6).
+arc(ibar, 12, cat, vin, 7).
+arc(ibar, 12, cat, vb, 7).
+arc(ibar, 12, cat, v, 7).
+
+arc(ibar, 13, push, comppas, 9).
+arc(ibar, 13, pop, [], []).
+
+arc(ibar, 14, cat, vsup, 14).
+arc(ibar, 14, cat, neg, 14).
+arc(ibar, 14, cat, ause, 2).
+arc(ibar, 14, cat, ausa, 2).
+arc(ibar, 14, cat, ausei, 2).
+arc(ibar, 14, cat, ausai, 2).
+arc(ibar, 14, cat, cong, 6).
+arc(ibar, 14, cat, congf, 14).
+arc(ibar, 14, cat, in, 14).
+arc(ibar, 14, cat, avv, 14).
+arc(ibar, 14, cat, avvl, 14).
+arc(ibar, 14, cat, neg, 14).
+arc(ibar, 14, cat, vit, 6).
+arc(ibar, 14, cat, viin, 7).
+arc(ibar, 14, cat, vin, 7).
+arc(ibar, 14, cat, v, 7).
+arc(ibar, 14, cat, vb, 7).
+arc(ibar, 14, cat, vbt, 6).
+arc(ibar, 14, cat, vbin, 7).
+arc(ibar, 14, cat, vsf, 2).
+arc(ibar, 14, cat, vbc, 8).
+arc(ibar, 14, cat, vci, 8).
+arc(ibar, 14, cat, vc, 10).
+arc(ibar, 14, cat, vt, 7).
+arc(ibar, 14, cat, vprog, 12).
+arc(ibar, 14, cat, ausd, 6).
+
+/***************
+RETE svt
+***************/
+
+arc(svt, 1, push, dirsp, 9).
+arc(svt, 1, push, savv, 1).
+arc(svt, 1, push, fp, 1).
+arc(svt, 1, push, sp, 5).
+arc(svt, 1, push, sn, 3).
+arc(svt, 1, push, fac, 3).
+arc(svt, 1, push, sv2, 3).
+arc(svt, 1, push, fint, 5).
+arc(svt, 1, push, sq, 1).
+arc(svt, 1, jmp, [], 3).
+
+arc(svt, 2, push, ibar, 3).
+arc(svt, 2, push, ir_infl, 3).
+
+arc(svt, 3, cat, congf, 2).
+arc(svt, 3, jmp, [], 4).
+
+arc(svt, 4, cat, in, 4).
+arc(svt, 4, push, sv2, 5).
+arc(svt, 4, push, sp, 5).
+arc(svt, 4, push, spd, 5).
+arc(svt, 4, push, fint, 5).
+arc(svt, 4, push, sa, 6).
+arc(svt, 4, push, savv, 4).
+arc(svt, 4, push, sq, 4).
+arc(svt, 4, pop, [], []).
+
+arc(svt, 5, cat, congf, 2).
+arc(svt, 5, push, fac, 9).
+arc(svt, 5, jmp, [], 6).
+
+arc(svt, 6, push, sn, 7).
+arc(svt, 6, push, sp, 7).
+arc(svt, 6, pop, [], []).
+
+arc(svt, 7, pop, [], []).
+
+arc(svt, 8, pop, [], []).
+arc(svt, 8, push, sv2, 5).
+
+arc(svt, 9, pop, [], []).
+
+
+/***************
+RETE svin
+***************/
+
+arc(svin, 1, push, sp, 2).
+arc(svin, 1, push, sv2, 2).
+arc(svin, 1, jmp, [], 2).
+arc(svin, 1, pop, [], []).
+
+arc(svin, 2, push, fc, 5).
+arc(svin, 2, jmp, [], 3).
+arc(svin, 2, pop, [], []).
+
+arc(svin, 3, push, sv2, 4).
+arc(svin, 3, push, sp, 4).
+arc(svin, 3, push, sa, 4).
+arc(svin, 3, push, savv, 4).
+arc(svin, 3, push, fac, 4).
+arc(svin, 3, push, fint, 4).
+arc(svin, 3, pop, [], []).
+
+arc(svin, 4, push, fc, 5).
+arc(svin, 4, pop, [], []).
+
+arc(svin, 5, pop, [], []).
+
+/***************
+RETE svc
+***************/
+arc(svc, 1, push, sa, 2).
+arc(svc, 1, cat, ccom, 4).
+arc(svc, 1, push, sn, 8).
+arc(svc, 1, push, sp, 9).
+arc(svc, 1, push, fp, 1).
+
+arc(svc, 2, push, sv2, 3).
+arc(svc, 2, push, spd, 3).
+arc(svc, 2, jmp, [], 4).
+
+arc(svc, 3, pop, [], []).
+
+arc(svc, 4, cat, ccom, 4).
+arc(svc, 4, push, sn, 4).
+arc(svc, 4, push, fac, 5).
+arc(svc, 4, jmp, [], 8).
+
+arc(svc, 5, pop, [], []).
+
+arc(svc, 8, cat, cong, 8).
+arc(svc, 8, push, sa, 9).
+arc(svc, 8, push, sp, 9).
+arc(svc, 8, push, fc, 9).
+arc(svc, 8, jmp, [], 9).
+
+arc(svc, 9, pop, [], []).
+
+/***************
+RETE f2
+***************/
+arc(f2, 1, cat, rel, 2).
+arc(f2, 1, cat, relin, 3).
+arc(f2, 1, cat, relob, 14).
+
+arc(f2, 2, cat, rel, 3).
+arc(f2, 2, cat, relob, 3).
+arc(f2, 2, jmp, [], 3).
+
+arc(f2, 3, push, savv, 3).
+arc(f2, 3, push, sn, 4).
+arc(f2, 3, cat, cong, 4).
+arc(f2, 3, push, fp, 3).
+arc(f2, 3, jmp, [], 4).
+
+arc(f2, 4, push, savv, 4).
+arc(f2, 4, push, ibar, 5).
+arc(f2, 4, push, ir_infl, 5).
+arc(f2, 4, push, fp, 4).
+arc(f2, 4, jmp, [], 5).
+
+arc(f2, 5, push, sp, 5).
+arc(f2, 5, push, sa, 5).
+arc(f2, 5, push, sv2, 5).
+arc(f2, 5, push, savv, 6).
+arc(f2, 5, push, fc, 6).
+arc(f2, 5, jmp, [], 6).
+arc(f2, 5, pop, [], []).
+arc(f2, 5, push, sv5, 12).
+
+arc(f2, 6, cat, cong, 5).
+arc(f2, 6, push, f2, 13).
+arc(f2, 6, push, fint, 13).
+arc(f2, 6, push, fs, 6).
+arc(f2, 6, pop, [], []).
+
+arc(f2, 7, push, ibar, 8).
+arc(f2, 7, push, ir_infl, 8).
+
+arc(f2, 8, pop, [], []).
+arc(f2, 8, push, sp, 9).
+
+arc(f2, 9, push, savv, 9).
+arc(f2, 9, push, sn, 10).
+
+arc(f2, 10, push, fs, 11).
+
+arc(f2, 11, pop, [], []).
+
+arc(f2, 12, push, savv, 12).
+arc(f2, 12, push, sp, 13).
+arc(f2, 12, pop, [], []).
+
+arc(f2, 13, pop, [], []).
+
+arc(f2, 14, cat, cong, 14).
+arc(f2, 14, cat, n, 14).
+arc(f2, 14, cat, ag, 14).
+arc(f2, 14, cat, num, 14).
+arc(f2, 14, pop, [], []).
+
+
+/***************
+RETE ir_infl
+***************/
+arc(ir_infl, 1, cat, neg, 1).
+arc(ir_infl, 1, cat, clit, 1).
+arc(ir_infl, 1, cat, clitac, 1).
+arc(ir_infl, 1, cat, vprogir, 12).
+arc(ir_infl, 1, cat, ausair, 2).
+arc(ir_infl, 1, cat, auseir, 4).
+arc(ir_infl, 1, cat, vsupir, 5).
+arc(ir_infl, 1, cat, virt, 6).
+arc(ir_infl, 1, cat, virin, 7).
+arc(ir_infl, 1, cat, vcir, 8).
+
+arc(ir_infl, 2, push, savv, 2).
+arc(ir_infl, 2, push, fp, 2).
+arc(ir_infl, 2, cat, vsup, 5).
+arc(ir_infl, 2, cat, vgt, 6).
+arc(ir_infl, 2, cat, vppt, 6).
+arc(ir_infl, 2, cat, vprt, 6).
+arc(ir_infl, 2, cat, vppin, 7).
+arc(ir_infl, 2, cat, vc, 8).
+
+arc(ir_infl, 3, cat, vin, 7).
+arc(ir_infl, 3, cat, vgin, 7).
+arc(ir_infl, 3, cat, vppin, 7).
+arc(ir_infl, 3, cat, vprin, 7).
+
+arc(ir_infl, 4, cat, ausep, 10).
+arc(ir_infl, 4, cat, vppin, 7).
+arc(ir_infl, 4, cat, vppt, 7).
+
+arc(ir_infl, 5, cat, vit, 6).
+arc(ir_infl, 5, cat, viin, 7).
+arc(ir_infl, 5, cat, ausei, 3).
+arc(ir_infl, 5, cat, ausai, 2).
+arc(ir_infl, 5, cat, vc, 8).
+arc(ir_infl, 5, cat, punt, 11).
+
+arc(ir_infl, 6, push, svt, 9).
+arc(ir_infl, 6, pop, [], []).
+
+arc(ir_infl, 7, push, svin, 9).
+arc(ir_infl, 7, pop, [], []).
+
+arc(ir_infl, 8, push, svc, 9).
+arc(ir_infl, 8, pop, [], []).
+
+arc(ir_infl, 9, pop, [], []).
+
+arc(ir_infl, 10, push, savv, 10).
+arc(ir_infl, 10, cat, vppt, 7).
+
+arc(ir_infl, 11, cat, cosu, 11).
+arc(ir_infl, 11, cat, vsup, 11).
+arc(ir_infl, 11, cat, punt, 5).
+
+arc(ir_infl, 12, cat, vgt, 6).
+arc(ir_infl, 12, cat, vgin, 7).
+
+/***************
+RETE fint
+***************/
+arc(fint, 1, cat, p, 2).
+arc(fint, 1, cat, int, 14).
+arc(fint, 1, cat, intj, 13).
+arc(fint, 1, cat, intjl, 13).
+arc(fint, 1, cat, intja, 13).
+arc(fint, 1, cat, intjn, 13).
+arc(fint, 1, cat, i, 13).
+arc(fint, 1, cat, w, 13).
+
+arc(fint, 2, cat, int, 3).
+
+arc(fint, 3, push, savv, 3).
+arc(fint, 3, push, sn, 4).
+arc(fint, 3, cat, cong, 4).
+arc(fint, 3, push, sp, 3).
+arc(fint, 3, jmp, [], 4).
+arc(fint, 3, push, fp, 4).
+
+arc(fint, 4, push, savv, 4).
+arc(fint, 4, push, ibar, 5).
+arc(fint, 4, push, sn, 4).
+arc(fint, 4, push, sp, 5).
+arc(fint, 4, jmp, [], 6).
+
+arc(fint, 5, push, sp, 5).
+arc(fint, 5, push, sa, 5).
+arc(fint, 5, push, sv2, 5).
+arc(fint, 5, push, savv, 6).
+arc(fint, 5, push, fc, 6).
+arc(fint, 5, jmp, [], 6).
+arc(fint, 5, push, sv5, 12).
+
+arc(fint, 6, cat, cong, 6).
+arc(fint, 6, push, sp, 6).
+arc(fint, 6, push, sn, 12).
+arc(fint, 6, jmp, [], 8).
+arc(fint, 6, push, f2, 12).
+arc(fint, 6, push, fs, 6).
+
+arc(fint, 7, push, ibar, 8).
+
+arc(fint, 8, jmp, [], 11).
+arc(fint, 8, push, sp, 9).
+
+arc(fint, 9, push, savv, 9).
+arc(fint, 9, push, sn, 10).
+
+arc(fint, 10, push, fs, 11).
+
+arc(fint, 11, jmp, [], 12).
+
+arc(fint, 12, push, savv, 12).
+arc(fint, 12, push, sp, 13).
+arc(fint, 12, jmp, [], 13).
+
+arc(fint, 13, cat, puntint, 13).
+arc(fint, 13, pop, [], []).
+
+arc(fint, 14, cat, q, 3).
+arc(fint, 14, pop, [], []).
+
+
+/***************
+RETE sv5
+***************/
+arc(sv5, 1, cat, auag, 8).
+arc(sv5, 1, cat, aueg, 8).
+arc(sv5, 1, cat, vgs, 7).
+arc(sv5, 1, cat, vgt, 2).
+arc(sv5, 1, cat, vgin, 2).
+arc(sv5, 1, cat, vsfa, 7).
+
+arc(sv5, 2, cat, cong, 2).
+arc(sv5, 2, push, savv, 2).
+arc(sv5, 2, push, sa, 2).
+arc(sv5, 2, push, sp, 2).
+arc(sv5, 2, push, sn, 3).
+arc(sv5, 2, push, fp, 3).
+arc(sv5, 2, jmp, [], 4).
+
+arc(sv5, 3, jmp, [], 4).
+arc(sv5, 3, wrd, and, 3).
+arc(sv5, 3, pop, [], []).
+arc(sv5, 3, push, sn, 4).
+
+arc(sv5, 4, push, sp, 4).
+arc(sv5, 4, pop, [], []).
+arc(sv5, 4, push, sv2, 5).
+arc(sv5, 4, push, f2, 5).
+arc(sv5, 4, push, fint, 5).
+
+arc(sv5, 5, pop, [], []).
+arc(sv5, 5, push, fac, 6).
+
+arc(sv5, 6, pop, [], []).
+
+arc(sv5, 7, cat, vi, 2).
+arc(sv5, 7, cat, vit, 2).
+arc(sv5, 7, cat, viin, 2).
+
+arc(sv5, 8, cat, vppin, 2).
+arc(sv5, 8, cat, vppt, 2).
+arc(sv5, 8, cat, vin, 2).
+arc(sv5, 8, cat, vt, 2).
+arc(sv5, 8, cat, vb, 2).
+arc(sv5, 8, cat, v, 2).
+
+
+/***************
+RETE sq
+***************/
+arc(sq, 1, cat, in, 2).
+arc(sq, 1, cat, q, 3).
+arc(sq, 1, cat, qo, 3).
+arc(sq, 1, cat, qc, 3).
+arc(sq, 1, cat, qd, 3).
+arc(sq, 1, cat, qp, 3).
+
+arc(sq, 2, push, sp, 4).
+
+arc(sq, 3, push, sn, 4).
+arc(sq, 3, cat, qo, 4).
+arc(sq, 3, pop, [], []).
+arc(sq, 3, cat, in, 4).
+
+arc(sq, 4, pop, [], []).
+
+
+/***************
+RETE sv2
+***************/
+arc(sv2, 1, cat, p, 2).
+arc(sv2, 1, cat, neg, 1).
+arc(sv2, 1, cat, pt, 5).
+arc(sv2, 1, cat, ausei, 6).
+arc(sv2, 1, cat, ausai, 6).
+arc(sv2, 1, cat, vsf, 6).
+arc(sv2, 1, cat, vit, 8).
+arc(sv2, 1, cat, vci, 3).
+arc(sv2, 1, cat, viin, 8).
+arc(sv2, 1, cat, pt, 11).
+
+arc(sv2, 2, cat, avv, 2).
+arc(sv2, 2, cat, vsup, 2).
+arc(sv2, 2, cat, ausd, 6).
+arc(sv2, 2, cat, ausei, 6).
+arc(sv2, 2, cat, ausai, 6).
+arc(sv2, 2, cat, vsf, 6).
+arc(sv2, 2, cat, vit, 3).
+arc(sv2, 2, cat, viin, 3).
+
+arc(sv2, 3, push, fint, 8).
+arc(sv2, 3, push, sn, 4).
+arc(sv2, 3, push, sp, 4).
+arc(sv2, 3, push, spd, 4).
+arc(sv2, 3, cat, clit, 3).
+arc(sv2, 3, cat, cong, 7).
+arc(sv2, 3, pop, [], []).
+
+arc(sv2, 4, wrd, wnd, 4).
+arc(sv2, 4, push, sp, 4).
+arc(sv2, 4, jmp, [], 5).
+arc(sv2, 4, pop, [], []).
+arc(sv2, 4, push, fp, 17).
+arc(sv2, 4, push, fs, 17).
+arc(sv2, 4, push, sn, 17).
+
+arc(sv2, 5, cat, neg, 5).
+arc(sv2, 5, cat, qc, 5).
+arc(sv2, 5, cat, qp, 5).
+arc(sv2, 5, cat, vc, 6).
+arc(sv2, 5, cat, ausd, 6).
+arc(sv2, 5, cat, ausai, 6).
+arc(sv2, 5, cat, ausei, 6).
+arc(sv2, 5, cat, vbt, 6).
+arc(sv2, 5, cat, vit, 6).
+arc(sv2, 5, cat, viin, 6).
+arc(sv2, 5, cat, vprog, 6).
+arc(sv2, 5, cat, vsup, 5).
+
+arc(sv2, 6, wrd, and, 5).
+arc(sv2, 6, cat, ausep, 6).
+arc(sv2, 6, cat, vppc, 6).
+arc(sv2, 6, cat, vppin, 6).
+arc(sv2, 6, cat, vppt, 6).
+arc(sv2, 6, cat, v, 6).
+arc(sv2, 6, cat, vb, 6).
+arc(sv2, 6, cat, vin, 6).
+arc(sv2, 6, cat, vt, 6).
+arc(sv2, 6, push, sa, 7).
+arc(sv2, 6, push, sn, 7).
+arc(sv2, 6, push, sp, 7).
+arc(sv2, 6, pop, [], []).
+
+arc(sv2, 7, push, savv, 4).
+arc(sv2, 7, push, fac, 4).
+arc(sv2, 7, push, sp, 4).
+arc(sv2, 7, pop, [], []).
+
+arc(sv2, 8, cat, clit, 9).
+arc(sv2, 8, push, fs, 9).
+arc(sv2, 8, push, sn, 9).
+arc(sv2, 8, pop, [], []).
+
+arc(sv2, 9, push, fs, 4).
+arc(sv2, 9, push, sv5, 4).
+arc(sv2, 9, push, sp, 4).
+arc(sv2, 9, pop, [], []).
+
+arc(sv2, 11, cat, vsup, 5).
+
+arc(sv2, 12, push, savv, 13).
+
+arc(sv2, 13, push, fs, 14).
+
+arc(sv2, 14, cat, vit, 15).
+arc(sv2, 14, cat, viin, 15).
+
+arc(sv2, 15, push, fs, 16).
+
+arc(sv2, 16, pop, [], []).
+
+arc(sv2, 17, pop, [], []).
+arc(sv2, 17, push, fc, 18).
+
+arc(sv2, 18, pop, [], []).
+
+
+/***************
+RETE savv
+***************/
+arc(savv, 1, cat, neg, 2).
+arc(savv, 1, cat, avv, 3).
+arc(savv, 1, cat, adv, 3).
+arc(savv, 1, cat, avvl, 3).
+arc(savv, 1, cat, in, 2).
+arc(savv, 1, cat, q, 2).
+
+arc(savv, 2, cat, avv, 3).
+arc(savv, 2, cat, in, 2).
+arc(savv, 2, pop, [], []).
+
+arc(savv, 3, cat, in, 3).
+arc(savv, 3, cat, nt, 3).
+arc(savv, 3, pop, [], []).
+
+
+/***************
+RETE fc
+***************/
+arc(fc, 1, cat, congf, 2).
+arc(fc, 1, cat, ccong, 2).
+arc(fc, 1, cat, cong, 2).
+
+arc(fc, 2, cat, cong, 2).
+arc(fc, 2, cat, cosu, 2).
+arc(fc, 2, push, cp, 3).
+
+arc(fc, 3, pop, [], []).
+
+
+/***************
+RETE fac
+***************/
+arc(fac, 1, cat, pk, 2).
+arc(fac, 1, cat, intj, 3).
+
+arc(fac, 2, push, savv, 2).
+arc(fac, 2, push, sp, 2).
+arc(fac, 2, push, f, 3).
+arc(fac, 2, push, cp, 3).
+
+arc(fac, 3, pop, [], []).
+
+/***************
+RETE dirsp
+***************/
+arc(dirsp, 1, cat, dirs, 2).
+
+arc(dirsp, 2, cat, par, 2).
+arc(dirsp, 2, push, sp, 2).
+arc(dirsp, 2, push, savv, 2).
+arc(dirsp, 2, push, ibar, 3).
+arc(dirsp, 2, push, ir_infl, 3).
+arc(dirsp, 2, push, sn, 2).
+arc(dirsp, 2, push, fp, 2).
+arc(dirsp, 2, jmp, [], 3).
+arc(dirsp, 2, cat, par, 3).
+
+arc(dirsp, 3, pop, [], []).
+
+
+/***************
+RETE fs
+***************/
+arc(fs, 1, cat, cosu, 2).
+arc(fs, 1, cat, conjl, 2).
+
+arc(fs, 2, cat, cosu, 2).
+arc(fs, 2, cat, pk, 2).
+arc(fs, 2, push, cp, 3).
+
+arc(fs, 3, pop, [], []).
+
+
+/***************
+RETE fp
+***************/
+arc(fp, 1, cat, punt, 2).
+arc(fp, 1, cat, par, 2).
+arc(fp, 1, cat, dots, 2).
+
+arc(fp, 2, pop, [], []).
+
+/***************
+RETE sv3
+***************/
+arc(sv3, 1, cat, ppas, 2).
+arc(sv3, 1, cat, ppre, 3).
+arc(sv3, 1, cat, vppc, 2).
+arc(sv3, 1, cat, vppin, 2).
+arc(sv3, 1, cat, vppt, 2).
+arc(sv3, 1, cat, vprt, 2).
+arc(sv3, 1, cat, vprin, 2).
+arc(sv3, 1, cat, avv, 1).
+
+arc(sv3, 2, cat, avv, 2).
+arc(sv3, 2, push, sp, 3).
+arc(sv3, 2, jmp, [], 3).
+
+arc(sv3, 3, cat, clit, 4).
+arc(sv3, 3, push, sp, 3).
+arc(sv3, 3, push, sn, 4).
+arc(sv3, 3, jmp, [], 4).
+arc(sv3, 3, push, sv2, 4).
+
+arc(sv3, 4, cat, cong, 4).
+arc(sv3, 4, push, savv, 4).
+arc(sv3, 4, push, sp, 4).
+arc(sv3, 4, push, fac, 5).
+arc(sv3, 4, push, sn, 5).
+arc(sv3, 4, push, sv2, 5).
+arc(sv3, 4, pop, [], []).
+
+arc(sv3, 5, push, savv, 5).
+arc(sv3, 5, push, sp, 5).
+arc(sv3, 5, pop, [], []).
+arc(sv3, 5, push, sn, 6).
+
+arc(sv3, 6, cat, cong, 6).
+arc(sv3, 6, pop, [], []).
+arc(sv3, 6, push, sv3, 7).
+arc(sv3, 6, push, sn, 7).
+
+arc(sv3, 7, pop, [], []).
+
+/***************
+RETE sp
+***************/
+narc(sp, 1, cat, in, 1).
+narc(sp, 1, cat, ccom, 2).
+narc(sp, 1, cat, p, 2).
+narc(sp, 1, cat, php, 2).
+narc(sp, 1, cat, part, 4).
+
+narc(sp, 2, cat, p, 3).
+narc(sp, 2, cat, part, 3).
+narc(sp, 2, cat, avvl, 4).
+narc(sp, 2, cat, conjl, 7).
+narc(sp, 2, push, f2, 6).
+narc(sp, 2, push, sv2, 6).
+narc(sp, 2, push, sn, 5).
+narc(sp, 2, jmp, [], 4).
+
+narc(sp, 3, push, f2, 6).
+narc(sp, 3, push, sn, 3).
+narc(sp, 3, push, sv3, 7).
+narc(sp, 3, pop, [], []).
+
+narc(sp, 4, push, f2, 6).
+narc(sp, 4, push, sn, 5).
+narc(sp, 4, push, sa, 4).
+
+narc(sp, 5, push, sv2, 6).
+narc(sp, 5, push, f2, 6).
+narc(sp, 5, push, fint, 6).
+narc(sp, 5, push, sv3, 6).
+narc(sp, 5, push, sp, 6).
+narc(sp, 5, pop, [], []).
+
+narc(sp, 6, push, fc, 6).
+narc(sp, 6, push, fp, 6).
+narc(sp, 6, pop, [], []).
+
+narc(sp, 7, pop, [], []).
+
+
+/***************
+RETE spd
+***************/
+narc(spd, 1, cat, in, 1).
+narc(spd, 1, cat, pd, 2).
+
+narc(spd, 2, cat, p, 3).
+narc(spd, 2, push, f2, 6).
+narc(spd, 2, push, fint, 6).
+narc(spd, 2, push, sn, 5).
+narc(spd, 2, push, sq, 5).
+narc(spd, 2, jmp, [], 4).
+
+narc(spd, 3, push, f2, 6).
+narc(spd, 3, push, sn, 3).
+narc(spd, 3, push, sq, 3).
+narc(spd, 3, push, sv3, 7).
+narc(spd, 3, pop, [], []).
+
+narc(spd, 4, push, f2, 6).
+narc(spd, 4, push, sn, 5).
+narc(spd, 4, push, sq, 5).
+narc(spd, 4, push, sa, 4).
+narc(spd, 4, jmp, [], 5).
+
+narc(spd, 5, push, sv2, 6).
+narc(spd, 5, push, f2, 6).
+narc(spd, 5, push, fint, 6).
+narc(spd, 5, push, sv3, 6).
+narc(spd, 5, pop, [], []).
+
+narc(spd, 6, push, fc, 6).
+narc(spd, 6, push, fp, 6).
+narc(spd, 6, pop, [], []).
+
+narc(spd, 7, pop, [], []).
+
+/***************
+RETE spda
+***************/
+narc(spda, 1, cat, in, 1).
+narc(spda, 1, cat, pda, 2).
+
+narc(spda, 2, cat, p, 3).
+narc(spda, 2, push, f2, 6).
+narc(spda, 2, push, sn, 5).
+narc(spda, 2, push, sq, 5).
+narc(spda, 2, jmp, [], 4).
+
+narc(spda, 3, push, f2, 6).
+narc(spda, 3, push, sn, 3).
+narc(spda, 3, push, sq, 3).
+narc(spda, 3, push, sv3, 7).
+narc(spda, 3, pop, [], []).
+
+narc(spda, 4, push, f2, 6).
+narc(spda, 4, push, sn, 5).
+narc(spda, 4, push, sq, 5).
+narc(spda, 4, push, sa, 4).
+narc(spda, 4, jmp, [], 5).
+
+narc(spda, 5, push, sv2, 6).
+narc(spda, 5, push, f2, 6).
+narc(spda, 5, push, fint, 6).
+narc(spda, 5, push, sv3, 6).
+narc(spda, 5, pop, [], []).
+
+narc(spda, 6, push, fc, 6).
+narc(spda, 6, push, fp, 6).
+narc(spda, 6, pop, [], []).
+
+narc(spda, 7, pop, [], []).
+
+/***************
+RETE sa
+***************/
+narc(sa, 1, cat, neg, 2).
+narc(sa, 1, cat, ind, 4).
+narc(sa, 1, cat, ccom, 4).
+narc(sa, 1, cat, in, 2).
+narc(sa, 1, cat, intn, 2).
+narc(sa, 1, cat, grad, 2).
+narc(sa, 1, cat, pref, 2).
+narc(sa, 1, cat, ag, 5). 
+narc(sa, 1, cat, agn, 6). 
+narc(sa, 1, cat, ag, 5).
+
+narc(sa, 2, cat, ag, 3).
+
+narc(sa, 3, pop, [], []).
+
+narc(sa, 4, cat, in, 4).
+narc(sa, 4, cat, ag, 5).
+narc(sa, 4, cat, agn, 6).
+narc(sa, 4, cat, num, 5).
+
+narc(sa, 5, cat, cong, 4).
+narc(sa, 5, cat, congf, 4).
+narc(sa, 5, cat, ag, 6).
+narc(sa, 5, push, sa, 6).
+narc(sa, 5, push, sn, 6).
+narc(sa, 5, push, fac, 6).
+narc(sa, 5, push, spd, 6).
+narc(sa, 5, push, spda, 6).
+narc(sa, 5, push, sp, 6).
+narc(sa, 5, pop, [], []).
+
+narc(sa, 6, pop, [], []).
+
+narc(sa, 7, cat, ag, 6).
+
+/***************
+RETE sv2
+***************/
+narc(sv2, 1, cat, p, 2).
+narc(sv2, 1, cat, neg, 1).
+narc(sv2, 1, cat, pt, 5).
+narc(sv2, 1, cat, ausei, 6).
+narc(sv2, 1, cat, ausai, 6).
+narc(sv2, 1, cat, vsf, 6).
+narc(sv2, 1, cat, vit, 8).
+narc(sv2, 1, cat, vci, 3).
+narc(sv2, 1, cat, viin, 8).
+narc(sv2, 1, cat, vbt, 8).
+narc(sv2, 1, cat, vbc, 3).
+narc(sv2, 1, cat, vbin, 8).
+narc(sv2, 1, cat, pt, 11).
+
+narc(sv2, 2, cat, avv, 2).
+narc(sv2, 2, cat, vsup, 2).
+narc(sv2, 2, cat, ausd, 3).
+narc(sv2, 2, cat, ausei, 6).
+narc(sv2, 2, cat, ausai, 6).
+narc(sv2, 2, cat, vsf, 6).
+narc(sv2, 2, cat, vit, 3).
+narc(sv2, 2, cat, viin, 3).
+narc(sv2, 2, cat, vbt, 8).
+narc(sv2, 2, cat, vbc, 3).
+narc(sv2, 2, cat, vbin, 8).
+
+narc(sv2, 3, push, fint, 8).
+narc(sv2, 3, push, sn, 4).
+narc(sv2, 3, push, sp, 4).
+narc(sv2, 3, push, spd, 4).
+narc(sv2, 3, cat, clit, 3).
+narc(sv2, 3, cat, cong, 7).
+narc(sv2, 3, pop, [], []).
+
+narc(sv2, 4, cat, cong, 4).
+narc(sv2, 4, push, sp, 4).
+narc(sv2, 4, jmp, [], 5).
+narc(sv2, 4, pop, [], []).
+narc(sv2, 4, push, fp, 17).
+narc(sv2, 4, push, fs, 17).
+narc(sv2, 4, push, sn, 17).
+
+narc(sv2, 5, cat, neg, 5).
+narc(sv2, 5, cat, qc, 5).
+narc(sv2, 5, cat, qp, 5).
+narc(sv2, 5, cat, vc, 6).
+narc(sv2, 5, cat, ausd, 6).
+narc(sv2, 5, cat, ausai, 6).
+narc(sv2, 5, cat, ausei, 6).
+narc(sv2, 5, cat, vbt, 6).
+narc(sv2, 5, cat, vbin, 6).
+narc(sv2, 5, cat, vit, 6).
+narc(sv2, 5, cat, viin, 6).
+narc(sv2, 5, cat, vprog, 6).
+narc(sv2, 5, cat, vsup, 5).
+
+narc(sv2, 6, cat, cong, 5).
+narc(sv2, 6, cat, ausep, 6).
+narc(sv2, 6, cat, vppc, 6).
+narc(sv2, 6, cat, vppin, 6).
+narc(sv2, 6, cat, vppt, 6).
+narc(sv2, 6, cat, v, 6).
+narc(sv2, 6, cat, vb, 6).
+narc(sv2, 6, cat, vin, 6).
+narc(sv2, 6, cat, vt, 6).
+narc(sv2, 6, push, sa, 7).
+narc(sv2, 6, push, sn, 7).
+narc(sv2, 6, push, sp, 7).
+narc(sv2, 6, pop, [], []).
+
+narc(sv2, 7, push, savv, 4).
+narc(sv2, 7, push, fac, 4).
+narc(sv2, 7, push, sp, 4).
+narc(sv2, 7, pop, [], []).
+
+narc(sv2, 8, cat, clit, 9).
+narc(sv2, 8, push, fs, 9).
+narc(sv2, 8, push, sn, 9).
+narc(sv2, 8, pop, [], []).
+
+narc(sv2, 9, push, fs, 4).
+narc(sv2, 9, push, sv5, 4).
+narc(sv2, 9, push, sp, 4).
+narc(sv2, 9, pop, [], []).
+
+narc(sv2, 11, cat, vsup, 5).
+
+narc(sv2, 12, push, savv, 13).
+
+narc(sv2, 13, push, fs, 14).
+
+narc(sv2, 14, cat, vit, 15).
+narc(sv2, 14, cat, viin, 15).
+
+narc(sv2, 15, push, fs, 16).
+
+narc(sv2, 16, pop, [], []).
+
+narc(sv2, 17, pop, [], []).
+narc(sv2, 17, push, fc, 18).
+
+narc(sv2, 18, pop, [], []).
+
+/***************
+RETE sv3
+***************/
+narc(sv3, 1, cat, ppas, 2).
+narc(sv3, 1, cat, ppre, 3).
+narc(sv3, 1, cat, vppc, 2).
+narc(sv3, 1, cat, vppin, 2).
+narc(sv3, 1, cat, vppt, 2).
+narc(sv3, 1, cat, vprt, 2).
+narc(sv3, 1, cat, vprin, 2).
+narc(sv3, 1, cat, avv, 1).
+
+narc(sv3, 2, cat, avv, 2).
+narc(sv3, 2, push, sp, 3).
+narc(sv3, 2, jmp, [], 3).
+
+narc(sv3, 3, cat, clit, 4).
+narc(sv3, 3, push, sp, 3).
+narc(sv3, 3, push, sn, 4).
+narc(sv3, 3, jmp, [], 4).
+narc(sv3, 3, push, sv2, 4).
+
+narc(sv3, 4, cat, cong, 4).
+narc(sv3, 4, push, savv, 4).
+narc(sv3, 4, push, sp, 4).
+narc(sv3, 4, push, fac, 5).
+narc(sv3, 4, push, sn, 5).
+narc(sv3, 4, push, sv2, 5).
+narc(sv3, 4, pop, [], []).
+
+narc(sv3, 5, push, savv, 5).
+narc(sv3, 5, push, sp, 5).
+narc(sv3, 5, pop, [], []).
+narc(sv3, 5, push, sn, 6).
+
+narc(sv3, 6, cat, cong, 6).
+narc(sv3, 6, pop, [], []).
+narc(sv3, 6, push, sv3, 7).
+narc(sv3, 6, push, sn, 7).
+
+narc(sv3, 7, pop, [], []).
+
+/***************
+RETE sn
+***************/
+narc(sn, 1, cat, in, 1).
+narc(sn, 1, cat, neg, 1).
+narc(sn, 1, cat, i, 13).
+narc(sn, 1, cat, art, 1).
+narc(sn, 1, cat, ag, 18).
+narc(sn, 1, cat, avv, 18).
+narc(sn, 1, cat, grad, 18).
+narc(sn, 1, cat, conjl, 1).
+narc(sn, 1, cat, ccom, 1).
+narc(sn, 1, cat, abbr, 4).
+narc(sn, 1, cat, qc, 13).
+narc(sn, 1, cat, expl, 17).
+narc(sn, 1, cat, relin, 17).
+narc(sn, 1, cat, relob, 17).
+narc(sn, 1, cat, qp, 5).
+narc(sn, 1, cat, poss, 10).
+narc(sn, 1, cat, per_cento, 4).
+narc(sn, 1, cat, num, 12).
+narc(sn, 1, cat, date, 18).
+narc(sn, 1, cat, ind, 4).
+narc(sn, 1, cat, inta, 4).
+narc(sn, 1, cat, intal, 4).
+narc(sn, 1, cat, intn, 4).
+narc(sn, 1, cat, intnl, 4).
+narc(sn, 1, cat, qd, 4).
+narc(sn, 1, cat, q, 13).
+narc(sn, 1, cat, noun, 14).
+narc(sn, 1, cat, pers, 14).
+narc(sn, 1, cat, dim, 5).
+narc(sn, 1, cat, deit, 5).
+narc(sn, 1, cat, pron, 12).
+narc(sn, 1, cat, prona, 2).
+narc(sn, 1, cat, prone, 2).
+narc(sn, 1, cat, pronl, 2).
+narc(sn, 1, cat, pronm, 2).
+narc(sn, 1, cat, equal, 2).
+narc(sn, 1, cat, doll, 1).
+narc(sn, 1, cat, euro, 1).
+narc(sn, 1, cat, pound, 1).
+narc(sn, 1, cat, slash, 2).
+narc(sn, 1, cat, parag, 2).
+narc(sn, 1, cat, n, 5).
+narc(sn, 1, cat, nc, 7).
+narc(sn, 1, cat, nf, 7).
+narc(sn, 1, cat, ng, 4).
+narc(sn, 1, cat, nh, 3).
+narc(sn, 1, cat, fw, 3).
+narc(sn, 1, cat, nw, 3).
+narc(sn, 1, cat, nt, 4).
+narc(sn, 1, cat, np, 3).
+narc(sn, 1, cat, npro, 3).
+narc(sn, 1, cat, agn, 5).
+%narc(sn, 1, cat, vgin, 5).
+%narc(sn, 1, cat, vgt, 5).
+%narc(sn, 1, cat, vppin, 5).
+%narc(sn, 1, cat, vppt, 5).
+%narc(sn, 1, cat, vprt, 5).
+%narc(sn, 1, cat, vprin, 5).
+
+narc(sn, 2, push, f2, 17).
+narc(sn, 2, push, sv3, 17).
+narc(sn, 2, pop, [], []).
+narc(sn, 2, jmp, [], 14).
+
+narc(sn, 3, cat, cong, 3).
+narc(sn, 3, cat, n, 5).
+narc(sn, 3, cat, nw, 5).
+narc(sn, 3, cat, ag, 18).
+narc(sn, 3, cat, fw, 5).
+narc(sn, 3, cat, nc, 5).
+narc(sn, 3, cat, nh, 4).
+narc(sn, 3, cat, ng, 4).
+narc(sn, 3, cat, nt, 5).
+narc(sn, 3, cat, np, 5).
+narc(sn, 3, cat, npro, 5).
+narc(sn, 3, cat, nf, 5).
+narc(sn, 3, jmp, [], 5).
+
+narc(sn, 4, cat, nf, 11).
+narc(sn, 4, cat, num, 4).
+narc(sn, 4, cat, date, 4).
+narc(sn, 4, cat, in, 4).
+narc(sn, 4, cat, abbr, 5).
+narc(sn, 4, push, fp, 14).
+narc(sn, 4, push, sq, 4).
+narc(sn, 4, cat, poss, 10).
+narc(sn, 4, cat, ag, 18).
+narc(sn, 4, cat, q, 18).
+narc(sn, 4, cat, vgt, 5).
+narc(sn, 4, cat, vppt, 5).
+narc(sn, 4, cat, vgin, 5).
+narc(sn, 4, cat, vppin, 5).
+narc(sn, 4, cat, avv, 4).
+narc(sn, 4, cat, n, 5).
+narc(sn, 4, cat, nh, 3).
+narc(sn, 4, cat, nc, 5).
+narc(sn, 4, cat, ng, 5).
+narc(sn, 4, cat, fw, 5).
+narc(sn, 4, cat, nt, 5).
+narc(sn, 4, cat, nf, 5).
+narc(sn, 4, cat, np, 3).
+narc(sn, 4, cat, npro, 3).
+narc(sn, 4, cat, agn, 5).
+narc(sn, 4, cat, pron, 6).
+narc(sn, 4, cat, ppas, 4).
+narc(sn, 4, cat, ppre, 4).
+narc(sn, 4, cat, cong, 18).
+narc(sn, 4, jmp, [], 5).
+
+narc(sn, 5, push, spd, 8).
+narc(sn, 5, cat, ag, 18).
+%narc(sn, 5, cat, agn, 5).
+narc(sn, 5, cat, date, 5).
+narc(sn, 5, cat, abbr, 5).
+narc(sn, 5, cat, in, 4).
+narc(sn, 5, push, f2, 8).
+narc(sn, 5, cat, np, 6).
+narc(sn, 5, cat, npro, 6).
+narc(sn, 5, cat, nt, 12).
+narc(sn, 5, cat, n, 6).
+narc(sn, 5, cat, nf, 6).
+narc(sn, 5, cat, nh, 3).
+narc(sn, 5, cat, num, 6).
+narc(sn, 5, push, sv3, 8).
+narc(sn, 5, push, sv2, 14).
+narc(sn, 5, cat, ccom, 5).
+narc(sn, 5, cat, cong, 18).
+narc(sn, 5, cat, congf, 18).
+narc(sn, 5, push, fp, 14).
+narc(sn, 5, cat, avvl, 17).
+narc(sn, 5, jmp, [], 7). 
+
+narc(sn, 6, cat, n, 6). 
+narc(sn, 6, cat, num, 8).
+narc(sn, 6, push, sv3, 8).
+narc(sn, 6, push, sv2, 14).
+%narc(sn, 6, push, sa, 11).
+narc(sn, 6, cat, nc, 6). 
+narc(sn, 6, cat, ng, 6). 
+narc(sn, 6, cat, np, 6). 
+narc(sn, 6, cat, nf, 6). 
+narc(sn, 6, cat, nh, 6).
+narc(sn, 6, cat, nt, 6).
+narc(sn, 6, cat, n, 6).
+narc(sn, 6, cat, abbr, 5).
+narc(sn, 6, cat, avvl, 17).
+narc(sn, 6, jmp, [], 11).
+
+%narc(sn, 7, push, sa, 8).
+narc(sn, 7, push, spd, 8).
+narc(sn, 7, pop, [], []).
+
+narc(sn, 8, jmp, [], 11).
+
+narc(sn, 10, cat, poss, 10).
+narc(sn, 10, cat, num, 18).
+narc(sn, 10, cat, ag, 10).
+narc(sn, 10, cat, q, 10).
+narc(sn, 10, cat, n, 10).
+narc(sn, 10, cat, nf, 11).
+narc(sn, 10, cat, nh, 10).
+narc(sn, 10, cat, nt, 11).
+narc(sn, 10, cat, ng, 10).
+narc(sn, 10, cat, pron, 12).
+narc(sn, 10, cat, avv, 10).
+narc(sn, 10, cat, vgin, 5).
+narc(sn, 10, cat, vgt, 5).
+narc(sn, 10, cat, vppin, 5).
+narc(sn, 10, cat, vppt, 5).
+narc(sn, 10, cat, vprt, 5).
+narc(sn, 10, cat, vprin, 5).
+narc(sn, 10, push, f2, 15).
+narc(sn, 10, jmp, [], 11).
+
+%narc(sn, 11, push, sa, 14).
+narc(sn, 11, push, spd, 14).
+narc(sn, 11, push, sv2, 14).
+narc(sn, 11, push, f2, 15).
+narc(sn, 11, push, fac, 14).
+narc(sn, 11, jmp, [], 14).
+narc(sn, 11, push, fp, 14).
+
+narc(sn, 12, cat, cong, 13).
+narc(sn, 12, cat, num, 12).
+narc(sn, 12, push, spd, 12).
+narc(sn, 12, cat, ag, 12).
+narc(sn, 12, cat, q, 12).
+narc(sn, 12, cat, qc, 13).
+narc(sn, 12, cat, n, 6).
+narc(sn, 12, cat, ng, 6).
+narc(sn, 12, cat, nf, 6).
+narc(sn, 12, cat, nh, 6).
+narc(sn, 12, cat, nt, 16).
+narc(sn, 12, pop, [], []).
+narc(sn, 12, jmp, [], 14).
+
+narc(sn, 13, cat, art, 10).
+narc(sn, 13, cat, deit, 11).
+narc(sn, 13, cat, ag, 5).
+narc(sn, 13, cat, n, 11).
+narc(sn, 13, cat, nh, 11).
+narc(sn, 13, cat, nf, 11).
+narc(sn, 13, cat, nt, 11).
+narc(sn, 13, cat, ng, 11).
+narc(sn, 13, jmp, [], 11).
+
+narc(sn, 14, cat, ag, 14).
+narc(sn, 14, push, spd, 14).
+narc(sn, 14, push, f2, 15).
+narc(sn, 14, push, f3, 15).
+narc(sn, 14, pop, [], []).
+narc(sn, 14, jmp, [], 16).
+narc(sn, 14, push, sv3, 15).
+
+narc(sn, 15, push, spd, 17).
+narc(sn, 15, pop, [], []).
+
+narc(sn, 16, push, sv3, 17).
+narc(sn, 16, push, sv2, 17).
+narc(sn, 16, pop, [], []).
+
+narc(sn, 17, pop, [], []).
+
+narc(sn, 18, cat, ag, 18).
+narc(sn, 18, cat, q, 18).
+narc(sn, 18, cat, cong, 18).
+narc(sn, 18, cat, in, 18). 
+narc(sn, 18, cat, n, 5). 
+narc(sn, 18, cat, num, 12).
+narc(sn, 18, cat, nc, 5). 
+narc(sn, 18, cat, ng, 5). 
+narc(sn, 18, cat, np, 5). 
+narc(sn, 18, cat, nf, 17). 
+narc(sn, 18, cat, nh, 5).
+narc(sn, 18, cat, nt, 12).
+
+/***************
+RETE sq
+***************/
+narc(sq, 1, cat, in, 2).
+narc(sq, 1, cat, q, 3).
+narc(sq, 1, cat, qo, 3).
+narc(sq, 1, cat, qc, 3).
+narc(sq, 1, cat, qd, 3).
+narc(sq, 1, cat, qp, 3).
+narc(sq, 1, cat, ccom, 3).
+
+narc(sq, 2, push, sp, 4).
+
+narc(sq, 3, push, sn, 4).
+narc(sq, 3, cat, qo, 4).
+narc(sq, 3, pop, [], []).
+narc(sq, 3, cat, in, 4).
+
+narc(sq, 4, pop, [], []).
+
+collect_np(Cats, NFeats, Words):-
+     build_allnps(Cats, NP, Main, Feats, NFeats, Words),
+     !.
+
+build_allnps(Cats, NP, Mains, Feats, NFeats, Words):-
+     build_nps(Cats, NP, Mains, Words),
+     (Feats\=[],
+      append(Mains, Feats, NFeats)
+      ;
+       NFeats=Mains),
+     !.
+
+build_nps([], VP, [], []):-!.
+build_nps(Cats, NP, AllVP, Allw):-
+   build_np(Cats, NP, M, R, Fword),
+   build_nps(R, NNP, Main, Words),
+   (var(M),  
+    AllVP=[];
+   (M=sn,
+    reverse(NP,[W-nt-_|Rest]),
+    \+ nnt(W),
+%    tpl(W,	['n:t:m']),
+    (Rest=[];Rest\=[],on(W-P-_,Rest),P\=poss),
+    append([savv-NP], Main, AllVP)
+    ;
+    M=sv3,
+    reverse(NP,[W-Vpp-_]),
+    verbs_of_saying(W),
+    append([ibar-NP], Main, AllVP)
+    ;
+    append([M-NP], Main, AllVP))
+   ),
+   append(Fword, Words, Allw),
+   !.
+
+try_other_nets([Net-NodeFrom-NodeTo],[N1-No-To],Cats, Rest, Cat, Words, VP):-
+    findall(Nt-Nf-Not,
+    try_vcats(Nt, Nf, O, Cat, Lab, Not, Nt), AllNets),
+    remove(Net-NodeFrom-NodeTo, AllNets, NewNets),
+    on(N1-F1-No, NewNets),
+    continuan(Cat,Cats, N1, No, To, VP, Rest, Words),
+    N1\=Net,
+    !.
+
+build_np([], VP, M, [], []):-!.
+
+build_np([W-Cat-P|Cats], Costs, Nnet, ACats, Www):-
+   try_vcats(Net, NodeFrom, Op, Cat, Label, NodeTo, Net),
+   Op\=pop,
+   continuan(Cat, Cats, Net, NodeTo, To, VP, Rest, Words),
+   (
+     (VP\=[];    VP=[], NodeTo\=1),
+    sequent(Net, To, Rest, Lab, NoTo, Main, ACats, Word),
+    append([W-Label], Words, Ww),
+    append(Ww, Word, Www),     
+    append([W-Label-Net], VP, Vps),
+    append(Vps, Main, Costs) , Nnet=Net
+     ;
+    VP=[], NodeTo=1,
+     try_other_nets([Net-NodeFrom-NodeTo],[Nt-From-NTo],Cats, NRest, Cat, NWords, Vpp),
+    sequent(Nt, From, NRest, Lab, NTo, Main, ACats, Word),
+    append([W-Label], NWords, Ww),
+    append(Ww, Word, Www),     
+    append([W-Label-Nt], Vpp, Vps),
+    append(Vps, Main, Costs), Nnet=Nt
+    ) ,
+   !.
+
+build_np([W-vgin-P, W1-n-P1|Cats], VP, Net, R, Www):-
+    try_vcat(sn, NodeFrom, Op, ag, Label, NodeTo, Net), 
+   continuav(ing,[W1-n-P1|Cats], Net, To, Fr, VP1, R, Words),
+   append([W-ag-Net], VP1, VP),     
+   append([W-ag], Words, Www),     
+    !.
+
+build_np([that-pk-P, W1-punto-P1|Cats], VP, Net, R, Www):-
+    try_vcat(sn, NodeFrom, Op, deit, Label, NodeTo, Net), 
+   continuav(nil,[W1-punto-P1|Cats], Net, To, Fr, VP1, R, Words),
+   append([that-deit-Net], VP1, VP),     
+   append([that-deit], Words, Www),     
+    !.
+
+build_np([W-Cat-P, to-pt-P1, W1-V-P1|Cats], VP, Net, R, Www):-
+   coplbh(W),
+   comparc(Net, 1, Op, Cat, To),
+   Net\=sn, Net=ibar,
+   continuav(nil,[W1-V-P1|Cats], Net, To, Fr, VP1, R, Words),
+   append([W-Cat-Net], VP1, VP),     
+   append([W-Cat], Words, Www),     
+   !.
+
+
+build_np([W-Cat-P, W1-V-P1|Cats], VP, Net, R1, Www):-
+   coplbh(W),
+   V=par,
+   continuav(nil,Cats, Nett, To, Fr, VP1, R, Words),
+   (nonvar(Nett), Net=Nett
+   ;
+   var(Nett),Net=ibar),
+   append([W-Cat-Net], VP1, VP),     
+   append([W-Cat], Words, Www),
+   append([W1-V-P1],R,R1),
+   !.
+   
+build_np([W-Cat-P,W1-Cat1-P1|Cats], VP, ibar, R, Www):-
+    coplbh(W),
+    Cat\=p,
+    stringof([V,U|_],Cat1), (V=v;V=a,U=u),
+    stringof(Gerund,W1),
+    (reverse(Gerund, [g,n,i|_]), Cat1\=aueg
+    ;
+    on('_',Gerund),
+    recover_descs(W1,Ws),
+    on(Verb,Ws),
+    stringof(Gerund1,Verb),
+    reverse(Gerund1, [g,n,i|_])
+    ),
+   comparc(Net, 1, Op, vgin, To),
+   Net\=sn,
+   continuav(nil,Cats, Net, To, Fr, VP1, R, Words),
+   append([W1-Cat1-ibar], VP1, VP0),     
+   append([W1-Cat1], Words, Ww0),     
+   append([W-Cat-ibar],VP0,VP),
+   append([W-Cat], Ww0, Www),     
+   !.
+
+build_np([W-Cat-P|Cats], VP, Net, R, Www):-
+    Cat\=p,
+    stringof([V,U|_],Cat), (V=v;V=a,U=u),
+    stringof(Gerund,W),
+    (reverse(Gerund, [g,n,i|_])
+    ;
+    on('_',Gerund),
+    recover_descs(W,Ws),
+    on(Verb,Ws),
+    stringof(Gerund1,Verb),
+    reverse(Gerund1, [g,n,i|_])
+    ),
+   comparc(Net, 1, Op, vgin, To),
+   Net\=sn,
+   continuav(nil,Cats, Net, To, Fr, VP1, R, Words),
+   append([W-Cat-Net], VP1, VP),     
+   append([W-Cat], Words, Www),     
+   !.
+
+build_np([W-Cat-P|Cats], VP, Net1, R, Www):-
+   \+ coplbh(W),
+   comparc(Net, 1, Op, Cat, To),
+   Net\=sn, Cat\=v,
+    participio(W,Lem,J,K),
+    Lem\=W,
+    disaccess_wsj(W,Best),
+    (Best=vbn,
+     Cat1=vppt, Net1=vcomp, Cos=sv3
+     ;
+     Best=vbd,
+     Cat1=vt, Net1=ibar, Cos=ibar),
+    Www=[W-Cat1],  
+    VP=[W-Cat1-Cos], R=Cats,
+    !.
+
+build_np([W-Cat-P|Cats], VP, Net, R, Www):-
+   comparc(Net, 1, Op, Cat, To),
+   Net\=sn, Cat\=v,
+   continuav(nil,Cats, Net, To, Fr, VP1, R, Words),
+   (evalpp(W,VP1, Words,VP11, Words1),
+    append([W-Cat-Net], VP11, VP),     
+    append([W-Cat], Words1, Www)
+    ;
+    Cat=pt, Net=sv2,
+    on(_-C1-sv2,VP1),
+    append([W-Cat-Net], VP1, VP),     
+    append([W-Cat], Words, Www)
+    ;
+    (support(W);W=do;W=does;W=did),
+    append([W-Cat-Net], VP1, VP),     
+    append([W-Cat], Words, Www)
+    ;
+    (check_all_verbs(Cat);Cat=neg;Cat=av;Cat=avv),
+    Www=[W-Cat],  VP=[W-Cat-Net], R=Cats
+    ),     
+   !.
+
+build_np([W-Cat-P, W1-V-P1|Cats], VP, Net, R, Www):-
+   coplbh(W),
+   comparc(Net, 1, Op, Cat, To),
+   Net\=sn, Net=ibar,
+   (
+    (support(W1);coplbh(W1)),
+    continuav(nil,[W1-V-P1|Cats], Net, To, Fr, VP1, R, Words),
+    append([W-Cat-Net], VP1, VP),     
+    append([W-Cat], Words, Www)
+    ;
+    Www=[W-Cat], VP=[W-Cat-Net], R=[W1-V-P1|Cats]),     
+   !.
+
+build_np([W-Cat-P|Cats], VP, Net, R, Words):-
+   comparc(Net, 1, Op, Cat, To),
+   Cat=v,
+   continuav(nil,[W-Cat-P|Cats], Net, To, Fr, VP, R, Words),
+   !.
+
+build_np([W-Cat-P|Cats], [], M, Cats, [W-Label]):-
+   try_vcats(Net, NodeFrom, Op, Cat, Label, NodeTo, Net),
+   Op=pop,
+   !.
+   
+build_np([W-cong-P|Cats], [W-cong-fc], fc, Cats, [W-cong]):-
+   !.
+build_np([W-cosu-P|Cats], [W-cosu-fs], fs, Cats, [W-cosu]):-
+   !.
+build_np([W-rel-P|Cats], [W-rel-f2], f2, Cats, [W-rel]):-
+   !.
+build_np([W-relob-P|Cats], [W-relob-f2], f2, Cats, [W-relob]):-
+   !.
+build_np([W-pk-P|Cats], [W-pk-fac], fac, Cats, [W-pk]):-
+   !.
+build_np([W-w-P|Cats], [W-w-fint], fint, Cats, [W-int]):-
+   !.
+build_np([W-int-P|Cats], [W-int-fint], fint, Cats, [W-int]):-
+   !.
+build_np([W-neg-P|Cats], [W-neg-savv], savv, Cats, [W-neg]):-
+   !.
+build_np([W-punto-P|Cats], [W-punto-cp], cp, Cats, [W-punto]):-
+   !.
+build_np([W-Cat-P|Cats], [W-Cat-cp], cp, Cats, [W-Cat]):-
+   !.
+/*
+build_np([W-Cat-P|Cats], VP, M, R, Words):-
+   build_np(Cats, VP, M, R, Words),!.
+*/
+
+continuav(Ing,[W-vgin-P, W1-n-P1|Cats], Net, NodeFrom, To, [W-Label-Net,W1-Label1-Net|VP], Rest, [W-Label,W1-Label1|Words]):-
+    try_vcat(sn, NodeFrom, Op, ag, Label, NodeTo, Net), 
+    try_vcat(sn, NodeTo, Op, n, Label1, NodeTo1, Net), 
+    continuan(n,Cats, Net, NodeTo1, To, VP, Rest, Words).
+
+continuav(Ing,[W-vgt-P, W1-n-P1|Cats], Net, NodeFrom, To, [W-Label-Net,W1-Label1-Net|VP], Rest, [W-Label,W1-Label1|Words]):-
+    try_vcat(sn, NodeFrom, Op, ag, Label, NodeTo, Net), 
+    try_vcat(sn, NodeTo, Op, n, Label1, NodeTo1, Net), 
+    continuan(n,Cats, Net, NodeTo1, To, VP, Rest, Words).
+
+continuav(Ing,[A-vsup-1,W-Cat-P|Cats], Net, NodeFrom, To, [A-vsup-ibar,W-Label-Net|VP], Rest, [A-vsup,W-Label|Words]):-
+    (A=going_to;A=set_to),
+    trycat(Net, 14, Op, Cat, Label, NodeTo, Net), 
+    continuav(nil,Cats, Net, NodeTo, To, VP, Rest, Words).
+
+continuav(Ing,[W-Cat-P|Cats], Net, NodeFrom, To, [W-Label-Net|VP], Rest, [W-Label|Words]):-
+    Ing\=ing,
+    (check_all_verbs(Cat);
+      (Cat=neg;Cat=av;Cat=avv;Cat=in),
+       Cats=[_-Cat1-_|_], 
+       (check_all_verbs(Cat1);Cat1=av;Cat1=avv;Cat1=in)
+       ),
+    trycat(Net, NodeFrom, Op, Cat, Label, NodeTo, Net), 
+    continuav(nil,Cats, Net, NodeTo, To, VP, Rest, Words).
+
+continuav(Ing,[W-par-P|Cats], Net, NodeTo, To, [W-par-Net|VP], Rest, [W-par|Words]):-
+    continuav(nil,Cats, Net, NodeTo, To, VP, Rest, Words).
+
+continuav(Ing,[W-Cat-P|Cats], NNet, NodeFrom, To, VP, Rest, Words):-
+    trycat(Net, NodeFrom, Op, Cat, Label, NodeTo, Net),
+    NNet\=ibar, Net\=ibar, Cat\=par, Cat\=punt,
+    \+ mainfunc(NNet),
+    continuan(Cat,[W-Cat-P|Cats], Net, NodeTo, To, VP, Rest, Words).
+
+continuav(Ing,Cats, Net, To, To, [], Cats, []):-
+    !.
+
+mainfunc(f).
+mainfunc(fc).
+mainfunc(fs).
+mainfunc(fint).
+mainfunc(fp).
+mainfunc(f3).
+mainfunc(f2).
+mainfunc(dirsp).
+mainfunc(fac).
+mainfunc(cp).
+
+
+sequent(Net, NodeFrom, [W-Cat-P|Cats], Label, NodeTo, [], [W-Cat-P|Cats], []):-
+    W\=of,
+    trycat(Net, NodeFrom, Op, Cat, Label, NodeTo, NNet),
+    !. 
+  
+sequent(Net, NodeFrom, [W-Cat-P|Cats], Label, NodeTo, [], [W-Cat-P|Cats], []):-
+    W\=of,
+    trycat(NNet, NodeF, Op, Cat, Label, NodeTo, NNet),
+    NNet\=spd, NNet\=sp,
+%    NNet\=spda,
+    !. 
+
+/*
+sequent(Net, NodeFrom, [W-Cat-P|Cats], Label, NodeTo, [mod-Mod], NRest, [W-Label|RWords]):-
+    (W=of;W=from),
+    trycat(NNet, NodeF, Op, Cat, Label, NodeTo, NNet),
+    (NNet=spd; NNet=sp;NNet=spda),
+    continuan(Cat,Cats, Net, 1, Too, VP, Rest, Words),
+    (Rest\=[],
+     embedded_mod(Net, VP, Rest, [W-Label-NNet], NToo, Mod, NRest, RWords)
+      ;
+     VP\=[],
+     append([W-Label-NNet], VP, Mod), NRest=Rest, RWords=Words),
+    !. 
+*/
+sequent(Net, NodeFrom, Cats, Label, NodeTo, [], Cats, []).
+
+
+embedded_mod(Net, VP, [W-Cat-P|Cats], Labl, NoTo, NMod, NRest, RWords):-
+    (W=of;W=from),
+     sequent(Net, To, [W-Cat-P|Cats], Lab, NoTo, Main, NRest, Word),
+     Main=[mod-Mod],
+     Mod\=[],
+     VP\=[],
+     append(Labl, VP, FMod),
+     append(FMod, [mod-Mod], NMod),
+     !.
+
+trycostv(Net, NodeFrom, push, Cats):-
+   findall(Label-NodeTo, arc(Net, NodeFrom, push, Label, NodeTo), Cats).
+
+try_vcats(Net, NodeFrom, Op, Cats, Cats, NodeTo, Net):-
+   legalnpush(Cats, Net),
+   trycat(Net, NodeFrom, Op, Cats, Cats, NodeTo, Net).
+
+trycatsv(Net, NodeFrom, Op, Cats, Cats, NodeTo, Net):-
+   legal_push(Cats, Net).
+
+try_vcat(Net, NodeFrom, Op, Cats, Cats, NodeTo, Net):-
+   comp_varc(Net, NodeFrom, Op, Cats, NodeTo).
+
+trycat(Net, NodeFrom, Op, Cats, Cats, NodeTo, NNet):-
+   comp_varc(Net, NodeFrom, Op, Cats, NodeTo),
+   trycatsv(WNet, 1, cat, Cats, Cats, To, NNet),
+   !.
+
+trycat(Net, NodeFrom, Op, Cats, Cats, NodeTo, NNet):-
+   comp_arc(NNet, NodeFrom, Op, Cats, NodeTo),
+   !.
+   
+   
+%comp_varc(Net, From, Op, par, From) :-!.
+
+comp_varc(Net, From, Op, Sym, To) :-
+		   narc(Net, From, Op, Sym, To),
+     !.
+
+comparc(Net, From, Op, Sym, To) :-
+		   arc(Net, From, Op, Sym, To),
+     !.
+unique(Word-Cat, Rest, Out):-
+   atomic(Word),
+   matchcomplex(Word, Cat, Out),
+   !.
+
+unique(Word-Cat, Rest, Out):-
+   stringof(Words, Word),
+   reverse(Words,['_',s,'-'|Wor]),
+   (Cat=n;Cat=np;Cat=ng;Cat=nh),
+   nth(Rest, N, [vppt]-_-_),
+   N<3,
+   Rest=[[S]-1-_|_],
+   S\=n,S\=np,S\=ng,S\=nh,
+   reverse(Wor,W),
+   stringof(W, W1),
+   Out=[W1, Cat1, has, ausa],
+   !.
+
+inspect_mod([First|Mod],Mod,SN,SN1):-
+   First=Det-D-_,
+   detss(D),
+   (SN=[W-_-_],
+     \+fct(W); 
+        SN\=[A],
+      reverse(SN,[W-_-_|_]),
+        \+fct(W)),
+      Mod=[W1-Ag-_|_],
+      \+ on(mod-_,Mod),
+    append([First],SN,SN1),!.
+inspect_mod([First|Mod],Mod,SN,SN1):-
+     on(mod-Mods,Mod),
+     Mods=[W1-D-_|_],
+   detss(D),
+   (SN=[W-_-_],
+     \+fct(W); 
+        SN\=[A],
+      reverse(SN,[W-_-_|_]),
+        \+fct(W)),
+    append([First],SN,SN1),!.
+inspect_mod(Mod,Mod,SN,SN):-
+      \+ on(mod-_,Mod),
+   (SN=[W-_-_],
+    \+fct(W),
+   Mod=[W1-_-_|_],
+    \+fct(W1)
+    ; 
+    SN\=[A],
+    reverse(SN,[W-_-_|_]),
+    \+fct(W),
+    Mod\=[A1],
+    (reverse(Mod,[W1-_-_|_]),
+     disaccess_wsj(W1,Best), Best\=jjs
+      ; true)),
+    !.
+inspect_mod2(Mod,Mod,SN,SN):-
+      \+ on(mod-_,Mod),
+   (SN=[W-_-_],
+    \+ wsentence_start(W),
+    \+fct(W),
+   Mod=[W1-_-_|_],
+    \+fct(W1),
+    stringof(List,W),
+    stringof(List1,W1),
+    (\+ on('_',List1)
+    ;
+    on('_',List),
+    on('_',List1))
+    ; 
+    SN\=[A],
+    SN=[W1-_-_|_],
+    \+ wsentence_start(W1),    
+    reverse(SN,[W-_-_|_]),
+    \+fct(W),
+    Mod\=[A1],
+    (reverse(Mod,[W1-_-_|_]),
+     disaccess_wsj(W1,Best), Best\=jjs
+      ; true)),
+    !.
+
+parse_costs([], [],T):-!.
+parse_costs(In, Out,T):-
+    paresecosall(In,Out,T),
+    !. 
+parse_costs(In, In,T).
+
+
+paresecosall(In,Output,T):-
+    parsecosts(In,Out1),
+    parsef2(Out1,Out22),
+    parsecoss(1,Out22,Outs,Rest),
+    (Rest=[], 
+      verify_cp_f(T,Outs,Output)
+      ;
+      Rest\=[],
+      parsecoss(1, Rest, Out, Rests),
+      append(Outs,Out,Outpu), 
+      (Rests=[],Outputt=Outpu
+        ;
+       Rests\=[], append(Outpu,Rests,Outputt)), 
+       verify_cp_f(T,Outputt,Output)
+      ),!.
+
+parsecosts(N-In,Output):-
+    parsecs1(In,Out1),
+    parsecs1(Out1,Outs),
+    parsecos(N,Outs,Outss,Rest),
+    (Rest=[], Output=Outss
+      ;
+      Rest\=[],Rest=[Fun-_|_],
+      (Fun=ibar,
+       rechecksubjf(Outss,Rest,Outss1,Rest1),
+       parsecoss(1, Rest1, Out, Rests)
+       ;
+       Fun\=ibar, Outss1=Outss,
+       parsecoss(1, Rest, Out, Rests)),
+      append(Outss1,Out,Outpu),
+      (Rests=[], Output=Outpu
+       ;
+      Rests\=[],
+      append(Outpu,Rests,Output))
+      ),!.
+
+parsecosts(In,Output):-
+    parsecs1(In,Out1),
+    parsecs1(Out1,Outs),
+    parsecos(1,Outs,Outss,Rest),
+    (Rest=[], Output=Outss
+      ;
+      Rest\=[],Rest=[Fun-_|_],
+      (Fun=ibar,
+       rechecksubjf(Outss,Rest,Outss1,Rest1),
+       parsecoss(1, Rest1, Out, Rests)
+        ;
+       Fun=fp,
+       rechecksubjf(Outss,Rest,Outss1,Rest1),
+       parsecoss(1, Rest1, Out, Rests)
+        ;
+       Fun\=ibar, Outss1=Outss,
+       parsecoss(1, Rest, Out, Rests)),
+      append(Outss1,Out,Outpu),
+      (Rests=[], Output=Outpu
+       ;
+      Rests\=[],
+      append(Outpu,Rests,Output))
+      ),
+      !.
+rechecksubjf([F-Outss],Rest,[F-Outs1],[f-Rests]):-
+     F=f,
+     remove(subj-Subj,Outss,Outs1),
+     append([subj-Subj],Rest,Rests),
+     !.
+rechecksubjf([F-Outss],Rest,[F-Outs1],[f-Rests]):-
+     remove(f-[subj-Subj],Outss,Outs1),
+     append([subj-Subj],Rest,Rests),
+     !.
+rechecksubjf(Subjs,[fp-FP, F-Outss],[],[f-Rests]):-
+     Outss=[ibar-Ibar|_],
+     \+ on(ibar-_,Subjs),
+     append(Subjs,[fp-FP|Outss],Rests),
+     !.
+rechecksubjf(Outs,Rest,Outs,Rest):-
+     !.
+
+
+callfun(First):-
+First=sn-_;First=sp-_; First=savv-_;First=sa-_;First=spda-_;First=vcomp-_;First=sv5-_;First=sv3-_;First=sv2-_.
+callfun1(First):-
+First=sp-_; First=savv-_;First=sa-_;First=spda-_;First=vcomp-_;First=sv5-_;First=sv3-_;First=sv2-_.
+callfun2(First):-
+First=sn-_;First=sp-_; First=savv-_;First=sa-_;First=spda-_;First=vcomp-_.
+
+verify_cp_f(T, [First|Outs],[f-Out]):-
+      First=sn-_,
+      findall(Rel, 
+                   (
+                     (on(ibar-[Rel|_],Outs);on(vcomp-[Rel|_],Outs)),
+                     \+ on(sv3-_,Outs), \+ on(mod-_,Outs)),
+                      Rels), Rels\=[],
+      append([First],Outs,Out),
+    !.
+verify_cp_f(T, [First|Outs],[cp-Out]):-
+      callfun1(First),
+      findall(Rel, on(ibar-[Rel|_],Outs),Rels), Rels\=[],
+      append([First],Outs,Out),
+    !.
+verify_cp_f(T, [First|Outs],[dirsp-Out]):-
+      First=fp-['"'-par-fp],
+      append([First],Outs,Out),
+    !.
+
+verify_cp_f(T, [First|Outs],[cp-Out]):-
+      First=F-_, Outs\=[],
+      (F=fint;F=f;F=fc;F=fs;F=fac),
+      append([First],Outs,Out),
+    !.
+verify_cp_f(T, [First|Outs],[First|Outs]):-
+      First=F-_,Outs=[],
+      (F=fint;F=cp;F=f;F=fc;F=fs;F=fac),
+    !.
+verify_cp_f(T, [First|Outs],[cp-Out]):-
+      First=F-_, Outs\=[],
+      F\=cp,F\=f,F\=fc,F\=fs,F\=fac,F\=fint,
+      findall(Rel, 
+                (on(ibar-[Rel|_],Outs),
+                 \+ on(sv3-_,Outs), \+ on(mod-_,Outs)), Rels), Rels\=[],
+      append([First],Outs,Out),
+    !.
+verify_cp_f(T, In,[f-Out]):-
+      In=[sn-Mod,sn-SN,vcomp-Ibar|Outs],
+      findall(Rel, on(ibar-[Rel|_],Outs),Rels), Rels=[],
+      findall(Rel, (
+                       (Ff=cp;Ff=f;Ff=fc;Ff=fs;Ff=fac),
+                       on(Ff-[Rel|_],Outs)),Fss), 
+      (Fss=[];Fss=[_-punto-cp];Fss=[_-punto-cp, _-par-f]),
+      inspect_mod(Mod,Mod1,SN,SN1),
+      append(SN1, [mod-Mod1],Subj),
+      Out=[subj-Subj, ibar-Ibar|Outs],
+      !.
+
+verify_cp_f(T, [First|Outs],[f3-Out]):-
+      First=F-_, Outs\=[],
+      F\=cp,F\=f,F\=fc,F\=fs,F\=fac,F\=ibar,
+      findall(Rel, on(ibar-[Rel|_],Outs),Rels), Rels=[],
+      findall(Rel, (on(mod-[V-Vpp-sv3],Outs);on(vcomp-[Rel|_],Outs)),Rels1), Rels1=[],
+      findall(Rel, (
+                       (Ff=cp;Ff=f;Ff=fc;Ff=fs;Ff=fac),
+                       on(Ff-[Rel|_],Outs)),Fss), 
+      (Fss=[];Fss=[_-punto-cp];Fss=[_-punto-cp, _-par-f]),
+      append([First],Outs,Out),
+    !.
+
+verify_cp_f(T, [First|Outs],[f-Out]):-
+      callfun2(First),
+      findall(Rel, (on(sv3-[V-Vpp-sv3],Outs);on(mod-[V-vppt-sv3],Outs)),Rels), Rels\=[],
+      collect_costs_rel2(Outs, Rel, Rest),
+      append([First],Rel,Outt),
+      append(Outt,Rest,Out),
+    !.
+
+verify_cp_f(T, [First|Outs],[cp-Out]):-
+      callfun(First),
+      Outs=[Sec|_],
+      \+ callfun(First),
+      remove(F-F11, Outs,Rest),
+      (F=cp;F=f;F=fc;F=fs;F=fac),
+      F11\=[A],
+      findall(Rel, on(vcomp-[Rel|_],Outs),Rels), Rels=[],
+      append(F11,[First],Second),
+      findall(Re, ((F1=cp;F1=f;F1=fc;F1=fs;F1=fac;F1=f2),
+               on(F1-[Re|_],Rest)),Re1), Re1=[],
+      length(Rest,L),
+     (L=<2, Out=[First|Outs]
+       ;
+      2<L,
+      append([F-Second],[f-Rest],Out)),
+    !.
+
+verify_cp_f(T, [First|Outs],[cp-Out]):-
+      callfun(First),
+      Outs=[Sec|_],
+      \+ callfun(First),
+      remove(F-F1, Outs,Rest),
+      (F=cp;F=f;F=fc;F=fs;F=fac),
+      F1\=[A],
+      length(Rest,L),
+     (L=<2, Out=[First|Outs]
+       ;
+      2<L,
+      append(F1,[First],Second),
+      append([F-Second],Rest,Out)),
+    !.
+
+verify_cp_f(T, [First|Outs],[cp-Out]):-
+      First=ibar-Fir, Outs\=[],
+      (on(spda-_, Outs),
+       append([vcomp-Fir],Outs,Out);
+       Out=[First|Outs]),
+      findall(Rel, ((Fu=vcomp;Fu=sv3), 
+                     on(Fu-[Rel|_],Outs)),Rels), Rels=[],
+    !.
+verify_cp_f(true,Outs,[f-Outs]):-
+      findall(Rel, ((Fu=vcomp;Fu=sv3), 
+                     on(Fu-[Rel|_],Outs)),Rels), Rels\=[],
+      findall(Rel, ((Fu=f;Fu=fs), 
+                     on(Fu-[Rel|_],Outs)),Rels), Rels=[],
+    !.
+verify_cp_f(T, Outs,[cp-Outs]):-
+    !.
+     
+change_costs_rel(In, Rest):-
+    nth(In, N2, f2-_),
+    changerel(N2,In,Rest),
+    !.
+
+changerel(1, [f2-[that-rel-f2]|Rest], [fac-[that-pk-fac]|Rest]):-
+     !.
+changerel(N, [A-Cos|Res], [A-Cos|FunctsO]):-
+    N1 is N - 1,
+    changerel(N1, Res, FunctsO),
+   !.
+     
+collect_costs_rel(In, In, []):-
+    length(In,L),
+    L=<3,
+    !.
+collect_costs_rel(In, Rel, Rest):-
+    nth(In, N1, ibar-_),
+    nth(In, N2, ibar-_),
+    N1<N2,
+    collectrel(N2,In,Rel,Rest),
+    !.
+collect_costs_rel1(In, Rel, Rest):-
+    In=[F-Res|_], F\=cp,
+    nth(In, N2, ibar-_),
+    collectrel(N2,In,Rel,Rest),
+    !.
+collect_costs_rel1(In, Rel, Rest):-
+    nth(In, N2, f-_),
+    collectrel(N2,In,Rel,Rest),
+    !.
+collect_costs_rel1(In, [F-Rel], Rest):-
+    In=[F-Res],
+    (F=fs;F=fc;F=fac),
+    nth(Res, N1, ibar-_),
+    nth(Res, N2, ibar-_),
+    N1<N2,
+    collectrel(N2,Res,Rel,Rest),
+    !.
+collect_costs_rel1(In, Rel, Rest):-
+    (F=fs;F=fac;F=fc),
+    nth(In, N2, F-_),
+    collectrel(N2,In,Rel,Rest),
+    !.
+collect_costs_rel1(In, Rel, Rest):-
+    In=[F-Res|_], F=cp,
+    length(In,L),
+    collectrel(L,In,Rel,Rest),
+    !.
+
+collect_costs_rel2(In, Rel, Rest):-
+    nth(In, N2, sv3-_),
+    collectrel(N2,In,Rel,Rest),
+    !.
+collect_costs_rel2(In, Rel, Rest):-
+    nth(In, N2, mod-_),
+    collectrel(N2,In,Rel,Rest),
+    !.
+
+collectrel(0, [A-Cos|Res], [A-Cos], Res):-!.
+collectrel(N, [fc-F2, ibar-Cos|Rest],  [], [fc-F2, ibar-Cos|Rest]):-
+     !.
+collectrel(N, [fc-F2, sn-SN, ibar-Cos|Rest],  [], [fc-F2, sn-SN, ibar-Cos|Rest]):-
+     !.
+collectrel(N, [fac-F2, ibar-Cos|Rest],  [], [fac-F2, ibar-Cos|Rest]):-
+     !.
+collectrel(N, [f2-F2, ibar-Cos|Rest],  [], [f2-F2, ibar-Cos|Rest]):-
+     !.
+collectrel(N, [f2-[that-rel-f2]|Rest],  [], [f2-[that-rel-f2]|Rest]):-
+     !.
+collectrel(N, [fp-[','-punt-fp]|Rest],  [], [fp-[','-punt-fp]|Rest]):-
+    findall(N1, (nth(Rest, N1, mod-_);
+                nth(Rest, N1, sv2-_)),Ns), 
+     (Ns=[];Ns\=[], on(N1,Ns), N1<4),
+     !.
+collectrel(N, [fp-[','-punt-fp]|Rest],  [], [fp-[','-punt-fp]|Rest]):-
+     \+on(f2-_,Rest),\+on(fac-_,Rest),\+on(f-_,Rest),\+on(fs-_,Rest),\+on(ibar-_,Rest),
+     !.
+collectrel(1, [ibar-Cos|Rest],  [], [ibar-Cos|Rest]):-
+     !.
+collectrel(N, [sv2-Cos|Rest],  [], [sv2-Cos|Rest]):-
+     !.
+collectrel(1, [mod-[V-Vpp-sv3]|Rest],  [], [ibar-[V-Vpp-sv3]|Rest]):-
+     !.
+collectrel(1, [sv3-[V-Vpp-sv3]|Rest],  [], [ibar-[V-Vpp-sv3]|Rest]):-
+     !.
+collectrel(1, [f-Cos|Rest],  [], [f-Cos|Rest]):-
+     !.
+collectrel(N, [fint-Cos|Rest],  [], [fint-Cos|Rest]):-
+     !.
+collectrel(N, [fs-Cos|Rest],  [], [fs-Cos|Rest]):-
+     !.
+collectrel(N, [A-Cos|Res], [A-Cos|FunctsO], Rest):-
+    N1 is N - 1,
+    collectrel(N1, Res, FunctsO, Rest),
+   !.
+ 
+parsecs1([], []):-!.
+
+parsecs1([cp-['.'-punto-cp]],[cp-['.'-punto-cp]]):-!.
+parsecs1([ibar-Ibar, sp-Struct|In], [sp-Struc|Out]):-
+     Ibar=[thanks-_-_],
+    Struct=[to-_-_|SP],
+     P=thanks_to-p-sp,
+     Struc=[P|SP],
+    parsecs1(In, Out),
+    !.
+parsecs1([ibar-Ibar, sp-Struct|In],[sp-Struc|Out]):-
+     Ibar=[compared-_-_],
+    Struct=[with-_-_|SP],
+     P=compared_with-p-sp,
+     Struc=[P|SP],
+    parsecs1(In, Out),
+    !.
+/*
+parsecs1([fp-['"'-par-fp], sn-SN|In], [sn-Struct|Out]):-
+    on('"'-par-_, SN),
+    append(SN, ['"'-par-fp], Struct),
+    parsecs1(In, Out),
+    !.
+*/
+parsecs1([fp-['"'-par-fp], sn-SN, fp-['"'-par-fp]|In], [sn-Struct|Out]):-
+    append(SN, ['"'-par-f], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([fp-['"'-par-fp], sa-SN, fp-['"'-par-fp]|In], [sa-Struct|Out]):-
+    append(SN, ['"'-par-fp], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([fp-['"'-par-fp], sn-SN, sn-SN1, fp-['"'-par-fp]|In], [sn-Struct|Out]):-
+    append(SN, SN1, Struct1),
+    append(Struct1, ['"'-par-fp], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([fp-['"'-par-fp], sn-SN, sn-SN1, fp-['"'-par-fp]], [sn-Struct]):-
+    append(SN, SN1, Struct1),
+    append(Struct1, ['"'-par-fp], Struct),
+    !.
+parsecs1([sp-[P-p-sp], fp-['"'-par-fp], sn-SN|In], [sp-Struct|Out]):-
+    append(SN, ['"'-par-f], Struc),
+    append([P-p-sp], Struc, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sn-Stru, fp-[','-punt-fp], sn-Mod, fc-[And-cong-fc], sn-SN, fp-[','-punt-fp], ibar-Ibar|In], [sn-Struct, ibar-Ibar|Out]):-
+    (And=and;And=or),
+    sentence_start(Stru),
+    append(SN, [And-cong-fc], Struc),
+    append(Struc, [appos-Mod], Strucc),
+    append(Stru, Strucc, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sn-Stru, fp-[','-punt-fp], sn-Mod, fc-[And-cong-fc], sn-SN, cp-['.'-punto-cp]|In], [sn-Struct, cp-['.'-punto-cp]|Out]):-
+    (And=and;And=or),
+    append(SN, [And-cong-fc], Struc),
+    append(Struc, [appos-Mod], Strucc),
+    append(Stru, Strucc, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sn-Mod, fc-[And-cong-fc], sn-SN, cp-['.'-punto-cp]], [sn-Struct, cp-['.'-punto-cp]]):-
+    (And=and;And=or),
+    append(SN, [And-cong-fc], Struc),
+    append(Struc, [appos-Mod], Struct),
+    !.
+parsecs1([sp-Mod, fc-[And-cong-fc], sn-SN, cp-['.'-punto-cp]], [sp-Struct, cp-['.'-punto-cp]]):-
+    (And=and;And=or),
+    append(SN, [And-cong-fc], Struc),
+    append(Struc, [appos-Mod], Struct),
+    !.
+parsecs1([sn-Stru, fp-[','-punt-fp], sn-Mod, fp-[','-punt-fp], fc-[And-cong-fc], sn-SN|In], [sn-Struct|Out]):-
+    (And=and;And=or),
+    append([And-cong-fc], Mod, Struc),
+    append(Stru, Struc, Struct),
+    parsecs1([fc-[and-cong-fc], sn-SN|In], Out),
+    !.
+
+parsecs1([sn-Mod, fc-[and-cong-fc], sn-['Co_'-n-sn]|In], [sn-Struc|Out]):-
+    append(Mod, [and-cong-fc, 'Co_'-n-sn], Struc),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([sp-[of-p-sp], sn-Mod, fp-['"'-par-fp], sn-SN|In], [sp-Struct|Out]):-
+    reverse(Mod, [First-ng-_]),
+    append(SN, [obl-Mod], Struc),
+    append([of-p-sp], Struc, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sn-Stru, SP-Str, sn-Mod, fc-[and-cong-fc], sn-SN|In], [sn-Struct|Out]):-
+    (SP=sp;SP=spda),
+    Str=[P-_-_],
+    getheadmod(Stru,Head),
+    check_subcn(Head,P),
+    reverse(Mod, [First-_-_]),
+    reverse(SN, [Sec-_-_]),
+    append(Mod,SN,Mods),
+    append(Mods,[and-cong-fc],Modss),
+    append(Str, Modss, Struc),
+    append(Stru, [obl-Struc], Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([SP-Stru, fp-[Par-P-_], sn-Mod, fp-FP|In], [SP-Struct|Out]):-
+    (SP=sp;SP=spda),
+    Par\='-',P\=';',FP\=[';'-_-_],
+    reverse(Mod, [First-_-_|_]),
+    reverse(Stru, [Sec-_-_|_]),
+    match_feats_heads_noms(First,Sec),
+    append(Stru, [appos-Mod], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([SP-Mod, fp-[Par-P-_], sn-SN, fp-FP|In], [SP-Struct|Out]):-
+    (SP=sp;SP=spda),
+    Par\='-',P\=';',FP\=[';'-_-_],
+    reverse(Mod,[Las-_-_|Rev]),
+    SN=[Sec-_-_|Res1],
+    concat(Las,'_',D),
+    concat(D,Sec,D1),
+    (ht(D1,_);sk(D1,K), stringof(Lis,K), Lis=[1|_];
+       nwn(D1,_);wsd(D1,_,_);citiespreds(D1,_)),
+    Mod\=[],
+    append([mod-Mod], SN, Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([SP-Stru, fp-[Par-P-_], sn-Mod, fp-FP|In], [SP-Struct|Out]):-
+    (SP=sp;SP=spda),
+    Par\='-',P\=';',FP\=[';'-_-_],
+    reverse(Mod, [W1-C-_|_]),
+    C\=num,
+    search_wn_cats(W1,Cats),
+    (
+    (on(informa,Cats);on(tecno,Cats);on(istituzione,Cats);on(sociale,Cats)),
+    append(Stru, [mod-Mod], Struct)
+    ;
+    on(luogo,Cats),
+    append(Stru, [appos-Mod], Struct)
+    ),
+    parsecs1(In, Out),
+    !.
+parsecs1([sn-Stru, fp-[Par-P-_], sn-Mod, fp-FP|In], [sn-Struct|Out]):-
+    Par\='-',P\=';',FP\=[';'-_-_],
+    reverse(Mod, [First-C-_|_]),
+    C\=num,
+    append(Stru, [appos-Mod], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([SP-Stru, fp-[','-punt-fp], sn-Mod, cp-['.'-punto-cp]|In], [SP-Struct, cp-['.'-punto-cp]|Out]):-
+    (SP=sp;SP=spda),
+    reverse(Mod, [First-_-_|_]),
+    reverse(Stru, [Sec-_-_|_]),
+    match_feats_heads_noms(First,Sec),
+    append(Stru, [appos-Mod], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([ibar-Stru, sp-Mod, cp-['.'-punto-cp]], [ibar-Compl]):-
+    Mod=[A],
+    append(Stru, Mod, Compl),
+    !.
+parsecs1([Ibar-Verb, sn-Stru, fp-[','-punt-fp], sn-Mod, cp-['.'-punto-cp]|In], [Ibar-Verb, obj-Stru, fp-[','-punt-fp], obj2-Mod, cp-['.'-punto-cp]]):-
+    (Ibar=ibar;Ibar=vcomp),
+    reverse(Verb, [First-_-_|_]),
+    \+ verbs_of_saying(First),
+    lemmatize_dic_v(First,Lemma,S),
+    iobj_ncmod(Lemma, P, F, R),
+    R=goal,
+    !.
+parsecs1([sn-Stru, fp-[','-punt-fp], sn-Mod, cp-['.'-punto-cp]|In], [sn-Struct, cp-['.'-punto-cp]|Out]):-
+    append(Stru, [appos-Mod], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sn-SN, sn-Mod, fp-[','-punt-fp]|In], [sn-Struct, fp-[','-punt-fp]|Out]):-
+    Mod=[W1-num-_],
+    inspect_mod(Mod,Mod1,SN,SN1),
+    Mod1\=[],
+    append(SN1, [mod-Mod1], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([fp-FP, sn-Mod, sn-SN, fp-[','-punt-fp]|In], [fp-FP, sn-Struct, fp-[','-punt-fp]|Out]):-
+    Mod=[W1-n-_],
+    search_wn_cats(W1,Cats),
+    (on(informa,Cats);on(tecno,Cats);on(istituzione,Cats);on(sociale,Cats)),
+    append(SN, [mod-Mod], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1(Input, [sn-Struct|Out]):-
+    Input=[sn-Stru, fp-Fp, fs-[As-cosu-fs]|Rest],
+    (As=as;As=such_as),
+    Rest=[sn-Mod, fp-FP|In],
+    append([As-cosu-fs], Mod, Mods),
+    append(Stru, [appos-Mods], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1(Input, [sn-Struct|Out]):-
+    Input=[sn-Stru, fp-Fp, sq-[As-ccom-sq]|Rest],
+    Rest=[F-_|_],F\=ibar,
+    (As=as;As=such_as),
+    Rest=[sn-Mod, fp-FP|In],
+    append([As-ccom-fs], Mod, Mods),
+    append(Stru, [appos-Mods], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1(Input, [sn-Struct|Out]):-
+    Input=[sn-Stru, sq-[As-ccom-sq]|Rest],
+    (As=as;As=such_as),
+    Rest=[Sn-Mod|In], (Sn=sn;Sn=sp),
+    In=[F-_|_],F\=ibar,
+    append([As-ccom-sq], Mod, Mods),
+    append(Stru, [appos-Mods], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1(Input, [sp-Struct|Out]):-
+    Input=[sp-Stru, fp-Fp, fs-[As-cosu-fs]|Rest],
+    (As=as;As=such_as),
+    Rest=[sp-Mod, fp-FP|In],
+    In=[F-_|_],F\=ibar,
+    append([As-cosu-fs], Mod, Mods),
+    append(Stru, [appos-Mods], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1(Input, [sp-Struct|Out]):-
+    Input=[sp-Stru, fp-Fp, sq-[As-ccom-sq]|Rest],
+    (As=as;As=such_as),
+    Rest=[sp-Mod, fp-FP|In],
+    In=[F-_|_],F\=ibar,
+    append([As-ccom-sq], Mod, Mods),
+    append(Stru, [appos-Mods], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1(Input, [sp-Struct|Out]):-
+    Input=[sp-Stru, sq-[As-ccom-sq]|Rest],
+    Rest=[F-_|_],F\=ibar,
+    (As=as;As=such_as),
+    Rest=[Sn-Mod|In],(Sn=sn;Sn=sp),
+    In=[F-_|_],F\=ibar,
+    append([As-ccom-sq], Mod, Mods),
+    append(Stru, [appos-Mods], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sp-[Prep-p-sp], sa-Mod1, savv-Mod2, sn-Mod|In], [sp-Struct|Out]):-
+    append(Mod1, Mod2, Stru),
+    append(Stru, Mod, Mods),
+    append([Prep-p-sp], Mods, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sn-SN, sp-[of-p-sp], sn-SN1, sp-[of-p-sp], sn-Mod|In], [sn-Struct|Out]):-
+    \+ on(_-nt-_,SN),
+    \+ on(_-nt-_,SN1),
+    append([of-p-sp], Mod, Mods),
+    append([of-p-sp], SN1, Mods1),
+    append(Mods1, [mod-Mods], Stru),
+    append(SN, [mod-Stru], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sp-[of-p-sp], savv-Savv, ibar-Mod, sn-SN|In], [sp-Struct|Out]):-
+    \+ on(_-nt-_,Savv),
+    Mod=[V-_-_],
+    pp_word_cat(V, Temp, part, Vinf),
+    append(Savv, [V-ag-_], Mods),
+    append(SN, [mod-Mods], Struc),
+    append([of-p-sp], Struc, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([fp-['"'-par-_], sn-Stru, sp-[of-p-sp], sn-SN, fp-['"'-par-_]|In], [sn-Structs|Out]):-
+    append(['"'-par-_], Mod, Mods),
+    append(Mods, Stru, Mods1),
+    append(Mods1, [of-p-sp], Mods2),
+    append(Mods2, SN, Mods3),
+    append(Mods3, ['"'-par-_], Structs),
+    parsecs1(In, Out),
+    !.
+parsecs1([sn-SN, sp-[of-p-sp], sn-Mod|In], [sn-Struct|Out]):-
+    \+ on(_-nt-_,SN),
+    append([of-p-sp], Mod, Mods),
+    append(SN, [mod-Mods], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sn-SN, sp-[of-p-sp], sn-Mod|In], [sn-Struct|Out]):-
+    \+ on(_-nt-_,SN),
+    append([of-p-sp], Mod, Mods),
+    append(SN, [mod-Mods], Struct),
+    parsecs1(In, Out),
+    !.
+/*
+parsecs1([sp-SP, sn-SN, sp-[of-p-sp], f2-F2|In], [sp-Struct|Out]):-
+    (on(whose-relob-f2, F2);on(which-rel-f2, F2)),
+    append(SP, SN, Head),
+    collect_costs_rel(In, Relt, Ins),
+    append([of-p-sp], F2, Mods),
+    append([f2-Mods], [f-Relt], Relss),
+    append(Head, [f2-Relss], Struct),
+    parsecs1(Ins, Out),
+    !.
+parsecs1([sn-SN, sp-[of-p-sp], f2-F2|In], [sn-Struct|Out]):-
+    (on(whose-relob-f2, F2);on(which-rel-f2, F2)),
+    collect_costs_rel(In, Relt, Ins),
+    append([of-p-sp], F2, Mods),
+    append([f2-Mods], [f-Relt], Relss),
+    append(SN, [f2-Relss], Struct),
+    parsecs1(Ins, Out),
+    !.
+*/
+parsecs1([sp-SP, sn-SN, sp-[of-p-sp], sn-Mod|In], [sp-Struct|Out]):-
+    \+ on(_-nt-_,SN),
+    append(SP, SN, Head),
+    append([of-p-sp], Mod, Mods),
+    append(Head, [mod-Mods], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sp-SN, sp-[of-p-sp], sn-Mod|In], [sn-Struct|Out]):-
+    \+ on(_-nt-_,SN),
+    append([of-p-sp], Mod, Mods),
+    append(SN, [mod-Mods], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sn-SN, sp-[of-p-sp], savv-Mod, fp-FP, sn-Modd|In], [sn-Struct|Out]):-
+    \+ on(_-nt-_,SN),
+    FP\=[';'-_-_],
+    append([of-p-sp], Mod, Mods),
+    append(Mods, Modd, Modss),
+    append(SN, [mod-Modss], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sn-SN, sp-[of-p-sp], savv-Mod|In], [sn-Struct|Out]):-
+    \+ on(_-nt-_,SN),
+    append([of-p-sp], Mod, Mods),
+    append(SN, [mod-Mods], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([fp-Fp, sp-[on-p-sp], savv-Mod, sn-[Num-num-_], fp-Fp, sn-[Nu-num-_]|In], [sp-Struct|Out]):-
+    append([on-p-sp], Mod, Mods),
+    append(Mods, [Num-num-_], Modss),
+    append(Modss, [Nu-num-_], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sp-[on-p-sp], savv-Mod, sn-[Num-num-_], fp-Fp, sn-[Num-num-_]|In], [sp-Modss|Out]):-
+    append([on-p-sp], Mod, Mods),
+    append(Mods, [Num-num-_], Modss),
+%    append(SN, [mod-Modss], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sp-[on-p-sp], savv-Mod, sn-[Num-num-_]|In], [sp-Modss|Out]):-
+    append([on-p-sp], Mod, Mods),
+    append(Mods, [Num-num-_], Modss),
+%    append(SN, [mod-Modss], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sp-[P-p-sp|SN], savv-Mod|In], [sp-Struct|Out]):-
+    on(_-num-_, SN),
+    on(_-nt-W, Mod),
+    append([P-p-sp|SN], Mod, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([savv-[in-p-sp|SN], sp-Mod|In], [savv-Struct|Out]):-
+    on(_-nt-_, SN),
+    on(_-num-W, Mod),
+    append([in-p-sp|SN], Mod, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([savv-[in-p-sp|SN], sn-Mod|In], [savv-Struct|Out]):-
+    on(_-nt-_, SN),
+    on(_-num-W, Mod),
+    append([in-p-sp|SN], Mod, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([spda-[by-pda-_], sn-[Num-num-_], savv-Mod, sn-['EDT'-n-_]|In], [sp-Struct|Out]):-
+    append([Num-num-_], Mod, Mods),
+    append(Mods, ['EDT'-n-_], Modss),
+    append([by-pda-sp], Modss, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([spda-[by-pda-_], savv-Mod, sn-[Num-num-_]|In], [sp-Struct|Out]):-
+    append([Num-num-_], Mod, Mods),
+    append([by-pda-sp], Mods, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([savv-Mod, sn-[Num-num-_]|In], [savv-Struct|Out]):-
+    on([Num-nt-_], Mod),
+    append(Mod, [Num-num-_], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([spda-[by-pda-_], sn-SN|In], [savv-Struct|Out]):-
+    on(Num-nt-_, SN),
+    append([by-pda-sp], SN, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sp-[in-p-_], sn-SN|In], [savv-Struct|Out]):-
+    on(Num-nt-_, SN),
+    append([in-p-sp], SN, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([spda-[P-pda-_], sn-SN|In], [savv-Struct|Out]):-
+    on(Num-nt-_, SN),
+    append([P-pda-spda], SN, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([savv-Avv, savv-Mod|In], [savv-Struct|Out]):-
+    (Avv=[_-avv-_], Mod=[_-avv-_]
+    ;Avv=[_-nt-_], Mod=[_-avv-_]
+    ;Avv=[_-avv-_], Mod=[_-nt-_]
+    ;Avv=[_-in-_], Mod=[_-avv-_]
+    ;Avv=[_-nt-_], Mod=[_-nt-_]),
+    append(Avv, Mod,  Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sn-SN, fp-FP, sn-[Num-num-_], fp-FP|In], [savv-Struct|Out]):-
+    on(Dat-nt-_, SN),
+    append(SN, [Num-num-_], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sp-[P-p-sp], savv-Mod|In], [savv-Struct|Out]):-
+    append([P-p-sp], Mod,  Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([savv-Avv, fc-Fc, savv-Mod|In], [savv-Struct|Out]):-
+    Avv=[_-avv-_], Mod=[_-avv-_],
+    append(Avv, Mod,  Struct),
+    parsecs1(In, Out),
+    !.    
+parsecs1([sp-[in-p-sp], sn-SN, fp-FP, sn-Mod|In], [sp-Struct|Out]):-
+    FP\=[';'-_-_],
+    SN=[W-_-_],
+    Mod=[W1-_-_],
+    search_wn_cats(W,Cats),
+    on(luogo,Cats),
+    search_wn_cats(W1,Cats1),
+    on(luogo,Cats1),
+    append([in-p-sp], SN,  Struc),
+    append(Struc, [mod-Mod],  Struct),
+    parsecs1(In, Out),
+    !.
+
+
+parsecs1([sp-[in-p-sp], savv-Mod|In], [savv-Struct|Out]):-
+    append([in-p-sp], Mod,  Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sp-[P-p-sp], fint-Mod, sn-SN, sn-SN1|In], [fint-Struct1|Out]):-
+    append([P-p-sp], Mod,  Struct),
+    append(Struct,  SN, Struct1),
+    parsecs1([sn-SN1|In], Out),
+    !.
+parsecs1([sp-[to-p-sp], fp-Mod, ibar-SN, ibar-SN1|In], [vcomp-Struct1|Out]):-
+    SN=[_-_-_],
+    SN1=[V-_-_],
+    pp_word_cat(V, Temp, part, Vinf),
+    append([to-p-sp], SN, Stru),
+    append(Stru, SN1, Struct),
+    append(Struct,  [fp-Mod], Struct1),
+    parsecs1(In, Out),
+    !.
+parsecs1([sp-[to-p-sp], fp-Mod, ibar-SN|In], [vcomp-Struct1|Out]):-
+    append([to-p-sp], SN, Struct),
+    append(Struct,  [fp-Mod], Struct1),
+    parsecs1(In, Out),
+    !.
+parsecs1([sp-[P-p-sp], fint-Mod|In], [fint-Struct|Out]):-
+    append([P-p-sp], Mod,  Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sp-[P-p-sp], fint-Mod|In], [fint-Struct|Out]):-
+    append([P-p-sp], Mod,  Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([fint-Mod, SA|In], [fint-Struct|Out]):-
+    SA=S-Sa, (S=sa;S=savv),
+    append(Sa, Mod,  Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([SP, sv3-Mod, sn-SN|In], [sp-Struct|Out]):-
+    (SP=sp-[Prep-P-_];SP=spda-[Prep-P-_]),
+    SN=[_-Cat-_|_], nouncats(Cat), Cat\=num,
+    reverse(Mod, [First-_-_]),
+    pp_word_cat(First, Temp, part, Vinf),
+    append([Prep-P-_], Mod, Struc),
+    append(Struc,SN,Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([SP, sq-SQ, sn-Mod, ibar-Ibar|In], [sp-Struct, ibar-Ibar|Out]):-
+    (SP=sp-[Prep-P-_];SP=spda-[Prep-P-_]),
+    append([Prep-P-_], SQ, Struc),
+    append(Struc,Mod,Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([SP, sn-SQ, sv5-Mod, sn-SN|In], [sp-Struct|Out]):-
+    (SP=sp-[Prep-P-_];SP=spda-[Prep-P-_]),
+    reverse(SQ, [First-Cat-_]),
+    (Cat=q;Cat=num),
+    append([Prep-P-_], SQ, Stru),
+    append(Stru,Mod,Struc),
+    append(Struc,SN,Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sn-SQ, sv5-Mod, sn-SN, fp-['-'-_-_]|In], [sn-Struct, fp-['-'-_-_]|Out]):-
+    reverse(SQ, [First-Cat-_]),
+    (Cat=q;Cat=num),
+    SN=[A],
+    append(SQ,Mod,Struc),
+    append(Struc,SN,Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sp-SQ, sv5-Mod, sn-SN, fp-['-'-_-_]|In], [sp-Struct, fp-['-'-_-_]|Out]):-
+    (SP=sp-[Prep-P-_];SP=spda-[Prep-P-_]),
+    reverse(Mod, [First-Cat-_|_]),
+    (Cat=q;Cat=num),
+    SN=[A],
+    append([Prep-P-_], SQ, Stru),
+    append(Stru,Mod,Struc),
+    append(Struc,SN,Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([SP, sv3-Mod|In], [vcomp-Struct|Out]):-
+    (SP=sp-[Prep-P-_];SP=spda-[Prep-P-_]),
+    append([Prep-P-_], Mod, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([SP, sv5-Mod|In], [vcomp-Struct|Out]):-
+    (SP=sp-[Prep-P-_];SP=spda-[Prep-P-_]),
+    append([Prep-P-_], Mod, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([SP, savv-Savv, sv3-Mod|In], [vcomp-Struct|Out]):-
+    (SP=sp-[Prep-P-_];SP=spda-[Prep-P-_]),
+    append(Savv, Mod, Struc),
+    append([Prep-P-_], Struc, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([SP, savv-Savv, sv5-Mod|In], [vcomp-Struct|Out]):-
+    (SP=sp-[Prep-P-_];SP=spda-[Prep-P-_]),
+    append(Savv, Mod, Struc),
+    append([Prep-P-_], Struc, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sp-[after-p-sp], sn-Mod|In], Out):-
+    length(In,L),
+    20<L,
+    nth(In,Num,ibar-_), 8<Num,
+    parsecs1([fs-[after-cosu-fs],sn-Mod|In], Out),
+    !.
+parsecs1([fs-[as-cosu-fs], sn-SN, ibar-Ibar, fp-FP|In], [fs-[fs-[as-cosu-fs], subj-SN, ibar-Ibar], fp-FP|Out]):-
+    parsecs1(In, Out),
+    !.
+parsecs1([fs-[as-cosu-fs], sn-Mod, fp-FP|In], Out):-
+    length(In,L),
+    20<L,
+    nth(In,Num,ibar-_), 
+    2<Num,
+    nth(In,Num1,vcomp-_), 
+    2<Num1,
+    parsecs1([sp-[as-p-sp], sn-Mod, fp-FP|In], Out),
+    !.
+
+parsecs1([fs-[as-cosu-fs], sn-Mod|In], Out):-
+    length(In,L),
+    L<20,
+    nth(In,Num,ibar-_), 
+    nth(In,Num1,vcomp-_), 
+    2<Num1,
+    (2<Num
+     ;
+     nth(In,Num1,f-[and-cong-f]), 
+      Num1<Num),
+    parsecs1([sp-[as-p-sp], sn-Mod|In], Out),
+    !.
+
+parsecs1([sp-[P-p-sp], sn-Mod|In], [sp-Struct|Out]):-
+    append([P-p-sp], Mod,  Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([spda-[P-pda-sp], sn-Mod|In], [spda-Struct|Out]):-
+    append([P-pda-sp], Mod,  Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([SP, ibar-Mod, sn-SN|In], [sp-Struct|Out]):-
+    (SP=sp-[Prep-p-_], Prep\=to, Prep\=in_order_to;SP=spda-[Prep-P-_]),
+    reverse(Mod, [First-_-_]),
+    pp_word_cat(First, Temp, part, Vinf),
+    append([Prep-P-_], Mod, Struc),
+    append(Struc,SN,Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([SP, ibar-Mod, sn-SN|In], [vcomp-Struct, sn-SN|Out]):-
+    reverse(Mod, [Head-_-_|_]),
+    lemmatize_dic_v(Head,Lemma,_),
+    v(Lemma, Subs), 
+    (on(t,Subs);on(ti,Subs)),
+    (SP=sp-[Prep-P-_];SP=spda-[Prep-P-_]),
+    append([Prep-P-_], Mod, Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([SP, ibar-Mod, sa-SA|In], [vcomp-Struct, sa-SA|Out]):-
+    reverse(Mod, [Head-_-_|_]),
+    lemmatize_dic_v(Head,Lemma,_),
+    v(Lemma, Subs), 
+    (on(t,Subs);on(ti,Subs)),
+    (SP=sp-[Prep-P-_];SP=spda-[Prep-P-_]),
+    append([Prep-P-_], Mod, Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([SP, ibar-Mod|In], [vcomp-Struct|Out]):-
+    (SP=sp-[Prep-P-_];SP=spda-[Prep-P-_]),
+    append([Prep-P-_], Mod, Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([fc-FC, vcomp-Struct, sn-SN|In], [fc-FC, ibar-Struct, sn-SN|Out]):-
+    reverse(Struct, [Head-_-_|_]),
+    lemmatize_dic_v(Head,Lemma,_),
+    v(Lemma, Subs), 
+    (on(t,Subs);on(ti,Subs)),
+    In=[Fun-First|_],
+    Fun\=ibar,
+    parsecs1(In, Out),
+    !.
+
+parsecs1([vcomp-Struct, sn-SN|In], [vcomp-Struct, sn-SN|Out]):-
+    reverse(Struct, [Head-_-_|_]),
+    lemmatize_dic_v(Head,Lemma,_),
+    v(Lemma, Subs), 
+    (on(t,Subs);on(ti,Subs)),
+    In=[Fun-First|_],
+    Fun\=ibar,
+    parsecs1(In, Out),
+    !.
+
+parsecs1([vcomp-Struct, sa-SA|In], [vcomp-Struct, sa-SA|Out]):-
+    reverse(Struct, [Head-_-_|_]),
+    lemmatize_dic_v(Head,Lemma,_),
+    v(Lemma, Subs), 
+    (on(t,Subs);on(ti,Subs)),
+    In=[Fun-First|_],
+    Fun\=ibar,
+    parsecs1(In, Out),
+    !.
+
+parsecs1([sn-Mod, sn-SN|In], [sn-Struct|Out]):-
+    reverse(Mod,[Las-_-_|Rev]),
+    SN=[Sec-_-_|Res1],
+    \+ on(and-cong-_,Mod),
+    concat(Las,'_',D),
+    concat(D,Sec,D1),
+    (ht(D1,_);sk(D1,K), stringof(Lis,K), Lis=[1|_];
+       nwn(D1,_);wsd(D1,_,_);citiespreds(D1,_)),
+    Mod\=[],
+    append([mod-Mod], SN, Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([sn-Mod, sn-SN|In], [sn-Struct|Out]):-
+    \+ on(and-cong-_,Mod),
+    sentence_modstart(Mod),
+    inspect_mod(Mod,Mod1,SN,SN1),
+    Mod1\=[],
+    append(SN1, [mod-Mod1], Struct),
+    parsecs1(In, Out),
+    !.
+        
+parsecs1([sn-Mod, sn-SN|In], [sn-Struct|Out]):-
+    \+ on(and-cong-_,Mod),
+    reverse(Mod, [First-_-_|_]),
+    stringof(Gen,First),
+    reverse(Gen,[s,_|_]),
+    inspect_mod(Mod,Mod1,SN,SN1),
+    Mod1\=[],
+    append(SN1, [mod-Mod1], Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([sn-Mod, sn-SN|In], [sn-Struct|Out]):-
+    reverse(Mod, [First-num-_|_]),
+    (nm(First,K,_);integer(First)),
+    reverse(SN, [Sec-_-_|_]),
+    spy_lower(Sec,Low,P), P=0,
+    append(Mod, SN, Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([sn-Mod, sn-SN|In], [sn-Struct|Out]):-
+    reverse(Mod, [First-num-_|_]),
+    SN=[a-_-_|Res],
+    on(W-_-_,Res),
+    (qm(W);nt(W);search_wn_cats(W,Cats),
+    Cats\=[],on(legale,Cats)),
+    append(Mod, [mod-SN], Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([sn-Mod, sn-SN|In], [sn-Struct|Out]):-
+    \+ on(and-cong-_,Mod),
+    Mod=[First-_-_|Res],
+    spy_lower(First,L1,P1),
+    SN=[Sec-_-_|Res1],
+    spy_lower(Sec,L2,P2),
+    P1=1,P2=1,
+    inspect_mod(Mod,Mod1,SN,SN1),
+    Mod1\=[],
+    append([mod-Mod1], SN1, Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([sn-Mod, sn-SN|In], [sn-Struct|Out]):-
+    \+ on(and-cong-_,Mod),
+    Mod=[First-_-_|Res],
+    spy_lower(First,L1,P1),
+    SN=[Sec-_-_|Res1],
+    spy_lower(Sec,L2,P2),
+    P1=1,P2=0,
+    reverse(SN,[Head-_-_|_]),
+    (collective_head(Head);ht(Head,Cats),on(str,Cats)),
+    Mod\=[],
+    append([mod-Mod], SN, Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([sn-Mod, sn-SN|In], [sn-Struct|Out]):-
+    Mod=[First-_-_|Res],
+    First=the,
+    reverse(Mod,[Las-_-_|Rev]),
+    spy_lower(Las,L1,P1),
+    SN=[Sec-_-_|Res1],
+    spy_lower(Sec,L2,P2),
+    P1=1,
+    (P2=1;P2=0,ht(Sec,Cats),
+        (on(str,Cats);on(col,Cats))
+        ),
+    inspect_mod(Mod,Mod1,SN,SN1),
+    Mod1\=[],
+    append([mod-Mod1], SN1, Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([sa-Mod, sn-SN|In], [sn-Struct|Out]):-
+    Mod=[Such-ag-sa], (Such=such;Such=many),
+    SN=[A-Art-sn|Cost], (A=a;A=an;A=another),
+   append([Such-ag-sa],[A-Art-sn|Cost],Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sa-Mod, savv-SN|In], [savv-Struct|Out]):-
+    Mod=[Dei-ag-sa],
+    SN=[Yea-nt-sn],
+   append(Mod,SN,Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sn-SN|In], [savv-SN|Out]):-
+    SN=[Dei-ag-_, Yea-nt-sn],
+    parsecs1(In, Out),
+    !.
+parsecs1([sn-SN|In], [savv-SN|Out]):-
+    SN=[Dei-nt-_, Yea-nt-sn],
+    parsecs1(In, Out),
+    !.
+
+parsecs1([sa-Mod, sp-SN|In], [sa-Struct|Out]):-
+    Mod=[Head-ag-sa],
+    SN=[P-p-_|Cost],
+    Cost\=[],
+    In=[F-S|_], F\=f2,
+    checksubcn_a(Head,P),
+    append(Mod,[obl-SN],Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([sa-Mod, sn-SN|In], [sn-Struct|Out]):-
+    SN=[A-Art-sn|Cost], Art\=art,Art\=q,
+    append(SN,[mod-Mod],Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([sp-[Prep-p-sp], sa-Mod|In], [sp-Struct|Out]):-
+    In=[F-S|_], (F\=sn
+     ;F=sn, Mod=[Nu-num-_], integer(Nu)),
+    append([Prep-p-sp], Mod, Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([sp-[Prep-p-sp], sn-Mod|In], [sp-Struct|Out]):-
+    In=[F-S|_], (F\=sn
+     ;F=sn, Mod=[Nu-num-_], integer(Nu)),
+    append([Prep-p-sp], Mod, Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([spda-[Prep-pda-spda], sn-Mod|In], [spda-Struct|Out]):-
+    In=[F-S|_], (F\=sn
+     ;F=sn, Mod=[Nu-num-_], integer(Nu)),
+    append([Prep-pda-spda], Mod, Struct),
+    parsecs1(In, Out),
+    !.
+
+/*
+parsecs1([sn-Mod, sn-SN, ibar-Ibar|In], [sn-F2|Out]):-
+    Mod=[A|_], SN=[B|_],
+    A=B, A=the-_-_,
+    findall(Rel, on(ibar-[Rel|_],In),Rels), Rels\=[],
+    Rels\=[],
+    length(Rels,L), 1=<L,
+    nth(In,Num,ibar-_), Num<6,
+    collect_costs_rel1(In, Rel, Rest1),
+    append([ibar-Ibar],Rel,Rel1),
+    append([subj-SN],Rel1,Rel2),
+    append(Mod, [f2-[f2-[nil], f-Rel2]], F2),
+    parsecs1(Rest1, Out),
+    !.
+*/
+parsecs1([sn-Mod, sn-SN, ibar-Ibar|In], [sn-Struct, ibar-Ibar|Out]):-
+    on(and-cong-_,Mod),
+    inspect_mod(Mod,Mod1,SN,SN1),
+    append(Mod1, SN1, Struct),
+    parsecs1(In, Out),
+    !.
+
+parsecs1([sn-Mod, sn-SN, ibar-Ibar|In], [sn-Struct, ibar-Ibar|Out]):-
+    inspect_mod(Mod,Mod1,SN,SN1),
+    Mod1\=[],
+    Mod=[A|_], SN=[B|_],
+    A\=B,
+    check_constraints(Mod,SN),
+    append(SN1, [mod-Mod1], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([FP-P, sn-Mod, sn-SN, ibar-Ibar|In], [FP-P, sn-Struct, ibar-Ibar|Out]):-
+    (FP=fp;FP=fac;FP=f2),
+    Mod=[A|_], SN=[B|_],
+    A\=B,
+    check_constraints(Mod,SN),
+    append(SN, [mod-Mod], Struct),
+    parsecs1(In, Out),
+    !.
+parsecs1([ibar-SN, ibar-Ibar|In], [ibar-SN, ibar-Ibar|Out]):-
+    reverse(SN, [Head-_-_|_]),
+    lemmatize_dic_v(Head,Lemma,_),
+    coml(Lemma, Subs),
+    appiattisci(Subs,Sub),
+    (on(fcomp/_,Sub)
+     ;
+     check_fac_subcat([ibar-Ibar])),
+    parsecs1(In, Out),
+    !.
+parsecs1([ibar-SN, ibar-Ibar|In], [ibar-Ibars|Out]):-
+    reverse(SN, [Head-_-_|_]),
+    (coplbh(Head);support(Head)),
+    append(SN, Ibar, Ibars),
+    parsecs1(In, Out),
+    !.
+parsecs1([ibar-SN, savv-[not-neg-_], ibar-Ibar|In], [ibar-Ibars|Out]):-
+    reverse(SN, [Head-_-_|_]),
+    coplbh(Head),
+    append(SN, [not-neg-_], Ibarss),
+    append(Ibarss, Ibar, Ibars),
+    parsecs1(In, Out),
+    !.
+parsecs1([ibar-SN, savv-Avv, sv5-Ibar|In], [ibar-Ibars|Out]):-
+    reverse(SN, [Head-_-_|_]),
+    coplbh(Head),
+    append(SN, Avv, Ibarss),
+    append(Ibarss, Ibar, Ibars),
+    parsecs1(In, Out),
+    !.
+parsecs1([ibar-SN, savv-Avv, sv3-Ibar|In], [ibar-Ibars|Out]):-
+    reverse(SN, [Head-_-_|_]),
+    coplbh(Head),
+    append(SN, Avv, Ibarss),
+    append(Ibarss, Ibar, Ibars),
+    parsecs1(In, Out),
+    !.
+parsecs1([ibar-SN, savv-Avv, ibar-Ibar|In], [ibar-Ibars|Out]):-
+    reverse(SN, [Head-_-_|_]),
+    coplbh(Head),
+    append(SN, Avv, Ibarss),
+    append(Ibarss, Ibar, Ibars),
+    parsecs1(In, Out),
+    !.
+parsecs1([sv3-SN, ibar-Ibar|In], [ibar-Ibars|Out]):-
+    append(SN, Ibar, Ibars),
+    parsecs1(In, Out),
+    !.
+parsecs1([Struct |In], [Struct|Out]):-
+    parsecs1(In, Out),
+    !.
+
+sentence_modstart(Mod):-
+        findall_poss(NuoFrase),
+        NuoFrase=[I-First|_],
+        Mod=[V-_-_|Rev], 
+        (on(_-V,First);
+        spy_lower(V,Low,P), P=1,
+        on(_-Low,First)),
+    !.
+
+sentence_start(Mod):-
+        findall_poss(NuoFrase),
+        NuoFrase=[I-First|_],
+        reverse(Mod,[V-_-_|Rev]), 
+        (on(_-V,First)
+         ;
+         spy_lower(V,Low,Pol),Pol=1,
+         on(_-Low,First)), 
+    !.
+wsentence_start(V):-
+        findall_poss(NuoFrase),
+        NuoFrase=[I-First|_],
+        (on(_-V,First)
+         ;
+         spy_lower(V,Low,Pol),Pol=1,
+         on(_-Low,First)), 
+    !.
+
+check_constraints(Mod,SN):-
+    remove(First-_-_,Mod,Res),
+    spy_lower(First,L1,P1),
+    remove(Sec-_-_,SN,Res1),
+    spy_lower(Sec,L2,P2),
+    \+ grammw(First,_),
+    \+ grammw(Sec,_),
+    (P1=P2
+      ;
+     P1\=P2,
+     P2=1,
+     lemmatize_dic(First,Lemma,_),
+     trova_CatSem(n, Lemma, CatSem),
+     (if_first_name(Sec),
+       (on(sociale,CatSem);on(umano,CatSem))
+      ;
+      main_head_match1(Lemma,Sec))
+      ),!.
+         
+
+main_head_match1(Head,Head1):-
+      Head\=[], Head1\=[],
+      atomic(Head),atomic(Head1),
+     (s_is_ax(Head,Head1)
+      ;
+      s_is_ax(Head1,Head)
+      ;
+      Head=Head1), 
+     !.
+main_head_match1(Head,Head1):-
+      Head\=[], Head1\=[],
+      atomic(Head),atomic(Head1),
+      valid_heads(Head,Head1),
+      (Head=Head1,Score=0;
+      spy_lower(Head,LowHead,1),
+      LowHead=Head1,Score=0;
+      spy_lower(Head1,LowHead1,1),
+      LowHead1=Head,Score=0;
+      (check_similar_multiword(Head,Head1, Pred2)
+      ;     
+      check_similar_multiword(Head1,Head, Pred2)),
+       Score=0       
+       ;
+       match_approximate(Head1,Head)
+       ;
+       (s_is_ax(Head1,Head);s_is_ax(Head,Head1)),
+       Score=0),!.
+
+verify_subj_case(SN):-
+     SN=[A],
+     A=Pron-_-_,
+     case(Case,Pro),
+      Pro=Pron,
+     !,
+     (Case=nom;Case=nacc).
+verify_subj_case(SN):-
+    SN\=[A]
+    ;
+     SN=[A],
+     A=Pron-_-_,
+     \+ case(Case,Pron),
+     !.
+
+check_sp_sn(SP,SN):-
+    (SP=sp-[P-p-sp|_];SP=spda-[P-pda-spda|_]),
+      (SN=sn-_;SN=savv-_)
+     	;
+    (SP=sp-[P-p-sp|_];SP=spda-[P-pda-spda|_]),
+      SN=sp-_
+     	;
+    (SN=sp-[P-p-sp|_];SN=spda-[P-pda-spda|_]),
+      (SP=sn-_;SP=savv-_)
+     	;
+    (SN=sp-[P-p-sp|_];SN=spda-[P-pda-spda|_]),
+     SP=sp-_,
+    !.
+
+parsecos(N, In, Out, Rest):-
+    parsecos1(N, In, Out, Rest)
+    ;
+    parsecos2(N, In, Out, Rest),
+    !.
+    
+match_feats_heads_noms(Fir,Sec):-
+     lemmatize_dic(Fir,Lemma1, C1),
+     lemmatize_dic(Sec,Lemma2, C2),
+     checkmatch_approximate(Lemma1,Lemma2),
+      !.
+
+weigh_length(NuoFrase):-
+    NuoFrase=[N1-K1|_],
+    (N1=0,
+     length(NuoFrase,L),
+     7<L
+     ;
+     N1\=0),!.
+
+
+crea_argomenti([],CatV, Valenza, [], Args, [], [], []):-!.
+crea_argomenti([ibar-_|NArgs],CatV, Valenza, Mods, Args, AllArgs, VArgs, AllAgg):-
+    crea_argomenti(NArgs,CatV, Valenza, Mods, Args, AllArgs, VArgs, AllAgg),
+   !.
+crea_argomenti([fp-_|NArgs],CatV, Valenza, Mods, Args, AllArgs, VArgs, AllAgg):-
+    crea_argomenti(NArgs,CatV, Valenza, Mods, Args, AllArgs, VArgs, AllAgg),
+   !.
+crea_argomenti([cp-_|NArgs],CatV, Valenza, Mods, Args, AllArgs, VArgs, AllAgg):-
+    crea_argomenti(NArgs,CatV, Valenza, Mods, Args, AllArgs, VArgs, AllAgg),
+   !.
+crea_argomenti([fs-_|NArgs],CatV, Valenza, Mods, Args, AllArgs, VArgs, AllAgg):-
+    crea_argomenti(NArgs,CatV, Valenza, Mods, Args, AllArgs, VArgs, AllAgg),
+   !.
+crea_argomenti([fc-_|NArgs],CatV, Valenza, Mods, Args, AllArgs, VArgs, AllAgg):-
+    crea_argomenti(NArgs,CatV, Valenza, Mods, Args, AllArgs, VArgs, AllAgg),
+   !.
+
+
+crea_argomenti(NArgs,CatV, Valenza, Mods, Args, AllArgs, VArgs, AllAgg):-
+    crea_argomen1(NArgs,CatV, Valenza, Mods, Args, AllArgs, VArgs, AllAgg),!. 
+    
+crea_argomenti(NArgs,CatV, Valenza, Mods, Args, AllArgs, VArgs, AllAgg):-
+    crea_argomen2(NArgs,CatV, Valenza, Mods, Args, AllArgs, VArgs, AllAgg),!.     
+
+
+parsecoss(N, [], [], Rests):-!.
+parsecoss(1, [ibar-Ibar, sp-Struct, cp-['.'-punto-cp]], [], [ibar-Ibars, cp-['.'-punto-cp]]):-
+    Struct=[A],
+    A=_-P-_, (P=p;P=pda),
+    append(Ibar,Struct,Ibars),
+    !.
+parsecoss(1, [ibar-Ibar, sn-Struct, cp-['.'-punto-cp]], [], [f-[subj-Struct, ibar-Ibar, cp-['.'-punto-cp]]]):-
+    !.
+parsecoss(1, [ibar-Ibar, sn-Struct], [], [f-[subj-Struct, ibar-Ibar, cp-['.'-punto-cp]]]):-
+    !.
+parsecoss(1, [sn-SN, f-Struct |In], Out, Rest):-
+    Struct=[subj-A|Frase],
+    A\=[Su],
+    append(SN,[mod-A],Subj),
+    parsecoss(N1, [f-[subj-Subj|Frase] |In], Out, Rest),
+    !.
+
+parsecoss(1, [sn-SN, f-Struct |In], Out, Rest):-
+    Struct=[subj-A|Frase],
+    A=[Su-pers-_],
+    append(SN, [f2-[f2-[nil], f-Struct]], F2),
+    parsecoss(1, [F2|In], Out, Rest),
+    !.
+
+parsecoss(2, [f-Struct |In], [f-Out], Rests):-
+    N1 is 2 + 1,
+    parsecoss(N1, Struct, Out, Rest),
+    append(Rest,In,Rests),
+    !.
+parsecoss(3, [f-Struct |In], [], [f-Struct |In]):-
+    !.
+parsecoss(N, [Struct |In], [F-Out], Rest):-
+    Struct=F-Struc,
+    (F=f;F=fc;F=fac;F=fs;F=fint),
+    findall(Rel, on(ibar-[Rel|_],Struc),Rels), Rels\=[],
+    findall(Rel, on(subj-[Rel|_],Struc),Subs), Subs\=[],
+    length(Rels,R), 1<R,
+    length(Subs,L), L=<1,
+    parsecosts(Struc, Outpu),
+    append(Outpu, In, Output),
+    parsecoss(1, Output, Out, Rest),
+    !.
+parsecoss(N, [Struct |In], [F-[Struct|Out]], Res):-
+    Struct=F-Struc,
+    (F=fc;F=fac;F=fs;F=fint),
+     Struc=[A],
+    findall(Rel, on(ibar-[Rel|_],In),Rels), Rels\=[],
+    findall(Rel, on(subj-[Rel|_],In),Subs), Subs=[],
+    parsecos(1, In, Output, Rest),
+    (Output\=[],Out=Output,Res=Rest;Out=Rest,Res=[]),
+    !.
+parsecoss(N, [Struct |In], [F-[Struc|Output]], Rest):-
+    Struct=F-Struc,
+    (F=fc;F=fac;F=fs;F=fint),
+     Struc\=[A],
+    findall(Rel, on(ibar-[Rel|_],Struc),Rels1), Rels1\=[],
+     (In=[f-A|_];In=[fs-A|_]),
+    findall(Rel, on(ibar-[Rel|_],A),Rels), Rels\=[],
+    parsecos(1, In, Output, Rest),
+    !.
+parsecoss(1, [savv-SAVV, ibar-Ibar |In], Out, Rest):-
+    findall(Rel, on(subj-[Rel|_],In),Subs), Subs=[],
+    SAVV=[N-nt-sn],
+    parsecoss(1, [subj-SAVV, ibar-Ibar |In], Out, Rest),
+    !.
+
+parsecoss(N, [Struct, fc-[and-cong-fc] |In], [f-Structs|Out], Rest):-
+    Struct=sn-A,
+    N=1,
+    remove(f-Sent, In, Rests),
+    findall(Rel, on(ibar-[Rel|_],Sent),Rels), Rels\=[],
+    findall(Rel, on(subj-[Rel|_],Sent),Subs), Subs\=[],
+    remove(subj-Sub, Sent, Res),
+    append([subj-A], [fc-[and-cong-fc]], Su),
+    append(Su, [subj-Sub], Subjs),
+    append(Subjs, Res, Structs),
+    parsecoss(N, Rests, Out, Rest),
+        !.
+
+parsecoss(N, [Struct, fc-[and-cong-fc] |In], [f-Structs|Out], Rest):-
+    Struct=sn-A,
+    N=1,
+    findall(Rel, on(ibar-[Rel|_],In),Rels), Rels\=[],
+    findall(Rel, on(subj-[Rel|_],In),Subs), Subs=[],
+    remove(sn-Sub, In, Res),
+    append([subj-A], [fc-[and-cong-fc]], Su),
+    append(Su, [subj-Sub], Subjs),
+    append(Subjs, Res, Structs),
+    Out=[], Rest=[],
+        !.
+
+parsecoss(N, [Struct |In], [Struct|Out], Rest):-
+    findall(Rel, on(ibar-[Rel|_],In),Rels), Rels\=[],
+    findall(Rel, on(subj-[Rel|_],In),Subs), Subs=[],
+    Struct\=sn-A,
+    N=1,
+    parsecosts(In, Output),
+    parsecoss(N, Output, Out, Rest),
+    !.
+parsecoss(N, [Struct |In], [Struct|Out], Rest):-
+    N1 is N + 1,
+    parsecoss(N1, In, Out, Rest),
+    !.
+
+parsecos1(N, [], [], Rest):-!.
+parsecos1(N, [fint-[P-puntint-fint], cp-['How'-int-cp], sn-[Much-q-sn], ibar-Ibar1, sn-Struct, ibar-Ibar2|In], [fint-[fint-[P-puntint-fint], cp-[H-int-cp], ibar-Ibar, subj-Struct|Out]], Rest)
+     :-
+    (Much=much;Much=many),
+    mcon(how,'_',J),
+    mcon(J,Much,H),
+    append(Ibar1,Ibar2,Ibar),
+    parsecos(2, In, Out, Rest),
+    !.
+
+parsecos1(N, [fint-[P-puntint-fint], cp-[H-int-cp], ibar-Ibar1, sn-Struct, ibar-Ibar2|In], [fint-[fint-[P-puntint-fint], cp-[H-int-cp], ibar-Ibar, subj-Struct|Out]], Rest)
+     :-
+    append(Ibar1,Ibar2,Ibar),
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(N, [fint-[P-puntint-fint], fint-Fint, ibar-Ibar1, sn-Struct, ibar-Ibar2|In], [fint-[fint-[P-puntint-fint], fint-Fint, ibar-Ibar, subj-Struct|Out]], Rest)
+     :-
+    append(Ibar1,Ibar2,Ibar),
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(N, [fint-[P-puntint-fint], ibar-Ibar1, sn-Struct, ibar-Ibar2|In], [fint-[fint-[P-puntint-fint], ibar-Ibar, subj-Struct|Out]], Rest)
+     :-
+    append(Ibar1,Ibar2,Ibar),
+    parsecos(2, In, Out, Rest),
+    !.
+
+parsecos1(N, [fint-[P-puntint-fint], ibar-Ibar1, sn-Struct, vcomp-Ibar2|In], [fint-[fint-[P-puntint-fint], ibar-Ibar, subj-Struct|Out]], Rest)
+     :-
+    append(Ibar1,Ibar2,Ibar),
+    parsecos(2, In, Out, Rest),
+    !.
+
+parsecos1(N, [fint-[P-puntint-fint], fp-['"'-par-_], ibar-Ibar1, sn-Struct, vcomp-Ibar2|In], [fint-[fint-[P-puntint-fint], ibar-Ibar, subj-Struct|Out]], Rest)
+     :-
+    append(Ibar1,Ibar2,Ibar),
+    parsecos(2, In, Out, Rest),
+    !.
+
+parsecos1(N, [fp-['"'-par-_], ibar-Ibar, sn-Struct|In], [], [fp-['"'-par-_], f-[ibar-Ibar, subj-Struct|Out]]):-
+     nth(In,Num,cp-_),
+     Num=<4,
+    parsecos(2, In, Out, Rest), Rest=[],
+    !.
+parsecos1(N, [fp-['"'-par-_], ibar-Ibar, sn-Struct|In], [], [fp-['"'-par-_], f-[ibar-Ibar, subj-Struct|Out]]):-
+     nth(In,Num,cp-_),
+     reverse(Ibar,[V-_-_|_]),
+     verbs_of_saying(V),
+     Num=<4,
+    parsecos(2, In, Out, Rest),Rest=[],
+    !.
+
+parsecos1(N, [ibar-Ibar, fp-FP, sp-Struct, ibar-Mod, spda-SP, fp-FP|In], [], [fp-FP, sp-Structs, fp-FP|Out]):-
+    append(Mod, [obl-SP], Mods),
+    append(Struct, [mod-Mods], Structs),
+    parsecos(2, [ibar-Ibar|In], Out, Rest),Rest=[],
+    !.
+
+parsecos1(N, [sp-Struct, ibar-Mod, Sp-SP|In], [sp-Structs|Out], Rest):-
+    Mod=[A],
+    reverse(Mod, [V-_-_]),
+    pp_word_cat(V, pass, part, NewLex),
+    (Sp=sp;Sp=spda),
+    append(Mod, [obl-SP], Mods),
+    append(Struct, [mod-Mods], Structs),
+    parsecos(2, In, Out, Rest),
+    !.
+
+parsecos1(N, [fp-FP1, fp-['"'-par-_], ibar-Ibar, sn-Struct|In], [], [fp-['"'-par-_], f-[ibar-Ibar|Out]]):-
+     nth(In,Num,cp-_),
+     reverse(Ibar,[V-_-_|_]),
+     verbs_of_saying(V),
+     4<Num,
+    parsecos(2, [sn-Struct|In], Out, Rest),Rest=[],
+    !.
+
+parsecos1(N, [sn-SN, f-['('-par-f], fint-F2|In], [sn-Struct|Out], Rest):-
+    findall(Rel, on(ibar-[Rel|_],In),Rels), Rels\=[],
+    length(Rels,L), 2=<L,
+    collect_costs_rel(In, Relt, Ins),
+    append(F2, Relt, Relss),
+    append(SN, [f2-Relss], Struct),
+    parsecos(N, Ins, Out, Rest),
+    !.
+
+parsecos1(N, [sn-Struct, fp-FP, fp-['"'-par-_], sn-Stru, cp-[_-dirs-_], sn-Struc, fp-['"'-par-_]|In], [sn-Structs|Out], Rest):-
+     (reverse(Struct,[V-_-_|_]);mod_make_list([sn-Struct],List,V)),
+     (V=author;V=movie;V=book;V=title;V=song),
+     append(Stru, [mod-Struc], Strut),
+     append(Struct, [mod-Strut],Structs),
+    parsecos(N, In, Out, Rest),
+    !.
+parsecos1(N, [sp-Struct, fp-['"'-par-_], sa-Stru, sp-Struc, fp-['"'-par-_]|In], [sp-Structs|Out], Rest):-
+     reverse(Struct,[V-_-_|_]),
+     (V=movie;V=book;V=title;V=song),
+     append(Struc, [mod-Stru], Strut),
+     append(Struct, [mod-Strut],Structs),
+    parsecos(N, In, Out, Rest),
+    !.
+parsecos1(N, [sp-Struct, fp-['"'-par-_], sa-Stru, sp-Struc, fp-['"'-par-_]], [sp-Structs], []):-
+     reverse(Struct,[V-_-_|_]),
+     (V=movie;V=book;V=title;V=song),
+     append(Struc, [mod-Stru], Strut),
+     append(Struct, [mod-Strut],Structs),
+    !.
+parsecos1(N, [sn-Struct, fp-FP, fp-['"'-par-_], sn-Struc, fp-['"'-par-_]], [sn-Structs], []):-
+     reverse(Struct,[V-_-_|_]),
+     (V=movie;V=book;V=title;V=song),
+     append(Struct, [mod-Struc],Structs),
+    !.
+parsecos1(1, [fp-['"'-par-_], sn-Struc, fp-FP1, fp-FP2, sn-Struct, ibar-Ibar, fp-FP1, fp-FP2|In], [], [fp-['"'-par-_], f-[subj-Struct, ibar-Ibar], fp-[','-punt-fp], f-[sn-Struc|Out]]):-
+     reverse(Ibar,[V-_-_|_]),
+     verbs_of_saying(V),
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(N, [fp-['"'-par-_], fp-FP, ibar-Ibar, sn-Struct|In], [], [fp-['"'-par-_], fp-[','-punt-fp], f-[ibar-Ibar, subj-Struct|Out]]):-
+     nth(In,Num,cp-_),
+     reverse(Ibar,[V-_-_|_]),
+     verbs_of_saying(V),
+     Num=<4,
+    parsecos(2, In, Out, Rest),Rest=[],
+    !.
+parsecos1(N, [fp-FP, ibar-Ibar, sn-Struct|In], [], [fp-[','-punt-fp], f-[ibar-Ibar, subj-Struct|Out]]):-
+     nth(In,Num,cp-_),
+     reverse(Ibar,[V-_-_|_]),
+     verbs_of_saying(V),
+     Num=<4,
+    parsecos(2, In, Out, Rest),Rest=[],
+    !.
+parsecos1(1, [ibar-Ibar, sp-Struct|In], [], [sp-Struc|Out]):-
+     Ibar=[thanks-_-_],
+    Struct=[to-_-_|SP],
+     P=thanks_to-p-sp,
+     Struc=[P|SP],
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(N, [ibar-Ibar, sp-Struct|In], [], [sp-Struc|Out]):-
+     Ibar=[compared-_-_],
+    Struct=[with-_-_|SP],
+     P=compared_with-p-sp,
+     Struc=[P|SP],
+    parsecos(N, In, Out, Rest),
+    !.
+parsecos1(1, [ibar-Ibar, sp-Struct|In], [], [vcomp-Ibar, sp-Struct|Out]):-
+     sentence_start(Ibar),
+     Ibar=[_-V-sv3],
+    parsecos(1, In, Out, Rest),
+    !.
+     
+parsecos1(N, [sp-Ibar, sa-Struct|In], [], [savv-Struc|Out]):-
+     Ibar=[P-_-_],
+    Struct=[A-_-_],
+    mcon(P,'_',P1),
+    mcon(P1,A,Word),
+     r(Word),
+     Struc=[Word-avv-_],
+    parsecos(N, In, Out, Rest),
+    !.
+parsecos1(N, [fc-[Cong-cong-fc], ibar-Ibar, sn-Struct, cp-['.'-punto-cp]], [], [fc-[Cong-cong-fc], ibar-Ibar, sn-Struct, cp-['.'-punto-cp]]):-
+    !.
+parsecos1(N, [fc-[Cong-cong-fc], ibar-Ibar, sn-Struct], [], [fc-[Cong-cong-fc], ibar-Ibar, sn-Struct, cp-['.'-punto-cp]]):-
+    !.
+
+parsecos1(2, [ibar-Ibar, sn-Struct, cp-['.'-punto-cp]], [], [f-[subj-Struct, ibar-Ibar, cp-['.'-punto-cp]]]):-
+     reverse(Ibar,[V-Cat-_|_]),
+     Cat\=vc,
+    reverse(Ibar, [Head-_-_|_]),
+    lemmatize_dic_v(Head,Lemma,_),
+    coml(Lemma, Subs),
+    appiattisci(Subs,Sub),
+    (on(fcomp/_,Sub)
+     ;
+     check_fac_subcat([ibar-Ibar])),
+     verbs_of_saying(Lemma),
+    !.
+parsecos1(2, [ibar-Ibar, sn-Struct], [], [f-[subj-Struct, ibar-Ibar, cp-['.'-punto-cp]]]):-
+    reverse(Struct,[A-_-_|_]),
+    reverse(Ibar, [Head-_-_|_]),
+    lemmatize_dic_v(Head,Lemma,_),
+    coml(Lemma, Subs),
+    appiattisci(Subs,Sub),
+    (on(fcomp/_,Sub)
+     ;
+     check_fac_subcat([ibar-Ibar])),
+     verbs_of_saying(Lemma),
+    !.
+parsecos1(N, [sn-Struct, f-[subj-SN, ibar-Ibar|Rest]], [], [f-[subj-Struc, ibar-Ibar|Rest]]):-
+    append(Struct,[appos-SN],Struc),
+    !.
+parsecos1(N, [subj-Struct, fp-FP, f-[subj-SN, ibar-Ibar|Rest]], [], [f-[subj-Struc, ibar-Ibar|Rest]]):-
+    append(Struct,[appos-SN],Struc),
+    !.
+parsecos1(N, [subj-Struct, fp-FP, sn-SN, ibar-Ibar|In], [subj-Struc, ibar-Ibar|Out], Rest):-
+    FP\=[';'-_-_],
+    append(Struct,[appos-SN],Struc),
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(N, [subj-Struct, fp-FP, sn-SN, fp-FP, ibar-Ibar|In], [subj-Struc, ibar-Ibar|Out], Rest):-
+    FP\=[';'-_-_],
+    append(Struct,[appos-SN],Struc),
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(1, [sn-Stru, fp-Fp, sn-Mod, fp-Fp|In], [f-[subj-Struct|Out]], Rest):-
+    append(Stru, [appos-Mod], Struct),
+     nth(In,Num,ibar-_),
+     Num=<3,
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(1, [sn-Stru, fp-FP, sp-Mod, ibar-Ibar|In], [f-[subj-Struct, ibar-Ibar|Out]], Rest):-
+    FP\=[';'-_-_],
+    append(Stru, [appos-Mod], Struct),
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(1, [sn-Stru, fp-Fp, fs-[as-cosu-fs], ibar-Ibar, SP, fp-FP|In], [f-[subj-Struct|Out]], Rest):-
+    reverse(Ibar, [Head-_-_|_]),
+    pp_word_cat(Head, Temp, part, Vinf),
+    append([as-p-sp], Ibar, Vcom),
+    append(Stru, [appos-[vcomp-Vcom, SP]], Struct),
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(1, [sn-Struct, fp-Fp, fs-[as-cosu-fs], ibar-Ibar, SN, SP, fp-FP|In], [f-[subj-Struct, fp-[','-punt-fp], fs-[fs-[as-cosu-fs], ibar-Ibar, SN, SP], fp-[','-punt-fp]|Out]], Rest):-
+    check_sp_sn(SP,SN),
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(1, [sn-Struct, fp-Fp, fs-[as-cosu-fs], ibar-Ibar, SN, SP, IBAR|In], [f-[subj-Struct, fp-[','-punt-fp], fs-[fs-[as-cosu-fs], ibar-Ibar, SN, SP], IBAR|Out]], Rest):-
+    IBAR=ibar-_,
+    check_sp_sn(SP,SN),
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(1, [sv5-Mod, sn-SN, fp-Fp, sn-Struct, ibar-Ibar|In], [sv5-Mod, sn-SN, f-[subj-Struct, ibar-Ibar|Out]], Rest):-
+%    parsecos(2, [ibar-Ibar|In], Out, Rest),
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(N, [spda-SP, sn-SN|In], [spda-Struct|Out],Rest):-
+    SP=[by-pda-_, Num-num-_],
+    SN=[Pm-Mod-_, 'EDT'-n-_],
+    append(SP, SN, Struct),
+    parsecos(N, In, Out,Rest),
+    !.
+parsecos1(N, [sn-Mod, sn-SN, SP|In], [sn-Struct|Out], Rest):-
+    getheadmod(SN,Head),
+    \+ verify_subj_case(Head),
+    (SP=sp-[P-p-sp|_];SP=spda-[P-pda-spda|_]),
+    check_subcn(Head,P),
+    inspect_mod(Mod,Mod1,SN,SN1),
+    SP=_-Cost,
+    Cost\=[A],
+    append(SN1, [obl-Cost], Mods),
+    Mod1\=[],
+    append(Mods, [mod-Mod1], Struct),
+    parsecos(N, In, Out, Rest),
+    !.
+parsecos1(N, [sn-SN, SP1|In], [sn-Struct|Out], Rest):-
+    getheadmod(SN,Head),
+    \+ verify_subj_case(Head),
+    SP1=A-SP, (A=sp;A=spda),
+    SP\=[B],
+    (SP=[P-p-sp|_];SP=[P-pda-spda|_]),
+    check_subcn(Head,P),
+    append(SN, [obl-SP], Struct),
+    parsecos(N, In, Out, Rest),
+    !.
+parsecos1(N, [sp-SN, SP1|In], [sp-Struct|Out], Rest):-
+    getheadmod(SN,Head),
+    \+ verify_subj_case(Head),
+    SP1=sp-SP, 
+    SP\=[B],
+    SP=[P-p-sp|_],
+    check_subcn(Head,P),
+    append(SN, [obl-SP], Struct),
+    parsecos(N, In, Out, Rest),
+    !.
+
+parsecos1(N, [sn-SN, sp-SP|In], [sn-Struct|Out], Rest):-
+    getheadmod(SN,Head),
+    \+ verify_subj_case(Head),
+    SP=[P-p-sp|_],
+    turn_up_wn(Head, Feats),
+    (on(rel,Feats);on(ecn,Feats),on(cmp,Feats)),
+    tipo_agg(Type,P,F),
+    Type=locativo,
+    append(SN, [obl-SP], Struct),
+    parsecos(N, In, Out, Rest),
+    !.
+
+parsecos1(N, [sp-SN, SP1|In], [sp-Struct|Out], Rest):-
+    reverse(SN, [_-nt-_|_]),
+    SP1=A-SP, A=sn,
+    SP=[_-num-_],
+    append(SN, [mod-SP], Struct),
+    parsecos(N, In, Out, Rest),
+    !.
+
+parsecos1(N, [sn-SN, SP1|In], [savv-Struct|Out], Rest):-
+    getheadmod(SN,Head),
+    \+ verify_subj_case(Head),
+    SP1=A-SP, A=savv,
+    SP=[ago-avv-_|_],
+    append(SN, [mod-SP], Struct),
+    parsecos(N, In, Out, Rest),
+    !.
+
+parsecos1(N, [SP, savv-Savv, sn-Mod|In], [SS-Struct|Out], Rest):-
+    (SP=sp-[Prep-P-_],SS=sp;
+     SP=spda-[Prep-P-_],SS=spda),
+    Mod=[_-ag-_|_],
+    append(Savv, Mod, Struc),
+    append([Prep-P-_], Struc, Struct),
+    parsecos(N, In, Out, Rest),
+    !.
+
+parsecos1(N, [sp-[P-p-sp], savv-Mod|In], [sp-Struct|Out], Rest):-
+    append([P-p-sp], Mod,  Struct),
+    parsecos(N, In, Out, Rest),
+    !.
+
+parsecos1(N, [SN, f2-Struc, sn-Subj, ibar-Ibar|In], [SN, fac-Fac|Out], Rest):-
+    (SN=sn-SN1;SN=sp-SN1),
+    Struc=[A],
+    on(that-_-_,Struc),
+    reverse(SN1, [Head-_-_|_]),
+    lemmatize_dic_v(Head,Lemma,_),
+    coml_n(Lemma, Subs),
+    on(subc-Sub,Subs),
+    (on(_/that/fcomp,Sub);on(_/irreal/fcomp,Sub)),
+    collect_costs_rel([sn-Subj, ibar-Ibar|In], Rel, Ins),
+    append([fac-Struc],Rel,Fac),
+    parsecos(N, Ins, Out, Rest),
+    !.
+
+/*
+parsecs1([sp-SP, sn-SN, sp-[of-p-sp], f2-F2|In], [sp-Struct|Out]):-
+    (on(whose-relob-f2, F2);on(which-rel-f2, F2)),
+    append(SP, SN, Head),
+    collect_costs_rel(In, Relt, Ins),
+    append([of-p-sp], F2, Mods),
+    append([f2-Mods], [f-Relt], Relss),
+    append(Head, [f2-Relss], Struct),
+    parsecs1(Ins, Out),
+    !.
+parsecs1([sn-SN, sp-[of-p-sp], f2-F2|In], [sn-Struct|Out]):-
+    (on(whose-relob-f2, F2);on(which-rel-f2, F2)),
+    collect_costs_rel(In, Relt, Ins),
+    append([of-p-sp], F2, Mods),
+    append([f2-Mods], [f-Relt], Relss),
+    append(SN, [f2-Relss], Struct),
+    parsecs1(Ins, Out),
+    !.
+parsecs1([sn-Mod, sn-SN, ibar-Ibar|In], [sn-F2|Out]):-
+    Mod=[A|_], SN=[B|_],
+    A=B, A=the-_-_,
+    findall(Rel, on(ibar-[Rel|_],In),Rels), Rels\=[],
+    Rels\=[],
+    length(Rels,L), 1=<L,
+    nth(In,Num,ibar-_), Num<6,
+    collect_costs_rel1(In, Rel, Rest1),
+    append([ibar-Ibar],Rel,Rel1),
+    append([subj-SN],Rel1,Rel2),
+    append(Mod, [f2-[f2-[nil], f-Rel2]], F2),
+    parsecs1(Rest1, Out),
+    !.
+*/
+parsecos1(N, [SN, f2-Struc, sn-Subj, ibar-Ibar|In], [sn-SNF|Out], Rests):-
+    Struc=[A],
+    (SN=sn-SN1;SN=sp-SN1),
+    on(Whe-_-_,Struc),
+    (Whe=when;Whe=where),
+    reverse(SN, [Head-_-_|_]),
+    locwn(Head),   
+    collect_costs_rel([sn-Subj, ibar-Ibar|In], Rel, Ins),
+     append(SN1, [f2-[f2-Struc, f-Rel]], SNF),
+    parsecos(N, Ins, Out, Rests),
+    !.
+parsecos1(N, [SN, f2-Struc, sn-Subj, ibar-Ibar|In], [f2-[f2-[Cos-Str], ibar-Ibar|Out]], Rests):-
+    (Struc=[A]; on(P-R-C, Struc), P=whose),
+    (SN=sn-SN1,Cos=sn;SN=sp-SN1,Cos=sp;SN=spda-SN1,Cos=spda;SN=spd-SN1,Cos=spd),
+    notinterrogative,
+    append(SN1,Struc,Struct),
+    append(Struct,Subj,Str),
+    parsecos(N, In, Out, Rests),
+    !.
+
+parsecos1(N, [SN, f2-Struc, sn-Subj, ibar-Ibar|In], [Cos-SNF|Out], Rests):-
+    Struc=[A],
+    (SN=sn-SN1,Cos=sn;SN=sp-SN1,Cos=sp;SN=spda-SN1,Cos=spda;SN=spd-SN1,Cos=spd),
+    \+ notinterrogative,
+    collect_costs_rel([ibar-Ibar|In], Rel, Ins),
+    append([sn-Subj],Rel,F),
+    Str=f2-[f2-Struc, f-F],
+    append(SN1,[Str],SNF),
+    parsecos(N, Ins, Out, Rests),
+    !.
+
+parsecos1(N, [SN, f2-Struc, sn-Subj, ibar-Ibar|In], [Cos-SNF|Out], Rests):-
+    on(P-R-C, Struc), P=whose,
+    (SN=sn-SN1,Cos=sn;SN=sp-SN1,Cos=sp;SN=spda-SN1,Cos=spda;SN=spd-SN1,Cos=spd),
+    \+ notinterrogative,
+    collect_costs_rel([sn-Subj, ibar-Ibar|In], Rel, Ins),
+    Str=f2-[f2-Struc, f-Rel],
+    append(SN1,[Str],SNF),
+    parsecos(N, Ins, Out, Rests),
+    !.
+parsecos1(N, [SN, f2-Struc, sn-Mod, sn-Subj, ibar-Ibar|In], [Cos-SNF|Out], Rests):-
+    on(P-R-C, Struc), P=whose,
+    (SN=sn-SN1,Cos=sn;SN=sp-SN1,Cos=sp;SN=spda-SN1,Cos=spda;SN=spd-SN1,Cos=spd),
+    \+ notinterrogative,
+    collect_costs_rel(In, Rel, Ins),
+    Str=f2-[f2-[P-R-C, sn-Mod], f-[sn-Subj, ibar-Ibar|Rel]],
+    append(SN1,[Str],SNF),
+    parsecos(N, Ins, Out, Rests),
+    !.
+parsecos1(N, [SN, fp-FP, f2-Struc, sn-Mod, sn-Subj, ibar-Ibar|In], [Cos-SNF|Out], Rests):-
+    on(P-R-C, Struc), P=whose,
+    (SN=sn-SN1,Cos=sn;SN=sp-SN1,Cos=sp;SN=spda-SN1,Cos=spda;SN=spd-SN1,Cos=spd),
+    \+ notinterrogative,
+    collect_costs_rel([sn-Subj, ibar-Ibar|In], Rel, Ins),
+    Str=f2-[f2-[P-R-C, sn-Mod], f-Rel],
+    append(SN1,[Str],SNF),
+    parsecos(N, Ins, Out, Rests),
+    !.
+parsecos1(N, [SN, fp-FP, f2-Struc, sn-Subj, ibar-Ibar|In], [Cos-SNF|Out], Rests):-
+    on(P-R-C, Struc), P=whose,
+    (SN=sn-SN1,Cos=sn;SN=sp-SN1,Cos=sp;SN=spda-SN1,Cos=spda;SN=spd-SN1,Cos=spd),
+    \+ notinterrogative,
+    collect_costs_rel([sn-Subj, ibar-Ibar|In], Rel, Ins),
+    Str=f2-[f2-Struc, f-Rel],
+    append(SN1,[Str],SNF),
+    parsecos(N, Ins, Out, Rests),
+    !.
+parsecos1(N, [SN, fp-FP, f2-Struc, sn-Subj, ibar-Ibar|In], [Cos-SNF|Out], Rests):-
+     Struc=[A], on(P-R-C, Struc), P\=whose,
+    (SN=sn-SN1, Cos=sn;SN=sp-SN1, Cos=sp),
+    collect_costs_rel([sn-Subj, ibar-Ibar|In], Rel, Ins),
+     append(SN1, [f2-[f2-Struc, f-Rel]], SNF),
+    parsecos(N, Ins, Out, Rests),
+    !.
+parsecos1(N, [SN, fp-FP, sn-Subj, f2-Struc, ibar-Ibar|In], [Cos-Str|Out], Rests):-
+    Struc=[A],
+    (SN=sn-SN1, Cos=sn;SN=sp-SN1, Cos=sp),
+    collect_costs_rel([ibar-Ibar|In], Rel, Ins),
+     append(Subj, [f2-[f2-Struc, f-Rel]], SNF),
+    append(SN1,[mod-SNF],Str),
+    parsecos(N, Ins, Out, Rests),
+    !.
+parsecos1(N, [SN, f2-Struc, sn-Mod, sn-Subj, ibar-Ibar|In], [Cos-SNF|Out], Rests):-
+     Struc=[A], on(P-R-C, Struc), P\=whose,
+    (SN=sn-SN1, Cos=sn;SN=sp-SN1, Cos=sp),
+    append(Subj,[mod-Mod],Str),
+    collect_costs_rel([subj-Str, ibar-Ibar|In], Rel, Ins),
+     append(SN1, [f2-[f2-Struc, f-Rel]], SNF),
+    parsecos(N, Ins, Out, Rests),
+    !.
+
+parsecos1(N, [SN, fp-FP, f2-Struc, sn-Mod, sn-Subj, ibar-Ibar|In], [Cos-SNF|Out], Rests):-
+     Struc=[A], on(P-R-C, Struc), P\=whose,
+    (SN=sn-SN1, Cos=sn;SN=sp-SN1, Cos=sp),
+    append(Subj,[mod-Mod],Str),
+    collect_costs_rel([subj-Str, ibar-Ibar|In], Rel, Ins),
+     append(SN1, [f2-[f2-Struc, f-Rel]], SNF),
+    parsecos(N, Ins, Out, Rests),
+    !.
+
+parsecos1(N, [SN, f2-Struc, sn-Subj, ibar-Ibar|In], [Cos-SNF|Out], Rests):-
+    on(Whe-_-_,Struc),
+    (Whe=when;Whe=where),
+    (SN=sn-SN1, Cos=sn;SN=sp-SN1, Cos=sp),
+    reverse(SN1, [Head-_-_|_]),
+    \+locwn(Head),   
+    collect_costs_rel([sn-Subj, ibar-Ibar|In], Rel, Ins),
+    append(SN1, [f2-[f2-Struc, f-Rel]], SNF),
+    parsecos(N, Ins, Out, Rests),
+    !.
+
+parsecos1(N, [ibar-Ibar, sn-SN, f2-Struc, f-F|In], [ibar-Ibar, sn-SNF|Out], Rest):-
+    Struc=[A],
+    on(that-_-_,Struc),
+    reverse(SN, [Head-Ca-_|_]),
+    lemmatize_dic(Head,Lemma,S),
+    (S=s,Lemm=Lemma;S\=s,Lemm=Head),
+    (coml_n(Lemm, Subs),
+    on(subc-Sub,Subs),
+    (on(_/that/fcomp,Sub);on(_/irreal/fcomp,Sub))
+      ;
+      Ca=nf),
+    append(SN, [fac-[fac-[nil], f-F]], SNF),
+    parsecos(N, In, Out, Rest),
+    !.
+
+parsecos1(N, [ibar-Ibar, savv-SA, sp-SN, f2-Struc, sn-SNS|In], [ibar-Ibar, savv-SA, sp-SN, fac-[fac-Struc|Out]], Rest):-
+    Struc=[A],
+    on(that-_-_,Struc),
+    reverse(Ibar, [Head-_-_|_]),
+    lemmatize_dic_v(Head,Lemma,_),
+    coml(Lemma, Subs),
+    appiattisci(Subs,Sub),
+    (on(fcomp/_,Sub)
+     ;
+     check_fac_subcat([ibar-Ibar])),
+    parsecos(N, [sn-SNS|In], Out, Rest),
+    !.
+
+parsecos1(N, [ibar-Ibar, sn-SN, savv-SA, f2-Struc, sn-SNS|In], [ibar-Ibar, sn-SN, savv-SA, fac-[fac-Struc|Out]], Rest):-
+    Struc=[A],
+    on(that-_-_,Struc),
+    reverse(Ibar, [Head-_-_|_]),
+    lemmatize_dic_v(Head,Lemma,_),
+    coml(Lemma, Subs),
+    appiattisci(Subs,Sub),
+    (on(fcomp/_,Sub)
+     ;
+     check_fac_subcat([ibar-Ibar])),
+    parsecos(N, [subj-SNS|In], Out, Rest),
+    !.
+parsecos1(N, [ibar-Ibar, sp-SN, f2-Struc, sn-SNS|In], [ibar-Ibar, sp-SN, fac-[fac-Struc|Out]], Rest):-
+    Struc=[A],
+    on(that-_-_,Struc),
+    reverse(Ibar, [Head-_-_|_]),
+    lemmatize_dic_v(Head,Lemma,_),
+    coml(Lemma, Subs),
+    appiattisci(Subs,Sub),
+    (on(fcomp/_,Sub)
+     ;
+     check_fac_subcat([ibar-Ibar])),
+    parsecos(N, [sn-SNS|In], Out, Rest),
+    !.
+
+parsecos1(N, [sv2-Ibar, sn-SN, f2-Struc, sn-SNS|In], [sv2-Ibar, sn-SN, fac-[fac-Struc|Out]], Rest):-
+    Struc=[A],
+    on(that-_-_,Struc),
+    reverse(Ibar, [Head-_-_|_]),
+    lemmatize_dic_v(Head,Lemma,_),
+    coml(Lemma, Subs),
+    appiattisci(Subs,Sub),
+    (on(fcomp/_,Sub)
+     ;
+     check_fac_subcat([ibar-Ibar])),
+    parsecos(N, [sn-SNS|In], Out, Rest),
+    !.
+
+parsecos1(N, [SN, f2-Struc, sn-SNS|In], [F-SNF], Rest):-
+    Struc=[A],
+    on(that-_-_,Struc),
+    (SN=sn-SN1, F=sn;SN=sp-SN1, F=sp),
+    reverse(SN1, [Head-Ca-_|_]),
+    lemmatize_dic(Head,Lemma,S),
+    (S=s,Lemm=Lemma;S\=s,Lemm=Head),
+    (coml_n(Lemm, Subs),
+     on(subc-Sub,Subs),
+     (on(_/that/fcomp,Sub);on(_/irreal/fcomp,Sub))
+      ;
+      Ca=nf),
+    parsecos(N, In, Out, Rest),
+    Out=[ibar-Ibar|Fac],
+    collect_costs_rel1(Fac,Sent,Res),
+    append(SN1, [fac-[fac-Struc, f-[subj-SNS,ibar-Ibar|Sent]]], SNF),
+    !.
+
+parsecos1(N, [ibar-Ibar, sn-SN, f2-Struc|In], [ibar-Ibar, sn-SN, fac-[fac-Struc|Out]], Rest):-
+    Struc=[A],
+    on(that-_-_,Struc),
+    reverse(Ibar, [Head-_-_|_]),
+    lemmatize_dic_v(Head,Lemma,_),
+    coml(Lemma, Subs),
+    appiattisci(Subs,Sub),
+    (on(fcomp/_,Sub)
+     ;
+     check_fac_subcat([ibar-Ibar])),
+    parsecos(N, In, Out, Rest),
+    !.
+
+parsecos1(N, [ibar-Ibar, sn-SN, f2-Struc|In], [ibar-Ibar, sn-SNF], Rest):-
+    Struc=[A],
+    on(that-_-_,Struc),
+    reverse(SN, [Head-Ca-_|_]),
+    lemmatize_dic(Head,Lemma,S),
+    (S=s,Lemm=Lemma;S\=s,Lemm=Head),
+    (coml_n(Lemm, Subs),
+    on(subc-Sub,Subs),
+    (on(_/that/fcomp,Sub);on(_/irreal/fcomp,Sub))
+      ;
+      Ca=nf),
+    parsecos(N, In, Out, Rest),
+    append(SN, [fac-[fac-[nil]|Out]], SNF),
+    !.
+
+parsecos1(N, [sn-SN, sp-SP, f2-Struc|In], [sn-SNF], Rest):-
+    Struc=[A],
+    on(that-_-_,Struc),
+    length(SP,L),
+    3=<L,
+    reverse(SN, [Head-Ca-_|_]),
+    lemmatize_dic(Head,Lemma,S),
+    (S=s,Lemm=Lemma;S\=s,Lemm=Head),
+    (coml_n(Lemm, Subs),
+    on(subc-Sub,Subs),
+    (on(_/that/fcomp,Sub);on(_/irreal/fcomp,Sub))
+      ;
+      Ca=nf),
+    parsecos(N, In, Out, Rest),
+    append(SN, [sp-SP, fac-[fac-[nil]|Out]], SNF),
+    !.
+
+parsecos1(N, [SN, f2-Struc], [F-SNF], []):-
+    Struc\=[A],
+    Struc=[f2-[that-_-_]|Rest],
+    (SN=sn-SN1, F=sn;SN=sp-SN1, F=sp),
+    prendi_testa(Func,SN1,Head),
+%    reverse(SN1, [Head-Ca-_|_]),
+    lemmatize_dic(Head,Lemma,S),
+    (S=s,Lemm=Lemma;S\=s,Lemm=Head),
+    (coml_n(Lemm, Subs),
+     on(subc-Sub,Subs),
+     (on(_/that/fcomp,Sub);on(_/irreal/fcomp,Sub))
+      ;
+      Ca=nf),
+    append(SN1, [fac-[fac-[that-pk-fac]|Rest]], SNF),
+    !.
+
+
+parsecos1(N, [f2-Struc, sn-SN, ibar-Ibar |In], [f2-[f2-Struc, f-Rel2]|Out], Rest):-
+    (Struc=[A]; on(P-R-C, Struc), P=whose),
+    findall(Rel, on(ibar-[Rel|_],In),Rels), Rels=[],
+    length(Rels,L), L=0,
+    explore_In(In),
+    collect_costs_rel1(In, Rel, Rest1),
+    append([ibar-Ibar],Rel,Rel1),
+    append([subj-SN],Rel1,Rel2),
+    parsecos(N, Rest1, Out, Rest),
+    !.
+parsecos1(N, [f2-Struc, sn-SN, ibar-Ibar |In], Outs, Rests):-
+    (Struc=[A]; on(P-R-C, Struc), P=whose),
+    findall(Rel, on(ibar-[Rel|_],In),Rels), 
+    explore_In(In),
+    (Rels\=[],
+     length(Rels,L), 1=<L,
+     nth(In,Num,ibar-_), Num<6,
+     collect_costs_rel1(In, Rel, Rest1)
+     ;
+     Rels=[],
+     length(In,L), L<4,
+     Rel=In),
+    append([ibar-Ibar],Rel,Rel1),
+    append([subj-SN],Rel1,Rel2),
+    parsecos(N, Rest1, Out, Rest),
+    check_said_parenth([ibar-Ibar], Rel, Rel2, Struc, Out, Outs, Rest, Rests),
+    !.
+
+parsecos1(N, [f2-Struc, sn-SN|In], [f2-Struct|Out], Rest):-
+    on(P-R-C, Struc), P=whose,
+    append(Struc,SN,Struct),
+    parsecos(N, In, Out, Rest),
+    !.
+
+parsecos1(1, [fp-FP, S-Fs, f2-Struc, ibar-Ibar |In], [fp-FP, S-[S-Fs, f-[subj-Struct|Out]]], Rest):-
+    Struc=[A], (S=fs;S=fc),
+    findall(Rel, on(ibar-[Rel|_],In),Rels), Rels\=[],
+    length(Rels,L), 1<L,
+    explore_In(In),
+    collect_costs_rel1(In, Rel, Rest1),
+    append([ibar-Ibar],Rel,Rel1),
+    append([subj-pro],Rel1,Rel2),
+    append(Struc,[f2-Rel2], Struct),
+    parsecos(2, Rest1, Out, Rest),
+    !.
+
+parsecos1(N, [f2-Struc, ibar-Ibar |In], [f2-[f2-Struc, f-Rel2]|Out], Rest):-
+    (Struc=[A]; on(P-R-C, Struc), P=whose),
+    findall(Rel, on(ibar-[Rel|_],In),Rels), Rels=[],
+    length(Rels,L), L=0,
+    explore_In(In),
+    collect_costs_rel1(In, Rel, Rest1),
+    append([ibar-Ibar],Rel,Rel1),
+    append([subj-pro],Rel1,Rel2),
+    parsecos(N, Rest1, Out, Rest),
+    !.
+parsecos1(N, [f2-Struc, ibar-Ibar |In], [f2-[f2-Struc, f-Rel2]|Out], Rest):-
+    (Struc=[A]; on(P-R-C, Struc), P=whose),
+    findall(Rel, on(ibar-[Rel|_],In),Rels), 
+    explore_In(In),
+    (Rels\=[],
+     length(Rels,L), 1=<L,
+     nth(In,Num,ibar-_), Num<6,
+     collect_costs_rel1(In, Rel, Rest1)
+     ;
+     Rels=[],
+     length(In,L), L<4,
+     Rel=In),
+    append([ibar-Ibar],Rel,Rel1),
+    append([subj-pro],Rel1,Rel2),
+    parsecos(N, Rest1, Out, Rest),
+    !.
+
+parsecos1(N, [sp-Subj, f2-Struc, vcomp-Ibar |In], [sp-SP|Out], Rest):-
+    (Struc=[A]; on(P-R-C, Struc), P=whose),
+    findall(Rel, on(ibar-[Rel|_],In),Rels), 
+    explore_In(In),
+    (Rels\=[],
+     length(Rels,L), 1=<L,
+     nth(In,Num,ibar-_), Num<6,
+     collect_costs_rel1(In, Rel, Rest1)
+     ;
+     Rels=[],
+     length(In,L), L=<5,
+     Rel=In),
+    append([ibar-Ibar],Rel,Rel1),
+    append([subj-pro],Rel1,Rel2),
+    append(Subj, [f2-[f2-Struc, f-Rel2]], SP),
+    parsecos(N, Rest1, Out, Rest),
+    !.
+
+parsecos1(N, [sp-Subj, f2-Struc, ibar-Ibar |In], [sp-SP|Out], Rest):-
+    (Struc=[A]; on(P-R-C, Struc), P=whose),
+    findall(Rel, on(ibar-[Rel|_],In),Rels), 
+    explore_In(In),
+    (Rels\=[],
+     length(Rels,L), 1=<L,
+     nth(In,Num,ibar-_), Num<6,
+     collect_costs_rel1(In, Rel, Rest1)
+     ;
+     Rels=[],
+     length(In,L), L=<5,
+     Rel=In),
+    append([ibar-Ibar],Rel,Rel1),
+    append([subj-pro],Rel1,Rel2),
+    append(Subj, [f2-[f2-Struc, f-Rel2]], SP),
+    parsecos(N, Rest1, Out, Rest),
+    !.
+parsecos1(N, [ibar-Struct, fp-Fp, fc-[Cong-cong-fc], savv-Savv, ibar-Ibar |In], [ibar-Struct, fp-[','-punt-fp], fc-[Cong-cong-fc], savv-Savv, ibar-Ibar |Out], Rest):-
+    (Cong=and;Cong=but),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos1(N, [ibar-Struct, sn-Savv, sv3-Ibar |In], [ibar-IBar, sn-Savv|Out], Rest):-
+    notinterrogative,
+    reverse(Struct,[V-Ca-_|Rev]),
+    check_auxcat(Ca),
+    append(Struct,Ibar,IBar),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+parsecos1(N, [fc-[Cong-cong-fc], sn-Struct, savv-Savv, ibar-Ibar |In], [fc-[fc-[Cong-cong-fc], subj-Struct, savv-Savv, ibar-Ibar|Out]], Rest):-
+    Cong\=and,
+     reverse(Ibar,[V-_-_|Rev]),
+     verbs_of_saying(V),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos1(N, [fc-[Cong-cong-fc], sn-Struct, ibar-Ibar |In], [fc-[fc-[Cong-cong-fc], subj-Struct, ibar-Ibar|Out]], Rest):-
+    Cong\=and,
+     reverse(Ibar,[V-_-_|Rev]),
+     verbs_of_saying(V),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos1(1, [sn-Struc, fc-[Cong-cong-fc], sn-Struct, ibar-Ibar |In], [f-[subj-Structs, ibar-Ibar|Out]], Rest):-
+    (Cong=and;Cong=or),
+    checksamehead(Struc, Struct),
+    append(Struc, [Cong-cong-fc], Strucc),
+    append(Strucc, Struct, Structs),
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(1, [sn-Struc, fc-[Cong-cong-fc], fp-['"'-par-fp], sn-Struct, ibar-Ibar |In], [f-[subj-Structs, ibar-Ibar|Out]], Rest):-
+    (Cong=and;Cong=or),
+    checksamehead(Struc, Struct),
+    append(Struc, [Cong-cong-fc], Strucc),
+    append(Strucc, Struct, Structs),
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(1, [sn-Struc, fc-[Cong-cong-fc], fp-['"'-par-fp], sn-Struct, fp-['"'-par-fp], ibar-Ibar |In], [f-[subj-Structs, ibar-Ibar|Out]], Rest):-
+    (Cong=and;Cong=or),
+    checksamehead(Struc, Struct),
+    append(Struc, [Cong-cong-fc], Strucc),
+    append(Strucc, Struct, Structs),
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(1, [sn-Struc, fc-[Cong-cong-fc], fp-['"'-par-fp], sn-Struct, savv-Savv, ibar-Ibar |In], [f-[subj-Structs, savv-Savv, ibar-Ibar|Out]], Rest):-
+    (Cong=and;Cong=or),
+    checksamehead(Struc, Struct),
+    append(Struc, [Cong-cong-fc], Strucc),
+    append(Strucc, Struct, Structs),
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos1(1, [sn-Struc, fc-[Cong-cong-fc], sn-Struct, fp-FP |In], [sn-Structs, fp-FP|Out], Rest):-
+    (Cong=and;Cong=or),
+    (checksamehead(Struc, Struct)
+     ;
+     Struc=[W-_-_|_],
+     Struct=[W1-_-_|_],
+     lemmatize_dic(W,Lem1,_),
+     lemmatize_dic(W1,Lem2,_),
+     search_wn_cats(Lem1,Cats),
+     search_wn_cats(Lem2,Cats1),
+     intersection(Cats,Cats1,Ints), Ints\=[]),
+    append(Struc, [Cong-cong-fc], Strucc),
+    append(Strucc, Struct, Structs),
+    parsecos(2, In, Out, Rest),
+    !.
+
+checksamehead(SN, SN1):-
+    reverse(SN, [Head-C-_|_]),
+    reverse(SN1, [Head1-C-_|_]),
+    !.
+checksamehead(SN, SN1):-
+    remove(_-_,SN,Rest),
+    reverse(Rest, [Head-C-_|_]),
+    reverse(SN1, [Head1-C-_|_]),
+    !.
+checksamehead(SN, SN1):-
+    remove(_-_,SN1,Rest),
+    reverse(Rest, [Head-C-_|_]),
+    reverse(SN, [Head1-C-_|_]),
+    !.
+checksamehead(SN, SN1):-
+    remove(_-_,SN1,Rest1),
+    remove(_-_,SN,Rest),
+    reverse(Rest1, [Head-C-_|_]),
+    reverse(Rest, [Head1-C-_|_]),
+    !.
+
+getheadmod(SN,Head):-
+    reverse(SN, [Head-_-_|_]),
+    !.
+getheadmod(SN,Head):-
+    remove(mod-Mod,SN,SN1),
+    reverse(SN1, [Head-_-_|_]),
+    !.
+
+notinterrogative:-
+        findall_poss(NuoFrase),
+        reverse(NuoFrase,Frase),
+        Frase=[I-First|_],
+        First=[x-'?'],
+        !.
+
+explore_In([Cos-SV|In]):-
+    Cos=sv5,
+    reverse(SV, [V-_-_|_]),
+    lemmatize_dic_v(V,Lemma,S),
+    \+ coml(Lemma,Sub),
+    !.     
+explore_In([Cos-SN|In]):-
+    Cos=sn,
+    SN=[P-Cat-_|_],
+    (Cat=Pron,
+     \+ filter_pers(P,Fea,L)
+     ;
+     Cat\=pron),
+     !.
+explore_In([Cos-SN|In]):-
+    Cos=sq
+    ;
+    Cos=savv,
+    !.
+
+embedded_clause(Ibar, Out, NewOut):-
+    reverse(Ibar,[V-_-_|_]),
+    verbs_of_saying(V),
+    lemmatize_dic_v(V,Lemma,_),
+    coml(Lemma, Subs),
+    appiattisci(Subs,Sub),
+    (on(fcomp/_,Sub)
+     ;
+     check_fac_subcat([ibar-Ibar])),
+    remove(f-F, Out, Rest),Rest=[],
+    NewOut=[fac-[fac-[nil]|F]],
+    !.
+embedded_clause(Ibar, Out, Out):-
+    !.
+
+check_vcopl_vpart(Ibar,Ibars):-
+     reverse(Ibar,[V-_-_|Rev]),
+     coplbh(V),
+     reverse(Ibars,[V1-_-_|Rev1]),
+     \+ coplbh(V1),
+    pp_word_cat(V1, Temp, part, Vinf),
+    !.
+end_of_second(In,Sent,Rest):-
+    nth(In, Num, ibar-_),
+    Num<5,
+    findall(fp, on(fp-[','-punt-fp], In), Fs),
+    (Fs=[]; Fs\=[],
+     nth(In, Nu, fp-[','-punt-fp]), Num<Nu),
+    collect_costs_rel1(In, Sent, Rest),
+    !.
+checkyear(Num):-
+   integer(Num),
+   Num<3000,
+   1000<Num,
+   !.
+
+/* parsecos2 */
+
+parsecos2(N, [], [], Rest):-!.
+
+parsecos2(1, [fint-[P-puntint-fint], fint-WH, sn-Struc, ibar-Ibar, sn-Struct, ibar-Ibar2|In], [fint-[fint-[P-puntint-fint], fint-Strucwh, ibar-Ibar1, subj-Struct|Out]], Rest)
+     :-
+     on(W-w-C, WH),
+     append(WH,Struc,Strucwh),
+    reverse(Ibar,[V-_-_|_]),
+    coplbh(V),
+     append(Ibar,Ibar2,Ibar1),
+    parsecos(1, In, Out, Rest),
+    !.
+parsecos2(1, [fint-[P-puntint-fint], fint-[W-int-fint], ibar-Ibar, sn-Struct, ibar-Ibar2|In], [fint-[fint-[P-puntint-fint], fint-[W-int-fint], ibar-Ibar1, subj-Struct|Out]], Rest)
+     :-
+     append(Ibar,Ibar2,Ibar1),
+    parsecos(1, In, Out, Rest),
+    !.
+parsecos2(1, [fint-[P-puntint-fint], fp-['"'-par-fp], f2-[what-rel-f2], ibar-Ibar|In], [fint-[fint-[P-puntint-fint], fint-[what-int-fint], ibar-Ibar|Out]], Rest)
+     :-
+    parsecos(1, In, Out, Rest),
+    !.
+parsecos2(1, [fint-[P-puntint-fint], fs-[W-cosu-fs], ibar-Ibar, sn-Struct, ibar-Ibar2|In], [fint-[fint-[P-puntint-fint], fint-[W-int-fint], ibar-Ibar1, subj-Struct|Out]], Rest)
+     :-
+     append(Ibar,Ibar2,Ibar1),
+    parsecos(1, In, Out, Rest),
+    !.
+parsecos2(1, [fint-[P-int-fint], ibar-Ibar, sn-Struct, ibar-Ibar2|In], [f-[f2-[f2-[nil], subj-[P-int-fint], ibar-Ibar, obj-Struct]|Out]], Rest)
+     :-
+    parsecos(1, [ibar-Ibar2|In], Out, Rest),
+    !.
+
+parsecos2(N, [sn-Sa|In], [sa-Sa|Out], Rest):-
+     on(so-R-C, Sa), 
+     nth(In,Num,f2-_), Num<5,
+     change_costs_rel(In, Rest1),
+    parsecos(N, Rest1, Out, Rest),
+    !.
+parsecos2(N, [sp-SP, fp-FP, sn-SN|In], [sp-Sa|Out], Rest):-
+     reverse(SP,[_-num-_|Rev]),
+     on(_-nt-C, SP),
+     on(Num-num-_,SN),
+     checkyear(Num),
+     append(SP,[appos-SN],Sa),
+    parsecos(N, In, Out, Rest),
+    !.
+     
+parsecos2(N, [sp-Subj, fp-Fp, f2-Struc, ibar-Ibar |In], [sp-SP|Out], Rest):-
+    (Struc=[A]; on(P-R-C, Struc), P=whose),
+    findall(Rel, on(ibar-[Rel|_],In),Rels), Rels\=[],
+    (Rels\=[],
+     length(Rels,L), 1=<L,
+     nth(In,Num,ibar-_), Num<6,
+     collect_costs_rel1(In, Rel, Rest1)
+     ;
+     Rels=[],
+     length(In,L), L<4,
+     Rel=In),
+    append([ibar-Ibar],Rel,Rel1),
+    append([subj-pro],Rel1,Rel2),
+    append(Subj, [f2-[f2-Struc, f-Rel2]], SP),
+    parsecos(N, Rest1, Out, Rest),
+    !.
+parsecos2(N, [sn-Subj, fp-Fp, f2-Struc, ibar-Ibar |In], Out, Rest):-
+    (Struc=[A]; on(P-R-C, Struc), P=whose),
+    findall(Rel, on(ibar-[Rel|_],In),Rels), Rels\=[],
+    (Rels\=[],
+     length(Rels,L), 1=<L,
+     nth(In,Num,ibar-_), Num<6,
+     collect_costs_rel1(In, Rel, Rest1)
+     ;
+     Rels=[],
+     length(In,L), L<4,
+     Rel=In),
+    append([ibar-Ibar],Rel,Rel1),
+    append([subj-pro],Rel1,Rel2),
+    append(Subj, [f2-[f2-Struc, f-Rel2]], SP),
+    parsecos(N, [sn-SP|Rest1], Out, Rest),
+    !.
+parsecos2(N, [sn-Subj, f2-Struc, ibar-Ibar|In], [f-[subj-Subjec, ibar-Ibar|Out]], Rest):-
+    Struc\=[A],
+    findall(Rel, (on(ibar-[Rel|_],Struc);on(f-[Rel|_],Struc)),Outs), Outs\=[],
+    on(f2-Rel,Struc),
+    Rel\=[when-_-_], Rel\=[where-_-_],
+    verify_subj_case(Subj),
+    append(Subj,[f2-Struc], Subjec),
+    parsecos(N, In, Out, Rest),
+    !.
+
+parsecos2(N, [sn-SN, f2-Struc, ibar-Ibar|In], [sn-Subj|Out], Rest):-
+    Struc=[A],
+    collect_costs_rel1(In, Rel, Rest1),
+    append([ibar-Ibar],Rel,Rel1),
+    append([subj-pro],Rel1,Rel2),
+    append(SN, [f2-[f2-Struc, f-Rel2]], Subj),
+    parsecos2(N, Rest1, Out, Rest),
+    !.
+
+parsecos2(N, [sn-SN, fp-Fp,  ibar-Ibar|In], [f-[subj-SN, ibar-Ibar|NewOut]], Rest):-
+    N1 is N + 1,
+    verify_subj_case(SN),
+    parsecos(N1, In, Out, Rest),
+    embedded_clause(Ibar, Out, NewOut),
+    !.
+
+parsecos2(1, [f2-SN,  sv3-Ibar|In], Out, Rest):-
+    parsecos(2, [f2-SN,  ibar-Ibar|In], Out, Rest),
+    !.
+
+parsecos2(1, [sn-SN,  sv3-Ibar,  sn-Savv, mod-SP|In], [f-[subj-SN, ibar-Ibar, fac-[fac-[nil], sn-Savv, mod-SP|Out]]], Rest):-
+    reverse(Ibar,[V-_-_|_]),
+    verbs_of_saying(V),
+    lemmatize_dic_v(V,Lemma,_),
+    coml(Lemma, Subs),
+    appiattisci(Subs,Sub),
+    (on(fcomp/_,Sub)
+     ;
+     check_fac_subcat([ibar-Ibar])),
+    verify_subj_case(SN),
+    parsecos(2, In, Out, Rest),
+    !.
+
+parsecos2(1, [sn-SN,  sv3-Ibar,  sn-Savv, sp-SP|In], [f-[subj-SN, ibar-Ibar, sn-Savv, sp-SP|Out]], Rest):-
+    \+ on(_-nt_, Savv),
+    verify_subj_case(SN),
+    parsecos(2, In, Out, Rest),
+    !.
+
+parsecos2(1, [sn-SN,  sv3-Ibar,  sn-Savv, sp-SP, f2-[that-rel-f2]|In], [f-[subj-SN, ibar-Ibar, sn-Savv, sp-SP, fac-[fac-[that-rel-f2]|Out]]], Rest):-
+    reverse(Ibar,[V-_-_|_]),
+    verbs_of_saying(V),
+    lemmatize_dic_v(V,Lemma,_),
+    coml(Lemma, Subs),
+    appiattisci(Subs,Sub),
+    (on(fcomp/_,Sub)
+     ;
+     check_fac_subcat([ibar-Ibar])),
+    verify_subj_case(SN),
+    parsecos(2, In, Out, Rest),
+    !.
+
+parsecos2(1, [sn-SN,  sv3-Ibar,  Sn-Savv, f2-[that-rel-f2]|In], [f-[subj-SN, ibar-Ibar, Sn-Savv, fac-[fac-[that-rel-f2]|Out]]], Rest):-
+    (Sn=sn;Sn=savv),
+    reverse(Ibar,[V-_-_|_]),
+    verbs_of_saying(V),
+    lemmatize_dic_v(V,Lemma,_),
+    coml(Lemma, Subs),
+    appiattisci(Subs,Sub),
+    (on(fcomp/_,Sub)
+     ;
+     check_fac_subcat([ibar-Ibar])),
+    verify_subj_case(SN),
+    parsecos(2, In, Out, Rest),
+    !.
+
+parsecos2(N, [sn-SN, fp-Fp,  savv-Savv, fp-FP, ibar-Ibar|In], [f-[subj-SN, savv-Savv, ibar-Ibar|Out]], Rest):-
+    verify_subj_case(SN),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+parsecos2(N, [sn-SN, savv-Savv, ibar-Ibar|In], [f-[subj-SN, savv-Savv, ibar-Ibar|Out]], Rest):-
+     reverse(Ibar,[V-_-_|_]),
+     verbs_of_saying(V),
+    verify_subj_case(SN),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+parsecos2(N, [sn-SN, savv-Savv, ibar-Ibar|In], [f-[subj-SN, savv-Savv, ibar-Ibar|Out]], Rest):-
+     reverse(Ibar,[V-_-_|_]),
+    \+verbs_of_saying(V),
+    verify_subj_case(SN),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+parsecos2(N, [sn-SN, fp-Fp,  sp-Savv, fp-FP, ibar-Ibar|In], [f-[subj-SN, sp-Savv, ibar-Ibar|Out]], Rest):-
+    verify_subj_case(SN),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+parsecos2(N, [sn-SN, sp-Savv, ibar-Ibar|In], [f-[subj-SN, sp-Savv, ibar-Ibar|Out]], Rest):-
+     reverse(Ibar,[V-_-_|_]),
+    verbs_of_saying(V),
+    verify_subj_case(SN),
+    N1 is N + 1,
+    \+ notinterrogative,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [sn-SN, sp-Savv, ibar-Ibar|In], [f-[subj-SN, sp-Savv, ibar-Ibar|Out]], Rest):-
+     reverse(Ibar,[V-_-_|_]),
+    \+verbs_of_saying(V),
+    verify_subj_case(SN),
+    N1 is N + 1,
+    \+ notinterrogative,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+parsecos2(1, [sn-Mod, sn-SN, ibar-Ibar|In], [f-[subj-Struct, ibar-Ibar|Out]], Rest):-
+     reverse(Ibar,[V-_-_|_]),
+    verbs_of_saying(V),
+    inspect_mod(Mod,Mod1,SN,SN1),
+    Mod1\=[],
+     verify_subj_case(SN),
+    append(SN1, [mod-Mod1], Struct),
+    \+ notinterrogative,
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos2(1, [sn-Mod, sn-SN, ibar-Ibar|In], [f-[subj-Struct, ibar-Ibar|Out]], Rest):-
+     reverse(Ibar,[V-_-_|_]),
+    \+verbs_of_saying(V),
+    inspect_mod(Mod,Mod1,SN,SN1),
+    Mod1\=[],
+     verify_subj_case(SN),
+    append(SN1, [mod-Mod1], Struct),
+    \+ notinterrogative,
+    parsecos(2, In, Out, Rest),
+    !.
+parsecos2(1, [sn-Mod, sn-SN, ibar-Ibar|In], [f-[subj-Struct, ibar-Ibar|Out]], Rest):-
+    reverse(Ibar,[V-_-_|_]),
+    remove(mod-Mo,Mod,Res),
+    Mo\=[],
+    make_list([sn-Mod],Lis),
+    length(Lis,L),
+    5=<L,
+    append(Mo, SN, Mod1),
+    append(Res, [mod-Mod1], Struct),
+    \+ notinterrogative,
+    parsecos(2, In, Out, Rest),
+    !.
+    
+parsecos2(N, [sn-Mod, sn-SN, ibar-Ibar|In], [f-[subj-Mod, fac-[fac-[nil], f-[subj-SN]], ibar-Ibar|Out]], Rest):-
+    reverse(Mod,[W1-_-_|_]),
+    disaccess_wsj(W1,Best), Best=jjs,
+    N1 is N + 1,
+     verify_subj_case(SN),
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [sn-SN, fp-Fp, sn-Mod, sn-Mod2, ibar-Ibar|In], [f-[subj-Struct, ibar-Ibar|Out]], Rest)
+     :-
+    length(In,L), 3<L,
+    SN=[W-_-_|_],
+    wsentence_start(W),
+    inspect_mod2(Mod,Mod1,Mod2,SN1),
+    Mod1\=[],
+     verify_subj_case(SN),
+    append(SN1, [appos-Mod1], Struc),
+    append(Struc, SN, Struct),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [sn-SN, fp-Fp, sn-Mod, ibar-Ibar|In], [f-[subj-Struct, ibar-Ibar|Out]], Rest)
+     :-
+    Fp\=[';'-_-_],
+    length(In,L), 3<L,
+    inspect_mod2(Mod,Mod1,SN,SN1),
+    Mod1\=[],
+     verify_subj_case(SN),
+    append(SN1, [appos-Mod1], Struct),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [sn-SN, ibar-Ibar, sn-Struct, ibar-Ibars|In], [f-[subj-SN, ibar-Ibar, fac-[fac-[nil], subj-Struct, ibar-Ibars|Out]]], Rest)
+     :-
+     verify_subj_case(Struct),
+     reverse(Ibar,[V-_-_|Rev]),
+     (verbs_of_saying(V)
+       ;
+       complessverbs(V,CatV)),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [sn-SN, ibar-Ibar, sn-Struct, ibar-Ibars|In], [f-[subj-SN, ibar-Ibar, sn-Struct, vcomp-Ibars|Out]], Rest)
+     :-
+     verify_subj_case(SN),
+%     \+ verify_subj_case(Struct),
+     sentence_start(SN),
+     reverse(Ibar,[V-_-_|Rev]),
+     lemmatize_dic_v(V,Lemma,_),
+     v(Lemma, Subs), 
+    (on(t,Subs);on(ti,Subs)),
+     reverse(Ibars,[V1-_-_|Rev1]),
+    (participio(V1,K,L,Q);verbgerund(V1)),
+     N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+
+parsecos2(N, [sn-SN, ibar-Ibar, sn-Struct, fc-Fc, ibar-Ibars|In], [f-[subj-SN, ibar-Ibar, sn-Struct, fc-Fc, ibar-Ibars|Out]], Rest)
+     :-
+     reverse(Ibar,[V-_-_|Rev]),
+    lemmatize_dic_v(V,Lemma,_),
+    v(Lemma, Subs), 
+    (on(t,Subs);on(ti,Subs)),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+parsecos2(N, [ibar-Ibar, sn-Struct, ibar-Ibars, SP|In], [ibar-Ibar, sn-Struct, vcomp-Ibars, SP|Out], Rest)
+     :-
+    (SP=[P-p-sp|_];SP=[P-pda-spda|_]),
+     reverse(Ibar,[V-_-_|Rev]),
+    lemmatize_dic_v(V,Lemma,_),
+    v(Lemma, Subs), 
+    (on(t,Subs);on(ti,Subs)),
+     reverse(Ibars,[V1-_-_|Rev1]),
+    participio(V1,K,L,Q),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+parsecos2(N, [ibar-Ibar, sn-Struct, ibar-Ibars|In], [ibar-Ibar, sn-Struct, vcomp-Ibars|Out], Rest)
+     :-
+     verify_subj_case(Struct),
+     sentence_start(Ibar),
+     reverse(Ibars,[V-_-_|Rev]),
+     pp_word_cat(V,T,M,New),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+parsecos2(N, [ibar-Ibar, sn-Struct, ibar-Ibars|In], [ibar-Ibar, fac-[fac-[nil], subj-Struct, ibar-Ibars|Out]], Rest)
+     :-
+     verify_subj_case(Struct),
+     reverse(Ibar,[V-_-_|Rev]),
+     (verbs_of_saying(V)
+     ;
+     complessverbs(V,CatV)),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [ibar-Ibar, sn-Struct, ibar-Ibars|In], [f-[subj-Struct, ibar-Ibarss|Out]], Rest)
+     :-
+     reverse(Ibar,[V-_-_|Rev]),
+     coplbh(V),
+     reverse(Ibars,[V1-_-_|Rev1]),
+     \+ coplbh(V1),
+     verify_subj_case(Struct),
+     (Rev1=[];
+          findall(V2-C, (on(V2-C-_, Rev1), supporto(V2)), Vs), Vs=[]
+           ),
+     append(Ibar,Ibars,Ibarss),
+     \+ notinterrogative,
+    1=N,
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+parsecos2(N, [ibar-Ibar, sa-Struct, ibar-Ibars|In], [ibar-Ibar, sa-Struct|Out], Rest)
+     :-
+    check_vcopl_vpart(Ibar,Ibars),
+    N1 is N + 1,
+    parsecos(N1, [vcomp-Ibars|In], Out, Rest),
+    !.
+parsecos2(N, [ibar-Ibar, sn-Struct, ibar-Ibars|In], [ibar-Ibar, sn-Struct|Out], Rest)
+     :-
+    check_vcopl_vpart(Ibar,Ibars),
+    N1 is N + 1,
+    parsecos(N1, [vcomp-Ibars|In], Out, Rest),
+    !.
+parsecos2(N, [ibar-Ibar, sp-Struct, ibar-Ibars|In], [ibar-Ibar, sp-Struct|Out], Rest)
+     :-
+    check_vcopl_vpart(Ibar,Ibars),
+    N1 is N + 1,
+    parsecos(N1, [vcomp-Ibars|In], Out, Rest),
+    !.
+
+parsecos2(N, [ibar-Ibar, savv-Struct|In], [ibar-Ibarss|Out], Rest)
+     :-
+     reverse(Ibar,[V-_-_|Rev]),
+     coplbh(V),
+     on(not-neg-_, Struct), 
+     append(Ibar,Struct,Ibarss),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+parsecos2(N, [sn-SN, ibar-Ibar, savv-Struct|In], Output, Rest)
+     :-
+     verify_subj_case(Struct),
+    nth(In,Num,cp-['.'-punto-cp]), 
+   (5=<Num, Input=[ibar-Ibars|In], Output=[f-[subj-SN|Out]]
+     ;
+    Num<5, Input=In, Output=[f-[subj-SN,ibar-Ibars|Out]]),
+     reverse(Ibar,[V-_-_|Rev]),
+     coplbh(V),
+     on(not-neg-_, Struct), 
+     append(Ibar,Struct,Ibars),
+    parsecos(N, Input, Out, Rest),
+    !.
+
+parsecos2(N, [sn-Struct, ibar-Ibar|In], Output, Rest)
+     :-
+     verify_subj_case(Struct),
+    nth(In,Num,cp-['.'-punto-cp]), 
+   (5=<Num, Input=[ibar-Ibar|In], Output=[f-[subj-Struct|Out]]
+     ;
+    Num<5, Input=In, Output=[f-[subj-Struct,ibar-Ibar|Out]]),
+%    N1 is N + 1,
+    parsecos(N, Input, Out, Rest),
+    !.
+parsecos2(N, [sa-Struct, ibar-Ibar|In], [f-[subj-Struct, ibar-Ibar|Out]], Rest)
+     :-
+     Struct=[A],
+    verify_subj_case(Struct),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [f-['"'-par-f],sn-Struct |In], [dirsp-['"'-par-f, subj-Struct|Out]], Rest):-
+    verify_subj_case(Struct),
+    parsecos(N, In, Out, Rest),
+    !.
+parsecos2(N, [fac-[that-pk-fac], sn-Struct, ibar-Ibar |In], [fac-[fac-[that-pk-fac], subj-Struct, ibar-Ibar |Out]], Rest):-
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [fac-[that-pk-fac], sn-Struct |In], [fac-[fac-[that-pk-fac]|Out]], Rest):-
+    N1 is N + 1,
+    parsecos(N1, [sn-Struct |In], Out, Rest),
+    !.
+parsecos2(N, [fac-[that-pk-fac], ibar-Ibar, sn-Struc |In], [fac-[fac-[that-pk-fac]|Out]], Rest):-
+     reverse(Ibar,[V1-_-_]),
+     \+ coplbh(V1),
+     pp_word_cat(V1, Temp, part, Vinf),
+     append([sa-[V1-ag-sa]],Struc,Struct),
+    parsecos(N, [sn-Struct |In], Out, Rest),
+    !.
+parsecos2(N, [fac-[that-pk-fac], sv5-Struct |In], [fac-[fac-[that-pk-fac]|Out]], Rest):-
+    N1 is N + 1,
+    parsecos(N1, [sv5-Struct |In], Out, Rest),
+    !.
+parsecos2(N, [ibar-Ibar, sv5-Struct |In], [ibar-Ibar, fac-[fac-[nil],subj_vcomp-Struct|Outs]], Rest):-
+    check_fac_subcat([ibar-Ibar]),
+    nth(In,Num,ibar-_), Num<6,
+    collect_costs_rel1(In, Rel, Rest1),
+    N1 is N + 1,
+    parsecos(N1, Rest1, Out, Rest),
+    append(Rel,Out,Outs),
+    !.
+parsecos2(N, [ibar-Ibar, f-[subj-Struct |In]], [ibar-Ibar, fac-[fac-[nil], subj-Struct|Out]], Rest):-
+    check_fac_subcat([ibar-Ibar]),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [fac-[that-pk-fac], fs-[Cong-cosu-fs], sn-Struct, ibar-Ibar |In], [fac-[fac-[that-pk-fac], fs-[fs-[Cong-cosu-fs], subj-Struct, ibar-Ibar |Outs]]], Rest):-
+    end_of_second(In,Sent,Cont),
+    N1 is N + 1,
+    parsecos(N1, Cont, Out, Rest),
+    append(Sent,Out,Outs),
+    !.
+    
+parsecos2(N, [fs-[Cong-cosu-fs], sn-Struct, savv-Savv, ibar-Ibar |In], [fs-[fs-[Cong-cosu-fs], subj-Struct, savv-Savv, ibar-Ibar|Out]], Rest):-
+    Cong\=and,
+     reverse(Ibar,[V-_-_|Rev]),
+     verbs_of_saying(V),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [fs-[Cong-cosu-fs], sn-Struct, sv3-Ibar, savv-Savv, sp-SP|In], [fs-[fs-[Cong-cosu-fs], subj-Struct, ibar-Ibar, savv-Savv, sp-SP|Out]], Rest):-
+    Cong\=and,
+     reverse(Ibar,[V-_-_|Rev]),
+     v(V,Cats),
+    (on(i,Cats);on(ti,Cats)),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+parsecos2(N, [fp-Fp, sv5-Struct, sn-Savv, ibar-Ibar |In], [sv5-Struct, sn-Savv, ibar-Ibar|Out], Rest):-
+     reverse(Ibar,[V-_-_|Rev]),
+    coplbh(V),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+parsecos2(N, [fp-Fp, sv5-Struct, sn-SN, ibar-Ibar |In], [vcomp-Struct|Outs], Rest):-
+     reverse(Struct,[V-_-_|Rev]),
+    lemmatize_dic_v(V,Lemma,_),
+    coml(Lemma, Subs),
+    appiattisci(Subs,Sub),
+    (on(fcomp/_,Sub)
+     ;
+     check_fac_subcat([ibar-Ibar])),
+    verify_subj_case(SN),
+    collect_costs_rel1(In, Rel, Rest1),
+    N1 is N + 1,
+    parsecos(N1, Rest1, Out, Rest),
+    (Rel=[], Fac=[fac-[nil], sn-SN, ibar-Ibar],
+     Outs=[fac-Fac|Out]
+     ;
+     Rel\=[],
+    append(Rel,Out,Outss),
+    append([fac-[nil], sn-SN, ibar-Ibar], Outss, Outs)),
+    !.
+
+parsecos2(N, [fp-Fp, SV-Struct, cp-That, sn-SN, ibar-Ibar |In], [SV1-Struct|Outs], Rest):-
+     (SV=sv5, SV1=vcomp; SV=vcomp, SV1=SV),
+     That=[that-pk-cp],
+     reverse(Struct,[V-_-_|Rev]),
+    lemmatize_dic_v(V,Lemma,_),
+    coml(Lemma, Subs),
+    appiattisci(Subs,Sub),
+    (on(fcomp/_,Sub)
+     ;
+     check_fac_subcat([ibar-Ibar])),
+    verify_subj_case(SN),
+    collect_costs_rel1(In, Rel, Rest1),
+    N1 is N + 1,
+    parsecos(N1, Rest1, Out, Rest),
+    (Rel=[], Fac=[fac-That, sn-SN, ibar-Ibar],
+     Outs=[fac-Fac|Out]
+     ;
+     Rel\=[],
+    append(Rel,Out,Outss),
+    append([fac-[nil], sn-SN, ibar-Ibar], Outss, Outs)),
+    !.
+
+parsecos2(N, [fp-Fp, fs-[Cong-cosu-fs], sv5-Struct, sn-Savv, ibar-Ibar |In], [fs-[fs-[Cong-cosu-fs], sv5-Struct, sn-Savv, ibar-Ibar|Out]], Rest):-
+     reverse(Ibar,[V-_-_|Rev]),
+    coplbh(V),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+parsecos2(N, [fs-[Cong-cosu-fs], sv5-Struct, sn-Savv, ibar-Ibar |In], [fs-[fs-[Cong-cosu-fs], sv5-Struct, sn-Savv, ibar-Ibar|Out]], Rest):-
+     reverse(Ibar,[V-_-_|Rev]),
+    coplbh(V),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+
+parsecos2(N, [fs-[Cong-cosu-fs], vcomp-Struct, sn-Savv, ibar-Ibar |In], [fs-[fs-[Cong-cosu-fs], vcomp-Struct, sn-Savv|Out]], Rest):-
+    reverse(Ibar,[V-_-_|Rev]),
+    \+ coplbh(V),
+    N1 is N + 1,
+    parsecos(N1, [ibar-Ibar|In], Out, Rest),
+    !.
+
+parsecos2(N, [fs-[Cong-cosu-fs], sn-Struct, ibar-Ibar |In], [fs-[fs-[Cong-cosu-fs], subj-Struct, ibar-Ibar|Out]], Rest):-
+     reverse(Ibar,[V-_-_|Rev]),
+     verbs_of_saying(V),
+    verify_subj_case(Struct),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [fc-[Cong-cong-fc], sn-Struct, savv-Savv, ibar-Ibar |In], [fc-[fc-[Cong-cong-fc], subj-Struct, savv-Savv, ibar-Ibar|Out]], Rest):-
+    Cong\=and,
+     reverse(Ibar,[V-_-_|Rev]),
+    \+verbs_of_saying(V),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [fc-[Cong-cong-fc], sn-Struct, ibar-Ibar |In], [fc-[fc-[Cong-cong-fc], subj-Struct, ibar-Ibar|Out]], Rest):-
+    Cong\=and,
+     reverse(Ibar,[V-_-_|Rev]),
+    \+verbs_of_saying(V),
+    verify_subj_case(Struct),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [fs-[Cong-cosu-fs], sn-Struct, savv-Savv, ibar-Ibar |In], [fs-[fs-[Cong-cosu-fs], subj-Struct, savv-Savv, ibar-Ibar|Out]], Rest):-
+    Cong\=and,
+     reverse(Ibar,[V-_-_|Rev]),
+    \+verbs_of_saying(V),
+    verify_subj_case(Struct),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [fs-[Cong-cosu-fs], sn-Struct, ibar-Ibar |In], [fs-[fs-[Cong-cosu-fs], subj-Struct, ibar-Ibar|Out]], Rest):-
+     reverse(Ibar,[V-_-_|Rev]),
+     \+verbs_of_saying(V),
+    verify_subj_case(Struct),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [fint-[Cong-int-fint], sn-Struct, ibar-Ibar |In], [fint-[fint-[Cong-int-fint], subj-Struct, ibar-Ibar|Out]], Rest):-
+     reverse(Ibar,[V-_-_|Rev]),
+     \+verbs_of_saying(V),
+    verify_subj_case(Struct),
+    N1 is N + 1,
+    parsecos(N1, In, Out, Rest),
+    !.
+parsecos2(N, [sn-Stru, fp-Fp, sn-SN, cp-['.'-punto-cp]], [sn-Struct, cp-['.'-punto-cp]], Rest):-
+    append(Stru, [appos-SN], Struct),
+    parsecos(N, [], [], Rest),
+    !.
+parsecos2(N, [sn-Stru, fp-Fp, sn-Mod, fc-[and-cong-fc], sn-SN, cp-['.'-punto-cp]], [sn-Struct, cp-['.'-punto-cp]], Rest):-
+    Fp\=[';'-_-_],
+    append(SN, [and-cong-fc], Struc),
+    append(Struc, [appos-Mod], Structt),
+    append(Stru, [appos-Structt], Struct),
+    parsecos(N, [], [], Rest),
+    !.
+parsecos2(2, [sv5-Mod, sn-Struct, ibar-Ibar |In], [vcomp-Mod, sn-Struct, ibar-Ibar|Out], Rest):-
+     reverse(Mod,[V-_-_|Rev]),     
+    pp_word_cat(V, Temp, Mo, Vinf),
+     v(Vinf,Cats),
+     on(t,Cats),
+    parsecos(2, In, Out, Rest),
+    !.
+     
+parsecos2(N, [sv5-Mod, ibar-Ibar |In], [vcomp-Ibars|Out], Rest):-
+     reverse(Ibar,[V-_-_]),     
+    pp_word_cat(V, Temp, Mo, Vinf),
+    append(Mod,Ibar,Ibars),
+    parsecos(N, In, Out, Rest),
+    !.
+parsecos2(N, [vcomp-Mod, ibar-Ibar |In], [vcomp-Ibars|Out], Rest):-
+     reverse(Ibar,[V-_-_]),     
+    pp_word_cat(V, Temp, Mo, Vinf),
+    append(Mod,Ibar,Ibars),
+    parsecos(N, In, Out, Rest),
+    !.
+     
+parsecos2(N, [sv5-Mod|In], [vcomp-Mod|Out], Rest):-
+    parsecos(N, In, Out, Rest),
+    !.
+parsecos2(N, [sv2-Mod|In], [vcomp-Mod|Out], Rest):-
+    parsecos(N, In, Out, Rest),
+    !.
+parsecos2(N, [sv3-Mod|In], [Mods-Mod|Out], Rest):-
+     reverse(Mod,[V1-_-_]),     
+    \+ participio(V1,K,L,Q), \+ verbgerund(V1),
+    findall(sp, (on(sp-_, In);on(spda-_,In)), Fs), 
+    (Fs=[], Mods=mod; 
+       Fs\=[], 
+     (
+        sentence_start(Mod), 
+         Mods=vcomp
+        ;    
+        (nth(In, Num, ibar-_),
+         3<Num, Mods=ibar; 
+          \+ nth(In, Num, ibar-_),
+          \+ nth(In, Num, sv3-_),
+           Mods=ibar; 
+         (nth(In, Num, spda-_),
+          Num<4, Mods=vcomp; 
+          nth(In, Num, sp-_), 
+          Num<4, Mods=mod))
+          )
+      ),
+    parsecos(N, In, Out, Rest),
+    !.
+parsecos2(N, [fp-Fp, Struct |In], [], [Struct|In]):-
+    (Struct=fs-F;Struct=fc-F),
+    nth(In, Num, ibar-_),
+    Num<5,
+    findall(fp, on(fp-[','-punt-fp], In), Fs),
+    (Fs=[]; Fs\=[],
+            nth(In, Nu, fp-[','-punt-fp]), Num<Nu),
+    !.
+parsecos2(N, [Struct |In], [], [Struct|In]):-
+    (Struct=fs-F;Struct=fc-F),
+    \+ sentence_start(F),
+    nth(In, Num, ibar-_),
+    Num<5,
+    findall(fp, on(fp-[','-punt-fp], In), Fs),
+    (Fs=[]; 
+    Fs\=[],
+    findall(fp,(nth(In, Nu, fp-[','-punt-fp]), Num<Nu),Fp),Fp\=[]),
+    !.
+parsecos2(N, [Struct |In], [], [Struct|In]):-
+    2=<N,
+    Struct=ibar-F,
+    length(In,L),
+    7<L,
+    findall(Num,(
+                 nth(In, Num, ibar-_),
+                      Num=<4),
+               Nums),
+    Nums=[],
+    findall(fp, on(fp-FP, In), Fs),
+    (Fs=[]; Fs\=[],
+           length(Fs,Ls),
+           (Ls=1,nth(In, Nu, fp-FP), 4<Nu
+             ;
+             1<Ls,
+            findall(Nu,(
+                    nth(In, Nu, fp-FP), Nu=<2),
+                    Nus),
+            Nus=[])
+      ),
+    reverse(F,[V-_-_|Rev]),
+    lemmatize_dic_v(V,Lemma,_),
+    v(Lemma, Subs), 
+    \+ on(t,Subs), \+ on(ti,Subs),
+     !.
+parsecos2(N, [Struct |In], [Struct|Out], Rest):-
+    parsecos(N, In, Out, Rest),
+    !.
+
+parsef2([], []):-!.
+parsef2([sn-SN,fp-Fp, vcomp-VC, fac-Struc|In], [f-[subj-SN, fp-[','-punt-fp], vcomp-VC, fac-Rel|Out]]):-
+    (Struc=[A];
+       Struc=[A|_],A=fac-_),
+    findall(Rel, on(ibar-[Rel|_],Struc),Rels), Rels\=[],
+    length(Rels,L), 2=<L,
+    collect_costs_rel(Struc, Rel, Rest1),
+    append(VC, Rel,VCR),
+     parsef2(Rest1, Out),
+    !.
+
+parsef2([sn-SN,fp-Fp, f2-Struc, ibar-Ibar|In], [f-[subj-Struct, ibar-Ibar|Out]]):-
+    Struc\=[A],
+    Struc=[A|_],A\=Pron-Cat-f2,
+    append(SN,[f2-Struc],Struct),
+    parsef2(In, Out),
+    !.
+
+parsef2([sn-SN,fp-Fp, f2-Struc, ibar-Ibar|In], [f-[subj-Subj|Out]]):-
+    (Struc=[A];
+       Struc=[A|_],A=Pron-Cat-f2),
+    collect_costs_rel1(In, Rel, Rest1),
+    append([ibar-Ibar],Rel,Rel1),
+    append([subj-pro],Rel1,Rel2),
+    append(SN, [f2-[f2-Struc, f-Rel2]], Subj),
+     parsef2(Rest1, Out),
+    !.
+
+
+parsef2([sn-SN,f2-Struc, ibar-Ibar|In], [f-[subj-Struct, ibar-Ibar|Out]]):-
+    Struc\=[A],
+    on(f2-Rel,Struc),
+    Rel\=[when-_-_], Rel\=[where-_-_],
+    append(SN,[f2-Struc],Struct),
+    parsef2(In, Out),
+    !.
+
+
+parsef2([sn-SN,f2-Struc, savv-SAV, ibar-Ibar|In], [sn-Subj|Out]):-
+    Struc=[A],
+    collect_costs_rel1(In, Rel, Rest1),
+    append([ibar-Ibar],Rel,Rel1),
+    append([subj-pro],Rel1,Rel2),
+    append([savv-SAV],Rel2,Rel22),
+    append(SN, [f2-[f2-Struc, f-Rel22]], Subj),
+    parsef2(Rest1, Out),
+    !.
+
+parsef2([sp-SN,f2-Struc, savv-SAV, ibar-Ibar|In], [sp-Subj|Out]):-
+    append([subj-pro],[ibar-Ibar],Rel2),
+    append([savv-SAV],Rel2,Rel22),
+    append(SN, [f2-[f2-Struc, f-Rel22]], Subj),
+    parsef2(In, Out),
+    !.
+parsef2([sn-SN,f2-Struc, ibar-Ibar|In], [sn-Subj|Out]):-
+    Struc=[A],
+    collect_costs_rel1(In, Rel, Rest1),
+    append([ibar-Ibar],Rel,Rel1),
+    append([subj-pro],Rel1,Rel2),
+    append(SN, [f2-[f2-Struc, f-Rel2]], Subj),
+    parsef2(Rest1, Out),
+    !.
+
+parsef2([sp-SN,f2-Struc, ibar-Ibar|In], [sp-Subj|Out]):-
+    append([subj-pro],[ibar-Ibar],Rel2),
+    append(SN, [f2-[f2-Struc, f-Rel2]], Subj),
+    parsef2(In, Out),
+    !.
+
+parsef2([fs-SN, f2-Struc, ibar-Ibar, X], [Out]):-
+    Out=[fs-[fs-SN, subj-Struc, ibar-Ibar, X]],
+    notinterrogative,
+    !.
+
+parsef2([f2-Struc, ibar-Ibar, X], [Out]):-
+    Out=[fint-[subj-Struc, ibar-Ibar, X]],
+    notinterrogative,
+    !.
+parsef2([sn-SN,f2-Struc], [sn-Struct]):-
+    append(SN,[f2-Struc],Struct),
+    !.
+
+parsef2([sp-SN,f2-Struc], [sp-Struct]):-
+    append(SN,[f2-Struc],Struct),
+    !.
+
+parsef2([ibar-Ibar, sn-SN, fac-Struc|In], [ibar-Ibar, obj-Struct|Out]):-
+    reverse(SN, [Head-_-_|_]),
+    lemmatize_dic(Head,Lemma,S),
+    (S=s,Lemm=Lemma;S\=s,Lemm=Head),
+    coml_n(Lemm, Subs),
+    on(subc-Sub,Subs),
+    (on(_/that/fcomp,Sub);on(_/irreal/fcomp,Sub)),
+    append(SN,[f2-Struc],Struct),
+    parsef2(In, Out),
+    !.
+
+parsef2([ibar-Ibar, cp-SN, f-Struc|In], [ibar-Ibar, fac-Struct|Out]):-
+    SN=[_-Cat-_], (Cat=rel;Cat=int;Cat=w),
+    reverse(Ibar, [Head-_-_|_]),
+    lemmatize_dic_v(Head,Lemma,S),
+     coml(Lemma,Sub),
+     on(fcomp/_,Sub),
+    append([fac-SN],[Struc],Struct),
+    parsef2(In, Out),
+    !.
+
+parsef2([f2-Struc, f-Ibar |In], [f2-[f2-Struc, f-Ibar]|Out]):-
+    (Struc=[A];
+       Struc=[A|_],A=f2-Pron-f2),
+    findall(Rel, on(ibar-[Rel|_],Ibar),Rels), Rels\=[],
+    length(Rels,L), L=1,
+    parsef2(In, Out),
+    !.
+parsef2([f2-Struc, f-Ibar |In], [f2-[f2-Struc, f-Rel]|Out]):-
+    (Struc=[A];
+       Struc=[A|_],A=f2-Pron-f2),
+    findall(Rel, on(ibar-[Rel|_],Ibar),Rels), Rels\=[],
+    length(Rels,L), L=2,
+    collect_costs_rel(Ibar, Rel, Rest),
+    append(Rest,In,Ins),
+    parsef2(Ins, Out),
+    !.
+parsef2([Struct |In], [Struct|Out]):-
+    parsef2(In, Out),
+    !.
+
+continuan(Cat,[], Net, NodeFrom, NodeTo, [], Rest, []):-!.
+continuan(Cat,['"'-par-P|Cats], Net, NodeFrom, NodeTo, ['"'-par-P|VP], Rest, ['"'-par|Words]):-
+    (Cat=nil;dets(Cat)),
+    continuan(Cat,Cats, Net, NodeFrom, NodeTo, VP, Rest, Words).
+
+continuan(qc,[W-art-P|Cats], Net, NodeFrom, To, [W-Label-sn|VP], Rest, [W-Label|Words]):-
+    try_vcat(sn, NodeFrom, Op, art, Label, NodeTo, sn), 
+    continuan(art, Cats, sn, NodeTo1, To, VP, Rest, Words).
+
+continuan(Cat,[W-ag-P, W1-V-P1|Cats], Net, NodeFrom, NodeTo, [W-n-P], [W1-V-P1|Cats], [W-n]):-
+    check_all_verbs(V),
+    try_vcat(Net, NodeFrom, Op, n, Label, NodeTo, Net), 
+    !.
+continuan(Cat,[W-ag-P, W11-V-P11, W1-Cat1-P1|Cats], Net, NodeFrom, To, [W-Label-Net,W1-Label1-Net|VP], Rest, [W-Label,W1-Label1|Words]):-
+    (dets(Cat);
+    Cat1\=nt;
+    \+ nnt(W1), \+ ntt(W1)),
+    select_punct(W11,[V]),
+    try_vcat(Net, NodeFrom, Op, ag, Label, NodeTo, Net), 
+    try_vcat(Net, NodeTo, Op, Cat1, Label1, NodeTo1, Net), 
+    continuan(Cat1,Cats, Net, NodeTo1, To, VP, Rest, Words).
+
+continuan(Cat,[W-ag-P, W1-V-P1|Cats], Net, NodeFrom, NodeTo, [W-ag-P], [W1-V-P1|Cats], [W-n]):-
+    select_punct(W1,[V]),
+    V=punt,
+    try_vcat(Net, NodeFrom, Op, ag, Label, NodeTo, Net), 
+    !.
+
+continuan(Cat,[W-ag-P, W1-Cat1-P1|Cats], Net, NodeFrom, To, [W-Label-Net,W1-Label1-Net|VP], Rest, [W-Label,W1-Label1|Words]):-
+     dets(Cat),
+    Cat1\=nt, \+ nnt(W1), \+ ntt(W1),
+    try_vcat(Net, NodeFrom, Op, ag, Label, NodeTo, Net), 
+    try_vcat(Net, NodeTo, Op, Cat1, Label1, NodeTo1, Net), 
+    continuan(Cat1,Cats, Net, NodeTo1, To, VP, Rest, Words).
+
+continuan(Cat,[W-ag-P, W1-ccom-P1|Cats], sa, NodeFrom, To, [W-Label-sa|VP], Rest, [W-Label|Words]):-
+    Cat\=nt,
+    try_vcat(sa, NodeFrom, Op, ag, Label, NodeTo, sa), 
+    continuan(Cat,[W1-ccom-P1|Cats], sa, NodeTo1, To, VP, Rest, Words).
+
+continuan(Cat,[W-ag-P, W1-Cat1-P1|Cats], Net, NodeFrom, To, [W-Label-sa|VP], Rest, [W-Label|Words]):-
+    dets(Cat),
+    try_vcat(sa, NodeFrom, Op, ag, Label, NodeTo, sa), 
+    continuan(Cat,[W1-Cat1-P1|Cats], sa, NodeTo1, To, VP, Rest, Words).
+
+continuan(Cat,[W-Cong-P, W1-Cat1-P1, W2-Cat2-P2|Cats], Net, NodeFrom, To, [W-Label-Net,W1-Label1-Net|VP], Rest, [W-Label,W1-Label1|Words]):-
+    (Cong=cong;Cong=ccom),
+    (W=or;W=and;W=but),
+    (Cat=Cat1;nouncats(Cat),nouncats(Cat1), \+nouncats(Cat2)
+      ;Cat=ag,nouncats(Cat1), nouncats(Cat2)),
+    \+ check_vcat(Cat2), 
+    try_vcat(Net, NodeFro, Op, cong, Label, NodeTo, Net), 
+    try_vcat(Net, NodeTo, Op, Cat1, Label1, NodeTo1, Net), 
+    continuan(Cat1,[W2-Cat2-P2|Cats], Net, NodeTo1, To, VP, Rest, Words),
+    length(VP,L).
+
+continuan(Cat,[W1-Cat1-P1, W-Cong-P, W2-Cat1-P2|Cats], Net, NodeFrom, To, [W1-Label1-Net,W-Label-Net,W2-Label2-Net|VP], Rest, [W1-Label1,W-Label,W2-Label2|Words]):-
+    (Cong=cong;Cong=ccom),
+    (W=or;W=and;W=but),
+    (dets(Cat), nouncats(Cat1);nouncats(Cat),nouncats(Cat1)
+      ;Cat=ag,nouncats(Cat1)),
+    Cats=[_-Cat2-_|_],
+    \+ check_vcat(Cat2), 
+    try_vcat(Net, NodeTo, Op, Cat1, Label1, NodeTo, Net), 
+    try_vcat(Net, NodeFro, Op, cong, Label, NodeTo1, Net), 
+    try_vcat(Net, NodeTo1, Op, Cat1, Label2, NodeTo11, Net), 
+    continuan(Cat1,Cats, Net, NodeTo11, To, VP, Rest, Words),
+    length(VP,L).
+
+continuan(n,[W-nt-P, W1-num-P1|Cats], Net, To, To, [], [W-nt-P, W1-num-P1|Cats], []):-
+    heads(Net, To, Cats),!.
+
+continuan(Cat0,[W-Cat-P, W1-punt-P1|Cats], Net, NodeFrom, To, [W-Label-Net|VP], Rest, [W-Label|Words]):-
+      try_vcat(Net, NodeFrom, Op, Cat, Label, NodeTo, Net), 
+      continuan(Cat,[W1-punt-P1|Cats], Net, NodeTo, To, VP, Rest, Words),!.
+
+continuan(Cat0,[W-Cat-P, W1-Cat1-P1|Cats], Net, NodeFrom, To, [W-Label-Net|VP], Rest, [W-Label|Words]):-
+    Cat0\=puntint,
+    Cat\=ag,Cat\=cong, Net\=sv2, Net\=sv3, Cat\=p,
+    \+ check_all_verbs(Cat),
+    (nouncats(Cat1); proncat(Cat1); qcats(Cat); 
+     \+ nouncats(Cat1), dets(Cat0), Cat0\=num;
+     \+ nouncats(Cat1), dets(Cat0), Cat0=num, check_vcat(Cat1);
+       Cat0=num, Cat=n,\+check_vcat(Cat1);
+      \+dets(Cat),   nouncats(Cat),nouncats(Cat0),\+check_vcat(Cat1)
+     ),
+    (
+     Cats=[A-B-_|_], 
+     (B\=ng, (
+                 \+ nnt(W), \+ ntt(W), Cat0\=nt, Cat\=nt, Cat\=ccom
+                 ;
+                 Cat=nt, dets(Cat0)),
+      (proncat(Cat0), \+ proncat(Cat); qcats(Cat); \+ proncat(Cat0), (Cat1=nt, Cat0\=n, Cat\=nt; Cat1\=nt)),
+      (Cat0=Num, search_wn_cats(W,Cats), \+ on(luogo,Cats); Cat0\=num),
+      try_vcat(Net, NodeFrom, Op, Cat, Label, NodeTo, Net), 
+      continuan(Cat0,[W1-Cat1-P1|Cats], Net, NodeTo, To, VP, Rest, Words)
+      ;
+      Cat0=num,  Cat\=q, (Cat\=nt;\+ nnt(W), \+ ntt(W)), spy_lower(W,Low,Pol), 
+       (Pol=0;Pol=1, 
+              (W1=of;trova_CatSem(Cat,W,Sem),
+                        (on(nquant,Sem);on(astratto,Sem))
+                        )),
+      try_vcat(Net, NodeFrom, Op, Cat, Label, NodeTo, Net),
+      Rest=[W1-Cat1-Net|Cats], VP=[], Words=[]
+      ;
+      Cat1=num, B=ng,
+      try_vcat(Net, NodeFrom, Op, Cat, Label, NodeTo, Net),
+      Rest=[W1-Cat1-Net|Cats], VP=[], Words=[]
+      ;
+      B=ng, Cat1\=p, nouncats(Cat1),
+      try_vcat(Net, NodeFrom, Op, Cat, Label, NodeTo, Net),
+      Rest=Cats, VP=[W1-Cat1-Net], Words=[W1-Cat1])
+     ;
+     (Cat1=p; Cats=[]), 
+     (grw(W1),Rest=[W1-Cat1-P1], Label=Cat, VP=[], Words=[]
+      ;
+      nouncats(Cat1), Label=Cat, VP=[W1-Cat1-Net], Words=[W1-Cat1], Rest=[]
+      ;
+      Cat1\=p,
+      continuan(Cat,[W1-Cat1-P1|Cats], Net, NodeTo, To, VP, Rest, Words), Label=Cat
+     )).
+
+continuan(Cat0,[W-Cat-P, W1-Cat1-P1, W2-Cat2-P2|Cats], Net, NodeFrom, To, [W-Label-Net|VP], Rest, [W-Label|Words]):-
+      Cat\=ag, Cat0\=num, Cat\=cong, Net\=sv2, Net\=sv3, Net\=savv,
+      nouncats(Cat),
+      (nouncats(Cat0);dets(Cat0)), 
+      (check_all_verbs(Cat1),
+       v(W1,Subs), (on(i,Subs);on(ti,Subs))
+       ;
+       Cat1=p),
+      (nouncats(Cat2); proncat(Cat2); dets(Cat2)),
+      (\+ nnt(W), \+ ntt(W), Cat0\=nt, Cat\=nt
+                 ;
+                 Cat=nt, dets(Cat0)),
+      Label=Cat, 
+      continuan(Cat,[W1-Cat1-P1, W2-Cat2-P2|Cats], Net, NodeTo, To, VP, Rest, Words).
+
+continuan(Cat0,[W-Cat-P, W1-Cat1-P1|Cats], Net, NodeFrom, To, [W-Label-Net|VP], Rest, [W-Label|Words]):-
+        nouncats(Cat),nouncats(Cat0), 
+       findall_poss(Si),
+       on(1-[Cat-W],Si),Label=Cat, 
+      continuan(Cat,[W1-Cat1-P1|Cats], Net, NodeTo, To, VP, Rest, Words).
+
+continuan(Cat0,[W-Cat-P, W1-Cat1-P1|Cats], Net, NodeFrom, To, [W-Cat-Net|VP], Rest, [W-Cat|Words]):-
+      nouncats(Cat),nouncats(Cat0),
+      Cat0=num, 
+      (Cat=nt;Cat=num;\+ check_all_verbs(Cat1)),
+      continuan(Cat,[W1-Cat1-P1|Cats], Net, NodeTo, To, VP, Rest, Words).
+
+continuan(Cat0,[W-Cat-P|[]], Net, NodeFrom, NodeTo, [W-Label-Net], [], [W-Label]):-
+    dets(Cat0),
+    try_vcat(Net, NodeFrom, Op, Cat, Label, NodeTo, Net).
+
+continuan(Cat,Cats, Net, To, To, [], Cats, []):-
+    Cats=[W-Cat0-P|_],
+    (Net\=sv2
+       ; 
+       Net=sv2, 
+        (Cat=ausei;Cat=ausai),
+         \+ check_vcat(Cat0)
+        ;
+        Cat\=ausei, Cat\=ausai),
+    heads(Net, To, Cats),!.
+
+ctofmap(N, [], [], Res):-!.
+ctofmap(N, [Struct |In], OutAll, Rests):-
+    Struct=dirsp-Struc,
+     Struc\=[A],
+    findall(Rel, on(ibar-[Rel|_],Struc),Rels), Rels\=[],
+    N1 is N + 1,
+    deep_ctofmap(N1, Struc, Outs, Rest),
+    ctofmap(N, In, Out, Res),
+    append(Out,Outs,OutAll),
+    (Res\=[],append([N-[dirsp-Res]],Rest,Rests);
+     Rest\=[], Rests=[N-[dirsp-Rest]];
+     Rests=[]),
+     !.
+
+ctofmap(N, [Struct |In], OutAll, Rests):-
+    Struct=dirsp-Struc,
+     Struc\=[A], In=[],
+     Struc=[fp-_|Rest],
+    ctofmap(N, Rest, OutAll, Rests),
+     !.
+     
+ctofmap(N, [Struct |In], Rests, OutAll):-
+      Struct=F-Struc,
+     F=f,
+     Struc\=[A],
+    findall(Rel, on(ibar-[Rel|_],Struc),Rels), Rels\=[],
+%    findall(Rel, on(subj-[Rel|_],Struc),Subs), Subs\=[],
+    N1 is N + 1,
+    deep_ctofmap(N1, Struc, Outs, Res),
+    (In\=[], 
+     ctofmap(N, In, Out, Rest),
+     append(Out,Outs,OutAll),
+    (Res\=[],append([N-[F-Res]],Rest,Rests);
+     Rest\=[], Rests=[N1-[F-Rest]];
+     Rests=[])
+      ;
+      In=[],Rests=Outs,
+     (Res\=[],OutAll=[N-[F-Res]];
+       Res=[], OutAll=[])
+     ),
+    !.
+
+ctofmap(N, [Struct |In], OutAll, Rests):-
+      Struct=F-Struc,
+     (F=cp;F=fc;F=fs;
+     F=f2, In\=[]),
+     Struc\=[A],
+    findall(Rel, on(ibar-[Rel|_],Struc),Rels), Rels\=[],
+%    findall(Rel, on(subj-[Rel|_],Struc),Subs), Subs\=[],
+    N1 is N + 1,
+    deep_ctofmap(N1, Struc, Outs, Res),
+    (In\=[], 
+     ctofmap(N, In, Out, Rest),
+     append(Out,Outs,OutAll),
+    (Res\=[],append([N-[F-Res]],Rest,Rests);
+     Rest\=[], Rests=[N1-[F-Rest]];
+     Rests=[])
+      ;
+      In=[],OutAll=Outs, Rest=[],
+    (Res\=[],append([N1-[F-Res]],Rest,Rests);
+       Res=[], Rests=[])
+     ),
+    !.
+ctofmap(N, [Struct |In], OutAll, Rests):-
+      Struct=F-Struc,
+     (F=cp;F=fc;F=fs;
+     F=f2, In\=[]),
+    findall(Rel, on(ibar-[Rel|_],Struc),Rels), Rels=[],
+    findall(Rel, on(subj-[Rel|_],Struc),Subs), Subs=[],
+     (F1=cp;F1=f;F1=fc;F1=fs;F1=f2),
+     subtract(Struc,[F1-Str],Stru),
+     Str\=[], 
+     append([F1-Str],Stru,Ins), In=[],
+     ctofmap(N, Ins, OutAll, Rests),
+    !.
+
+ctofmap(N, [Struct |In], OutAll, Rests):-
+      Struct=F-Struc,
+     (F=cp;F=fc;F=fs;
+     F=f2, In\=[]),
+    findall(Rel, on(ibar-[Rel|_],Struc),Rels), Rels=[],
+     (F1=cp;F1=f;F1=fc;F1=fs;F1=f2),
+     subtract(Struc,[F1-Str],Stru),
+     Str\=[], Stru=[],
+    (In\=[], append([F1-Str],In,Ins);In=[],Ins=Struc),
+     ctofmap(N, Ins, OutAll, Rests),
+    !.
+      
+ctofmap(N, [Struct |In], OutAll, Rests):-
+     is_list(Struct),
+     length(Struct,L),
+     2=<L,
+     F=cp,
+      Struct=F-Struc,
+     subtract(Struc,[F1-Str],Stru),
+     (F1=cp;F1=f;F1=fc;F1=fs;
+      F1=f2, In\=[]),
+     Str\=[],
+     Str\=[A],
+    N1 is N + 1,
+    deep_ctofmap(N1, Str, Outs, Res),
+     append(Stru,In,Ins),
+     ctofmap(N, Ins, Out, Rest),
+     append(Out,Outs,OutAll),
+    (Res\=[],
+     length(Res,Lr),
+     (Lr=1,
+       append(Res,Rest,Restt), Rests=[N-[F1-Restt]]
+       ;
+       1<Lr,
+       append([N-[F1-Res]],Rest,Rests))
+       ;
+       Rest\=[], Rests=[N1-[F-Rest]];
+       Rests=[]),
+    !.
+ctofmap(N, [Struct |In], OutAll, Rests):-
+     is_list(Struct),
+     length(Struct,L),
+     2=<L,
+     (F=f;F=fc;F=fs;F=dirsp),
+      Struct=F-Struc,
+     subtract(Struc,[F1-Str],Stru),
+     (F1=cp;F1=f),
+     Str\=[],
+     Str\=[A],
+    N1 is N + 1,
+    deep_ctofmap(N1, Str, Outs, Res),
+    (In=[], 
+     length(Stru,L1),
+      L1=1, remove(_-_, Stru,St), St\=[],
+       append([F-Stru],Outs,OutAll), Rest=[]
+        ;
+         (In=[], 
+          length(Stru,L1),
+           L1\=1;In\=[]), 
+          append([F-Stru],In,Ins),
+                ctofmap(N, Ins, Out, Rest),
+                append(Out,Outs,OutAll)),
+    (Res\=[],append([N-[F-Res]],Rest,Rests);
+     Rest\=[], Rests=[N1-[F1-Rest]];
+      Rests=[]),
+    !.
+ctofmap(N, [Struct |In], OutAll, Rests):-
+     is_list(Struct),
+     length(Struct,L),
+     2=<L,
+     (F=f;F=fc;F=fs;F=dirsp),
+      Struct=F-Struc,
+     subtract(Struc,[F1-Str],Stru),
+     (F1=fc;F1=fs;F1=fac;
+      F1=f2, In\=[]),
+     Str\=[],
+     Str\=[A],
+    N1 is N + 1,
+    deep_ctofmap(N1, [F1-Str], Outs, Res),
+     append([F-Stru],In,Ins),
+    ctofmap(N, Ins, Out, Rest),
+    (Res\=[],append(Rest,[N-Res],Rests);
+     append(Rest,Res,Rests)),
+      append(Out,Outs,OutAll),
+    !.
+ctofmap(N, Struct , [N1-[F-Res]|Outs], Stru):-
+     is_list(Struct),
+     length(Struct,L),
+     2=<L,
+     subtract(Struct,[F-Str],Stru),
+     (F=cp;F=f;F=dirsp),
+     Str\=[],
+     Str\=[A],
+    N1 is N + 1,
+    deep_ctofmap(N1, Str, Outs, Res),
+    !.
+ctofmap(N, Struct , [N1-[F-Res]|Outs], Stru):-
+     is_list(Struct),
+     length(Struct,L),
+     2=<L,
+     subtract(Struct,[F-Str],Stru),
+     (F=fc;F=fs;F=fac),
+     Str\=[],
+     Str\=[A],
+    Str=[Head|Costs],
+    N1 is N + 1,
+    (Costs=[f-Frase],
+     deep_ctofmap(N1, Frase, Outs, Rest)
+     ;
+     Costs\=[f-Frase],
+     deep_ctofmap(N1, Costs, Outs, Rest)),
+     (Rest\=[],append([Head],Rest,Res);
+      Rest=[], append([Head],Outs,Res)),
+    !.
+
+ctofmap(N, [Struct |In], OutAll, Rests):-
+     is_list(Struct),
+     length(Struct,L),
+     2=<L,
+     subtract(Struct,[F-Str],Stru),
+     (F=cp;F=f;F=dirsp),
+     Str\=[],
+     Str\=[A],
+    N1 is N + 1,
+    deep_ctofmap(N1, Str, Outs, Res),
+    ctofmap(N, [Stru |In], Out, Rest),
+    append(Out,Outs,OutAll),
+    (Res\=[],append([N-[F-Res]],Rest,Rests);
+     Rest\=[], Rests=[N1-[F-Rest]];
+     Rests=[]),
+    !.
+ctofmap(N, [Struct |In], OutAll, Rests):-
+     is_list(Struct),
+     length(Struct,L),
+     2=<L,
+     subtract(Struct,[F-Str],Stru),
+     (F=fc;F=fs;F=fac;F=dirsp),
+     Str\=[],
+     Str\=[A],
+    N1 is N + 1,
+     remove(F1-SStr,Str,Re),
+     F1=f,
+    deep_ctofmap(N1, SStr, Outs, Res),
+    ctofmap(N, [Stru |In], Out, Rest),
+    append(Out,Outs,OutAll),
+    (Res\=[],append(Re,Res,Restt), 
+                 append([N-[F-Restt]],Rest,Rests);
+     Rest\=[], Rests=[N1-[F-Rest]];
+     Rests=[]),
+    !.
+ctofmap(N, [Struct |In], OutAll, Rests):-
+     is_list(Struct),
+     length(Struct,L),
+     2=<L,
+     F=fac,
+     subtract(Struct,[F-Str],Stru),
+     Str\=[],
+     Str\=[A],
+    N1 is N + 1,
+    deep_ctofmap(N1, Str, Outs, Res),
+    ctofmap(N, [Stru |In], Out, Rest),
+    append(Out,Outs,OutAll),
+    (Res\=[],append(Re,Res,Restt), 
+                  append([N-[F-Restt]],Rest,Rests);
+     Rest\=[], Rests=[N1-[F-Rest]];
+     Rests=[]),
+    !.
+
+ctofmap(N, Struct , [], Struct):-!.
+
+ctofmaps(Symb,PCosts, Outs):-
+    ctofmap(1, PCosts, Out, Rest),
+    reorganizeclauses(Rest,Out,A,B),
+    appendmap(B,A,Outs),
+    writenl(_,Symb),
+   !.
+
+reorganizeclauses([N-Structs], [[N1-[fs-FS|Cl]],[N2-[f-F]]], A,B):-
+    Structs=[f-Struct],
+    reverse(Struct,[Fac|RevStruc]), 
+    Fac=fac-[that-_-_],
+    reverse(RevStruc,Struc),
+    append([Fac],F,FAC),
+    B=[[N1-[fac-FAC]],[N2-[fs-FS|Cl]]],
+    A=[N-Struc],
+    !.
+reorganizeclauses(A,B,A,B):-
+    !.
+    
+evaluate_words_clauses(Str,Str1,Out,Rest,Outs):-
+    make_lists(Str,[W|L],_),
+    make_lists(Str1,[W1|L1],_),
+    atomic(W),atomic(W1),
+    tolower(W,Wv),
+    tolower(W1,Wv1),
+    findall_poss(NuoFrase),
+    (W=Wv,W1=Wv1,
+     on(N-[_-W|_],NuoFrase),
+     on(N1-[_-W1|_],NuoFrase)
+     ;
+     W\=Wv,W1\=Wv1,
+     on(N-[_-Wv|_],NuoFrase),
+     on(N1-[_-Wv1|_],NuoFrase)
+     ;
+     W=Wv,W1\=Wv1,
+     on(N-[_-W|_],NuoFrase),
+     on(N1-[_-Wv1|_],NuoFrase)
+     ;
+     W\=Wv,W1=Wv1,
+     (on(N-[_-Wv|_],NuoFrase);
+     on(N-[_-W|_],NuoFrase)),
+     on(N1-[_-W1|_],NuoFrase)),
+    (nonvar(N),nonvar(N1),
+      N<N1,
+     append(Rest,Out,Outs)
+     ;
+      var(N),nonvar(N1),
+     append(Rest,Out,Outs)
+     ;
+     append(Out,Rest,Outs)
+    ),
+    !.
+
+appendmap(Out,Rest,Outs):-
+    nogen_member(F-Str,Rest),
+    integer(F),
+    nogen_member(F1-Str1,Out),
+    integer(F1),
+%    F=<F1,
+    evaluate_words_clauses(Str,Str1,Out,Rest,Outs),
+    !.   
+appendmap(Out,Rest,Outs):-
+    nogen_member(F-Str,Rest),
+    integer(F),
+    appiattisci(Out,Outt),
+    nogen_member(F1-Str1,Outt),
+    integer(F1),
+%     F=<F1,
+    evaluate_words_clauses(Str,Str1,Out,Rest,Outs),
+    !.   
+appendmap(Out,Rest,Outs):-
+    nogen_member(F-Str,Rest),
+    integer(F),
+    appiattisci(Out,Outt),
+    nogen_member(F1-Str1,Outt),
+    evaluate_words_clauses(Str,Str1,Out,Rest,Outs),
+    !.   
+appendmap(Out,Rest,Outs):-
+    appiattisci(Out,Outt),
+    append(Outt,Rest,Outs),
+    !.   
+
+deep_ctofmap(N, [], [], Res):-!.
+deep_ctofmap(N, In, Outall, Resto):-
+    F=f,
+    remove(F-Str,In,Stru),
+    Str\=[],
+     Str\=[A],
+    N1 is N + 1,
+    deep_ctofmap(N1, Str, Outs, Rests),
+    ctofmap(N1, Stru, Out, Rest),
+    (Rest\=[], on(S-Cos,Rest),
+       S=f2, 
+       Cos=[A], 
+       append(Rest,[F-Rests],Restos),
+       Resto=[]
+      ;
+      Rests=[], Restos=[], Resto=Rest
+      ;
+      Restos=[N-[F-Rests]], Resto=Rest),
+    append(Out,Outs,Outal),
+    append([Restos],Outal,Outall),
+   !.
+deep_ctofmap(N, In, [Ris|Outs], Stru):-
+    (F=fc;F=fs;F=cp),
+    remove(F-Str,In,Stru),
+    Str\=[],
+    Str\=[A],
+    N1 is N + 1,
+%    (Out=[], Ris=N1-[F-Head|Res];Out\=[],Ris=Out),
+    deep_ctofmap(N1, Str, Outs, Res),
+%    ctofmap(N1, Stru, Out, Res),
+    (Res\=[], Ris=[N-Res];Ris=[]),
+   !.
+deep_ctofmap(N, In, OutAll, Stru):-
+%    (
+      F=fac,
+%     ;F=f2),
+    remove(F-Str,In,Stru),
+    Str\=[],
+    Str\=[A],
+    Str=[Head|Costs],
+    N1 is N + 1,
+    deep_ctofmap(N1, Costs, Outs, Rests),
+    appiattisci(Outs,Outss),
+    (Rests\=[],
+      append([Head],Rests,NCosts),
+      append([N1-[F-NCosts]],Outs,OutAll)
+      ;
+      Rests=[],Outs\=[],
+      (Outss=[N1-[f-F2]], 
+       append([Head],[f-F2],F1),
+       OutAll=[N1-[F-F1]]
+       ;
+       Outss=[N1-[f-F2]|Clause], 
+       append([Head],[f-F2],F1),
+       OutAll=[N1-[F-F1]|Clause])
+       ;
+       Outss=[N1-F2|Clauses],
+       remove(N2-[f-F1],Clauses,Re), 
+       (Re=[],
+        append([Head],[f-F1],F3)
+        ;
+        Re\=[],
+        append([Head],[f-F1],F33),
+        append(Re,[N-F33],F3)),        
+       OutAll=[F3,N1-F2]
+      ),
+%    ctofmap(N, Stru, Out, Res),
+     append(Out,Res,Rest),
+   !.
+deep_ctofmap(N, Struct , [], Struct):-!.
+

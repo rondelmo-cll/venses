@@ -1,0 +1,5865 @@
+﻿:- style_check(-singleton).
+
+findall_poss(Si):-
+  findall(I-X, termin(I-X), Si),
+  !.
+findall_pos(_P, Si):-
+  findall(I, termin(I-_X), Si),
+  !.
+ 
+retraction(A,B):-!.
+
+check_empty_cost1(Cost):-
+    var(Cost),
+    !.
+check_empty_cost1(Cost):-
+    nonvar(Cost),
+    (Cost\=[], 
+     Cost=..[Pref,C], C=[]
+     ;
+     Cost=[]),
+    !.
+check_empty_cost(Cost):-
+    var(Cost),
+    !.
+check_empty_cost(Cost):-
+    nonvar(Cost),
+    (Cost\=[], 
+     Cost=..[Pref,C], C\=[]
+     ;
+     Cost=[]),
+    !.
+
+map_subcat_list(
+  [[vcomp-[F=C], Prep, Role, Sem] | RestNorm ],
+  ArgN,
+  [vcomp/Role/Prep/[F1=C1]| RestList])
+  :-
+  !,
+  map_control([F=C], [F1=C1]),
+  NextArgN is ArgN+1,
+  map_subcat_list(RestNorm, NextArgN, RestList).
+
+
+
+/* fcomp controllati */
+map_subcat_list(
+  [[fcomp-Control, [nn], Role, Sem] | RestNorm ],
+  ArgN,
+  [f/fcomp/Role/Control1| RestList])
+  :-
+  !,
+  map_control(Control, Control1),
+  NextArgN is ArgN+1,
+  map_subcat_list(RestNorm, NextArgN, RestList).
+
+
+/* obliqui  */
+map_subcat_list(
+  [[Cstr-Fun, Prep, Role, Sem] | RestNorm ],
+  ArgN,
+  [Cstr/Fun/Role/Prep/Sem | RestList])
+  :-
+  atomic(Fun),
+  atomic(Cstr),
+  Prep\=[nn],
+  !,
+  NextArgN is ArgN+1,
+  map_subcat_list(RestNorm, NextArgN, RestList).
+
+/* sogg */
+map_subcat_list(
+  [[Cstr-Fun, Role, Sems] | RestNorm ],
+  ArgN,
+  [Cstr/Fun/Role/Sems | RestList])
+  :-
+  atomic(Fun),
+  atomic(Cstr),
+  isa_sem_cat_list(Sems),
+  !,
+  NextArgN is ArgN+1,
+  map_subcat_list(RestNorm, NextArgN, RestList).
+
+/* ogg */
+map_subcat_list(
+  [[Cstr-Fun, [nn], Role, Sems] | RestNorm ],
+  ArgN,
+  [Cstr/Fun/Role/Sems | RestList])
+  :-
+  atomic(Fun),
+  atomic(Cstr),
+  isa_sem_cat_list(Sems),
+  !,
+  NextArgN is ArgN+1,
+  map_subcat_list(RestNorm, NextArgN, RestList).
+
+/* soggetti inf controllato*/
+map_subcat_list(
+  [[Fun-[F=C], Role, Sems] | RestNorm ],
+  ArgN,
+  [Fun/Role/[F1=C1] | RestList])
+  :-
+  atomic(Fun),
+  isa_sem_cat_list(Sems),
+  !,
+  map_control([F=C], [F1=C1]),
+  NextArgN is ArgN+1,
+  map_subcat_list(RestNorm, NextArgN, RestList).
+
+/* soggetti inf */
+map_subcat_list(
+  [[Fun, Role, Sem] | RestNorm ],
+  ArgN,
+  [Fun/Role/Sem | RestList])
+  :-
+  atomic(Fun),
+  isa_sem_cat_list(Sem),
+  !,
+  NextArgN is ArgN+1,
+  map_subcat_list(RestNorm, NextArgN, RestList).
+
+
+/* xcomp */
+map_subcat_list(
+  [[Fun, [nn], Role, Sem] | RestNorm ],
+  ArgN,
+  [Fun/Role/Sem | RestList])
+  :-
+  atomic(Fun),
+  isa_sem_cat_list(Sem),
+  !,
+  NextArgN is ArgN+1,
+  map_subcat_list(RestNorm, NextArgN, RestList).
+
+
+/* Terzo arg nullo  */
+map_subcat_list(
+  [[nn, [nn], nn, nn]], 
+  2, 
+  []).
+
+
+/* Secondo e Terzo arg nullo  */
+map_subcat_list(
+  [
+  [nn, [nn], nn, nn],
+  [nn, [nn], nn, nn]],
+  1,
+  []).
+
+
+/* Primo Secondo e Terzo arg nullo  */
+map_subcat_list(
+  [
+  [nn, nn, nn],
+  [nn, [nn], nn, nn],
+  [nn, [nn], nn, nn]],
+  0,
+  []).
+
+
+map_subcat_list([], 3, []).
+
+map_control(
+  [Fun1=Fun2 | Control],
+  [Fun1=Fun2/Role | NewControl])
+  :-
+  !,
+  map_control(Control, NewControl).
+
+map_control(Control, Control).
+
+isa_sem_cat_list([]).
+isa_sem_cat_list([Sem | _]) :-
+  atom(Sem),
+  !.
+isa_sem_cat_list([Sem | _]) :-
+  var(Sem),
+  !.
+
+write_diagnosis(_,_).
+
+write_c_structure(Win,X):-
+ nl,
+ ppf(X,0),
+ !.
+write_c_structure(_,_).
+
+write_f_structure(Win,Rete):-
+ nl,
+ pp_arc(n1,0,Rete),
+ !.  
+write_f_structure(_,_).
+
+/*
+write_s_structure(Win) :-
+ active_output_win(Win),
+ write(Win, ......),
+ set_win(Win,Rete),
+ nl ~> Win,
+ fs_to_ss(RevInds,SS),
+ reverse(RevInds,Inds),
+ pp_list(Inds,Win),
+ nl ~> Win,
+ pp_list([SS],'','','',3,0,Win),
+ nl ~> Win,
+ !.
+*/
+
+write_s_structure(_).
+
+write_s_structure(Win, NoFr, NoCl, NewNoCl, Loc, Temp, At) :-
+  write(......),
+  nl,
+  fs_to_ss(RevInds, SS, NoFr, NoCl, NewNoCl, Loc, Temp, At),
+  reverse(RevInds, Inds),
+  pp_list(Inds, Win),
+  nl,
+  pp_list([SS], '', '', '', 3, 0, Win),
+  nl,
+  !.
+write_s_structure(_,_,_,_,_,_,_).
+
+write_l_structure(Win) :-
+  write(......),
+  nl,
+  tologf(Inds),
+  !.
+write_l_structure(_).
+
+
+write_ls_structure(Win, Lfs, Rels) :-
+  nl,
+  ppin(Lfs),
+  nl, nl, 
+  ppin(Rels),
+  nl, nl,
+  !.
+write_ls_structure(_,_,_).
+
+forma_goal(NonTerm,Frase,X,Goal):-
+ atomic(NonTerm),
+ Goal =.. [NonTerm,X,Frase,[]],
+ !.
+
+forma_goal(NonTerm,Frase,X,Goal):-
+ not(atomic(NonTerm)),
+ NonTerm =.. [Nome,X|Resto],
+ append_list([Nome,X|Resto],[Frase,[]],Lista),
+ Goal =.. Lista,
+ !.
+
+
+/* gestione liste */
+
+/* controlla liste */
+
+lista_piena([_|_]).
+
+/* ho sostituito quello di generate con quello di klone
+is_list(-) :- !, fail.		% catch & reject variables
+is_list([]).
+is_list([_|Tail]) :-
+	is_list(Tail).
+is_list([]).
+is_list([_|_]).
+*/
+
+islist([]).
+
+islist([_|L]):-
+ islist(L).
+
+/* cancella */
+
+elimina(A,[A|L],L):-
+ !.
+
+elimina(A,[B|L],[B|M]):-
+ elimina(A,L,M).
+
+cancel(T, [], []).
+
+cancel(T, [T|Id1], Id2):-
+  cancel(T, Id1, Id2),!.
+
+cancel(T, [T|Id1], Id1).
+
+cancel(E, [T|Id1], [T|Id2]):-
+  E\=T, cancel(E, Id1, Id2).
+
+togli_doppi([], []).
+
+togli_doppi([T|Id1], [T|Id2]):-
+      delete_el(T,Id1,Ids),
+%       cancel(T, Id1, Ids),
+      togli_doppi(Ids, Id2).
+
+
+/* delete_el */
+
+delete_el(_,[],[]):-
+ !.
+
+delete_el(Elemnt,[Elemnt|List],List1):-
+ !,
+	 delete_el(Elemnt,List,List1).
+
+delete_el(Elemnt,[Elemnt1|List],[Elemnt1|List1]):-
+	 delete_el(Elemnt,List,List1).
+
+
+/* efface - rimuove un elemento da una lista 
+            l'ho modificato per il matching della anafora
+             per il classico efface usare ELIMINA */
+
+efface(Element,[Element|Rest],Rest):-
+ !.
+
+efface(Element,[Elmnt|Rest],Rest):-
+ check(Element,Elmnt),
+ !.
+
+efface(Element,[Elmnt|List1],[Elmnt|List2]):-
+ efface(Element,List1,List2).
+
+
+/* membro - member adattato per i matching nell'anafora 
+               cambiare nome !!!!!!!  */
+
+membro(X,[X|_]):- nonvar(X) .
+
+membro(X,[Y|_]):-
+ check(X,Y),    % dove  definito ??????????
+ !.
+
+membro(X,[_|Y]):-
+  nonvar(Y),
+  membro(X,Y).
+
+notmembro(A, B):-
+  findall(A, membro(A, B), As),
+  As=[].
+
+noton(A,B):-
+  findall(A, member(A, B), As),
+  As=[].
+
+/* lunghezza */
+
+lunghezza([],0) :- !.
+lunghezza([X|T],L) :- lunghezza(T,L1), L is L1 + 1.
+
+/* append_list */
+
+append_list([],L,L):-
+ !.
+
+append_list([X|L1],L2,[X|L3]):-
+ append_list(L1,L2,L3).
+
+/* append_list_x : attacca due liste, se il primo argomento non e'
+  lista lo trasforma in lista */
+
+append_list_x([],[],[]):-
+ !.
+
+append_list_x([],[H|T],[H|T]):-
+ !.
+
+append_list_x([],L,[L]):-
+ !.
+
+append_list_x(L1,L2,L3):-
+ lista_piena(L1),
+ !,
+ append_list(L1,L2,L3).
+
+append_list_x(X,L2,L3):-
+ append_list([X],L2,L3).
+
+     
+/* Predicato the_list, utile per append_listere tante 
+liste in una sola:
+  es:
+          Lista the_list [a] && [b,c] && d && [] && e(1,2).
+risulta:   Lista = [a,b,c,d,e(1,2)].
+
+richiede le definizioni di operatore :
+:- op(800,xfx,the_list).
+:- op(600,xfy,&&).
+*/
+
+Lista the_list Xhead && Xtail :-
+ Ltail the_list Xtail,
+ append_list_x(Xhead,Ltail,Lista).
+
+Lista the_list X :-
+ X \= _A && _B ,
+ append_list_x(X,[],Lista).
+
+
+/* estrai - testa l'appartenenza di un elemento in una lista e quindi
+           lo rimuove */
+
+estrai([],LIn,_).
+
+estrai(X,LIn,LOut):-
+ member(X,LIn),
+ efface(X,LIn,LOut).
+
+/* elimina_doppi/2 - elimina le successive occorrenze dello stesso elemento
+  da una lista */
+
+elimina_doppi([],[]).
+elimina_doppi([H|T],L) :-
+	  member(H,T),
+	  !,
+	  elimina_doppi(T,L).
+elimina_doppi([H|T],[H|L]) :-
+	  elimina_doppi(T,L).
+
+/* APPIATTISCI/2 - appiattisce una lista che abbia delle sottoliste 
+      come elementi */
+
+appiattisci([],[]):-
+ !.
+
+appiattisci([H|T],[H|T1]):-
+ nonvar(H),
+	 \+ list(H),    
+	 appiattisci(T,T1),
+ !.
+
+appiattisci([H|T],T1):-
+	 appiattisci(H,L1),    
+	 appiattisci(T,L2),
+	 append_list(L1,L2,T1),
+ !.
+
+
+/* apply - applica un predicato ad 1 argomento 
+ad una lista
+
+apply(_,[]):-
+ !.
+apply(P,[X|L]):-
+ Q =.. [P,X],
+ call(Q),
+ apply(P,L).
+
+maplist 
+maplist(_,[],[]).
+maplist(P,[X|L],[Y|M]):-
+ P =.. P1,
+ append_list(P1,[X,Y],P2),
+ Q =.. P2,
+ call(Q),
+ maplist(P,L,M).
+maplist(P,[X|L], M):-
+ maplist(P,L,M).
+*/
+
+/* gestione insiemi */
+/* intersezione */
+
+intersezione([],X,[]):-
+ !.
+
+intersezione([X|R],Y,[Y1|Z]):- 
+ member(X, Y),
+ Y = [Y1 |_],
+ !,
+ intersezione(R, Y, Z).
+
+intersezione([_|R],Y,Z):-
+ intersezione(R,Y,Z).
+
+intersect([],_):-
+ !.
+
+intersect(_,[]):-
+ !.
+
+intersect(A,B):-
+ intersezione(A,B,I),
+ I \= [].
+
+intersect(Set1, Set2) :-
+	member(Element, Set1),		%  generates Elements from Set1
+	memberchk(Element, Set2),	%  tests them against Set2
+	!.				%  if it succeeds once, is enough.
+
+/*
+memberchk(X, [X|_]    ) :- !.
+memberchk(X, [_,X|_]  ) :- !.
+memberchk(X, [_,_,X|_]) :- !.
+memberchk(X, [_,_,_|L]) :-
+	memberchk(X, L).
+*/
+
+subset([], _).
+subset([Element|Elements], Set) :-
+	memberchk(Element, Set),
+	subset(Elements, Set).
+
+subsetr([],[_|_]).
+subsetr([X1|C1],L2) :- del(X1,L2,L3),
+                     subsetr(C1,L3).
+
+del(X,[X|C],C) :- !.
+del(X,[A|C],[A|C1]) :- del(X,C,C1).
+
+/*
+subset([],_) :-
+ !.
+subset([El|AltriEl],Set1) :-
+ remove(El,Set1,NewSet1),
+ subset(AltriEl,NewSet1).
+controlled_cats(CatSN,CatGovHead):-
+ nonvar(CatSN),
+ member(collettivo,CatGovHead).
+*/
+
+
+/* pretty print */
+
+pr_pr(X,I):-
+ atomic(X),
+ tab(I),
+ write(X),
+ nl,
+ !.
+
+pr_pr([],I):-
+ tab(I),
+ write([]),
+ nl,
+ !.
+
+pr_pr([H|T],I):-
+ !,
+ J is I + 1,
+ pr_pr(H,J),
+ ppx(T,J),
+ !.
+
+pr_pr(Struttura,I):-
+ Struttura =.. [Func|[[]]],
+ tab(I),
+ write(Func),
+ tab(1),
+ write([]),
+ nl,
+ !.
+
+pr_pr(Struttura,I):-
+ Struttura =.. [Func|Args],
+ member(Func,[regola,indice,n,npro,pr,cl,prorel,a,v,aux,supporto,pp,def,part,
+                  card,prep,cat,sub,controllore,ruolo,implicito,possessivo]),
+ tab(I),
+ write(Struttura),
+ nl,
+ !.
+
+pr_pr(Struttura,I):-
+ Struttura =.. [Func|Args],
+ tab(I),
+ write(Func),
+ nl,
+ J is I + 1,
+ pr_pr(Args,J),
+ !.
+
+ppx([],_):-
+ !.
+
+ppx([H|T],I):-
+ pr_pr(H,I),
+ ppx(T,I),
+ !.
+
+
+/* pretty print su file - pp della struttura originale */
+
+ppf(X,I):-
+ atomic(X),
+ nl,
+ tab(I),
+ write(X),
+ !.
+
+ppf([],I):-
+ nl,
+ tab(I),
+ write([]),
+ !.
+
+ppf([H|T],I):-
+ !,
+ J is I + 1,
+ ppf('[',J),
+ ppfx([H|T],J),
+ ppf(']',J),
+ !.
+
+ppf(Struttura,I):-
+ Struttura =.. [Func|[[]]],
+ nl,
+ tab(I),
+ write(Func),
+ write('([])'),
+ !.
+
+ppf(Struttura,I):-
+ Struttura =.. [Func|Args],
+ member(Func,[regola,indice,n,npro,pr,cl,prorel,a,v,appoggio,aux,avv,
+              supporto,pp,def,part,card,prep,rifl,cat,sub,controllore,
+              ruolo,implicito, possessivo,rel,funzione]),
+ nl,
+ tab(I),
+ write(Struttura),
+ !.
+
+ppf(Struttura,I):-
+ Struttura =.. [Func|Args],
+ nl,
+ tab(I),
+ write(Func),
+ write('('),
+ J is I + 1,
+ ppfx(Args,J),
+ ppf(')',J),
+ !.
+
+ppfx([X|[]],I):-
+ ppf(X,I),
+ !.
+
+ppfx([X,Y|T],I):-
+ ppf(X,I),
+ write(','),
+ ppfx([Y|T],I),
+ !.
+
+/* varie */
+
+/* trova(X,S)  cerca nella struttura S la sottostruttura X */
+
+trova(_14768,[]):-
+ !,
+ fail .
+
+trova(X,Y):-
+ nonvar(Y),
+ X = Y.
+
+trova(X,L):-
+ lista_piena(L) ,
+ nonvar_member(S1,L),
+ trova(X,S1).
+
+trova(X,S):-
+ \+ atomic(S) ,
+ \+ lista_piena(S) ,
+ S =.. [_|L] ,
+ trova(X,L).
+
+nonvar_member(El,[El|Resto]):-
+ var(Resto),
+ !.
+
+nonvar_member(El,[El|Resto]).
+
+nonvar_member(El,[_|Resto]):-
+ nonvar_member(El,Resto).
+
+/* findall_q: tratto da I. Bratko */
+findall_q(X, Goal, Xlist) :- call(Goal),
+                          assertz(queue(X)),
+                          fail;
+                          assertz(queue(bottom)),
+                          collect(Xlist).
+
+collect(L) :- retract(queue(X)),!,
+             ( X == bottom,!, L=[]
+             ;
+               L = [X|Rest], collect(Rest)).
+
+
+feature_on(F,F):-
+ !.
+
+feature_on(F,[F]):-
+ !.
+
+feature_on(F,List):-
+ nogen_member(F,List),
+ !.
+
+
+/* BUBBLESORT/2 - per ordinare i possibili antecedenti e secondo il punteggio
+   attribuito loro */
+
+bubblesort(List,Sorted):-
+ swap(List,List1),
+ !,
+ bubblesort(List1,Sorted).
+
+bubblesort(Sorted,Sorted).
+
+swap([X,Y|Rest],[Y,X|Rest]):-
+ md(X,Y).
+
+swap([Z|Rest],[Z|Rest1]):-
+ swap(Rest,Rest1).
+
+md(N1/P1,N2/P2):-
+ P2 < P1.
+
+
+zero(0).
+
+zero('0').
+
+
+dot:-
+ write('.').
+
+separa(S1,_,_):-
+ var(S1),
+ !.
+
+separa(S1,S2,S3):- 
+ nonvar(S1),
+ name(S1,L1),
+ separa_x(L1,L2,L3),
+ name(S2,L2),
+ name(S3,L3),
+ !.
+
+separa_x([95|L3],[],L3):-
+ !.   % 95 -> '_'
+
+separa_x([X|R],[X|Lx],L3):-
+ separa_x(R,Lx,L3).
+
+
+
+/***************
+leggi_rete(+NetFile, -NetIdentifier)
+== cancella la rete precedente e ne legge una nuova
+****************/
+leggi_rete(NetFile, NetId) :-
+  fname(NetFile, Vol, _, _),
+%   fname(FSpec1, Path, _, _),
+%   dvol(Vol),
+  ftype(NetFile, Vol, 'TEXT',_),
+  clear_net(_),
+  dynamic(current_node/1),
+  consult(NetFile),
+  update_current_node,
+  rete(NetId).
+
+
+leggi_rete(NetFile, NetId) :-
+  dvol(Vol),
+  ftype(NetFile, Vol, 'SIGM',_),
+  cload(NetFile),
+  update_current_node,
+  rete(NetId).
+
+
+update_current_node :-
+  current_node(N),
+  retractall(current_num(n, _)),
+  assert(current_num(n, N)).
+update_current_node.
+
+/*
+leggi_rete(NetFile, NetId) :-
+  clear_net(_),
+  see(NetFile),
+  repeat,
+  read(Term),
+  process(Term),
+  seen,
+  rete(NetId),
+  !.
+
+process(Term) :- end_of_file_mark(Term), !.
+process(Clause) :- assertz(Clause), fail.
+
+end_of_file_mark(end_of_file).
+*/
+
+/* programmi di stampa, salvataggio, e cancellazione dei grafi */
+
+
+/* cancella una rete dal database */
+
+cancella_rete(Rete) :- 
+        retractall(rete(Rete)),
+        retractall(arco(_,_,_,Rete)),
+        retractall(foglia(_,_,Rete)).
+
+/* lista una rete */
+
+lista_rete(Rete) :-
+        fp(Rete,Frase),
+        writeq(f(Frase,Rete)),dot,nl,
+        rete(Rete),write(rete(Rete)),dot,nl,
+        lista_foglie(Rete),
+        lista_archi(Rete),
+        current_num(n, N), % EP 93.05.27
+        writeq(current_num(n, N)),dot,nl.
+
+lista_foglie(Rete) :- 
+  foglia(Nodo,Val,Rete),
+   write(foglia(Nodo,Val,Rete)),dot,nl,fail.
+lista_foglie(_).
+
+lista_archi(Rete) :- 
+ arco(N1,N2,Attr,Rete),
+ write(arco(N1,N2,Attr,Rete)),dot,nl,fail.
+lista_archi(_).
+
+
+
+/* pretty print del grafo generato da toarc(Infile,Radice). */
+
+/* pp_arc/1 */
+
+pp_arc(Radice) :-
+ rete(Radice),
+ nl,write('Rete '),write(Radice),nl,
+ pp_arc(n1,0,Radice).
+
+
+/* pp_arc/2 */
+
+pp_arc(Radice,Rete) :-
+ nl,write('Nodo '),write(Radice),nl,
+ pp_arc(Radice,0,Rete).
+
+
+/* pp_arc/3 */
+
+pp_arc(Nodo,Col,Rete) :-
+ foglia(Nodo,Val,Rete),
+ writeq(Val),nl,!.
+/*
+pp_arc(Nodo,Col,Rete) :-
+ \+ bagof(ToNodo,pp_arco(Nodo,ToNodo,Rete),[Primo|Altri]),
+ \+ foglia(Nodo,Val,Rete),
+ nl.
+questo predicato c'e' per gli args, mods e adjs VUOTI */
+
+pp_arc(Nodo,Col,Rete) :-
+ bagof(ToNodo,pp_arco(Nodo,ToNodo,Rete),[Primo|Altri]),
+ arco(Nodo,Primo,Attr,Rete),
+ writeq(Attr),write(':'),
+ term_length(W,Attr), 
+ NewCol is Col + W + 1,
+ pp_arc(Primo,NewCol,Rete),
+ pp_arc(Nodo,Altri,Col,Rete),!.
+
+
+/* pp_arc/4 */
+
+pp_arc(_,[],_,_) :- !.
+
+pp_arc(Nodo,[Primo|Altri],Col,Rete) :-
+ arco(Nodo,Primo,Attr,Rete),
+ tab(Col),
+ writeq(Attr),write(':'),
+ term_length(W,Attr),
+ NewCol is Col + W + 1,
+ pp_arc(Primo,NewCol,Rete),
+ pp_arc(Nodo,Altri,Col,Rete),!.
+
+pp_arco(Nodo,ToNodo,Rete) :- arco(Nodo,ToNodo,_,Rete).
+
+
+triplelook(P,Mc,Y,Z,Q):-
+  find_pos(P, I, X, List),
+  nogen_member(Y-_,X), 
+  K is I+1,
+  alternatelist(List, K-W),
+  nogen_member(Z-_,W),
+  J is K+1,
+  alternatelist(List, J-U),
+  nogen_member(Q-_,U).
+
+
+eitherdlook(P,Mc,T,S,R):-
+ (
+  find_pos(P, I, X, List),
+  (K is I+1,
+   nogen_member(T-_,X),
+   alternatelist(List, K-W),
+   J is K+1,
+   (nogen_member(S-_,W)
+    ;
+    nogen_member(R-_,W))
+   ; 
+   alternatelist(List, J-U),
+   nogen_member(R-_, U))
+  ;
+  true).
+
+eitherlook(P,Mc,T,nil):-
+ (
+  find_pos(P, I, X, List),
+  (nogen_member(T-_,X)
+   ; 
+   K is I+1,
+   alternatelist(List, K-W),
+   nogen_member(T-_,W))
+  ;
+  true).
+
+eitherlook(P,Mc,T,N):-
+ N\=nil,
+ (
+  find_pos(P, I, X, List),
+  (nogen_member(T-_,X),
+   (X=[R-_]
+    ;
+    on(V-_,X), V=T,V\=N)
+   ; 
+   K is I+1,
+   alternatelist(List, K-W),
+   nogen_member(T-_,W),
+   (W=[R-_]
+    ;
+    on(V-_,W), V=T,V\=N))
+  ;
+  true).
+
+dlook(List,Q,I,Mc,Y,Z,W):-
+  K is I+1,
+  alternatelist(List, K-W),
+  (list(Z),
+  on(Zz, Z)
+  ;
+  atomic(Z), Zz=Z),
+  nogen_member(Zz-_,W).
+
+doublelook([P, Q|Rest],Mc,Y,Z,nil):- 
+ (find_pos([P, Q|Rest], I, X, AllP),
+  nogen_member(Y-_,X), 
+  dlook(AllP,Q,I,Mc,Y,Z,W)
+  ;
+  fail).
+
+doublelook([P, Q|Rest],Mc,Y,Z,N):-
+  N \= nil, 
+ (find_pos([P, Q|Rest], I, X, AllP),
+  nogen_member(Y-_,X),
+  dlook(AllP,Q,I,Mc,Y,Z,W),
+  notnogen(N-_,W)
+  ;
+  fail).
+
+multiplelook(_,_,[]):-
+ !.
+
+multiplelook(P,Mc,Cats):-
+ find_pos(P, I, X, AllP),
+  multlook(X,Cats).
+
+multlook(X,[]):-fail,!.
+
+multlook(X,[Y|Rest]):-
+ (nogen_member(Y-_, X)
+  ;
+  multlook(X,Rest)).
+
+ambigu_tok(P,Mc,Y,Cats):-
+ (look(head), 
+ find_pos(P, I, X, AllP),
+ nogen_member(Y-_, X),    
+ (X \= [Y-_],
+  multlook(X,Cats)
+  ;
+  X = [Y-_]
+  ;
+  X = [Y-_|Rest],
+  nogen_member(V-_,Rest),
+  V\=v)),
+  !.
+
+notonelook(P,Mc,Y,Cats):- 
+ find_pos(P, I, X, List),
+ alternatelist(List, I-W),
+ \+ multlook(W,Cats).
+
+neitherlook(P,Mc,Y,Cats):- 
+ find_pos(P, I, X, List),
+ nogen_member(Y-_, X),    
+ K is I+1,
+ alternatelist(List, K-W),
+ \+ multlook(W,Cats).
+
+onebacklook(P,Mc,Y,Cats):- 
+ find_pos(P, I, X, List),
+ nogen_member(Y-_, X),    
+ K is I-1,
+ alternatelist(List, K-W),
+ \+ multlook(W,Cats).
+
+olook(I,Mc,Z,W):-
+ !, 
+ (nogen_member(Z-_,W)
+  ;
+  list(Z),
+  multlook(W,Z)).
+
+onelook(P,Mc,Y,nil):- (var(P); P=[]; P=[A], var(A); P=[A|_], var(A)), fail.
+
+onelook(P,Mc,Y,Nil):- 
+ nogen_member(A,P),
+ oneluk(A,Mc,Y,Nil),!.
+
+oneluk(P,Mc,Y,nil):- 
+ find_pos(P, I, X, AllP),
+ (olook(I,Mc,Y,X)
+  ;
+  false).
+
+oneluk(P,Mc,Z,N):- 
+ N \= nil, 
+ find_pos(P, I, W, AllP),
+ (olook(I,Mc,Z,W),
+   (W=[R-_], 
+     (atomic(N),
+       R\=N;
+       list(N),
+      \+ nogen_member(R,N))
+   ;
+   W\=[R-_],
+   exhaust_list(W, Z, N)
+   )
+  ;
+  false).
+
+exhaust_list([], Z, N):-!.
+exhaust_list([Y-_|W], Z, N):-
+     atomic(N),
+    (atomic(Z),
+     (Y=Z,Y\=N; 
+      Y\=Z,Y\=N)
+     ;
+     list(Z),
+     (alternatemember(Z,Xx),
+      Xx\=N
+      ;
+     (
+     var(W)
+     ;
+     alternatelists(W, T-_),
+     T=Xx,T\=N),
+     exhaust_list(W, Z, N))
+     ),!.
+
+exhaust_list([Y-_|W], Z, N):-
+     list(N),
+    (atomic(Z),
+     (Y=Z,Y\=N; 
+      Y\=Z,Y\=N)
+     ;
+     list(Z),
+     (\+ multlook([Y-_|W],N)
+      ;
+     (
+     var(W)
+     ;
+     alternatelists(W, T-_),
+     remove(Tt,N,N1),
+     Tt\=T),
+     exhaust_list(W, Z, N1))
+     ),!.
+
+alternatelists([], K-W):-!.
+alternatelists(List, K-W):-
+  List\=[],
+  List=[X-W|_],
+  nonvar(K),
+  X<K,
+  !.
+alternatelists(List, K-W):-
+  List\=[],
+  on(K-W, List),
+  !.
+
+alternatelist([], I-X):-
+  one(termin(I-X)),
+  !.
+  
+alternatelist(List, K-W):-
+  List\=[],
+  on(K-W, List),
+  !.
+alternatelist(List, K-W):-
+  List\=[],
+  List=[X-W|_],
+  (nonvar(K),
+   X<K
+   ;
+   var(K)),
+  !.
+
+alternatemember(A,X):-
+ member(X, A).
+
+choose_pref(Pref):-
+ Pref=sn;Pref=sp;Pref=fcomp;
+ Pref=vcomp;Pref=acomp;Pref=ncomp;Pref=xcomp.
+
+
+nogen_member([], []):-!, fail.
+
+nogen_member(A=N, [B=N|T]):-
+ nonvar(A),
+ atomic(B),
+ nonvar(B),
+ A=B.
+nogen_member(A, [B|T]):-
+ nonvar(A),
+ atomic(B),
+ nonvar(B),
+ A=B.
+
+nogen_member(A/F/R/P/G, [B/F/R/P/G|T]):-
+ nonvar(A),
+ nonvar(B),
+ choose_pref(Pref),
+ A=Pref,
+ B=Pref,!.
+
+nogen_member(A/F/R/G, [B/F/R/G|T]):-
+ nonvar(A),
+ nonvar(B),
+ choose_pref(Pref),
+ A=Pref,
+ B=Pref,!.
+
+nogen_member(A/R/G, [B/R/G|T]):-
+ nonvar(A),
+ nonvar(B),
+ B\=_/_,
+ choose_pref(Pref),
+ A=Pref/_/RestA,
+ B=Pref/_/RestB,!.
+
+nogen_member(A/R/G, [B/R/G|T]):-
+ nonvar(A),
+ nonvar(B),
+ B\=_/_,
+ A=B,!.
+
+nogen_member(A/G, [B/G|T]):-
+ nonvar(A),
+ nonvar(B),
+ B\=_/_,
+ choose_pref(Pref),
+ A=Pref/_,
+ B=Pref/_.
+
+nogen_member(A-C, [B|T]):-
+ \+ atomic(B),
+ B=X-Y,
+ nonvar(X),
+ (list(X),
+ list_member(A, C, X, Y)
+ ;
+ atomic(X),
+ (nonvar(A),
+  list(A),
+ alternatemember(A,X)
+ ;
+ atomic(A),
+ A=X),
+ C=Y
+ ;
+ nonvar(Y),
+ C=Y,
+ (list(A),
+ alternatemember(A,X)
+ ;
+ atomic(A),   
+ A=X
+ ;
+ A=X)).
+
+nogen_member(A, [B|T]):-
+ nonvar(B),
+ A=B.
+
+nogen_member(X, []):-!, fail.
+
+nogen_member(X,[Y|T]) :- nogen_member(X,T).
+
+list_member(A, C, [X|Rest], Y):-
+ nonvar(X),
+ (nonvar(A),
+  list(A),
+ alternatemember(A,X)
+ ;
+ atomic(A),
+ A=X),
+ C=Y
+ ;
+ nonvar(Y),
+ C=Y,
+ (list(A),
+ alternatemember(A,X)
+ ;
+ atomic(A),   
+ A=X)
+ ;
+ list_member(A, C, Rest, Y),!.
+ 
+sub_member(A, C, X, Y):-
+ (nonvar(A),
+  list(A),
+ alternatemember(A,X)
+ ;
+ atomic(A),
+ A=X),
+ C=Y
+ ;
+ nonvar(Y),
+ C=Y,
+ (list(A),
+ alternatemember(A,X)
+ ;
+ atomic(A),   
+ A=X),
+ !.
+
+onegr(Mc,G):-
+ gr(G),
+ !.
+     
+mcon(M, [], M):-!.
+mcon([], M, M):-!.
+mcon(M, R, N):-
+  (nonvar(R),
+   nonvar(M),
+   atomic(R),
+   atomic(M),
+   var(N),
+%    c_cat(M, R, N)
+   concat(M, R, N)
+   ;
+   fail).
+
+dt(Call,Time,Seconds) :-
+ Call,
+   ticks(Time1),Delta is Time1-Time,Seconds is Delta/60,
+      writenl(user, Seconds),write(user, '/60 sec.'),nl(user)
+    ;
+   ticks(Time1),Delta is Time1-Time,Seconds is Delta/60,
+      writenl(user, Seconds),write(user, '/60 sec.'),nl(user),fail.
+
+compute_time(Time):-
+   var(Time),!.
+compute_time(Time):-
+%   ticks(Time),
+  logical(on),
+  nonvar(Time),
+  ticks(Time1),
+  Delta is Time1-Time,
+  Seconds is Delta/60,
+  write(user, Seconds),
+  nl(user),
+  !,
+  Seconds < 30.
+
+compute_time(Time):-
+  logical(off).
+
+comput_time(Time,Seconds):-
+  nonvar(Time),
+  ticks(Time1),
+  Delta is Time1-Time,
+  Seconds is Delta/60,
+  !.
+
+/******************
+and_to_listw(+NestedAndWff, -FlatAndWff)
+== Convert a nested conjunction of wffs in a flat one
+******************/
+and_to_listw(wff(and, Args), wff(and, List)) :-
+  !,
+  conjs_to_list(Args, List).
+
+and_to_listw(Wff, Wff) .
+ 
+land_to_list(wff(and, Args), wff(and, List)) :-
+  !,
+  conjs_to_list(Args, List).
+
+land_to_list(Wff, Wff) .
+
+conjs_to_list([Conj, wff(and, Conjs)], [Conj | List]) :-
+  !,
+  conjs_to_list(Conjs, List).
+
+conjs_to_list(Conjs, Conjs).
+
+/************************************************************************************************/
+/* Regole per la concatenazione di due identificativi 
+
+concatena(S1,S2,S3) :- name(S1,L1),
+                      name(S2,L2),
+                      name('_',La),
+                      conc(L1,La,Lb),
+                      conc(Lb,L2,L3),
+                      name(S3,L3). 
+
+conc([],Lista,Lista).
+conc([T|Lista1],Lista2,[T|Lista3]):-conc(Lista1,Lista2,Lista3).
+
+*/
+
+/* concatena due simboli - per creare i nomi dei
+  concetti individuali associati alle primitive */
+
+concatena(S1,S2,S3):-
+ nonvar(S1), nonvar(S2),
+ concat([S1,'_',S2],S3).
+
+                                                                                              
+/* Generazione di simboli */
+/* la chiamata    gen_sym(Radice,0) inizializza il generatore 
+  per la radice Radice  */
+
+/* EP 93.05.27 */
+init_gen_sym(Radice, N) :- 
+  integer(N),
+  !,
+  retractall(current_num(Radice, _)),
+  assert(current_num(Radice, N)).
+
+
+/* solo inizializzazione a 0 */
+gen_sym(Radice,X) :- 
+  nonvar(X),
+  !,
+  X = 0,  
+  retractall(current_num(Radice, _)).
+
+gen_sym(Radice,Atomo) :- 
+  get_num(Radice,Num),
+  name(Radice,Name1),
+  name(Num,Name2),
+  append_list(Name1,Name2,Name),
+  name(Atomo,Name).
+
+get_num(Radice,Num) :- 
+  retract(current_num(Radice,Num1)),
+  !,
+  Num is Num1 + 1,
+  assert(current_num(Radice,Num)).
+get_num(Radice,1)   :- assert(current_num(Radice,1)).
+
+
+
+
+/* serve per la stampa dei grafi 
+  calcola il numero di caratteri in un atomo o in una struttura
+  X/Y dove X e Y sono atomi */
+
+term_length(N,X/Y) :- 
+		term_length(N1,X),
+		term_length(N2,Y),N is N1 + N2 + 1.
+term_length(2,[]) :-!.
+term_length(N,Atomo) :- 
+ atomic(Atomo),name(Atomo,L),length(L,N).
+
+
+/***************************
+Generalized map program
+map/[2,3,4,5]
+****************************/
+
+map(Rel, Input):-
+   map1(Rel, Input).
+
+map(Rel, Input, Output):-
+   map2(Rel, Input, Output).
+
+map(Rel, Input, Start, Finish):-
+   map3(Rel, Input, Start, Finish).
+
+map(Rel, Input, Output, Start, Finish):-
+   map4(Rel, Input, Output, Start, Finish).
+
+
+/* Each kind of map is handled separately */
+
+% Type check
+map1(Rel, L):-
+   var( L ),
+   !,
+   fail.
+map1(Rel, []):-
+   !.
+map1(Rel, [Val| List]):-
+   make_map_goal(Rel, Call, [Val]),
+   Call,
+   map1(Rel, List).
+
+% List conversion
+map2(Rel, [], []):-
+   !.
+map2(Rel, [El1| List1], [El2| List2]):-
+   make_map_goal(Rel, Call, [El1, El2]),
+   Call,
+   map2(Rel, List1, List2).
+
+% Accumulator map
+map3(Rel, [], Value, Value):-
+   !.
+map3(Rel, [El| List], Acc, Value):-
+   make_map_goal(Rel, Call, [El, Acc, Int]),
+   Call,
+   map3(Rel, List, Int, Value).
+
+% Produce and accumulate
+map4(Rel, [], [], Value, Value):-
+   !.
+map4(Rel, [El1| List1], [El2| List2], Acc, Value):-
+   make_map_goal(Rel, Call, [El1, El2, Acc, Int]),
+   Call,
+   map4(Rel, List1, List2, Int, Value).
+
+% Make each map goal
+make_map_goal( Rels, Call, Rest ):-
+   Rels=..[Rel,Fixed],
+   Call =.. [Rel, Fixed| Rest],
+   !.
+make_map_goal( Rel, Call,  Args ):-
+   Call =.. [Rel| Args].
+
+
+
+% keysort/3
+keysort( List, Sorted, -1 ):-
+ !,
+ keysort( List, Sorted ).
+keysort( List, Sorted, 1 ):-
+ keysort( List, SortedAsc ),
+ reverse( SortedAsc, Sorted ).
+
+% on/2
+% Same as member/2
+on( X, Y ):-
+ Y=[A],X=A,!.
+on( X, Y ):-
+ member( X, Y ).
+
+
+% remove_all/3
+remove_all( _, [], [] ).
+remove_all( RemoveItems, [El|Rest], Rems ):-
+ member( El, RemoveItems ),
+ !,
+ remove_all( RemoveItems, Rest, Rems ).
+remove_all( RemoveItems, [El|Rest], [El|Rems] ):-
+ remove_all( RemoveItems, Rest, Rems ).
+
+
+% sort/4
+sort( List, Sorted, Path, -1 ):-
+ !,
+ sort( List, Sorted ).
+sort( List, Sorted, Path, 1 ):-
+ sort( List, SortedAsc),
+ reverse( SortedAsc, Sorted ).
+
+
+stringof( ListOfChars, Atom ):-
+ atom( Atom ),
+ !,
+ name( Atom, ListOfBytes ),
+ bytestochars( ListOfBytes, ListOfChars ).
+
+stringof( Atom, ListOfChars ):-
+ integer( Atom ),
+ !,
+ name( Atom, ListOfBytes ),
+ bytestochars( ListOfBytes, ListOfChars ).
+
+stringof( ListOfChars, Atom ):-
+ var( Atom ),
+ \+ atom(ListOfChars),
+ !,
+ charstobytes( ListOfChars, ListOfBytes ),
+ name( Atom, ListOfBytes ),
+ !.
+
+stringof( ListOfChars, Atom ):-
+ integer( Atom ),
+ !,
+ name( Atom, ListOfBytes ),
+ bytestochars( ListOfBytes, ListOfChars ).
+ 
+charstobytes( [], [] ).
+charstobytes( [Char|Chars], [Byte|Bytes] ):-
+ nonvar(Char),
+ var(Byte),
+ name( Char, [Byte]),
+ charstobytes( Chars, Bytes ).
+charstobytes( [Char|Chars], [Byte|Bytes] ):-
+ nonvar(Char),
+ var(Byte),
+ name( Byte, [Char] ),
+ charstobytes( Chars, Bytes ).
+
+bytestochars( [], [] ).
+bytestochars( [Byte|Bytes], [Char|Chars] ):-
+ nonvar(Byte),
+ var(Char),
+ name( Char, [Byte] ),
+ bytestochars( Bytes, Chars ).
+
+/*
+bytestochars( Bytes, Chars ):-
+ name(Chars, Bytes).
+*/
+nth(Lista, N, Elemento) :-
+ nth_member(Lista, N, Elemento, 1).
+
+nth_member([H|T], N, H, N).
+nth_member([H|T], N, X, C):-
+ C1 is C+1,
+ nth_member(T, N, X, C1).
+
+
++(X,Y,Z) :- Z is X+Y.
+-(X,Y,Z) :- Z is X-Y.
+*(X,Y,Z) :- Z is X*Y.
+/(X,Y,Z) :- Z is X/Y.
+//(X,Y,Z) :- Z is X//Y.
+^(X,Y,Z) :- Z is X^Y.
+pwr(X,Y,Z) :- Z is X^Y.
+mod(X,Y,Z) :- Z is X mod Y.
+/\(X,Y,Z) :- Z is X /\ Y.
+\/(X,Y,Z) :- Z is X \/ Y.
+>>(X,Y,Z) :- Z is X >> Y.
+<<(X,Y,Z) :- Z is X << Y.
+\(X,Z) :- Z is \(X).
+sqrt(X,Z) :- ( number(X) -> Z is sqrt(X) ; X is Z*Z ).
+abs(X,Z) :- Z is abs(X).
+int(X,Z) :- Z is int(X).
+sign(X,Z) :- Z is sign(X).
+ln(X,Z) :- Z is ln(X).
+cos(X,Z) :- Z is cos(X).
+sin(X,Z) :- Z is sin(X).
+tan(X,Z) :- Z is tan(X).
+pi( PI ) :- PI is pi.
+
+% multifile(_).
+
+retract_all(Pred/Arity) :-
+ abolish(Pred, Arity).
+
+clear_net(_) :-
+  kill(f),
+  kill(rete),
+  retractall(current_num(n,_)),
+  kill(arco),
+  kill(foglia),
+  !.
+clear_net(_).
+
+clear_pronomi :-
+  kill(antecedente),
+  kill(controllato),
+  kill(esterno).
+
+
+pp_list(List) :-
+ pp_list(List, user).
+pp_list(List, Fin) :-
+ pp_list(List, ',', '[', ']', Fin).
+
+pp_list(List, SepEl, Beg, End, Fin) :-
+ pp_list(List, SepEl, Beg, End, 1, 0, Fin).
+
+pp_list(Var, SepEl, Beg, End, Ind, Tab, Fin) :-
+ (var(Var);atomic(Var)),
+ !,
+ ((Beg\='')->nl,tab(Tab),write(Beg)
+      ;
+      true),
+ ((Beg\='',End\='')->NewTab is Tab+Ind
+      ;
+      NewTab=Tab),
+ write(Var),
+ (End\='')->nl,tab(Tab),write(End).
+
+pp_list([], SepEl, Beg, End, Ind, Tab, Fin) :-
+ !,
+ write([]).
+
+pp_list([El| AltriEL], SepEl, Beg, End, Ind, Tab, Fin) :-
+ ((Beg\='')->nl,tab(Tab),write(Beg);true),
+ ((Beg\='',End\='')->NewTab is Tab+Ind;NewTab=Tab),
+ pp_elements([El| AltriEL], SepEl, Beg, End, Ind, NewTab, Fin),
+ (End\='')->nl,tab(Tab),write(End);true.
+
+pp_list([Func-El| AltriEL], SepEl, Beg, End, Ind, Tab, Fin) :-
+ ((Beg\='')->nl,tab(Tab),write(Beg);true),
+ ((Beg\='',End\='')->NewTab is Tab+Ind;NewTab=Tab),
+ pp_elements([El| AltriEL], SepEl, Beg, End, Ind, NewTab, Fin),
+ (End\='')->nl,tab(Tab),write(End);true.
+
+pp_win(PPWin) :-
+ def(pretty_print_win),
+ !,
+ syswin(pretty_print, PPWin).
+pp_win(user).
+
+pp_elements([El| Var], SepEl, Beg, End, Ind, Tab, Fin) :-
+ var(Var),
+ !,
+ pp_el(El, SepEl, Beg, End, Ind, Tab, Fin),
+ pp_el(Var, SepEl, Beg, End, Ind, Tab, Fin).
+pp_elements([El], SepEl, Beg, End, Ind, Tab, Fin) :-
+ pp_el(El, SepEl, Beg, End, Ind, Tab, Fin).
+pp_elements([El| AltriEl], SepEl, Beg, End, Ind, Tab, Fin) :-
+ pp_el(El, SepEl, Beg, End, Ind, Tab, Fin),
+ pp_elements(AltriEl, SepEl, Beg, End, Ind, Tab, Fin).
+
+pp_el(El, SepEl, Beg, End, Ind, Tab, Fin) :-
+ var(El),
+ !,
+ nl,
+ tab(Tab),
+ writeq(El),
+ write(SepEl).
+pp_el([T| C], SepEl, Beg, End, Ind, Tab, Fin) :-
+ !,
+ pp_list([T| C], SepEl, Beg, End, Ind, Tab, Fin).
+pp_el([], SepEl, Beg, End, Ind, Tab, Fin) :-
+ !,
+ pp_list([], SepEl, Beg, End, Ind, Tab, Fin).
+pp_el(Ops, SepEl, Beg, End, Ind, Tab, Fin) :-
+ (atomic(Val);var(Val)),
+ !,
+ Ops=..[Op,Att, Val],
+ nl,
+ tab(Tab),
+ writeq(Ops),
+ write(SepEl).
+pp_el(Ops, SepEl, Beg, End, Ind, Tab, Fin) :-
+ !,
+ Ops=..[Op,Att, [T| C]],
+ nl,
+ tab(Tab),
+ writeq(Att),
+ writeq(Op),
+ NewTab is Tab+Ind,
+ pp_list([T| C], SepEl, Beg, End, Ind, NewTab, Fin),
+ write(SepEl).
+pp_el(Ops, SepEl, Beg, End, Ind, Tab, Fin) :-
+ !,
+ Ops=..[Op,Att, List1-List2],
+ nl,
+ tab(Tab),
+ writeq(Att),
+ writeq(Op),
+ NewTab is Tab+Ind,
+ pp_list(List1, SepEl, Beg, End, Ind, NewTab, Fin),
+ nl,
+ tab(NewTab),
+ writeq(-),
+ pp_list(List2, SepEl, Beg, End, Ind, NewTab, Fin),
+ write(SepEl).
+pp_el(Ops, SepEl, Beg, End, Ind, Tab, Fin) :-
+ !,
+ Ops=..[Op,Att1, Value],
+ nl,
+ tab(Tab),
+ writeq(Att),
+ writeq(Op),
+ NewTab is Tab+Ind,
+ pp_el(Ops, SepEl, Beg, End, Ind, NewTab, Fin).
+pp_el(El, SepEl, Beg, End, Ind, Tab, Fin) :-
+ nl,
+ tab(Tab),
+ writeq(El),
+ write(SepEl).
+
+notnodop(N, Path, Atomo):-
+  findall(Value, 
+          nodo(N)::Path::Atomo::Value, Ps),
+  Ps=[].
+
+
+notno(N, Path):-
+   findall(Value, 
+          nodo(N)::Path::Value, Ps),
+   (Ps\=[],  Ps\=[[]], !
+   ;
+   Ps\=[[]],
+   !, 
+   nodo(N)::Pa::Value, 
+   Pa\=Path).
+
+notnod(N, Path):-
+  findall(Value, 
+          nodo(N)::Path::nodo(Value), Ps),
+  Ps=[],!.
+
+notnodo0(N, Path, Atomo):-
+  findall(Value, 
+          nodo(N)::Path::Atomo::Value, Ps),
+  Ps=[],!.
+
+notnodo(N, Path, Atomo):-
+  findall(Value, 
+          nodo(N)::Path::Atomo::nodo(Value), Ps),
+  Ps=[],!.
+
+notnodo1(N, Attributo, Path, Atomo):-
+  findall(Value, 
+          nodo(N)::Attributo::Path::Atomo::nodo(Value), Ps),
+  Ps=[],!.
+
+notnodo2(N, Attributo1, Path, Attributo2, Atomo):-
+  findall(Value, 
+          nodo(N)::Attributo1::Path::Attributo2::Atomo::nodo(Value), Ps),
+  Ps=[],!.
+
+nodo(Nodo)::Percorso :-
+  nonvar(Nodo),
+  rete(Rete),
+  nodo(Percorso, Nodo, Rete).
+
+nodo(Nodo)::Path :-
+  var(Nodo),
+  rete(Rete),
+  back_node(Path, Nodo, Rete).
+
+nodo(Valore,N,Rete) :-
+ foglia(N,V,Rete),
+ nonvar(V),
+ Valore=V
+ ;
+ notfogl(N,V,Rete),
+ Valore = nodo(N).
+
+nodo(Cammino, N, Rete) :-
+  nonvar(Cammino),
+  Cammino = Attributo::Valore,
+  arco(N, N1, Attributo, Rete),
+  nodo(Valore, N1, Rete).
+
+nodo(Cammino, N, Rete) :-
+  nonvar(Cammino),
+  Cammino = Attributo::Valore,
+  nonvar(Attributo),
+  Attributo = path(P),
+  arco(N, N1, Attributo2, Rete),
+  nodo(X::Valore, N1, Rete),
+  P = Attributo2::X. 
+
+nodo(Cammino, N, Rete) :-
+  nonvar(Cammino),
+  Cammino = Attributo::Valore,
+  nonvar(Attributo),
+  Attributo = path(P),
+  arco(N, N1, Attributo2, Rete),
+  nodo(path(X)::Valore, N1, Rete),
+  X=F/R::F1/R1::indice,
+  F/R \=fcomp/prop,
+  P = Attributo2::X. 
+
+notfogl(N, V, Rete):-
+  findall(N-V, foglia(N,V,Rete), Inds),
+  Inds = [],!.
+
+
+back_node(nodo(ToNode), ToNode, _) .
+
+back_node(Leaf, FromNode, Rete) :-
+  atomic(Leaf),
+  foglia(FromNode, Leaf, Rete).
+
+back_node(Leaf, FromNode, Rete) :-
+  lst(Leaf),
+  foglia(FromNode, Leaf, Rete).
+
+back_node(Label::Path, FromNode, Rete) :-
+  legal_label(Label),
+  nonvar(Path),
+  back_node(Path, PathFromNode, Rete),
+  arco(FromNode, PathFromNode, Label, Rete).
+  
+back_node(Label::Leaf, FromNode, Rete) :-
+  legal_label(Label),
+  var(Leaf),
+  arco(FromNode, MidNode, Label, Rete),
+  foglia(MidNode, Leaf, Rete).
+  
+back_node(Path1::Path2, FromNode, Rete) :-
+  nonvar(Path1),
+  Path1=path(Path),
+  back_path(Path1::Path2, FromNode, Rete).
+  
+back_path(path(Path)::Path1, FromNode, Rete):-
+  nonvar(Path),
+  ground_back_path(path(Path)::Path1, FromNode, Rete).
+
+back_path(path(Path)::Path1, FromNode, Rete):-
+  var(Path),
+  back_node(Path1, Path1FromNode, Rete),
+  var_back_path(RevPath, FromNode, Path1FromNode, Rete),
+  reverse_path(RevPath, Path).
+
+ground_back_path(path(Label)::Path, FromNode, Rete) :-
+  atomic(Label),
+  back_node(Path, PathFromNode, Rete),
+  arco(FromNode, PathFromNode, Label, Rete).
+
+ground_back_path(path(Label::Path)::Path1, FromNode, Rete) :-
+  ground_back_path(path(Path)::Path1, PathFromNode, Rete),
+  arco(FromNode, PathFromNode, Label, Rete).
+
+var_back_path([Label1, Label2], FromNode, ToNode, Rete) :-
+  arco(MidNode, ToNode, Label1, Rete),
+  arco(FromNode, MidNode, Label2, Rete).
+
+var_back_path([Label | Path], FromNode, ToNode, Rete) :-
+  arco(MidFromNode, ToNode, Label, Rete),
+  var_back_path(Path, FromNode, MidFromNode, Rete).
+
+
+reverse_path([Label | Path], RevPath) :-
+  reverse_path(Path, Label, RevPath).
+
+reverse_path([Label | Path], Acc,  RevPath) :-
+  reverse_path(Path, Label::Acc,  RevPath).
+
+reverse_path([], Path,  Path) .
+
+legal_label(Var):-
+  var(Var),
+  !.
+legal_label(_/_) :-
+  !.
+
+legal_label(Atomic) :-
+  atomic(Atomic).
+  
+atomic_path(Path) :-
+  atomic(Path).
+atomic_path(Path) :-
+  var(Path).
+
+legal_leaf(Leaf) :-
+  atomic(Leaf).
+legal_leaf(Leaf) :- 
+  var(Leaf).
+
+
+/* F-struttura = funzione + indice del valore */
+
+f_struttura(Indice, F/R, Nodo) :-
+       nodo(Nodo)::F/R::indice::Indice.
+
+
+f_strutture(Indice, F/R, Nodo) :-
+       (nodo(Nodo)::F/R::indice::Indice, 
+        R\=nil,!
+        ;
+        nodo(Nodo)::F/R::F0/R0::indice::Indice,
+        R\=nil
+        ).
+
+f_sec_str(Indice, F, Nodo) :-
+       nodo(Nodo)::F::indice::Indice.
+
+/*
+f_comanda(-AlphaIndex, -AlphaFunc , +BetaIndex, -Livello)
+Beta non  soggetto
+*/
+
+f_comanda(Alpha, Alpha_Funz, Beta, Livello, N0) :- 
+  f_struttura(Beta, F, N), 
+			f_command(F, N, Alpha, Alpha_Funz, Beta, Livello, N0). 
+
+f_command(sogg/_, N, Alpha, Alpha_Funz, Beta, Livello, N0):-
+  nodo(N1)::F1::nodo(N), 
+  F1 =sogg/_, 
+  nodo(N2)::F2::nodo(N1), 
+  f_c(N,N2,F2,Alpha,Alpha_Funz,0,Livello_x, N0),
+  Livello is Livello_x + 2.
+
+f_command(sogg/R, N, Alpha, Alpha_Funz, Beta, Livello, N0):-
+  !,
+  nodo(N1)::F1::nodo(N), 
+  F1 \= sogg/_, 
+  (nonvar(R),
+  R\=nil
+  ;var(R)), 
+  f_c(N,N1,F1,Alpha,Alpha_Funz,0,Livello_x, N0),
+  Livello is Livello_x + 1.
+
+f_command(F/R, N, Alpha, Fun/Rol, Beta, Livello, N0):-
+  (nonvar(Rol),
+  Rol\=nil
+  ;var(Rol)), 
+  f_c(N,N,F,Alpha,Fun/Rol,0,Livello, N0).
+
+f_c(En,N,F,Alpha,Alpha_Funz,Liv,Livello, N0) :-
+  0 < Liv,
+  on(F, [sogg/_, ogg/_, obl/_, fcomp/_, vcomp/_, acomp/_, ncomp/_]),
+  nodo(N)::F::nodo(N1),
+  f_c_down(En,N,N1,F,Alpha,Alpha_Funz,Liv,Livello, N0).
+
+f_c(En,N,F,Alpha,Alpha_Funz,Liv,Liv, N) :-
+  0 < Liv,
+  nodo(N)::Alpha_Funz::indice::Alpha,
+  Alpha_Funz\=sub/prop.
+
+f_c(En,N, F, Alpha, Alpha_Funz, 0, 0, N) :- 
+  nodo(N)::Alpha_Funz::indice::Alpha,
+  not_cl_fclist(Alpha_Funz).
+%   not clean_fclist(Alpha_Funz).
+
+f_c(En,N,F,Alpha,Alpha_Funz,Liv,Livello, N0) :-
+  nodo(N1)::F1::nodo(N),
+  Liv1 is Liv + 1,
+  f_c(En,N1,F1,Alpha,Alpha_Funz,Liv1,Livello, N0).
+
+f_c(En,n1,F,Alpha,Alpha_Funz,Liv,Livello, N0) :-
+  f_c_down(En,n1,n1,F,Alpha,Alpha_Funz,Liv,Livello, N0).
+
+f_c_down(En,N,N1,F,Alpha,Alpha_Funz,Liv,Liv, N0) :-
+  0 < Liv,
+  nodo(N1)::indice::Alpha,
+  nodo(N0)::F::indice::Alpha,
+  Alpha_Funz=F,
+  not_cl_fclist(Alpha_Funz).
+%   not clean_fclist(Alpha_Funz).
+
+f_c_down(En,N0,N,F,Alpha,Alpha_Funz,Liv,Livello, N2) :-
+  nonvar(N),
+  not_cl_fclist(F),
+%   not clean_fclist(F),
+  nodo(N)::F1::nodo(N1),
+  F1\=spec, N1\=En,
+  Liv1 is Liv + 1,
+  f_c_down(En,N0,N1,F1,Alpha,Alpha_Funz,Liv1,Livello, N2).
+
+
+contiene(Indice1, Indice2) :- 
+        nodo(Nodo1)::indice::Indice1,
+        nodo(Nodo1)::path(Bo)::indice::Indice2,
+        nodo(Nodo2)::indice::Indice2.
+
+contiene(Indice1, Indice2) :- 
+        nodo(Nodo1)::indice::Indice1,
+        nodo(Nodo1)::path(Bo)::Indice2,
+        nodo(Nodo2)::indice::Indice2.
+
+cont_fstrct(Indice1, Indice2) :- 
+        nodo(Nodo1)::F/R::indice::Indice1,
+        nodo(Nodo1)::path(Bo)::nodo(Nodo2),
+        nodo(Nodo2)::_::_/predic::nodo(Nodo3),
+        nodo(Nodo3)::F1/R2::indice::Indice2.
+
+cont_fstrct(Indice1, Indice2) :- 
+        nodo(Nodo1)::F/R::indice::Indice1,
+        nodo(Nodo1)::path(Bo)::indice::Indice2,
+        nodo(Nodo2)::indice::Indice2.
+
+cont_fstrct(Indice1, Indice2) :- 
+        nodo(Nodo1)::F/R::indice::Indice1,
+        nodo(Nodo1)::path(Bo)::Indice2,
+        nodo(Nodo2)::indice::Indice2.
+
+
+f_dominio(Nodo,Dominati) :-
+     pari_livello(Nodo,Lista_pari),
+     delete_el(Nodo,Lista_pari,Lista_altri),
+     maplist(profondita,Lista_altri,D),
+     flatten(D,DF),
+     append_list(Lista_altri,DF,Dominati).
+
+pari_livello(Ind,Lista_altri) :-
+  nodo(Nodo)::indice::Ind,
+  nodo(X)::Y::nodo(Nodo),
+  findall_q(N/A,(nodo(X)::A::nodo(N),A \= Y),Lista_pari_livello),
+  delete_el(Nodo/Y,Lista_pari_livello,Lista_altri).
+
+profondita(Nodo,Lista_dominio) :-
+     bagof(Sotto_nodo,sotto_nodo(Nodo,Sotto_nodo),Lista_dominio).
+
+/* not nodo diventa findall e not [] */
+notnogen(N-_, W):-
+  atomic(N),
+  findall(N, nogen_member(N-_,W), Inds),
+  Inds = [],!.
+
+notnogen(N-_, W):-
+  list(N), 
+  findall(N, (on(N1, N), nogen_member(N1-_,W)), Inds),
+  Inds = [],!.
+
+notnodpat(N_ante, Ind):-
+  findall(N_antes-Ind, nodo(N_antes)::path(_)::Ind, Inds),
+  \+ member(N_ante-Ind, Inds),
+%   Inds = [],
+  !.
+
+notnodspart(N):-
+  findall(N, nodo(N)::spec::part::_, Inds),
+  Inds = [],!.
+
+notnodspard(N):-
+  findall(N, nodo(N)::spec::card::_, Inds),
+  Inds = [],!.
+
+notnodfcomp(N):-
+  findall(N, nodo(NodeAnte)::fcomp/propq::yes/no_question::_/_::pred::Pro, Inds),
+  Inds = [],!.
+
+notnodcoord(N):-
+ findall(N, nodo(N)::coord::nodo(_), Inds),
+  Inds = [],!.
+
+notnodsubprop(N):-
+ findall(N, nodo(N)::sub/prop::adj::sub/prop::nodo(_), Inds),
+ Inds = [],!.
+
+notnodfunc(N):-
+ findall(N, nodo(N0)::F0/R0::nodo(N),Inds),
+ Inds = [],!.
+
+notnodposs(N):-
+ findall(N, nodo(N)::sogg/poss::indice::Ind,Inds),
+ Inds = [],!.
+
+notnodmain(N):-
+ findall(N, nodo(n1)::main/prop::F/R::indice::N,Inds),
+ Inds = [],!.
+
+notnodcoordf(N):-
+ findall(N, nodo(No)::coord::Fu/Ru::indice::N,Inds),
+ Inds = [],!.
+
+/**************
+is_principale(+nodo, +rete).
+il nodo individua una frase principale in calc_temp 
+***************/
+is_principale(Nodo,_Rete):- 
+ nodo(n1)::main/prop::[],
+ nodo(N)::adj::sub/prop::adj::sub/prop::nodo(Nodo).
+
+is_principale(Nodo,_Rete):- 
+ nodo(n1)::main/prop::[],
+ nodo(N)::adj::sub/prop::nodo(Nodo).
+
+is_principale(Nodo,_Rete):- 
+ nodo(n1)::main/prop::[],
+ nodo(N)::adj/gerund::nodo(Nodo).
+
+is_principale(Nodo,_Rete):- 
+ nodo(n1)::report/prop::nodo(Nodo).
+
+is_principale(Nodo,_Rete):- 
+ nodo(n1)::dir_speech/prop::nodo(Nodo).
+
+is_principale(Nodo,_Rete):- 
+ nodo(n1)::main/prop::nodo(Nodo).
+
+is_principale(Nodo,_Rete):- 
+ nodo(n1)::adv_main/prop::nodo(Nodo).
+
+is_principale(Nodo,_Rete):- 
+ nodo(n1)::presentv/prop::nodo(Nodo).
+
+is_principale(n1,_Rete).       /* n1 e' il nodo di partenza del grafo*/
+
+is_principale(Nodo,_Rete):- 
+ nodo(n1)::yes/no_question::nodo(Nodo).
+
+is_principale(Nodo,Rete):- 
+ arco(_X,Nodo,coord,Rete).  % una coordinata (solo principale ????)
+
+is_principale(Nodo,_Rete):- 
+ nodo(N)::main/prop::nodo(Nodo).
+
+/**************
+is_relativa(+nodo, +rete).
+il nodo individua una frase relativa 
+***************/
+
+is_relativa(Nodo,Rete):- 
+ arco(_X,Nodo,FF,Rete),
+ (FF=mod/predic;          /* una relativa  */
+  FF=adj/predic).         /* altra forma di relativa*/
+
+
+/***********************
+sotto_nodo(-Nodo, +SottoNodo) in f-comando
+************************/
+
+sotto_nodo(Nodo,Sotto_nodo):-
+ nodo(Nodo)::_X::nodo(Sotto_nodo),
+ nodo(Sotto_nodo)::indice::_.
+
+sotto_nodo(Nodo,Sotto_nodo):-
+ nodo(Nodo)::path(_X)::nodo(Sotto_nodo),
+ nodo(Sotto_nodo)::indice::_.
+
+
+/********
+nominal_pred(+nominalIndex, -nominalPred). 
+********/
+
+nominal_pred(Index,Pred):-
+ nodo(Nodo)::indice::Index,
+ nodo(Nodo)::pred::Pred,
+ !.
+
+nominal_pred(_,unknown).
+
+/********
+np_function(+nominalIndex, -nominalFunction). 
+:- np_function(Index, Function) 
+********/
+
+np_function(Index,Fun/Verbo):-
+ nodo(Nodo)::Fun/_Role::indice::Index,
+ syntactic_verbal_pred(Nodo,Verbo),
+ !.
+
+np_function(Index,topic/Tipo):-
+ nodo(Nodo)::indice::Index,
+ nodo(Nodo)::tipo_topic::Tipo,
+ !.
+
+np_function(Index,Any):-
+ nodo(_)::Any::indice::Index,
+ !.
+
+np_function(_,unknown).
+
+
+/***********************
+prop_roots(-Nodes)
+== Trova i punti di accesso alla rete da cui partono proposizioni. Nodes  una lista i cui elementi hanno struttura Node-(Function/Role)
+************************/
+prop_roots(Nodes) :-
+  setof(Node, prop_root(Node), Nodes).
+
+/* principale se  vuota e ci sono due subordinate */
+prop_root(N11-(main/Role)) :-
+  nodo(n1)::main/prop::[],
+  nodo(n1)::adj::nodo(N2),
+  nodo(N2)::sub/prop::nodo(N1),
+  nodo(N1)::main/prop::[],
+  nodo(N1)::adj::nodo(N3),
+  nodo(N3)::sub/prop::nodo(N11),
+  nodo(N3)::sem_mark::Subord,
+  subord_role(Subord, Role).
+
+/* subordinata se  vuota e ci sono due subordinatori */
+prop_root(N11-(adj/Role)) :-
+  nodo(n1)::main/prop::[],
+  nodo(n1)::adj::nodo(N2),
+  nodo(N2)::sub/prop::nodo(N1),
+  nodo(N1)::main/prop::nodo(N3),
+  nodo(N1)::adj::nodo(N4),
+  nodo(N4)::sub/prop::nodo(N11),
+  nodo(N4)::sem_mark::Subord,
+  subord_role(Subord, Role).
+
+/* principale se  vuota e c' una subordinata */
+prop_root(N1-(main/Role)) :-
+  nodo(n1)::main/prop::[],
+  notnodo1(n1, adj, sub/prop, coord),
+  notnodo2(n1, adj, sub/prop, adj, sub/prop),
+  nodo(n1)::adj::nodo(N2),
+  nodo(N2)::sub/prop::nodo(N1),
+  nodo(N2)::sem_mark::Subord,
+  subord_role(Subord, Role).
+
+/* principale se  vuota e c' una subordinata */
+prop_root(N1-(main/Role)) :-
+  nodo(n1)::main/prop::[],
+  notnodo1(n1, adj, sub/prop, coord),
+  notnodo2(n1, adj, sub/prop, adj, sub/prop),
+  notnodo(n1, adj, sub/prop),
+  nodo(n1)::adj/Role::nodo(N1).
+
+prop_root(N1-(coord/prop)) :-
+  nodo(n1)::main/prop::[],
+  nodo(n1)::adj::nodo(N2),
+  nodo(N2)::sub/prop::nodo(N),
+  nodo(N)::coord::nodo(N1).
+
+
+prop_root(N1-(coord/prop)) :-
+  nodo(n1)::coord_ip::nodo(N),
+  nodo(N)::main/prop::nodo(N1).
+
+/* principale vuota, gerundiva di una subordinata-"principale" */
+prop_root(N-(adj/gerund)) :-
+  nodo(n1)::main/prop::[],
+  nodo(n1)::adj::sub/prop::adjs::adj/gerund::nodo(N).
+
+/* principale report */
+prop_root(N-(main/advers)) :-
+  nodo(n1)::adv_main /prop::nodo(N).
+
+prop_root(N-(report/prop)) :-
+  nodo(n1)::report/prop::nodo(N).
+
+/* ellittica */
+prop_root(N-(ip_ell/prop)) :-
+  nodo(n1)::ip::nodo(N),
+  nodo(N2)::ip_ell/prop::nodo(N1).
+
+/* principale per default */
+prop_root(n1-(main/prop)) :-
+  notno(n1, main/prop),
+  notnod(n1, main/prop),
+  notnod(n1, report/prop),
+  notnod(n1, adv_main/prop),
+  notnod(n1, dir_speech/prop).
+
+/* coordinate principali */
+prop_root(N1-(coord/prop)) :-
+  nodo(n1)::main/prop::main/prop::nodo(N),
+  nodo(N)::coord::nodo(N1).
+
+/* coordinate principali */
+prop_root(N1-(coord/prop)) :-
+  nodo(n1)::main/prop::nodo(N),
+  notnodo(n1, main/prop, main/prop),
+  nodo(N)::coord::nodo(N1).
+
+/* discorso diretto */
+prop_root(N-(dir_speech/prop)) :-
+  nodo(n1)::dir_speech/prop::nodo(N).
+
+/* principale */
+prop_root(N-(main/prop)) :-
+  nodo(n1)::main/prop::nodo(N),
+  notnodo(n1, main/prop, main/prop),
+  notnod(N, coord).
+
+prop_root(N-(main/prop)) :-
+  nodo(n1)::main/prop::[],
+  nodo(n1)::adj::sub/prop::main/prop::nodo(N).
+
+/* gerundiva aggiunta alla principale */
+prop_root(N-(adj/gerund)) :-
+  notnod(n1, main/prop),
+  nodo(n1)::adjs::adj/gerund::nodo(N).
+
+/* gerundiva argomento della principale */
+prop_root(N-(adv/gerund)) :-
+  notnod(n1, main/prop),
+  nodo(n1)::adv/modal::coord::nodo(N).
+
+/* participiale aggiunta alla principale */
+prop_root(N-(adj/particip)) :-
+  nodo(n1)::main/prop::nodo(_),
+  nodo(n1)::adj/particip::nodo(N).
+
+/* subordinata aggiunta alla principale */
+prop_root(N-(adj/Role)) :-
+  nodo(n1)::adjs::nodo(N1),
+  nodo(N1)::adj::nodo(N2),
+  nodo(N2)::sub/prop::nodo(N),
+  nodo(N2)::sem_mark::Subord,
+  subord_role(Subord, Role).
+
+prop_root(N-(adj/result)) :-
+  nodo(n1)::adjs::nodo(N1),
+  nodo(N1)::vcomp/prop::nodo(N2),
+  !.
+/* subordinata coordinata aggiunta alla principale */
+prop_root(N-(coord/Role)) :-
+  nodo(n1)::main/prop::nodo(_),
+  nodo(n1)::adj::nodo(N1),
+  nodo(N1)::sub/prop::main/prop::coord::nodo(N),
+  nodo(N1)::sem_mark::Subord,
+  subord_role(Subord, Role).
+
+/* subordinata coordinata aggiunta alla principale */
+prop_root(N-(coord/Role)) :-
+  nodo(n1)::main/prop::[],
+  nodo(n1)::adj::nodo(N1),
+  nodo(N1)::sub/prop::coord::nodo(N),
+  nodo(N1)::sem_mark::Subord,
+  subord_role(Subord, Role).
+
+/* subordinata aggiunta alla principale */
+prop_root(N-(coord/Role)) :-
+  nodo(n1)::main/prop::nodo(_),
+  nodo(n1)::adj::nodo(N1),
+  notnodo1(N1, sub/prop, main/prop, coord),
+  nodo(N1)::sub/prop::coord::nodo(N),
+  nodo(N1)::sem_mark::Subord,
+  subord_role(Subord, Role).
+
+/* subordinata aggiunta alla principale */
+prop_root(N-(adj/Role)) :-
+  (nodo(n1)::main/prop::nodo(_);
+   nodo(n1)::adv_main/prop::nodo(_)),
+  nodo(n1)::adj::nodo(N1),
+  notnodo(n1, sub/prop, coord),
+  notnodo1(N1, sub/prop, main/prop, coord),
+  nodo(N1)::sub/prop::nodo(N),
+  nodo(N1)::sem_mark::Subord,
+  subord_role(Subord, Role).
+
+
+/* gerundive coordinate aggiunte alla principale */
+prop_root(N-(adj/gerund)) :-
+  notnod(n1, main/prop),
+  nodo(n1)::adjs::gerundive_coordinate::adj/gerund::nodo(N).
+
+
+/* gerundiva dentro una coordinata */
+prop_root(N1-(adj/gerund)) :-
+  nodo(n1)::main/prop::nodo(N),
+  nodo(N)::coord::nodo(N2),
+  nodo(N2)::adjs::adj/gerund::nodo(N1).
+
+/* gerundiva dentro una coordinata */
+prop_root(N3-(adj/Role)) :-
+  nodo(n1)::main/prop::nodo(N),
+  nodo(N)::coord::nodo(N2),
+  nodo(N2)::adjs::adj::nodo(N1),
+  nodo(N1)::sub/prop::nodo(N3),
+  nodo(N1)::sem_mark::Subord,
+  subord_role(Subord, Role).
+
+/* fcomp di una principale */
+% EP 93.02.26
+prop_root(N-(fcomp/prop)) :-
+  nodo(_)::fcomp/prop::nodo(N).
+
+prop_root(N-(fcomp/propq)) :-
+  nodo(_)::fcomp/propq::nodo(N).
+
+prop_root(N-(fcomp/propint)) :-
+  nodo(_)::fcomp/propint::nodo(N).
+
+prop_root(N1-(relp/prop)) :-
+  nodo(N)::mods::mod/predic::nodo(N1),
+  nodo(N1)::modo::ind.
+
+prop_root(N1-(relp/prop)) :-
+  notnodo(_, adjs, nadj/tema),
+  nodo(N)::adjs::adj/predic::nodo(N1).
+
+/******************
+sn_prop_node(+SnIndex, -PropNode)
+== Dato l'indice di un sn argomento, fornisce il nodo da cui parte la relativa proposizione
+sn_prop_node(SnIndex, nil) :-
+  beep(1),
+  nl,writeseq(user, 
+     ['Unable to find proposition node from:', SnIndex]).
+
+******************/
+sn_prop_node(SnIndex, Node) :-
+  nodo(Node)::_/_::indice::SnIndex,
+  !.
+
+sn_prop_node(SnIndex, nil).
+
+/******************
+main_sentence_index(+SentenceIndex)
+******************/
+main_sentence_index(FrX) :-
+  nodo(n1)::indice::FrX,
+  !.
+main_sentence_index(FrX) :-
+  nodo(n1)::main/prop::indice::FrX,
+  !.
+main_sentence_index(FrX) :-
+  nodo(n1)::report/prop::indice::FrX,
+  !.
+main_sentence_index(FrX) :-
+  nodo(n1)::dir_speech/prop::indice::FrX,
+  !.
+
+main_sentence_index(FrX) :-
+ nodo(n1)::presentv/prop::indice::FrX,
+  !.
+main_sentence_index(FrX) :-
+  nodo(N)::indice::FrX,
+  !.
+
+/**************************
+== Selezionano informazioni dalla f-struttura
+**************************/
+/* Speech Type */
+speech_type(Root, direct) :-
+  nodo(_)::dir_speech/prop::nodo(Root),
+  !.  
+speech_type(_, indirect).
+
+
+/********
+np_description(+nominalIndex, -nominalPred, -nominalFunction). 
+?- sn_prop_node(SnIndex, Node), np_description(SnIndex, NominalPred, NominalFunction) in pro_ambigui 
+********/
+np_description(Index, Pred, FunVerb) :-
+  nominal_pred(Index, Pred),
+  np_function(Index, FunVerb).
+
+/********
+semantic_verbal_pred(+propRoot, -verbalPred). 
+The main verb or the prop object of a support verb 
+********/
+semantic_verbal_pred(Root, Pred) :-
+  nodo(Root)::pred::Pred,
+  !.
+semantic_verbal_pred(Root, Pred) :-
+  nodo(Root)::_/prop::pred::Pred.
+
+semantic_verbal_pred(Root, Pred) :-
+  nodo(Root)::coord::pred::Pred.
+
+
+/********
+syntactic_verbal_pred(+propRoot, -verbalPred). 
+The main verb or a support verb 
+********/
+syntactic_verbal_pred(Root, Pred) :-
+  nodo(Root)::supporto::Pred,
+  !.
+syntactic_verbal_pred(Root, Pred) :-
+  nodo(Root)::pred::Pred,
+  !.
+
+/* Semantic category */
+/* ??? */
+sem_cat(Root, SemCat) :-
+  nodo(Root)::cat::process,
+  !,
+  (
+  nodo(N)::_/prop::nodo(N1),
+  sem_cat(N1, SemCat)
+  ;
+  nodo(n1)::main/prop::nodo(N),
+  nodo(N)::coord::nodo(N1)
+  ),
+  !.
+
+sem_cat(Root, stato) :-
+  nodo(Root)::cat::L,
+  lst(L),
+  !.
+
+sem_cat(Root, SemCat) :-
+  nodo(Root)::cat::SemCat,
+  !.
+
+sem_cat(Root, SemCat) :-
+  nodo(Root)::_/prop::nodo(N),
+  sem_cat(N, SemCat).
+
+sem_cat(Root, SemCat) :-
+  nodo(Root)::coord::nodo(N),
+  sem_cat(N, SemCat).
+
+
+/* geverning role */
+
+gov_role(Node, Fun/Role) :-
+ nodo(_)::Fun/Role::nodo(Node),
+ !.
+gov_role(Node, nil) .
+ 
+
+/* tense */
+
+tense(Root, adj/gerund, Tense) :-
+  nodo(N1)::adjs::adj/gerund::nodo(Root),
+  nodo(N1)::tempo::Tense,
+  !.
+tense(Root, adj/gerund, Tense) :-
+  nodo(N1)::adjs::gerundive_coordinate::adj/gerund::nodo(Root), 
+  nodo(N1)::tempo::Tense,
+  !.
+tense(Root,_, Tense) :-
+  nodo(Root)::tempo::Tense,
+  !.
+
+tense(Root,_, Tense) :-
+  nodo(_)::tempo::Tense,
+  !.
+
+tense(_, _, nil).
+
+
+/* focalizers */
+focalizers(Root, Focs) :-
+  findall(Foc, focalizer(Root, Foc), Focs).
+
+focalizer(Root, Foc) :-
+ nodo(Root)::adjs::adj/focal::pred::Foc.
+
+focalizer(Root, Foc) :-
+ nodo(Root)::adj/focal::pred::Foc.
+
+/* support */
+
+support(Root, Support) :-
+  nodo(Root)::supporto::Support,
+  !.
+support(_, nil).
+
+
+
+/* mood */
+
+mood(Root, Mood) :-
+  nodo(Root)::modo::Mood,
+  !.
+
+mood(Root, Mood) :-
+  nodo(Root)::_/prop::nodo(N),
+  nodo(N)::modo::Mood,
+  !.
+
+mood(Root, Mood) :-
+  nodo(_)::modo::Mood,
+  !.
+
+/* aspect */
+
+aspect(Root, Aspect) :-
+  nodo(Root)::aspetto::Aspect,
+  !.
+
+aspect(Root, Aspect) :-
+  nodo(Root)::_/prop::nodo(N),
+  nodo(N)::aspetto::Aspect,
+  !.
+
+aspect(Root, Aspect) :-
+  nodo(_)::aspetto::Aspect,
+  !.
+
+aspect(_, nil).
+
+/* voice */
+
+voice(Root, Voice) :-
+  nodo(Root)::voice::Voice,
+  !.
+
+voice(Root, Voice) :-
+  nodo(Root)::_/prop::nodo(N),
+  nodo(N)::voice::Voice,
+  !.
+voice(_, active).
+
+/* polarity */
+
+polarity(Root, no) :-
+  nodo(Root)::adjs::nodo(N),
+  nodo(N)::neg::_,
+  !.
+polarity(_, yes).
+
+
+
+perform(Root, _, perform) :-
+  social_engagement(Root),
+  !.
+
+perform(Root, _, optat) :-
+  obligation_verb(Root),
+  !.
+
+perform(Root, _, allow) :-
+  perm_verb(Root),
+  !.
+
+perform(Root, Supp, prescr) :-
+  genre(legal),
+  nonvar(Supp),!.
+
+perform(Root, _, inform).
+
+
+
+dobject(Root, Object) :-
+  nodo(Root)::ogg/Role::nodo(_),
+  !.
+dobject(_, nil/nil).
+
+
+
+event_index(Root, tes(TesIndex)) :-
+  nodo(Root)::indice::PropIndex,
+  rete(Rete),
+  concat([PropIndex, '_', Rete], TesIndex).
+
+event_index(Root, tes(TesIndex)) :-
+  nodo(Roo)::indice::PropIndex,
+  rete(Rete),
+  concat([PropIndex, '_', Rete], TesIndex).
+
+/* segue una catena di controllo */
+segui_catena_di_controllo(IndContr, CC) :- 
+  nodo(N)::F/R::indice::IndContr,    
+  (
+  nodo(N)::F/R::controllore::NuovoIndContr
+  ;     
+  nodo(N)::F/R::antecedente::NuovoIndContr
+  ),    
+  NuovoIndContr \= esterno,    
+  segui_catena_di_controllo1(NuovoIndContr,CC), 
+  CC\=IndContr,
+  !.
+
+segui_catena_di_controllo1(IndContr, CC) :- 
+  nodo(N)::F/R::indice::IndContr,    
+  (
+  nodo(N)::F/R::controllore::NuovoIndContr
+  ;     
+  nodo(N)::F/R::antecedente::NuovoIndContr
+  ),    
+  NuovoIndContr \= esterno,    
+  segui_catena_di_controllo1(NuovoIndContr,CC), !.
+
+segui_catena_di_controllo1(X,X).
+
+
+parse(NoFr, Frase,Symb):-
+ abolish(termin/1),
+ abolish(stackxp/1),
+ dynamic(termin/1),
+ assert(look(head)),
+ asserta(stackxp(0-0-0-0)),
+ cond_set_win('Moves-Trace',Symb),
+ Cont = 0,
+ append(Frase,[?],Quest),            
+ ncheck_lexs(NoFr,Cont,Quest,NFrase),
+  findall_poss(Si),
+ writeseq(user,Si),
+ nl,
+ gen_sym(f,0),
+ gen_sym(sn,0),
+ gen_sym(finf,0),  
+ questions(Time,Cstr, NFrase,X,nil),
+ elaborate_output(In, Out, Cstr, NFrase, Symb, Prons),
+ !.
+
+elaborate_output(Out, Out, [], Frase, Symb, Prons):-!.
+elaborate_output(In, Out, Cstr, Frase, Symb, [q(Quants), pr(Prons), rn(Noms)])
+  :-
+%  write_c_structure('C-Structure',Cstr),
+ converti(Cstr,Symb),
+ quantifiers_raising(Quants),
+ pronomi(Cstr,Symb,Prons, Noms),
+ assert(f(Frase,Symb)).
+%  write_f_structure('F-Structure',Symb).
+%  write_s_structure('S-Structure').
+
+pronomi([],_Code, _,_) :-!.
+pronomi(Strut,Code,DProns,DNoms) :-
+  pronoun(on),
+  pronome(Code,Prons),
+  describe_prons(Prons,DProns),
+  nomi(Code,Noms),
+  describe_prons(Noms,DNoms),
+  !.
+
+pronomi(_Strut,_Code,_,_) :-!.
+
+describe_prons([],[]):-!.
+describe_prons([Ind/Tab|Prons],[Ind-Pred-FunRole|DProns]):-
+  np_description(Ind, Pred, FunRole),
+  describe_prons(Prons,DProns),
+  !.
+describe_prons([Ind/Tab|Prons],[Ind-Pred-FunRole|DProns]):-
+  describe_prons(Prons,DProns),
+  !.
+
+/* il test contiene  ovviativo: cio l'Ante va eliminato in quanto contenuto nel Ind direttamente oppure indirettamente se controlla un elemento che  contenuto nello stesso livello 
+cont_fstrct(Indice1,Indice2):-
+*/
+
+find_pos([P,Q|_], I, Z, Si):-
+  findall_poss(Si),
+  findall(I-X, (
+  nogen_member(I-X, Si),
+  nogen_member(Y-P,X)),Pss),
+  sort(Pss,Ps),
+  length(Ps,L),
+  (L=1, on(I-Z,Ps)
+    ;
+   1<L,
+   nogen_member(I1-X, Si),
+   nogen_member(Y-Q,X),
+   I is I1 - 1,
+   nogen_member(I-Z, Si),
+   nogen_member(_-P,Z)
+   ),!.
+
+
+find_pos([P|_], I, Z, Si):-
+  findall_poss(Si),
+  nogen_member(I-Z, Si),
+  nogen_member(_-P,Z),
+  !.
+
+find_pos(P, I, X, Si):-
+  var(P),
+  findall_poss(Si),
+  nogen_member(I-X, Si),
+  nogen_member(_Y-P,X).
+
+find_pos([P], I, X, Si):-
+  findall_poss(Si),
+  nogen_member(I-X, Si),
+  nogen_member(_Y-P,X).
+
+find_pos(P, I, X, Si):-
+  findall_poss(Si),
+  nogen_member(I-X, Si),
+  nogen_member(_Y-P,X).
+
+find_pos([], I, X, Si):-
+  findall_poss(AllP),
+  reverse(AllP, [O-_|_]),
+  I is O - 1,
+  !.
+
+find_pos(P, I, X, Si):-
+   (onegr(sp,romance);onegr(sp,deutsch)),
+  findall_poss(Si),
+  prep_articolata(P,[Pre,Art]),
+  nogen_member(I-X, Si),
+  nogen_member(_Y-Pre,X),!.
+
+find_pos(P, I, X, Si):-
+   (onegr(sp,romance);onegr(sp,deutsch)),
+  findall_poss(Si),
+  vcl(P,V,Art),
+  nogen_member(I-X, Si),
+  nogen_member(_Y-V,X),!.
+
+find_pos(P, I, X, Si):-
+   (onegr(sp,romance);onegr(sp,deutsch)),
+  findall_poss(Si),
+  mod_alterato(P,N,Agg,Gen,Num),
+  nogen_member(I-X, Si),
+  nogen_member(_Y-N,X),!.
+
+ntns1(Verb,P):-
+  ntn(Verb),!.
+
+ntns2(Verb,P):-
+  var(P),
+  vsp(Verb,Preps),
+  (on(to,Preps)
+  ;
+  on('p-dir',Preps)),
+  !.
+ntns2(Verb,P):-
+  nonvar(P),
+  vsp(Verb,Preps),
+  (on(P,Preps)
+  ;
+  on('p-dir',Preps),
+  on(P,[below,down,from,up,into,up_to,to,toward,towards,above,below])),
+  !.
+ntn(accord).
+ntn(adjudge).
+ntn(administer).
+ntn(advance).
+ntn(afford).
+ntn(allocate).
+ntn(apportion).
+ntn(assign).
+ntn(award).
+ntn(begrudge).
+ntn(bequeath).
+ntn(betroth).
+ntn(bid).
+ntn(bring).
+ntn(cable).
+ntn(concede).
+ntn(deal).
+ntn(deliver).
+ntn(deny).
+ntn(drop).
+ntn(fax).
+ntn(feed).
+ntn('force-feed').
+ntn(furnish).
+ntn(give).
+ntn(grant).
+ntn(guarantee).
+ntn(hand).
+ntn(issue).
+ntn(leave).
+ntn(lend).
+ntn(let).
+ntn(licence).
+ntn(license).
+ntn(loan).
+ntn(mail).
+ntn(make).
+ntn(mean).
+ntn(offer).
+ntn(owe).
+ntn(pay).
+ntn(permit).
+ntn(pitch).
+ntn(proffer).
+ntn(purvey).
+ntn(quote).
+ntn(read).
+ntn(recite).
+ntn(refuse).
+ntn(reoffer).
+ntn(repay).
+ntn(sell).
+ntn(send).
+ntn(serve).
+ntn(ship).
+ntn(show).
+ntn(take).
+ntn(teach).
+ntn(tell).
+ntn(throw).
+ntn(will).
+ntn(wire).
+ntn(write).
+ntn(yield).
+
+/*DEFINIZIONE DEI QUANTIFICATORI*/
+
+quantifier(event).
+quantifier(q).
+quantifier(q1).
+quantifier(q2).
+quantifier(some).
+quantifier(someone).
+quantifier(set).
+quantifier(every).
+quantifier(everyone).
+quantifier(everywhere).
+quantifier(most).
+quantifier(a_few).
+quantifier(few).
+quantifier(each).
+quantifier(only).
+quantifier(all).
+quantifier(many).
+quantifier(the).
+quantifier(exist).
+quantifier(mass).
+quantifier(nessuno).
+quantifier(niente).
+quantifier(nobody).
+quantifier(nothing).
+quantifier(no).
+quantifier(ogni).
+quantifier(tutto).
+quantifier(tutti).
+quantifier(indefinito).
+quantifier(definito).
+quantifier(quale).
+quantifier(pPro).
+quantifier(ciascuno).
+quantifier(ciascuna).
+quantifier(ognuno).
+quantifier(ognuna).
+quantifier(arbitraria).
+quantifier(focus).
+quantifier(molti).
+quantifier(molto).
+quantifier(plural).
+quantifier(qualche).
+quantifier(ovunque).
+
+conv_is_ax('UNITED_STATES','United_States').
+conv_is_ax('UNITED_KINGDOM','United_Kingdom').
+conv_is_ax('US','United_States').
+conv_is_ax('USA','United_States').
+conv_is_ax('U_S_','United_States').
+conv_is_ax(u_s_,'United_States').
+conv_is_ax(united_states,'United_States').
+conv_is_ax('TV',television).
+conv_is_ax('Mike','Michael').
+conv_is_ax(bush,'Bush').
+
+s_is_ax('TNSM','Tehrik_Nifaz_Shariat-e-Muhammadi').
+s_is_ax('AIDS', 'HIV').
+s_is_ax('IAEA', 'International_Atomic_Energy_Agency').
+s_is_ax('G8', 'Group_of_Eight').
+s_is_ax('FARC', 'Revolutionary_Armed_Forces_of_Colombia').
+s_is_ax('CIA', 'Central_Intelligence_Agency').
+s_is_ax('UMP', 'Union_for_a_Popular_Movement').
+s_is_ax('CNOOC', 'China_National_Offshore_Oil_Corporation').
+s_is_ax('USD', 'U_S_dollar').
+s_is_ax('US$', 'U_S_dollar').
+s_is_ax('ESA', 'European_Space_Agency').
+s_is_ax('PI', 'Privacy_International').
+s_is_ax('PM', 'Prime_Minister').
+s_is_ax('NSA', 'National_Security_Agency').
+s_is_ax('FMLN', 'Farabundo_Marti_National_Liberation_Front').
+s_is_ax('QSFA', 'Quick_Service_Food_Alliance').
+  s_is_ax('Dimitrios','Demetrios').
+  s_is_ax('Barack','Barak').
+  s_is_ax('Holland','Netherlands').
+  s_is_ax('Holland','the_Netherlands').
+
+  s_is_ax('NSW','New_South_Wales').
+  s_is_ax('WTO','World_Trade_Organization').
+  s_is_ax('GDP','gross_domestic_product').
+  s_is_ax('GAA','Gaelic_Athelic_Association').
+  s_is_ax('BSE','bovine_spongiform_encephalopathy').
+  s_is_ax('BSE','mad_cow_disease').
+  s_is_ax('Britain','UK').
+  s_is_ax('Britain','U_K_').
+  s_is_ax('E_U_','European_Union').
+  s_is_ax('U_S_','United_States').
+  s_is_ax('U_S_Military','Marines').
+  s_is_ax('Military','Marines').
+  s_is_ax('U_K_','United_Kingdom').
+  s_is_ax('U_K_','UNITED_KINGDOM').
+  s_is_ax('E_U','European_Union').
+  s_is_ax('U_S','United_States').
+  s_is_ax('U_K','UNITED_KINGDOM').
+  s_is_ax('U_K','United_Kingdom').
+  s_is_ax('UK','United_Kingdom').
+  s_is_ax('UK','UNITED_KINGDOM').
+  s_is_ax('UI','unemployment_insurance').
+  s_is_ax('MT_','Mountain').
+  s_is_ax('ICC','international_criminal_court').
+  s_is_ax('VP','Vice_President').
+  s_is_ax('VP',vice_president).
+  s_is_ax('SEC','Securities_and_Exchange_Commission').
+  s_is_ax(firefighters,fireman).
+  s_is_ax(embassy,ambassador).
+  s_is_ax(blockade,embargo).
+  s_is_ax(hippo,hippopotamus).
+  s_is_ax(u_s_,'United_States').
+  s_is_ax(u_k_,'United_Kingdom').
+  s_is_ax(e_u_,'European_Union').
+  s_is_ax(u_s,'United_States').
+  s_is_ax(u_k,'United_Kingdom').
+  s_is_ax(e_u,'European_Union').
+  s_is_ax('NY','New_York').
+  s_is_ax('NYT','New_York_Times').
+  s_is_ax('N_Y_','New_York').
+  s_is_ax('N_Y_T','New_York_Times').
+  s_is_ax(proceed,money).
+  s_is_ax('La_Paz','Bolivia').
+  s_is_ax('Nepalese','Gautama').
+  s_is_ax('Filipino','Philippine').
+  s_is_ax('Loraine','Lauren').
+  s_is_ax('Shiite','Shi-ite_').
+  s_is_ax('Filipinos','Philippines').
+  s_is_ax('Shiites','Shi-ites_').
+  s_is_ax('Qaddafi','Kaddafi').
+  s_is_ax('EU','European_Union').
+  s_is_ax('US','United_States').
+  s_is_ax('USA','United_States').
+  s_is_ax(eu,'European_Union').
+  s_is_ax(united_states,'United_States').
+  s_is_ax(anc,african_national_conference).
+  s_is_ax('ANC','African_National_Conference').
+  s_is_ax('ANC','African_National_Congress').
+  s_is_ax(ceo,chief_executive).
+  s_is_ax(cop,police_officer).
+  s_is_ax('Ex-cop',police_officer).
+  s_is_ax('Mike','Michael').
+  s_is_ax('Liberal_Democrats',party).
+  s_is_ax(candidate,party).
+  s_is_ax(technology,site).
+  s_is_ax(internet,tool).
+  s_is_ax(internet,device).
+  s_is_ax(internet,site).
+  s_is_ax(internet,web).
+  s_is_ax(internet,interactivity).
+  s_is_ax(internet,media).
+  s_is_ax(material,brochure).
+  s_is_ax(internet,technology).
+  s_is_ax(brochure,propaganda).
+  s_is_ax(user,public).
+  s_is_ax(television, appliance).
+  s_is_ax('TV',television).
+  s_is_ax('TV',appliance).
+  s_is_ax(receiver, unit).
+  s_is_ax(airline, company).
+
+/* lista in  pred_v + lista semplice */
+subcat_on([Cost/Rest | RestSc], pred_v(_, _, _,[Cost/Rest | RestSc])):-
+  !.
+
+/* lista in lista semplice */
+subcat_on([Cost/Rest | RestSc], [Cost/Rest | RestSc]):-
+  !.
+
+/* arg in pred_v +lista semplice */
+subcat_on(SubCat, pred_v(_, _, _,[SubCatList|SubCatList1])):-
+  on(SubCat, SubCatList).
+
+/* arg in pred_v +lista semplice */
+subcat_on(SubCat, pred_v(_, _, _,SubCatList)):-
+  !,
+  on(SubCat, SubCatList).
+
+/* arg in  lista semplice */
+subcat_on(SubCat, [SubCatList|SubCatList1]):-
+  on(SubCat, SubCatList).
+
+subcat_on(SubCat, SubCatList):-
+  on(SubCat, SubCatList).
+
+subcat_on(SubCat, [SubCatList|SubCatList1]):-
+  subcat_on(SubCat, SubCatList1).
+
+
+/**************
+select_subcat(+arg, +condition, +inSubcat, -outSubcat).
+Trova tutte le liste di sottocategorizzazione in inSubcat che contengono arg e rispettano condition. 
+**************/
+
+select_subcat(Arg, [], []) :-!.
+select_subcat(Arg, PredIn, PredOut) :-
+  select_subcatt(Arg, true, PredIn, PredOut).
+
+select_subcatt(Ar/G, Condition, Pred, Pred) :-
+  Pred = pred_v(V, Gr, S, [Sub/Cat | Rest]),
+  !,
+  on(Ar/G, [Sub/Cat | Rest]),
+  Condition.
+
+select_subcatt(SubCat, Condition, Pred, Pred) :-
+  Pred = pred_v(V, G, S, SubCat),
+  !,
+  Condition.
+select_subcatt(Arg, Condition, PredIn, PredOut) :-
+  \+ list(Arg),
+  PredIn\=[],
+  PredIn = pred_v(V, G, S, SubCatIn),
+  search_subcatt(PredIn, Arg, Condition, SubCatOut), 
+  PredOut = pred_v(V, G, S, SubCatOut),!.
+
+select_subcatt([Arg | Args], Condition, PredIn, PredOut) :-
+  PredIn\=[],
+  PredIn = pred_v(V, G, S, SubCatIn),
+  findall(
+     [Arg | Args], 
+     (
+     on([Arg | Args], SubCatIn),
+     Condition
+     ),
+     SubCatList),  
+  SubCatList \= [],
+  sort(SubCatList, SubCatOut),
+  PredOut = pred_v(V, G, S, SubCatOut).
+
+search_subcatt(PredIn, Arg, Condition, SubCatOut):-
+  PredIn = pred_v(_, _, _,[SubCatIn|SubCatList]),
+ (findall(
+     SubCat, 
+     (
+     on(SubCat, SubCatIn),
+     on(Arg, SubCat),
+     Condition
+     ),
+     SubCatList),  
+  SubCatList \= [],
+  sort(SubCatList, SubCatOuts),
+  SubCatOuts=[SubCatOut],
+  !
+  ;
+  PredIn1 = pred_v(_, _, _,SubCatList),
+  search_subcatt(PredIn1, Arg, Condition, SubCatOut)
+  ),!.
+
+search_subcatt(PredIn, Arg, Condition, SubCatOut):-
+  PredIn = pred_v(V, G, S, SubCatIn),
+  findall(
+     SubCat, 
+     (
+     on(SubCat, SubCatIn),
+     on(Arg, SubCat),
+     Condition
+     ),
+     SubCatList),  
+  SubCatList \= [],
+  sort(SubCatList, SubCatOuts),
+  (SubCatOuts=[SubCatOut];
+    on(SubCatOut,SubCatOuts)).
+
+isa_sn_ref(Pred, Tab) :-
+  member(+ref,Tab),
+  Tab \= [+ref,-pro,-ana,+me].
+
+/*
+isa_sn_ref(Pred, [+ref,-pro,-ana,+me]) :-
+  Pred\=si.
+*/
+isa_sn_ref(_, [- ref, - pro, + ana, + me, - subj]) :-
+  gr(english).
+
+
+/* Riceve in input la lista pesata dei sintagmi nominali di una frase
+  producendo la lista dei possibili argomenti di tale frase : elimina
+  pertanto quei sintagmi nominali non referenziali per la frase successiva
+  e per ogni sintagma nominale che compare piu' volte all'interno della
+  stessa frase riporta solo la sua occorrenza di peso maggiore (minore)
+  eliminando le altre */
+
+crea_lista(L1,L3) :- crea_lista1(L1,[],_,L2),
+                    filtra(L2,L3,1500).
+
+filtra([],[],_).
+/* elimina se punteggio maggiore di PuntMax e diverso da nome proprio */
+filtra([H/P|T],T2,PuntMax) :- P >= PuntMax,
+                             H = ref_ex(Snx,Testa,Tab,Pers,Gen,Num,Cat,F/R),
+                             member(+ref,Tab),
+                             Tab \= [+ref,-pro,-ana,-class],
+                             filtra(T,T2,PuntMax) , !.
+
+filtra([H/P|T],[H/P|T2],PuntMax) :-  filtra(T,T2,PuntMax).
+/* elimina se pronome  indefinito, pronome quantificato */
+filtra2([H/P|T],T2,PuntMax) :-
+                             H = ref_ex(Snx,Testa,Tab,Pers,Gen,Num,Cat,F/R),
+                             Tab =  [+ ref, - def, + part, nil, - pro, - ana, + me],
+                             filtra(T,T2,PuntMax) , !.
+
+
+
+crea_lista1([],_,_,[]).
+/*
+crea_lista1([Snx/P|Coda],T,Ind,Coda1) :-
+                  ref_ex(Snx,Testa,Tab,Pers,Gen,Num,Cat,F/R),
+                  member(+ref,Tab),
+                    (nodo(N)::indice::Snx,nodo(N)::controllore::Ind2 
+                    ;
+                    nodo(N)::indice::Snx,nodo(N)::antecedente::Ind2 ) ,
+                    Ind3 = Snx,
+                    not(Ind2 = esterno),
+                    ( (membro(Testa, T),
+                        (var(Ind);
+                       nonvar(Ind),
+                     membro(Ind2, Ind)) );
+                       notmembro(Testa,T)),!,
+                  crea_lista1(Coda,[Testa|T],[Ind3|Ind],Coda1).
+*/
+crea_lista1([Snx/P|Coda],T,Ind,
+           [ref_ex(Snx,Testa,Tab,Pers,Gen,Num,Cat,F/R)/P|Coda1]) :-
+                  ref_ex(Snx,Testa,Tab,Pers,Gen,Num,Cat,F/R),
+                 crea_lista1(Coda,[Testa|T],Ind,Coda1).
+
+crea_lista1([Snx/P|Coda],T,Ind,Coda1) :-
+                  ref_ex(Snx,Testa,Contr,Tab,Pers,Gen,Num,Cat,F/R),
+                    Ind3 = Snx,
+                   (member(Testa, T);member(Contr,Ind)),!,
+                  crea_lista1(Coda,[Testa|T],[Contr|Ind],Coda1).
+
+crea_lista1([Snx/P|Coda],T,Ind,Coda1) :-
+                 crea_lista1(Coda,T,Ind,Coda1).
+
+
+/* Calcola il punteggio per ogni sintagma nominale utilizzando il
+  valore ritornato dalla regola ampiezza (cioe' la distanza del
+  sintagma dalla radice dell'albero sintattico), e i punteggi relativi
+  a funzione grammaticale e ruolo tematico estratti dalle rispettive
+  tabelle.   */
+
+punteggio_ruolo_funzione1(_,focus,0).
+punteggio_ruolo_funzione1(causer_emot,sogg,100).
+punteggio_ruolo_funzione1(agente,sogg,0).
+punteggio_ruolo_funzione1(agent,sogg,0).
+punteggio_ruolo_funzione1(agent,arg_mod,0).
+punteggio_ruolo_funzione1(topic,ogg,-10).
+punteggio_ruolo_funzione1(topic,sogg,-10).
+punteggio_ruolo_funzione1(malef,obl,0).
+punteggio_ruolo_funzione1(esperiente,ogg2,0).
+punteggio_ruolo_funzione1(experiencer,obj2,0).
+punteggio_ruolo_funzione1(tema_emot,sogg,100).
+punteggio_ruolo_funzione1(tema,sogg,100).
+punteggio_ruolo_funzione1(theme,sogg,100).
+punteggio_ruolo_funzione1(tema_bound,sogg_foc,30).
+punteggio_ruolo_funzione1(theme_bound,sogg_foc,30).
+punteggio_ruolo_funzione1(compar,sub,50).
+punteggio_ruolo_funzione1(tema,ogg,100).
+punteggio_ruolo_funzione1(nil,ogg,100).
+%punteggio_ruolo_funzione1(_,_,1000).
+
+punteggio_ruolo_funzione1(Ruolo,Funzione,Punt) :-
+    punteggio_ruolo1(Ruolo,Pruolo),
+    punteggio_funzione1(Funzione,Pfunzione),
+    Punt is Pruolo + Pfunzione.
+
+punteggio1(Nodo/Distanza,Nodo/Punteggio) 
+:-
+    (
+     ref_ex(Nodo,Testa,Tab,Pers,Gen,Num,Cat,Funzione/Ruolo)
+     ;
+    ref_ex(Nodo,Testa,Contr,Tab,Pers,Gen,Num,Cat,Funzione/Ruolo)),
+    punteggio_ruolo_funzione1(Ruolo,Funzione,Punteggio2),!,
+   (
+     (Cat=[],
+      (Ruolo=creator;Ruolo=poss),
+       Funzione=sogg, 
+       PCat= -30)
+     ;
+    punteggio_tratto1(Testa,Funzione,Cat,RCat),
+    punteggio_ref(Tab,RCat1,Funzione),
+    (RCat=0, PCat=RCat1; 
+     RCat<RCat1, PCat=RCat1; 
+     RCat1<RCat, PCat=RCat; 
+     PCat=RCat)
+   ),
+    Punteggio is Punteggio2 + Distanza * 15 + PCat, !.
+
+punteggio1(Nodo/Distanza,Nodo/2500):-!.
+
+
+/* punteggio della funzione grammaticale */
+
+punteggio_funzione1(sogg,0).
+punteggio_funzione1(arg_mod,0).
+punteggio_funzione1(sogg_foc,-10).
+punteggio_funzione1(sogg_top,-10).
+punteggio_funzione1(subj_foc,-10).
+punteggio_funzione1(subj_top,-10).
+punteggio_funzione1(foc,-10).
+punteggio_funzione1(focus,-10).
+punteggio_funzione1(topic,0).
+punteggio_funzione1(ogg,2).
+punteggio_funzione1(ogg_avv,2).
+punteggio_funzione1(ogg2,1).
+punteggio_funzione1(obl1,5).
+punteggio_funzione1(obl,5).
+punteggio_funzione1(obl2,5).
+punteggio_funzione1(adj,20).
+punteggio_funzione1(mod,20).
+punteggio_funzione1(ncomp,10).
+punteggio_funzione1(nadj,20).
+punteggio_funzione1(acomp,10).
+punteggio_funzione1(vcomp,20).
+punteggio_funzione1(pcomp,10).
+punteggio_funzione1(nil,1000).
+punteggio_funzione1(Funz,Score):-
+         pf1(Funz,Score).
+punteggio_funzione1(_,1000).
+
+
+/* punteggio dei ruoli tematici */
+
+punteggio_ruolo1(agente,0).
+punteggio_ruolo1(malef,0).
+punteggio_ruolo1(source,0).
+punteggio_ruolo1(benef,0).
+punteggio_ruolo1(beneficiary,0).
+punteggio_ruolo1(benefactive,0).
+punteggio_ruolo1(receiver,0).
+punteggio_ruolo1(creatore,0).
+punteggio_ruolo1(creator,0).
+punteggio_ruolo1(causante,0).
+punteggio_ruolo1(causale,0).
+punteggio_ruolo1(causa,0).
+punteggio_ruolo1(causer,0).
+punteggio_ruolo1(actor,1).
+punteggio_ruolo1(goal,1).
+punteggio_ruolo1(poss,3).
+punteggio_ruolo1(possess,3).
+punteggio_ruolo1(subj_disc,1).
+punteggio_ruolo1(paziente,2).
+punteggio_ruolo1(esperiente,3).
+punteggio_ruolo1(experiencer,3).
+punteggio_ruolo1(esper,3).
+punteggio_ruolo1(perceiver,3).
+punteggio_ruolo1(perciv,3).
+punteggio_ruolo1(owner,3).
+punteggio_ruolo1(address,3).
+punteggio_ruolo1(valutatore,3).
+punteggio_ruolo1(theme_aff,3).
+punteggio_ruolo1(theme_nonaff,3).
+punteggio_ruolo1(tema_aff,3).
+punteggio_ruolo1(tema_nonaff,3).
+punteggio_ruolo1(tema_emot,3).
+punteggio_ruolo1(tema_eff,3).
+punteggio_ruolo1(tema_bound,4).
+punteggio_ruolo1(locat,8).
+punteggio_ruolo1(locativo,8).
+punteggio_ruolo1(loc_origin,8).
+punteggio_ruolo1(loc_direct,8).
+punteggio_ruolo1(comitativo,10).
+punteggio_ruolo1(comitat,10).
+punteggio_ruolo1(materia,10).
+punteggio_ruolo1(relation,10).
+punteggio_ruolo1(cibo,10).
+punteggio_ruolo1(tema,20).
+punteggio_ruolo1(comparativa,20).
+punteggio_ruolo1(esplicativa,20).
+punteggio_ruolo1(attributo,20).
+punteggio_ruolo1(appos,20).
+punteggio_ruolo1(modale,30).
+punteggio_ruolo1(misura,30).
+punteggio_ruolo1(stato,20).
+punteggio_ruolo1(specif,20).
+punteggio_ruolo1(adj,40).
+punteggio_ruolo1(mod,40).
+punteggio_ruolo1(privative,20).
+punteggio_ruolo1(temporal,30).
+punteggio_ruolo1(non_punct,30).
+punteggio_ruolo1(durata,30).
+punteggio_ruolo1(causer_emot,0).
+punteggio_ruolo1(prop,20).
+punteggio_ruolo1(nil,1000).
+punteggio_ruolo1(form,1500).
+punteggio_ruolo1(Ruolo,Score):-
+  pr1(Ruolo,Score).
+
+punteggio_ruolo1(Ruolo,Score):-
+  assign_role_score(Ruolo,Score),!.
+punteggio_ruolo1(Ruolo,Score):-
+  pbrol(Ruolo,Score,_,_),!.
+/*
+punteggio_ruolo1(Ruolo,Score):-
+  on(N,[1,2,3,4,5,6,7,8,9]),
+  mcon(ssr,N,Ssr),
+  Sems=..[Ssr,Ruolo],
+  Sems,
+  Score is N * 2.
+*/
+punteggio_ruolo1(_,1000).
+
+punteggio_ref(Lis,1000,_) :-
+                member(X,Lis),
+                X = + arb, !.
+punteggio_ref(Lis,200,_) :-
+                Lis=[R,D, - part, C, P, A, + me], !.
+punteggio_ref(Lis,200,_) :-
+                Lis=[R,D, + part, C, P, A, + me], !.
+punteggio_ref(Lis,-30,_) :-
+                Lis=[R,D,P,C,Pa,A, + me], !.
+punteggio_ref(Lis,-30,_) :-
+                Lis=[R,D,P,C,Pa,A, - me], !.
+%punteggio_ref(Lis,-20,_) :- Lis=[R,D,P,C,Pa,A,-class],!.
+
+punteggio_ref(Lis,-20,ogg) :-
+                Lis=[R,-def,P,C,Pa,A,+class],!.
+punteggio_ref(Lis,-20,sogg) :-
+                Lis=[R, D, nil, nil, + pro, A, + class],!.
+punteggio_ref(Lis,0,_).
+
+pf1(subj,0).
+pf1(subj_foc,-10).
+pf1(subj_top,-10).
+pf1(foc,-10).
+pf1(focus,-10).
+pf1(cmod,10).
+pf1(ncmod,20).
+pf1(ncsubj,0).
+pf1(topic,0).
+pf1(obj,2).
+pf1(dobj,2).
+pf1(obj_avv,2).
+pf1(arg_mod,2).
+pf1(obj2,1).
+pf1(obl1,5).
+pf1(obl,5).
+pf1(iobj,5).
+pf1(obl2,5).
+pf1(adj,20).
+pf1(mod,20).
+pf1(ncomp,10).
+pf1(nadj,20).
+pf1(acomp,10).
+pf1(vcomp,20).
+pf1(xcomp,20).
+pf1(fcomp,20).
+pf1(pcomp,10).
+pf1(nil,1000).
+pf1('?? ',1000).
+pf1(Fun,1000):-var(Fun).
+
+pr1(topic,0).
+pr1(subj_foc,-10).
+pr1(subj_top,-10).
+pr1(foc,-10).
+pr1(focus,-10).
+pr1(actor,1).
+pr1(addressee,3).
+pr1(agent,0).
+pr1(apposition,30).
+pr1(appos,30).
+pr1(subord,30).
+pr1(attr,30).
+pr1(attribute,30).
+pr1(benef,4).
+pr1(benefactive,4).
+pr1(beneficiary,4).
+pr1(cause,0).
+pr1(causal,4).
+pr1(causale,4).
+pr1(causer,0).
+pr1(causer_emot,0).
+pr1(comitat,10).
+pr1(comitative,10).
+pr1(comitativo,10).
+pr1(comparative,30).
+pr1(creator,0).
+pr1(durata,40).
+pr1(duration,40).
+pr1(evalutator,2).
+pr1(event,40).
+pr1(experiencer,2).
+pr1(explicative,30).
+pr1(focus,1).
+pr1(food,10).
+pr1(form,1500).
+pr1(goal,3).
+pr1(instrument,10).
+pr1(loc_direct,8).
+pr1(loc_origin,8).
+pr1(locat,8).
+pr1(locative,8).
+pr1(locativo,8).
+pr1(malef,4).
+pr1(matter,10).
+pr1(measure,30).
+pr1(modal,30).
+pr1(modale,30).
+pr1(non_punct,40).
+pr1(owner,3).
+pr1(patient,4).
+pr1(perceiver,3).
+pr1(perciv,3).
+pr1(poss,10).
+pr1(possess,10).
+pr1(privative,10).
+pr1(prop,30).
+pr1(receiver,0).
+pr1(recipient,0).
+pr1(relation,10).
+pr1(source,4).
+pr1(source_information,4).
+pr1(specif,20).
+pr1(state,40).
+pr1(stato,40).
+pr1(strumento,10).
+pr1(strumentale,10).
+pr1(subj_disc,1).
+pr1(theme,4).
+pr1(adj,40).
+pr1(mod,30).
+pr1(privation,40).
+pr1(temp,40).
+pr1(tempor,40).
+pr1(temporal,40).
+pr1(temporale,40).
+pr1(theme_aff,3).
+pr1(theme_bound,1).
+pr1(theme_eff,3).
+pr1(theme_emot,3).
+pr1(theme_unaff,3).
+pr1(theme_nonaff,3).
+pr1(tema_aff,3).
+pr1(tema_bound,4).
+pr1(tema_eff,3).
+pr1(tema_emot,3).
+pr1(tema_nonaff,3).
+pr1(Role,Score):-
+  assign_role_score(Role,Score),!.
+pr1(Role,Score):-
+  pbrol(Role,Score,_,_),!.
+
+pr1(Role,1000):-var(Role).
+
+assign_role_score(Role,0):-
+     ssr0(Role);ssr1(Role),
+     !.  
+assign_role_score(Role,10):-
+     ssr2(Role);ssr3(Role),
+     !.  
+assign_role_score(Role,8):-
+     ssr4(Role),
+     !.  
+assign_role_score(Role,2):-
+     ssr5(Role),
+     !.  
+assign_role_score(Role,5):-
+     ssr6(Role);ssr8(Role),
+     !.  
+assign_role_score(Role,1):-
+     ssr7(Role),
+     !.  
+assign_role_score(Role,3):-
+     ssr9(Role),
+     !.  
+
+
+match_approximate(Pred1,Pred2):-
+  atomic(Pred1),atomic(Pred2),
+  Pred1\=[],Pred2\=[],
+  recover_descs(Pred1, PredS),
+  on(Pred2,PredS),!.
+match_approximate(Pred1,Pred2):-
+  atomic(Pred1),atomic(Pred2),
+  Pred1\=[],Pred2\=[],
+  recover_descs(Pred2, PredS),
+  on(Pred1,PredS),!.
+match_approximate(Pred1,Pred2):-
+  atomic(Pred1),atomic(Pred2),
+  Pred1\=[],Pred2\=[],
+  spy_lower(Pred1,LowP,1),
+  spy_lower(Pred2,LowP2,0),
+  match_approximate(LowP,Pred2),!.
+match_approximate(Pred1,Pred2):-
+  atomic(Pred1),atomic(Pred2),
+  Pred1\=[],Pred2\=[],
+  recover_descs(Pred1, PredS),
+  recover_descs(Pred2, PredT),
+  remove(Pred,PredS,[Pre1]),
+  remove(Pred,PredT,[Pre2]),
+  match_approximate(Pre1,Pre2),
+  !.
+match_approximate(Pred1,Pred2):-
+  atomic(Pred1),atomic(Pred2),
+  Pred1\=[],Pred2\=[],
+  spy_lower(Pred2,LowP,1),
+  spy_lower(Pred1,LowP2,0),
+  match_approximate(LowP,Pred1),!.
+
+match_approximate(Pred1,Pred2):-
+  atomic(Pred1),atomic(Pred2),
+  Pred1\=[],Pred2\=[],
+  stringof(ChP1,Pred1),
+  stringof(ChP2,Pred2),
+  length(ChP1,L1), 2<L1,
+  length(ChP2,L), 2<L,
+  closest_match([ChP2],ChP1,Evl),
+   Evl\=[],
+     !.
+match_approximate(Pred1,Pred2):-
+  atomic(Pred1),atomic(Pred2),
+  Pred1\=[],Pred2\=[],
+  stringof([A,B,C,D,E,F,G|ChP1],Pred1),
+  stringof([A1,B1,C1,D1,E1,F1,G1|ChP2],Pred2),
+  matchstring([A,B,C,D,E,F,G],[A1,B1,C1,D1,E1,F1,G1]),
+  (check_suff_match(ChP1);
+    check_suff_match(ChP2);
+    ChP2=[G1|Rest],check_suff_match(Rest)
+      ),
+     !.
+match_approximate(Pred1,Pred2):-
+  atomic(Pred1),atomic(Pred2),
+  Pred1\=[],Pred2\=[],
+  stringof([A,B,C,D,E,F|ChP1],Pred1),
+  stringof([A1,B1,C1,D1,E1,F1|ChP2],Pred2),
+  matchstring([A,B,C,D,E,F],[A1,B1,C1,D1,E1,F1]),
+  (check_suff_match(ChP1);
+    check_suff_match(ChP2);
+    ChP2=[F1|Rest],check_suff_match(Rest);
+    ChP1=[], p(Pred1,_)),
+     !.
+match_approximate(Pred1,Pred2):-
+  atomic(Pred1),atomic(Pred2),
+  Pred1\=[],Pred2\=[],
+  stringof([A,B,C,D,E|ChP1],Pred1),
+  stringof([A1,B1,C1,D1,E1|ChP2],Pred2),
+  matchstring([A,B,C,D,E],[A1,B1,C1,D1,E1]),
+  (check_suff_match(ChP1);
+    check_suff_match(ChP2);
+    ChP2=[E1|Rest],check_suff_match(Rest);
+    ChP1=[], p(Pred1,_)),
+     !.
+match_approximate(Pred1,Pred2):-
+  atomic(Pred1),atomic(Pred2),
+  Pred1\=[],Pred2\=[],
+  stringof([A,B,C,D|ChP1],Pred1),
+  stringof([A1,B1,C1,D1|ChP2],Pred2),
+  matchstring([A,B,C,D],[A1,B1,C1,D1]),
+  (check_suff_match(ChP1);
+    check_suff_match(ChP2);
+    ChP2=[D1|Rest],check_suff_match(Rest);
+    ChP1=[], p(Pred1,_)),
+     !.
+match_approximate(Pred1,Pred2):-
+  atomic(Pred1),atomic(Pred2),
+  Pred1\=[],Pred2\=[],
+  stringof([A,B,C|ChP1],Pred1),
+  stringof([A1,B1,C1|ChP2],Pred2),
+  matchstring([A,B,C],[A1,B1,C1]),
+  length(ChP1,L1),length(ChP2,L2),
+  L1 =< 4, L2 =< 3,
+  (check_suff_match(ChP1);
+    check_suff_match(ChP2);
+    ChP2=[C1|Rest],check_suff_match(Rest);
+    ChP1=[], p(Pred1,_)),
+     !.
+
+match_approximate(Pred1,Pred2):-
+  atomic(Pred1),atomic(Pred2),
+  Pred1\=[],Pred2\=[],
+  stringof([A,B,C,D|_],Pred1),
+  stringof([J,K,H,A1,B1,C1,D1|_],Pred2),
+  matchstring([A,B,C],[A1,B1,C1]),
+  stringof([J,K,H],Pref),
+    Pref\=dis,
+  (H\='_',
+   (p(Pref,Feat);checkab(Pref);chabbr(Pref))
+   ;
+   H='_',
+  stringof([J,K],Pre),
+   (p(Pre,Feat);checkab(Pre);chabbr(Pre))),
+     !.
+match_approximate(Pred1,Pred2):-
+  atomic(Pred1),atomic(Pred2),
+  Pred1\=[],Pred2\=[],
+  stringof([A,B,C,D|_],Pred1),
+  stringof([J,K,A1,B1,C1,D1|_],Pred2),
+  matchstring([A,B,C,D],[A1,B1,C1,D1]),
+  stringof([J,K],Pref),
+    Pref\=dis,
+  (K\='_',
+   (p(Pref,Feat);checkab(Pref);chabbr(Pref))
+  ;
+  K='_',
+   (p(J,Feat);checkab(J);chabbr(J))),
+     !.
+match_approximate(Pred1,Pred2):-
+  atomic(Pred1),atomic(Pred2),
+  Pred1\=[],Pred2\=[],
+  stringof([A,B,C,D,E,F|ChP1],Pred1),
+  stringof([A1,B1,C1,D1,E1,F1|ChP2],Pred2),
+  stringof([A,B],Pref),
+  matchstring([A,B],[A1,B2]),
+  p(Pref,Feat),
+  stringof([C,D,E,F|ChP1],Pred11),
+  stringof([C1,D1,E1,F1|ChP2],Pred22),
+  match_approximate(Pred11,Pred22),
+     !.
+  
+sufd(town).
+sufd(land).
+sufd(country).
+
+matchstring([A,B],[A,B]).
+matchstring([A,B,C],[A,B,C]).
+matchstring([A,B,C,D],[A,B,C,D]).
+matchstring([A,B,C,D,E],[A,B,C,D,E]).
+matchstring([A,B,C,D,E,F],[A,B,C,D,E,F]).
+matchstring([A,B,C,D,E,F,G],[A,B,C,D,E,F,G]).
+matchstring([A,B,C,D,E,F,G,H],[A,B,C,D,E,F,G,H]).
+matchstring([A,B,C,D,E,F,G,H,I],[A,B,C,D,E,F,G,H,I]).
+matchstring([A,B,C,D,E,F,G,H,I,L],[A,B,C,D,E,F,G,H,I,L]).
+matchstring([A,B,C,D,E,F,G,H,I,L,M],[A,B,C,D,E,F,G,H,I,L,M]).
+matchstring([A,B,C,D,E,F,G,H,I,L,M,N],[A,B,C,D,E,F,G,H,I,L,M,N]).
+matchstring([A,B,C,D,E,F,G,H,I,L,M,N,O],[A,B,C,D,E,F,G,H,I,L,M,N,O]).
+matchstring([A,B,C,D,E,F,G,H,I,L,M,N,O,P],[A,B,C,D,E,F,G,H,I,L,M,N,O,P]).
+matchstring([A,B,C,D,E,F,G,H,I,L,M,N,O,P,Q],[A,B,C,D,E,F,G,H,I,L,M,N,O,P,Q]).
+matchstring([A,B,C,D,E,F,G,H,I,L,M,N,O,P,Q,R],[A,B,C,D,E,F,G,H,I,L,M,N,O,P,Q,R]).
+
+check_suff_match(ChP2):-
+  stringof(ChP2,Suff),
+  sfx(Suff,Feat),
+  !.
+check_suff_match(ChP2):-
+  stringof(ChP2,Suff),
+  sufd(Suff),
+  !.
+stative_cat(stato).
+stative_cat(esistenza).
+
+
+subjective_boundary(implicit_subjective).
+subjective_boundary(explicit_subjective).
+subjective_boundary(pre_subjective(_, _, _)+explicit_subjective).
+subjective_boundary(subjective(_,_,_)).
+
+explicit_subjective_fun_role(fcomp/prop).
+explicit_subjective_fun_role(fcomp/propq).
+explicit_subjective_fun_role(vcomp/prop). 
+
+pre_subjective_cat(soggettivo, [esperiente, actor, agente, tema_nonaff]).
+pre_subjective_cat(presuppositivo, [actor]).
+pre_subjective_cat(emotivo, [esperiente, agente, tema_emotivo, actor]).
+% pre_subjective_cat(riportivo, [actor]).
+
+cog_w(regard).
+
+check_disc_rel(DRel, DRel, TempRel, PrDMove,  level):-
+      on(DRel, [explanation, setting, description, evaluation, definition]).
+
+check_disc_rel(setting, _, TempRel, PrDMove,  up):-
+      PrDMove\=nil.
+
+check_disc_rel(result, hypothesis, TempRel, PrDMove,  down).
+
+
+check_disc_rel(DRel, PDRel, before(_,_), PrDMove,  bottom).
+
+
+check_disc_rel(purpose, PDRel, TempRel, PrDMove,  down).
+
+check_disc_rel(DRel, PDRel, overlap(_,_), PrDMove,  level):-
+      PrDMove\=nil.
+
+check_disc_rel(DRel, PDRel, finished_by(_,_), PrDMove,  bottom).
+
+check_disc_rel(DRel, PDRel, TempRel, PrDMove,  down):-
+    on(DRel, [evaluation, explanation, definition]).
+
+check_disc_rel(narration, inception, TempRel, PrDMove,  level).
+
+check_disc_rel(DRel, result, TempRel, PrDMove,  down).
+
+check_disc_rel(inception, PDRel, TempRel, PrDMove,  up).
+
+check_disc_rel(obligation, PDRel, TempRel, PrDMove,  up).
+
+check_disc_rel(hypothesis, PDRel, TempRel, PrDMove,  up).
+
+d_move([shifting], [shifting], up) .
+d_move([shifting], [retaining], down) .
+d_move([resume], [continua, continua_analyze], up) .
+d_move([retaining], [continua, continua_analyze], level) .
+d_move([retaining], [cambia], up) .
+d_move([continua], [continua], level) .
+d_move([continua_analyze], [continua_analyze], down) .
+d_move([continua], [retaining], level) .
+d_move([continua, retaining], [resume, retaining], up) .
+d_move([continua], [resume], up) .
+d_move([cambia], [resume], down) .
+d_move([nil], _, down) .
+d_move(_, _, level) .
+
+
+assign_level(1,[]):-!.
+assign_level(Lev,PrecLev):-
+  Lev is PrecLev + 1.
+
+
+
+/***********
+view(+NoFr, +Root, +SpeecType, +VerbSemanticCat, +Voice, +Verb, +Support, -PointOfView)
+== 
+Se lo SpeechType  direct,  View  internal
+altrimenti, se la SemCat  perloc, View  social_engagement
+altrimenti, se la SemCat  soggettiva, View   internal,
+altrimenti View  external
+In aggiunta, se il Mood  cond  internal
+***********/
+view(_, _,direct, _, _, _, _, internal) :-
+  !.
+view(_, adj/hypoth,indirect, _, _, _, _, internal) :-
+  !.
+
+view(_, main/hypoth,indirect, _, _, _, _, external) :-
+  !.
+
+view(_, _,indirect, perloc, _, _, _, social_engagement) :-
+  !.
+view(_, _,indirect, _, passive, Verb, Supp, social_engagement) :-
+  genre(legal),
+  (obligation_verb(Verb)
+   ;
+  modal_verb(Supp)),
+  !.
+
+view(_, _,indirect, SemCat, _, _, _, internal_intensional) :-
+  internal_intens(SemCat),
+  !.
+
+view(_, _,indirect, SemCat, _, _, _, internal_extensional) :-
+  internal_extens(SemCat),
+  !.
+view(NoFr, _,indirect, SemCat, _, _, _, internal):-
+  PrecNoFr is NoFr - 1,
+  sinfo(PrecNoFr, _, View, _, Change, _, _, _, _, _, DiscDom, _),
+  stato(PrecNoFr, State),
+  SemCat=esistenza,
+  State=continua, DiscDom=implicit_subjective.
+  
+view(_, _,indirect, _, _, _, _, external).
+
+/*
+Infon=..[info, NoFr, xcomp/Role, 
+  View, Intens, Change, Relev,
+  Aspect, Verb, nil, DiscRel, objective, nil]
+*/
+
+/* internal_intens(affettivo). */
+internal_intens(soggettivo).
+internal_intens(mental_activ).
+internal_intens(emotivo).
+
+internal_extens(percettivo).
+internal_extens(stato).
+internal_extens(presuppositivo).
+
+factivity(_, _, _, vcomp/_, _, nonfactive) :-
+  !.
+
+factivity(_, _, _, _/hypoth, _, nonfactive) :-
+  !.
+
+factivity(_, _, _, fcomp/Role, _, nonfactive) :-
+  on(Role, [propq, propint]),
+  !.
+
+factivity(_, _, _, adj/hypoth, _, nonfactive) :-
+  !.
+
+factivity(_, _, _, adj/cond, _, nonfactive) :-
+  !.
+
+factivity(_, _, Mood, _, _, nonfactive) :-
+%   not genre(legal),
+  on(Mood, [cond, cong]),
+  !.
+
+factivity(_, Tense, _, _, _, nonfactive) :-
+  on(Tense, [fut, imperat]),
+  !.
+
+factivity(Verb, _, _, _, _, nonfactive) :-
+  modal(Verb, _,_,_,_,_),
+  !.
+
+factivity(_, _, _, _, Support, nonfactive) :-
+  modal(Support, _,_,_,_,_),
+  !.
+
+factivity(_, _, _, _, _, factive) .
+
+
+
+/***********
+change(+Speech, +Pol, +View, +Tense, +Aspect, -Change)
+== 
+Se la polarit  no e l'aspetto  stato Change  null,
+altrimenti se la polarit  no Change  negated,
+altrimenti, se View  soggettivo allora Change  null,
+altrimenti calcola Change sulla base di Speec, Tense, Aspect.
+
+NB: Se il verbo  uno stativo, sarebbe meglio dare null, anche se la polarit e no
+***********/
+change(_, _, _, _, cond, _, _, null) :- !.
+
+change(_, no, Supp, _, _, _, stato, negated) :- 
+   nonvar(Supp),  
+  !.
+
+change(Speech, Pol, Supp, View, Mood, Tense, Aspect, Change) :- 
+change(Speech, Pol, View, Tense, Aspect, Change), !.
+
+
+change(_, no, _, _, stato, null) :-
+  !.
+change(_, no, _, _, _, negated) :-
+  !.
+change(_, _, internal_intensional, _,    stato,   null) :-
+  !.
+change(_, _, internal_extensional, _,    stato,   null) :-
+  !.
+change(Speech, _, _, Tense, Aspect, Change) :-
+ change(Speech, Tense, Aspect, Change),
+ !.
+
+/* change(+Speech, +Tense, +Aspect, -Change)*/
+change(indirect, pres,       _,        null).
+change(indirect, imp,        stato,    null).
+change(indirect, pass_rem,   _,        culminated).
+change(indirect, past,        stato,    null).
+change(indirect, past,   _,        culminated).
+change(indirect, perf,        stato,    null).
+change(indirect, perf,   _,        culminated).
+change(indirect, imp,        Tense,    gradual) :-
+  on(Tense, [attivita, accomp, mental_activ, process]).
+change(indirect, trap_pross,    _,        earlier).
+change(direct,   imperat,    _,        null).
+change(direct,   fut,        _,        null).
+change(direct,   pres,       stato,    null).
+change(direct,   pass_pross, _,        culminated).
+change(direct,   trap_pross,    _,        earlier).
+change(direct,   pres,       attivita, gradual).
+change(_,        _,          _,        null). /* default */
+     
+
+/***********
+relevance(+change, -relevance)
+***********/
+relevance(null, background) :-
+ !.
+relevance(_, foreground).
+
+
+/***************
+prec_sentence_info(
+  +noFr, -change, -precState, -semCat, -tempRel, -discRel, -discDom).
+info/10 viene asserita attraverso asserta e quindi chiamando info/10 si ottiene l'informazione sull'ultima clause analizzata 
+***************/
+prec_sentence_info(1, _, _, _, TesIndex, _, _, infon(OldClause,NewClause)) :-
+  (var(OldClause),
+   OldClause=1
+   ;
+   nonvar(OldClause),
+   NewClause is OldClause + 1,
+  sinfo(1, _, View, _, Change, _, SemCat, _, TempRel, DiscRel, DiscDom, _),
+  stato(1, State),
+  TempRel=..[_, TesIndex, _]
+   ),
+  !.
+prec_sentence_info(
+  NoFr, Change, PrecState, SemCat,  TesIndex, DiscRel, DiscDom, _)
+  :-
+  sinfo(LastNoFr, _, View, _, Change, _, SemCat, _, _, DiscRel, DiscDom, _),
+  nonvar(NoFr),
+  PrecNoFr is NoFr - 1,
+  stato(_, PrecState),
+  (NoFr = LastNoFr, CurrNoFr=LastNoFr;
+   PrecNoFr = LastNoFr, CurrNoFr=LastNoFr;
+   PrecNoFr \= LastNoFr, CurrNoFr=PrecNoFr),     
+  prec_temp_rel_sentence(CurrNoFr, StackNo, TesInd),
+  (var(StackNo);
+   nonvar(StackNo),
+   (StackNo < CurrNoFr; StackNo = CurrNoFr)),   
+  (var(TesInd),
+   sinfo(AppropNoFr, _, _, _, _, _, _, _, TempRel, _, _, _),
+   TempRel=..[_, TesIndex, _]
+   ;
+   nonvar(TesInd),
+   TesIndex=tes(TesInd)
+   ;
+   var(TesInd),
+   sinfo(AppropNoFr, _, _, _, _, _, _, _, TesIndex, _, _, _)
+   ).
+
+prec_temp_rel_sentence(PrecNoFr, StackNo, TimeInd) :-
+  time_focus(StackNo, tes(TimeInd)).
+
+prec_temp_rel_sentence(AppropNoFr, AppropNoFr, TimeInd) :-
+  time_focus(AppropNoFr, tes(TimeInd)),
+  AppropNoFr\=0,
+  !.
+prec_temp_rel_sentence(PrecNoFr, PrecNoFr, _).
+
+/* calcola le relazioni temporali tenendo conto della fattivit 
+del cambiamento nel mondo e della precedente relazione del discorso: 
+nella prima frase considera clauses diverse 
+
+temp_relation(infon(1,Nc),_,
+  1, Root, TesIndex, _, _, _, _, TempRel) 
+  :-
+  var(Nc),
+  nodo(Root)::rel1::[Rel1|_],
+  nodo(Root)::rel2::[Rel2|_],
+  Rel1=..[Reltd, _, Td],
+  Rel2=..[Reltr, _, Tr],
+  map_temp_rel(Reltr, MappedRel),
+  t_rel_all(MappedRel, TesIndex, Td, [TempRel]),!.
+%    TempRel=..[MappedRel, TesIndex, Td].
+*/
+
+t_rel_all(Rel1, TesIndex, PrecTesIndex, [TempRel]):-
+  Rels=..[Rel1,TesIndex, PrecTesIndex],
+  TempRel=Rels,
+  !.
+
+map_temp_rel('<', before).
+map_temp_rel('>', after).
+map_temp_rel('=', overlap).
+map_temp_rel(diverso, after).
+map_temp_rel(contemporaneo, overlap).
+map_temp_rel(incluso, contains).
+map_temp_rel([eq], overlap).
+map_temp_rel([af], after).
+map_temp_rel([bf], before).
+map_temp_rel([dr], during).
+map_temp_rel(Rels, finished_by) :-
+  on(fb, Rels).
+map_temp_rel(Rels, started_by) :-
+  on(sb, Rels).
+map_temp_rel(Rels, contains) :-
+  on(cn, Rels).
+map_temp_rel(Rels, after) :-
+  on(bf, Rels).
+map_temp_rel(Rels, after) :-
+  on(af, Rels).
+map_temp_rel(Rels, during) :-
+  on(dr, Rels).
+
+infer_temp_rel(PrecDiscRel, tes(TesIndex), tr(TimeIndex), Rel, Rel) 
+:-
+  PrecDiscRel\=inception,   
+%   PrecDiscRel\=result,   
+  rel_temp(_, tes(TimeIndex), tr(TimeIndex), [eq]).
+
+infer_temp_rel(PrecDiscRel, TesIndex, TrIndex, Rel, Rel) :-
+%   PrecDiscRel\=result,   
+  rel_temp(_, TesIndex, tr(TempIndex), Rel),
+  rel_temp(_,  tes(TempIndex), tr(TempIndex), Rel).
+
+infer_temp_rel(PrecDiscRel,tes(TesIndex), TrIndex, Rel, Rel1) :-
+  rel_temp(_, tes(TesIndex), tr(TempIndex), Rel),
+  (PrecDiscRel=inception,
+   (on(sb,Rel), Rel1=[sb])
+   ;
+   (on(af,Rel), Rel1=[af])
+   ;
+   PrecDiscRel\=inception, 
+%    PrecDiscRel\=result, 
+   Rel1=Rel).
+
+infer_temp_rel(_,tes(TesIndex), TrIndex, Rel, Rel1) :-
+  rel_temp(_, tes(TesIndex), tr(TempIndex), Rel),
+  rel_temp(_,  tr(TempIndex), tr(TesIndex), Rel1).
+
+analyze_relation(NoFr, PrecNoFr1, MainRel, NewRel, Topics):- 
+  1<NoFr,
+  topic(NoFr,Type,Id1),
+  (Type=main; Type=expected),
+  (fact(In, isa, [_:Id1, _:Tes], 1, _, _)
+   ;
+   in(_,Id1,Ids),
+   fact(In, isa, [_:Ids, _:Tes], 1, _, _)),
+  member(Type1:Id:Tes, Topics),
+  (Type1=main; Type1=expected),
+%   MainRel=Rel(Args, _, _),
+   functor(MainRel,Rel,_),
+   arg(1,MainRel,Args),
+   member(Id:_, Args),
+   (
+    (fact(Inf, NewRel, Args, 1, _, _);
+    sit(Inf, NewRel, Args, 1, _, _)),
+    member(_:Id1, Args)
+    ;
+    infer_relation(NewRel, Rel, Args)),
+   !.
+
+infer_relation(NewRel, Rel, Args):-
+  (inception_verb(Rel);
+   social_engagement(Rel)),
+   member(Id:Rel1, Args),
+   cause_result(Rel1, NewRel),
+   !.
+
+/*
+taggger(Text,Output):-
+  init,
+   Tokens=Text,
+   see(Tokens),
+   atom_to_term(Outs,outs/Output,_),
+   tell(Outs),
+   tokenizer(Tokens,Outs),
+   told,
+   see(Outs),
+   atom_to_term(Sentences,outs/sentences,_),
+   tell(Sentences),
+  rtn(Outs, Sentences,  Parse),
+   told,
+   see(Sentences),
+  assert_sents(Text,Sentences),
+  !.
+*/
+
+rtnew(NFile, InFile,  Parse):-
+  read_newfr(NFile, InFile),
+  !.
+
+read_newfr([], OutFile):-!.
+read_newfr(File, OutFile):-
+  read_nfr(File, Frase, Fra, Rest),
+  (Frase\=[],
+   (Frase\=[A];Frase=[A], A\=_-_-5),
+    newsuper_reorgs(Frase, NFrase),
+    assertsents(OutFile,NFrase),
+    (Rest=[end_of_file],!
+    ;
+    read_newfr(Rest, OutFile)
+   )
+    ;
+   Frase=[],Rest=[]
+   ;
+   Rest\=[],
+   read_newfr(Rest, OutFile)
+   ),
+  !.
+
+read_nfr([], [P-punto-5],Frase, []):-!.
+read_nfr([Out, Par|Rest], [Par,Out],Frase, Rest):-
+    nonvar(Out),
+    (Out=P-punto-5;Out=P-puntint-5),
+    Par=_-par-_,
+    !.
+read_nfr([Par,Out|Rest], [Par,Out],Frase, Rest):-
+    nonvar(Out),
+    (Out=P-punto-5;Out=P-puntint-5),
+    Par=_-par-_,
+    !.
+read_nfr([Out|Rest], [Out],Frase, Rest):-
+    nonvar(Out),
+    (Out=P-punto-5;Out=P-puntint-5),
+    !.
+read_nfr([Out|File], Frase, Frase, File):-
+    nonvar(Out),
+    Out=P-parag-_,
+    !.
+read_nfr([Out|File], [], [end_of_file], Rest):-
+    nonvar(Out),
+    Out=end_of_file,
+    !.
+read_nfr([Out|File], [Out|Frase], T, Rest):-
+    Out\=end_of_file, 
+    read_nfr(File, Frase, T, Rest),
+    !.
+read_nfr([Out|File], Frase, T, Rest):-
+    Out=end_of_file, 
+    read_nfr(File, Frase, T, Rest),
+    !.
+
+callnewtager(N,Text,Output):-
+  init,
+  newinit,
+  thtok(Text,Outs),
+ % mcon('partial/testset',N,File),
+  rtnew(Outs, 'user',  Output),
+  !.
+cnewtager(N,Text,Output):-
+  thtok(Text,Outs),
+  mcon('partial/testset',N,File),
+  rtnew(Outs, File,  Output),
+  !.
+
+thtok([],[]):-!.
+thtok([W],[]):-
+  !.
+thtok([W|Text],[W-Ca-5|Outs]):-
+  grw(W),
+  select_punct(W, C),on(Ca,C),
+  thtok(Text,Outs),
+  !.
+thtok([W|Text],[W-0-44|Outs]):-
+  fct(W),
+  thtok(Text,Outs),
+  !.
+thtok([W|Text],[W1-P-4|Outs]):-
+  spy_lower(W,Low,P),
+  (P=0, W1=W
+   ;
+   P=1,
+   W1=W-Low),
+  thtok(Text,Outs),
+  !.
+thtok([W|Text],[W-0-4|Outs]):-
+  thtok(Text,Outs),
+  !.
+
+newtager(Tokens,Output):-
+  init,
+  newinit,
+   tokenizer(Tokens,Output),
+   recovertokens(Outs),
+  rtnew(Outs, Tokens,  Parse),
+  !.
+
+newinit:-
+  abolish(ts/3),
+  abolish(idmw/5),
+  abolish(idx/5),
+  assert(ts(nil,nil,nil)),
+  !.
+  
+recovertokens(Outs):-
+  bagof(T-C-P,(
+                 ts(T,C,P),T\=nil),
+                 Outs),
+  indicizzawrds(1,Outs),
+  !.
+
+indicizzawrds(N,[]):-!.
+indicizzawrds(N,[T-parag-P|Outs]):-
+  indicizzawrds(N,Outs),
+  !.
+indicizzawrds(N,[T-C-P|Outs]):-
+   list(C),
+   C=[F|_],
+   (atomic(F),W=F;F=W-_),
+   spy_lower(W,Low,Pol),
+   indicizzamws(N,C,T,P,N1),
+   assert(idmw(N, T, Pol, C, P)),
+  indicizzawrds(N1,Outs),
+  !.
+indicizzawrds(N,[T-C-P|Outs]):-
+   (atomic(T),W=T;T=W-_),
+   assert(idx(N, W, T, C, P)),
+   N1 is N + 1,
+  indicizzawrds(N1,Outs),
+  !.
+indicizzamws(N,[],T1,P,N):-!.
+indicizzamws(N,[T|C],T1,P,N2):-
+   (atomic(T),W=T;T=W-_),
+   assert(idx(N, W, T, C, P)),
+   N1 is N + 1,
+   indicizzamws(N1,C,T,P,N2),
+   !.
+   
+extract_title(Input, Tops):-
+  see(Input),
+  get0(Car),
+  l_p(Car, LCar, Pol, OrTok, Token, Type),
+  l_p(LCar, NCar, NPol, NOrTok, NToken, NType),
+  read_lista_tops(NCar, Input, 1, ListaTops),
+  append([OrTok, NOrTok],ListaTops,ListTops),
+  reverse(ListTops,[Punt|_]),
+  length(ListTops,Len), 
+  (Punt\='.',
+   append(ListTops,['.'], Title),
+   gen_sym(es,E),
+   mults(Title, NewFrase,Mult),
+   assert(fp(E,NewFrase)), Tops=ListTops
+   ;
+   Punt='.',
+   Tops=ListTops).
+extract_title(Input, []):-
+  seen,
+  see(Input),
+  !.
+
+read_lista_tops(13, Input, N, []):-!.
+read_lista_tops(10, Input, N, []):-!.
+read_lista_tops(-1, Input, N, []):-!.
+read_lista_tops(News, Input, N, [OrTok|Tops]):-
+  see(Input),
+  get0(Car),
+  ((Car=13;Car=10), Tops=[],!
+   ;
+  l_p(Car, LCar, Pol, OrTok, Token, Type),
+  LCar\=13, LCar\=10, N1 is N + 1,   
+  read_lista_tops(News, Input, N1, Tops)
+  ),!.
+
+read_lista_tops(Sigla, Input, N, Tops).
+
+
+evl(1,unknown,qa).
+evl(2,false,qa).
+evl(3,unknown,qa).
+evl(4,true,qa).
+evl(5,unknown,qa).
+evl(6,true,qa).
+evl(7,false,qa).
+evl(8,true,qa).
+evl(9,true,qa).
+evl(10,unknown,qa).
+evl(11,false,qa).
+evl(12,false,qa).
+evl(13,false,qa).
+evl(14,true,qa).
+evl(15,unknown,qa).
+evl(16,true,qa).
+evl(17,true,qa).
+evl(18,unknown,qa).
+evl(19,unknown,qa).
+evl(20,true,qa).
+evl(21,unknown,qa).
+evl(22,true,qa).
+evl(23,true,qa).
+evl(24,unknown,qa).
+evl(25,true,qa).
+evl(26,true,qa).
+evl(27,true,qa).
+evl(28,true,qa).
+evl(29,false,qa).
+evl(30,false,qa).
+evl(31,true,qa).
+evl(32,unknown,qa).
+evl(33,true,qa).
+evl(34,unknown,qa).
+evl(35,true,qa).
+evl(36,true,qa).
+evl(37,true,qa).
+evl(38,false,qa).
+evl(39,unknown,qa).
+evl(40,false,qa).
+evl(41,false,qa).
+evl(42,true,qa).
+evl(43,unknown,qa).
+evl(44,false,qa).
+evl(45,false,qa).
+evl(46,true,qa).
+evl(47,false,qa).
+evl(48,true,qa).
+evl(49,unknown,qa).
+evl(50,true,qa).
+evl(51,true,qa).
+evl(52,true,qa).
+evl(53,true,qa).
+evl(54,true,qa).
+evl(55,unknown,qa).
+evl(56,true,qa).
+evl(57,unknown,qa).
+evl(58,true,qa).
+evl(59,false,qa).
+evl(60,true,qa).
+evl(61,false,qa).
+evl(62,unknown,qa).
+evl(63,true,qa).
+evl(64,unknown,qa).
+evl(65,true,qa).
+evl(66,true,qa).
+evl(67,unknown,qa).
+evl(68,true,qa).
+evl(69,true,qa).
+evl(70,true,qa).
+evl(71,true,qa).
+evl(72,unknown,qa).
+evl(73,false,qa).
+evl(74,unknown,qa).
+evl(75,unknown,qa).
+evl(76,unknown,qa).
+evl(77,unknown,qa).
+evl(78,true,qa).
+evl(79,unknown,qa).
+evl(80,true,qa).
+evl(81,true,qa).
+evl(82,unknown,qa).
+evl(83,true,qa).
+evl(84,unknown,qa).
+evl(85,unknown,qa).
+evl(86,true,qa).
+evl(87,unknown,qa).
+evl(88,unknown,qa).
+evl(89,false,qa).
+evl(90,unknown,qa).
+evl(91,true,qa).
+evl(92,false,qa).
+evl(93,false,qa).
+evl(94,true,qa).
+evl(95,false,qa).
+evl(96,true,qa).
+evl(97,unknown,qa).
+evl(98,true,qa).
+evl(99,unknown,qa).
+evl(100,unknown,qa).
+evl(101,true,qa).
+evl(102,unknown,qa).
+evl(103,true,qa).
+evl(104,true,qa).
+evl(105,unknown,qa).
+evl(106,true,qa).
+evl(107,true,qa).
+evl(108,true,qa).
+evl(109,unknown,qa).
+evl(110,false,qa).
+evl(111,unknown,qa).
+evl(112,true,qa).
+evl(113,true,qa).
+evl(114,unknown,qa).
+evl(115,unknown,qa).
+evl(116,true,qa).
+evl(117,unknown,qa).
+evl(118,unknown,qa).
+evl(119,unknown,qa).
+evl(120,true,qa).
+evl(121,unknown,qa).
+evl(122,false,qa).
+evl(123,true,qa).
+evl(124,true,qa).
+evl(125,false,qa).
+evl(126,true,qa).
+evl(127,unknown,qa).
+evl(128,true,qa).
+evl(129,unknown,qa).
+evl(130,true,qa).
+evl(131,false,qa).
+evl(132,unknown,qa).
+evl(133,unknown,qa).
+evl(134,true,qa).
+evl(135,unknown,qa).
+evl(136,unknown,qa).
+evl(137,true,qa).
+evl(138,unknown,qa).
+evl(139,unknown,qa).
+evl(140,true,qa).
+evl(141,unknown,qa).
+evl(142,true,qa).
+evl(143,true,qa).
+evl(144,true,qa).
+evl(145,true,qa).
+evl(146,true,qa).
+evl(147,unknown,qa).
+evl(148,true,qa).
+evl(149,unknown,qa).
+evl(150,unknown,qa).
+evl(151,true,qa).
+evl(152,true,qa).
+evl(153,true,qa).
+evl(154,true,qa).
+evl(155,true,qa).
+evl(156,true,qa).
+evl(157,true,qa).
+evl(158,true,qa).
+evl(159,true,qa).
+evl(160,true,qa).
+evl(161,false,qa).
+evl(162,false,qa).
+evl(163,true,qa).
+evl(164,true,qa).
+evl(165,true,qa).
+evl(166,true,qa).
+evl(167,unknown,qa).
+evl(168,true,qa).
+evl(169,true,qa).
+evl(170,true,qa).
+evl(171,true,qa).
+evl(172,unknown,qa).
+evl(173,unknown,qa).
+evl(174,true,qa).
+evl(175,unknown,qa).
+evl(176,true,qa).
+evl(177,false,qa).
+evl(178,true,qa).
+evl(179,false,qa).
+evl(180,false,qa).
+evl(181,unknown,qa).
+evl(182,unknown,qa).
+evl(183,unknown,qa).
+evl(184,true,qa).
+evl(185,true,qa).
+evl(186,unknown,qa).
+evl(187,true,qa).
+evl(188,true,qa).
+evl(189,unknown,qa).
+evl(190,true,qa).
+evl(191,true,qa).
+evl(192,unknown,qa).
+evl(193,unknown,qa).
+evl(194,true,qa).
+evl(195,unknown,qa).
+evl(196,unknown,qa).
+evl(197,true,qa).
+evl(198,unknown,qa).
+evl(199,true,qa).
+evl(200,false,qa).
+evl(201,true,ie).
+evl(202,true,ie).
+evl(203,false,ie).
+evl(204,unknown,ie).
+evl(205,true,ie).
+evl(206,unknown,ie).
+evl(207,true,ie).
+evl(208,false,ie).
+evl(209,false,ie).
+evl(210,false,ie).
+evl(211,unknown,ie).
+evl(212,true,ie).
+evl(213,true,ie).
+evl(214,true,ie).
+evl(215,unknown,ie).
+evl(216,true,ie).
+evl(217,true,ie).
+evl(218,true,ie).
+evl(219,true,ie).
+evl(220,true,ie).
+evl(221,unknown,ie).
+evl(222,true,ie).
+evl(223,true,ie).
+evl(224,true,ie).
+evl(225,unknown,ie).
+evl(226,true,ie).
+evl(227,true,ie).
+evl(228,true,ie).
+evl(229,false,ie).
+evl(230,unknown,ie).
+evl(231,true,ie).
+evl(232,true,ie).
+evl(233,true,ie).
+evl(234,unknown,ie).
+evl(235,unknown,ie).
+evl(236,true,ie).
+evl(237,unknown,ie).
+evl(238,true,ie).
+evl(239,unknown,ie).
+evl(240,true,ie).
+evl(241,unknown,ie).
+evl(242,true,ie).
+evl(243,unknown,ie).
+evl(244,false,ie).
+evl(245,unknown,ie).
+evl(246,true,ie).
+evl(247,true,ie).
+evl(248,false,ie).
+evl(249,unknown,ie).
+evl(250,true,ie).
+evl(251,unknown,ie).
+evl(252,false,ie).
+evl(253,unknown,ie).
+evl(254,unknown,ie).
+evl(255,true,ie).
+evl(256,false,ie).
+evl(257,true,ie).
+evl(258,unknown,ie).
+evl(259,false,ie).
+evl(260,true,ie).
+evl(261,true,ie).
+evl(262,false,ie).
+evl(263,false,ie).
+evl(264,true,ie).
+evl(265,false,ie).
+evl(266,true,ie).
+evl(267,false,ie).
+evl(268,unknown,ie).
+evl(269,unknown,ie).
+evl(270,true,ie).
+evl(271,unknown,ie).
+evl(272,true,ie).
+evl(273,true,ie).
+evl(274,unknown,ie).
+evl(275,unknown,ie).
+evl(276,unknown,ie).
+evl(277,false,ie).
+evl(278,true,ie).
+evl(279,unknown,ie).
+evl(280,unknown,ie).
+evl(281,false,ie).
+evl(282,true,ie).
+evl(283,unknown,ie).
+evl(284,false,ie).
+evl(285,true,ie).
+evl(286,true,ie).
+evl(287,unknown,ie).
+evl(288,true,ie).
+evl(289,unknown,ie).
+evl(290,unknown,ie).
+evl(291,false,ie).
+evl(292,false,ie).
+evl(293,true,ie).
+evl(294,unknown,ie).
+evl(295,unknown,ie).
+evl(296,true,ie).
+evl(297,true,ie).
+evl(298,true,ie).
+evl(299,true,ie).
+evl(300,true,ie).
+evl(301,true,ie).
+evl(302,false,ie).
+evl(303,true,ie).
+evl(304,true,ie).
+evl(305,true,ie).
+evl(306,true,ie).
+evl(307,unknown,ie).
+evl(308,unknown,ie).
+evl(309,true,ie).
+evl(310,unknown,ie).
+evl(311,false,ie).
+evl(312,true,ie).
+evl(313,true,ie).
+evl(314,true,ie).
+evl(315,true,ie).
+evl(316,true,ie).
+evl(317,true,ie).
+evl(318,true,ie).
+evl(319,true,ie).
+evl(320,false,ie).
+evl(321,unknown,ie).
+evl(322,unknown,ie).
+evl(323,false,ie).
+evl(324,unknown,ie).
+evl(325,unknown,ie).
+evl(326,unknown,ie).
+evl(327,false,ie).
+evl(328,unknown,ie).
+evl(329,false,ie).
+evl(330,true,ie).
+evl(331,true,ie).
+evl(332,unknown,ie).
+evl(333,true,ie).
+evl(334,true,ie).
+evl(335,unknown,ie).
+evl(336,false,ie).
+evl(337,true,ie).
+evl(338,true,ie).
+evl(339,unknown,ie).
+evl(340,unknown,ie).
+evl(341,true,ie).
+evl(342,unknown,ie).
+evl(343,true,ie).
+evl(344,unknown,ie).
+evl(345,unknown,ie).
+evl(346,unknown,ie).
+evl(347,unknown,ie).
+evl(348,true,ie).
+evl(349,true,ie).
+evl(350,unknown,ie).
+evl(351,true,ie).
+evl(352,true,ie).
+evl(353,true,ie).
+evl(354,true,ie).
+evl(355,true,ie).
+evl(356,unknown,ie).
+evl(357,false,ie).
+evl(358,true,ie).
+evl(359,unknown,ie).
+evl(360,unknown,ie).
+evl(361,true,ie).
+evl(362,unknown,ie).
+evl(363,unknown,ie).
+evl(364,true,ie).
+evl(365,unknown,ie).
+evl(366,true,ie).
+evl(367,unknown,ie).
+evl(368,unknown,ie).
+evl(369,true,ie).
+evl(370,true,ie).
+evl(371,true,ie).
+evl(372,false,ie).
+evl(373,true,ie).
+evl(374,true,ie).
+evl(375,true,ie).
+evl(376,unknown,ie).
+evl(377,true,ie).
+evl(378,true,ie).
+evl(379,false,ie).
+evl(380,unknown,ie).
+evl(381,true,ie).
+evl(382,unknown,ie).
+evl(383,true,ie).
+evl(384,true,ie).
+evl(385,unknown,ie).
+evl(386,unknown,ie).
+evl(387,true,ie).
+evl(388,true,ie).
+evl(389,unknown,ie).
+evl(390,true,ie).
+evl(391,unknown,ie).
+evl(392,unknown,ie).
+evl(393,unknown,ie).
+evl(394,true,ie).
+evl(395,true,ie).
+evl(396,true,ie).
+evl(397,true,ie).
+evl(398,true,ie).
+evl(399,unknown,ie).
+evl(400,false,ie).
+evl(401,true,ir).
+evl(402,unknown,ir).
+evl(403,unknown,ir).
+evl(404,true,ir).
+evl(405,unknown,ir).
+evl(406,true,ir).
+evl(407,false,ir).
+evl(408,true,ir).
+evl(409,unknown,ir).
+evl(410,true,ir).
+evl(411,true,ir).
+evl(412,false,ir).
+evl(413,true,ir).
+evl(414,true,ir).
+evl(415,true,ir).
+evl(416,true,ir).
+evl(417,unknown,ir).
+evl(418,unknown,ir).
+evl(419,true,ir).
+evl(420,unknown,ir).
+evl(421,unknown,ir).
+evl(422,unknown,ir).
+evl(423,false,ir).
+evl(424,true,ir).
+evl(425,true,ir).
+evl(426,true,ir).
+evl(427,true,ir).
+evl(428,true,ir).
+evl(429,true,ir).
+evl(430,false,ir).
+evl(431,unknown,ir).
+evl(432,false,ir).
+evl(433,unknown,ir).
+evl(434,true,ir).
+evl(435,unknown,ir).
+evl(436,true,ir).
+evl(437,true,ir).
+evl(438,false,ir).
+evl(439,unknown,ir).
+evl(440,unknown,ir).
+evl(441,unknown,ir).
+evl(442,true,ir).
+evl(443,unknown,ir).
+evl(444,true,ir).
+evl(445,unknown,ir).
+evl(446,true,ir).
+evl(447,true,ir).
+evl(448,unknown,ir).
+evl(449,unknown,ir).
+evl(450,unknown,ir).
+evl(451,unknown,ir).
+evl(452,unknown,ir).
+evl(453,true,ir).
+evl(454,true,ir).
+evl(455,unknown,ir).
+evl(456,true,ir).
+evl(457,false,ir).
+evl(458,true,ir).
+evl(459,true,ir).
+evl(460,true,ir).
+evl(461,true,ir).
+evl(462,unknown,ir).
+evl(463,true,ir).
+evl(464,unknown,ir).
+evl(465,unknown,ir).
+evl(466,true,ir).
+evl(467,true,ir).
+evl(468,false,ir).
+evl(469,true,ir).
+evl(470,true,ir).
+evl(471,true,ir).
+evl(472,unknown,ir).
+evl(473,true,ir).
+evl(474,true,ir).
+evl(475,true,ir).
+evl(476,unknown,ir).
+evl(477,true,ir).
+evl(478,true,ir).
+evl(479,unknown,ir).
+evl(480,true,ir).
+evl(481,true,ir).
+evl(482,unknown,ir).
+evl(483,false,ir).
+evl(484,unknown,ir).
+evl(485,true,ir).
+evl(486,true,ir).
+evl(487,unknown,ir).
+evl(488,true,ir).
+evl(489,unknown,ir).
+evl(490,true,ir).
+evl(491,true,ir).
+evl(492,true,ir).
+evl(493,false,ir).
+evl(494,true,ir).
+evl(495,unknown,ir).
+evl(496,true,ir).
+evl(497,false,ir).
+evl(498,false,ir).
+evl(499,false,ir).
+evl(500,true,ir).
+evl(501,false,ir).
+evl(502,true,ir).
+evl(503,true,ir).
+evl(504,true,ir).
+evl(505,unknown,ir).
+evl(506,false,ir).
+evl(507,unknown,ir).
+evl(508,unknown,ir).
+evl(509,true,ir).
+evl(510,true,ir).
+evl(511,true,ir).
+evl(512,true,ir).
+evl(513,unknown,ir).
+evl(514,false,ir).
+evl(515,true,ir).
+evl(516,unknown,ir).
+evl(517,unknown,ir).
+evl(518,unknown,ir).
+evl(519,true,ir).
+evl(520,true,ir).
+evl(521,unknown,ir).
+evl(522,false,ir).
+evl(523,true,ir).
+evl(524,true,ir).
+evl(525,unknown,ir).
+evl(526,unknown,ir).
+evl(527,false,ir).
+evl(528,unknown,ir).
+evl(529,unknown,ir).
+evl(530,unknown,ir).
+evl(531,unknown,ir).
+evl(532,true,ir).
+evl(533,unknown,ir).
+evl(534,true,ir).
+evl(535,true,ir).
+evl(536,unknown,ir).
+evl(537,true,ir).
+evl(538,unknown,ir).
+evl(539,false,ir).
+evl(540,true,ir).
+evl(541,unknown,ir).
+evl(542,false,ir).
+evl(543,unknown,ir).
+evl(544,true,ir).
+evl(545,true,ir).
+evl(546,true,ir).
+evl(547,unknown,ir).
+evl(548,true,ir).
+evl(549,true,ir).
+evl(550,true,ir).
+evl(551,unknown,ir).
+evl(552,true,ir).
+evl(553,unknown,ir).
+evl(554,unknown,ir).
+evl(555,false,ir).
+evl(556,true,ir).
+evl(557,true,ir).
+evl(558,false,ir).
+evl(559,unknown,ir).
+evl(560,false,ir).
+evl(561,true,ir).
+evl(562,unknown,ir).
+evl(563,true,ir).
+evl(564,unknown,ir).
+evl(565,unknown,ir).
+evl(566,false,ir).
+evl(567,false,ir).
+evl(568,true,ir).
+evl(569,unknown,ir).
+evl(570,true,ir).
+evl(571,true,ir).
+evl(572,true,ir).
+evl(573,unknown,ir).
+evl(574,true,ir).
+evl(575,true,ir).
+evl(576,unknown,ir).
+evl(577,true,ir).
+evl(578,false,ir).
+evl(579,true,ir).
+evl(580,unknown,ir).
+evl(581,true,ir).
+evl(582,false,ir).
+evl(583,unknown,ir).
+evl(584,true,ir).
+evl(585,true,ir).
+evl(586,true,ir).
+evl(587,unknown,ir).
+evl(588,false,ir).
+evl(589,true,ir).
+evl(590,true,ir).
+evl(591,unknown,ir).
+evl(592,true,ir).
+evl(593,true,ir).
+evl(594,false,ir).
+evl(595,true,ir).
+evl(596,true,ir).
+evl(597,unknown,ir).
+evl(598,true,ir).
+evl(599,unknown,ir).
+evl(600,false,ir).
+
+%*******************
+
+rte4(1,entailment,ir).
+rte4(2,entailment,ir).
+rte4(3,unknown,ir).
+rte4(4,unknown,ir).
+rte4(5,entailment,ir).
+rte4(6,entailment,ir).
+rte4(7,unknown,ir).
+rte4(8,contradiction,ir).
+rte4(9,entailment,ir).
+rte4(10,entailment,ir).
+rte4(11,unknown,ir).
+rte4(12,entailment,ir).
+rte4(13,entailment,ir).
+rte4(14,contradiction,ir).
+rte4(15,unknown,ir).
+rte4(16,entailment,ir).
+rte4(17,entailment,ir).
+rte4(18,unknown,ir).
+rte4(19,entailment,ir).
+rte4(20,entailment,ir).
+rte4(21,entailment,ir).
+rte4(22,entailment,ir).
+rte4(23,unknown,ir).
+rte4(24,unknown,ir).
+rte4(25,entailment,ir).
+rte4(26,contradiction,ir).
+rte4(27,entailment,ir).
+rte4(28,contradiction,ir).
+rte4(29,unknown,ir).
+rte4(30,entailment,ir).
+rte4(31,entailment,ir).
+rte4(32,unknown,ir).
+rte4(33,unknown,ir).
+rte4(34,entailment,ir).
+rte4(35,entailment,ir).
+rte4(36,unknown,ir).
+rte4(37,entailment,ir).
+rte4(38,unknown,ir).
+rte4(39,contradiction,ir).
+rte4(40,entailment,ir).
+rte4(41,unknown,ir).
+rte4(42,contradiction,ir).
+rte4(43,contradiction,ir).
+rte4(44,entailment,ir).
+rte4(45,contradiction,ir).
+rte4(46,entailment,ir).
+rte4(47,unknown,ir).
+rte4(48,contradiction,ir).
+rte4(49,entailment,ir).
+rte4(50,entailment,ir).
+rte4(51,contradiction,ir).
+rte4(52,unknown,ir).
+rte4(53,entailment,ir).
+rte4(54,contradiction,ir).
+rte4(55,entailment,ir).
+rte4(56,unknown,ir).
+rte4(57,entailment,ir).
+rte4(58,unknown,ir).
+rte4(59,unknown,ir).
+rte4(60,contradiction,ir).
+rte4(61,unknown,ir).
+rte4(62,entailment,ir).
+rte4(63,contradiction,ir).
+rte4(64,contradiction,ir).
+rte4(65,entailment,ir).
+rte4(66,unknown,ir).
+rte4(67,contradiction,ir).
+rte4(68,entailment,ir).
+rte4(69,contradiction,ir).
+rte4(70,entailment,ir).
+rte4(71,contradiction,ir).
+rte4(72,entailment,ir).
+rte4(73,entailment,ir).
+rte4(74,unknown,ir).
+rte4(75,unknown,ir).
+rte4(76,contradiction,ir).
+rte4(77,entailment,ir).
+rte4(78,unknown,ir).
+rte4(79,unknown,ir).
+rte4(80,entailment,ir).
+rte4(81,unknown,ir).
+rte4(82,unknown,ir).
+rte4(83,entailment,ir).
+rte4(84,entailment,ir).
+rte4(85,entailment,ir).
+rte4(86,unknown,ir).
+rte4(87,entailment,ir).
+rte4(88,entailment,ir).
+rte4(89,unknown,ir).
+rte4(90,unknown,ir).
+rte4(91,entailment,ir).
+rte4(92,entailment,ir).
+rte4(93,entailment,ir).
+rte4(94,unknown,ir).
+rte4(95,contradiction,ir).
+rte4(96,entailment,ir).
+rte4(97,unknown,ir).
+rte4(98,unknown,ir).
+rte4(99,entailment,ir).
+rte4(100,unknown,ir).
+rte4(101,entailment,ir).
+rte4(102,entailment,ir).
+rte4(103,entailment,ir).
+rte4(104,unknown,ir).
+rte4(105,entailment,ir).
+rte4(106,unknown,ir).
+rte4(107,contradiction,ir).
+rte4(108,entailment,ir).
+rte4(109,contradiction,ir).
+rte4(110,entailment,ir).
+rte4(111,entailment,ir).
+rte4(112,unknown,ir).
+rte4(113,entailment,ir).
+rte4(114,entailment,ir).
+rte4(115,unknown,ir).
+rte4(116,unknown,ir).
+rte4(117,entailment,ir).
+rte4(118,unknown,ir).
+rte4(119,unknown,ir).
+rte4(120,entailment,ir).
+rte4(121,entailment,ir).
+rte4(122,unknown,ir).
+rte4(123,contradiction,ir).
+rte4(124,entailment,ir).
+rte4(125,entailment,ir).
+rte4(126,unknown,ir).
+rte4(127,unknown,ir).
+rte4(128,contradiction,ir).
+rte4(129,entailment,ir).
+rte4(130,contradiction,ir).
+rte4(131,unknown,ir).
+rte4(132,entailment,ir).
+rte4(133,unknown,ir).
+rte4(134,entailment,ir).
+rte4(135,unknown,ir).
+rte4(136,entailment,ir).
+rte4(137,entailment,ir).
+rte4(138,entailment,ir).
+rte4(139,contradiction,ir).
+rte4(140,unknown,ir).
+rte4(141,entailment,ir).
+rte4(142,entailment,ir).
+rte4(143,entailment,ir).
+rte4(144,unknown,ir).
+rte4(145,unknown,ir).
+rte4(146,contradiction,ir).
+rte4(147,entailment,ir).
+rte4(148,unknown,ir).
+rte4(149,entailment,ir).
+rte4(150,entailment,ir).
+rte4(151,entailment,ir).
+rte4(152,unknown,ir).
+rte4(153,contradiction,ir).
+rte4(154,entailment,ir).
+rte4(155,contradiction,ir).
+rte4(156,entailment,ir).
+rte4(157,entailment,ir).
+rte4(158,unknown,ir).
+rte4(159,contradiction,ir).
+rte4(160,entailment,ir).
+rte4(161,entailment,ir).
+rte4(162,unknown,ir).
+rte4(163,unknown,ir).
+rte4(164,contradiction,ir).
+rte4(165,unknown,ir).
+rte4(166,entailment,ir).
+rte4(167,contradiction,ir).
+rte4(168,entailment,ir).
+rte4(169,unknown,ir).
+rte4(170,contradiction,ir).
+rte4(171,entailment,ir).
+rte4(172,unknown,ir).
+rte4(173,entailment,ir).
+rte4(174,unknown,ir).
+rte4(175,entailment,ir).
+rte4(176,contradiction,ir).
+rte4(177,entailment,ir).
+rte4(178,entailment,ir).
+rte4(179,unknown,ir).
+rte4(180,entailment,ir).
+rte4(181,entailment,ir).
+rte4(182,unknown,ir).
+rte4(183,unknown,ir).
+rte4(184,contradiction,ir).
+rte4(185,entailment,ir).
+rte4(186,entailment,ir).
+rte4(187,unknown,ir).
+rte4(188,contradiction,ir).
+rte4(189,entailment,ir).
+rte4(190,unknown,ir).
+rte4(191,contradiction,ir).
+rte4(192,entailment,ir).
+rte4(193,unknown,ir).
+rte4(194,contradiction,ir).
+rte4(195,entailment,ir).
+rte4(196,unknown,ir).
+rte4(197,unknown,ir).
+rte4(198,entailment,ir).
+rte4(199,entailment,ir).
+rte4(200,unknown,ir).
+rte4(201,unknown,ir).
+rte4(202,entailment,ir).
+rte4(203,entailment,ir).
+rte4(204,contradiction,ir).
+rte4(205,unknown,ir).
+rte4(206,entailment,ir).
+rte4(207,entailment,ir).
+rte4(208,unknown,ir).
+rte4(209,unknown,ir).
+rte4(210,unknown,ir).
+rte4(211,entailment,ir).
+rte4(212,contradiction,ir).
+rte4(213,unknown,ir).
+rte4(214,unknown,ir).
+rte4(215,entailment,ir).
+rte4(216,unknown,ir).
+rte4(217,entailment,ir).
+rte4(218,unknown,ir).
+rte4(219,entailment,ir).
+rte4(220,entailment,ir).
+rte4(221,unknown,ir).
+rte4(222,contradiction,ir).
+rte4(223,unknown,ir).
+rte4(224,unknown,ir).
+rte4(225,entailment,ir).
+rte4(226,entailment,ir).
+rte4(227,entailment,ir).
+rte4(228,contradiction,ir).
+rte4(229,entailment,ir).
+rte4(230,unknown,ir).
+rte4(231,entailment,ir).
+rte4(232,entailment,ir).
+rte4(233,unknown,ir).
+rte4(234,contradiction,ir).
+rte4(235,entailment,ir).
+rte4(236,unknown,ir).
+rte4(237,unknown,ir).
+rte4(238,entailment,ir).
+rte4(239,unknown,ir).
+rte4(240,entailment,ir).
+rte4(241,entailment,ir).
+rte4(242,unknown,ir).
+rte4(243,entailment,ir).
+rte4(244,entailment,ir).
+rte4(245,entailment,ir).
+rte4(246,unknown,ir).
+rte4(247,entailment,ir).
+rte4(248,unknown,ir).
+rte4(249,entailment,ir).
+rte4(250,entailment,ir).
+rte4(251,unknown,ir).
+rte4(252,entailment,ir).
+rte4(253,unknown,ir).
+rte4(254,unknown,ir).
+rte4(255,entailment,ir).
+rte4(256,unknown,ir).
+rte4(257,entailment,ir).
+rte4(258,entailment,ir).
+rte4(259,unknown,ir).
+rte4(260,unknown,ir).
+rte4(261,entailment,ir).
+rte4(262,contradiction,ir).
+rte4(263,unknown,ir).
+rte4(264,entailment,ir).
+rte4(265,entailment,ir).
+rte4(266,contradiction,ir).
+rte4(267,entailment,ir).
+rte4(268,unknown,ir).
+rte4(269,entailment,ir).
+rte4(270,unknown,ir).
+rte4(271,contradiction,ir).
+rte4(272,entailment,ir).
+rte4(273,entailment,ir).
+rte4(274,unknown,ir).
+rte4(275,entailment,ir).
+rte4(276,entailment,ir).
+rte4(277,unknown,ir).
+rte4(278,entailment,ir).
+rte4(279,entailment,ir).
+rte4(280,entailment,ir).
+rte4(281,entailment,ir).
+rte4(282,unknown,ir).
+rte4(283,entailment,ir).
+rte4(284,entailment,ir).
+rte4(285,entailment,ir).
+rte4(286,entailment,ir).
+rte4(287,unknown,ir).
+rte4(288,unknown,ir).
+rte4(289,entailment,ir).
+rte4(290,unknown,ir).
+rte4(291,entailment,ir).
+rte4(292,entailment,ir).
+rte4(293,unknown,ir).
+rte4(294,unknown,ir).
+rte4(295,entailment,ir).
+rte4(296,entailment,ir).
+rte4(297,entailment,ir).
+rte4(298,entailment,ir).
+rte4(299,entailment,ir).
+rte4(300,entailment,ir).
+rte4(301,entailment,qa).
+rte4(302,contradiction,qa).
+rte4(303,unknown,qa).
+rte4(304,entailment,qa).
+rte4(305,unknown,qa).
+rte4(306,entailment,qa).
+rte4(307,entailment,qa).
+rte4(308,entailment,qa).
+rte4(309,unknown,qa).
+rte4(310,unknown,qa).
+rte4(311,entailment,qa).
+rte4(312,unknown,qa).
+rte4(313,unknown,qa).
+rte4(314,unknown,qa).
+rte4(315,entailment,qa).
+rte4(316,contradiction,qa).
+rte4(317,entailment,qa).
+rte4(318,unknown,qa).
+rte4(319,contradiction,qa).
+rte4(320,entailment,qa).
+rte4(321,unknown,qa).
+rte4(322,entailment,qa).
+rte4(323,unknown,qa).
+rte4(324,contradiction,qa).
+rte4(325,unknown,qa).
+rte4(326,entailment,qa).
+rte4(327,unknown,qa).
+rte4(328,entailment,qa).
+rte4(329,entailment,qa).
+rte4(330,contradiction,qa).
+rte4(331,entailment,qa).
+rte4(332,entailment,qa).
+rte4(333,entailment,qa).
+rte4(334,contradiction,qa).
+rte4(335,unknown,qa).
+rte4(336,entailment,qa).
+rte4(337,unknown,qa).
+rte4(338,entailment,qa).
+rte4(339,contradiction,qa).
+rte4(340,contradiction,qa).
+rte4(341,entailment,qa).
+rte4(342,entailment,qa).
+rte4(343,entailment,qa).
+rte4(344,entailment,qa).
+rte4(345,entailment,qa).
+rte4(346,contradiction,qa).
+rte4(347,entailment,qa).
+rte4(348,entailment,qa).
+rte4(349,entailment,qa).
+rte4(350,entailment,qa).
+rte4(351,entailment,qa).
+rte4(352,entailment,qa).
+rte4(353,contradiction,qa).
+rte4(354,contradiction,qa).
+rte4(355,entailment,qa).
+rte4(356,unknown,qa).
+rte4(357,unknown,qa).
+rte4(358,entailment,qa).
+rte4(359,entailment,qa).
+rte4(360,unknown,qa).
+rte4(361,contradiction,qa).
+rte4(362,unknown,qa).
+rte4(363,entailment,qa).
+rte4(364,entailment,qa).
+rte4(365,unknown,qa).
+rte4(366,entailment,qa).
+rte4(367,unknown,qa).
+rte4(368,unknown,qa).
+rte4(369,entailment,qa).
+rte4(370,unknown,qa).
+rte4(371,entailment,qa).
+rte4(372,contradiction,qa).
+rte4(373,unknown,qa).
+rte4(374,entailment,qa).
+rte4(375,entailment,qa).
+rte4(376,entailment,qa).
+rte4(377,entailment,qa).
+rte4(378,contradiction,qa).
+rte4(379,entailment,qa).
+rte4(380,entailment,qa).
+rte4(381,entailment,qa).
+rte4(382,entailment,qa).
+rte4(383,unknown,qa).
+rte4(384,entailment,qa).
+rte4(385,unknown,qa).
+rte4(386,unknown,qa).
+rte4(387,unknown,qa).
+rte4(388,unknown,qa).
+rte4(389,unknown,qa).
+rte4(390,entailment,qa).
+rte4(391,unknown,qa).
+rte4(392,entailment,qa).
+rte4(393,unknown,qa).
+rte4(394,entailment,qa).
+rte4(395,entailment,qa).
+rte4(396,unknown,qa).
+rte4(397,entailment,qa).
+rte4(398,unknown,qa).
+rte4(399,unknown,qa).
+rte4(400,entailment,qa).
+rte4(401,unknown,qa).
+rte4(402,entailment,qa).
+rte4(403,unknown,qa).
+rte4(404,entailment,qa).
+rte4(405,entailment,qa).
+rte4(406,entailment,qa).
+rte4(407,entailment,qa).
+rte4(408,entailment,qa).
+rte4(409,entailment,qa).
+rte4(410,entailment,qa).
+rte4(411,unknown,qa).
+rte4(412,entailment,qa).
+rte4(413,unknown,qa).
+rte4(414,entailment,qa).
+rte4(415,contradiction,qa).
+rte4(416,entailment,qa).
+rte4(417,unknown,qa).
+rte4(418,entailment,qa).
+rte4(419,entailment,qa).
+rte4(420,unknown,qa).
+rte4(421,unknown,qa).
+rte4(422,unknown,qa).
+rte4(423,entailment,qa).
+rte4(424,contradiction,qa).
+rte4(425,entailment,qa).
+rte4(426,contradiction,qa).
+rte4(427,contradiction,qa).
+rte4(428,contradiction,qa).
+rte4(429,contradiction,qa).
+rte4(430,entailment,qa).
+rte4(431,contradiction,qa).
+rte4(432,unknown,qa).
+rte4(433,entailment,qa).
+rte4(434,entailment,qa).
+rte4(435,unknown,qa).
+rte4(436,unknown,qa).
+rte4(437,unknown,qa).
+rte4(438,entailment,qa).
+rte4(439,entailment,qa).
+rte4(440,entailment,qa).
+rte4(441,unknown,qa).
+rte4(442,entailment,qa).
+rte4(443,entailment,qa).
+rte4(444,contradiction,qa).
+rte4(445,entailment,qa).
+rte4(446,entailment,qa).
+rte4(447,unknown,qa).
+rte4(448,entailment,qa).
+rte4(449,entailment,qa).
+rte4(450,contradiction,qa).
+rte4(451,entailment,qa).
+rte4(452,unknown,qa).
+rte4(453,entailment,qa).
+rte4(454,unknown,qa).
+rte4(455,unknown,qa).
+rte4(456,contradiction,qa).
+rte4(457,entailment,qa).
+rte4(458,unknown,qa).
+rte4(459,unknown,qa).
+rte4(460,entailment,qa).
+rte4(461,contradiction,qa).
+rte4(462,entailment,qa).
+rte4(463,entailment,qa).
+rte4(464,entailment,qa).
+rte4(465,entailment,qa).
+rte4(466,contradiction,qa).
+rte4(467,unknown,qa).
+rte4(468,unknown,qa).
+rte4(469,unknown,qa).
+rte4(470,entailment,qa).
+rte4(471,contradiction,qa).
+rte4(472,entailment,qa).
+rte4(473,unknown,qa).
+rte4(474,unknown,qa).
+rte4(475,entailment,qa).
+rte4(476,unknown,qa).
+rte4(477,unknown,qa).
+rte4(478,contradiction,qa).
+rte4(479,unknown,qa).
+rte4(480,unknown,qa).
+rte4(481,entailment,qa).
+rte4(482,entailment,qa).
+rte4(483,contradiction,qa).
+rte4(484,unknown,qa).
+rte4(485,entailment,qa).
+rte4(486,unknown,qa).
+rte4(487,unknown,qa).
+rte4(488,entailment,qa).
+rte4(489,entailment,qa).
+rte4(490,entailment,qa).
+rte4(491,unknown,qa).
+rte4(492,entailment,qa).
+rte4(493,unknown,qa).
+rte4(494,entailment,qa).
+rte4(495,contradiction,qa).
+rte4(496,entailment,qa).
+rte4(497,entailment,qa).
+rte4(498,unknown,qa).
+rte4(499,unknown,qa).
+rte4(500,unknown,qa).
+rte4(501,entailment,sum).
+rte4(502,unknown,sum).
+rte4(503,unknown,sum).
+rte4(504,unknown,sum).
+rte4(505,unknown,sum).
+rte4(506,entailment,sum).
+rte4(507,unknown,sum).
+rte4(508,entailment,sum).
+rte4(509,entailment,sum).
+rte4(510,entailment,sum).
+rte4(511,unknown,sum).
+rte4(512,unknown,sum).
+rte4(513,unknown,sum).
+rte4(514,entailment,sum).
+rte4(515,unknown,sum).
+rte4(516,unknown,sum).
+rte4(517,entailment,sum).
+rte4(518,unknown,sum).
+rte4(519,unknown,sum).
+rte4(520,entailment,sum).
+rte4(521,entailment,sum).
+rte4(522,unknown,sum).
+rte4(523,unknown,sum).
+rte4(524,entailment,sum).
+rte4(525,unknown,sum).
+rte4(526,entailment,sum).
+rte4(527,unknown,sum).
+rte4(528,entailment,sum).
+rte4(529,entailment,sum).
+rte4(530,unknown,sum).
+rte4(531,contradiction,sum).
+rte4(532,unknown,sum).
+rte4(533,unknown,sum).
+rte4(534,contradiction,sum).
+rte4(535,unknown,sum).
+rte4(536,entailment,sum).
+rte4(537,entailment,sum).
+rte4(538,entailment,sum).
+rte4(539,entailment,sum).
+rte4(540,unknown,sum).
+rte4(541,entailment,sum).
+rte4(542,entailment,sum).
+rte4(543,entailment,sum).
+rte4(544,unknown,sum).
+rte4(545,contradiction,sum).
+rte4(546,entailment,sum).
+rte4(547,entailment,sum).
+rte4(548,unknown,sum).
+rte4(549,entailment,sum).
+rte4(550,entailment,sum).
+rte4(551,contradiction,sum).
+rte4(552,entailment,sum).
+rte4(553,unknown,sum).
+rte4(554,entailment,sum).
+rte4(555,entailment,sum).
+rte4(556,entailment,sum).
+rte4(557,unknown,sum).
+rte4(558,entailment,sum).
+rte4(559,entailment,sum).
+rte4(560,contradiction,sum).
+rte4(561,entailment,sum).
+rte4(562,contradiction,sum).
+rte4(563,unknown,sum).
+rte4(564,unknown,sum).
+rte4(565,entailment,sum).
+rte4(566,contradiction,sum).
+rte4(567,entailment,sum).
+rte4(568,entailment,sum).
+rte4(569,unknown,sum).
+rte4(570,entailment,sum).
+rte4(571,entailment,sum).
+rte4(572,entailment,sum).
+rte4(573,unknown,sum).
+rte4(574,unknown,sum).
+rte4(575,unknown,sum).
+rte4(576,contradiction,sum).
+rte4(577,unknown,sum).
+rte4(578,contradiction,sum).
+rte4(579,contradiction,sum).
+rte4(580,entailment,sum).
+rte4(581,unknown,sum).
+rte4(582,unknown,sum).
+rte4(583,contradiction,sum).
+rte4(584,unknown,sum).
+rte4(585,entailment,sum).
+rte4(586,entailment,sum).
+rte4(587,contradiction,sum).
+rte4(588,unknown,sum).
+rte4(589,unknown,sum).
+rte4(590,entailment,sum).
+rte4(591,entailment,sum).
+rte4(592,entailment,sum).
+rte4(593,unknown,sum).
+rte4(594,unknown,sum).
+rte4(595,unknown,sum).
+rte4(596,unknown,sum).
+rte4(597,entailment,sum).
+rte4(598,entailment,sum).
+rte4(599,entailment,sum).
+rte4(600,contradiction,sum).
+rte4(601,entailment,sum).
+rte4(602,entailment,sum).
+rte4(603,entailment,sum).
+rte4(604,unknown,sum).
+rte4(605,entailment,sum).
+rte4(606,unknown,sum).
+rte4(607,entailment,sum).
+rte4(608,unknown,sum).
+rte4(609,contradiction,sum).
+rte4(610,entailment,sum).
+rte4(611,contradiction,sum).
+rte4(612,contradiction,sum).
+rte4(613,contradiction,sum).
+rte4(614,entailment,sum).
+rte4(615,entailment,sum).
+rte4(616,entailment,sum).
+rte4(617,contradiction,sum).
+rte4(618,entailment,sum).
+rte4(619,contradiction,sum).
+rte4(620,entailment,sum).
+rte4(621,contradiction,sum).
+rte4(622,unknown,sum).
+rte4(623,unknown,sum).
+rte4(624,entailment,sum).
+rte4(625,unknown,sum).
+rte4(626,entailment,sum).
+rte4(627,entailment,sum).
+rte4(628,entailment,sum).
+rte4(629,entailment,sum).
+rte4(630,contradiction,sum).
+rte4(631,unknown,sum).
+rte4(632,entailment,sum).
+rte4(633,entailment,sum).
+rte4(634,entailment,sum).
+rte4(635,unknown,sum).
+rte4(636,unknown,sum).
+rte4(637,entailment,sum).
+rte4(638,unknown,sum).
+rte4(639,entailment,sum).
+rte4(640,unknown,sum).
+rte4(641,unknown,sum).
+rte4(642,entailment,sum).
+rte4(643,entailment,sum).
+rte4(644,entailment,sum).
+rte4(645,unknown,sum).
+rte4(646,contradiction,sum).
+rte4(647,entailment,sum).
+rte4(648,unknown,sum).
+rte4(649,entailment,sum).
+rte4(650,unknown,sum).
+rte4(651,contradiction,sum).
+rte4(652,unknown,sum).
+rte4(653,entailment,sum).
+rte4(654,entailment,sum).
+rte4(655,unknown,sum).
+rte4(656,entailment,sum).
+rte4(657,unknown,sum).
+rte4(658,entailment,sum).
+rte4(659,unknown,sum).
+rte4(660,contradiction,sum).
+rte4(661,unknown,sum).
+rte4(662,entailment,sum).
+rte4(663,unknown,sum).
+rte4(664,contradiction,sum).
+rte4(665,unknown,sum).
+rte4(666,entailment,sum).
+rte4(667,entailment,sum).
+rte4(668,entailment,sum).
+rte4(669,unknown,sum).
+rte4(670,entailment,sum).
+rte4(671,unknown,sum).
+rte4(672,entailment,sum).
+rte4(673,entailment,sum).
+rte4(674,entailment,sum).
+rte4(675,entailment,sum).
+rte4(676,contradiction,sum).
+rte4(677,entailment,sum).
+rte4(678,entailment,sum).
+rte4(679,unknown,sum).
+rte4(680,entailment,sum).
+rte4(681,contradiction,sum).
+rte4(682,contradiction,sum).
+rte4(683,entailment,sum).
+rte4(684,entailment,sum).
+rte4(685,unknown,sum).
+rte4(686,entailment,sum).
+rte4(687,entailment,sum).
+rte4(688,entailment,sum).
+rte4(689,contradiction,sum).
+rte4(690,entailment,sum).
+rte4(691,entailment,sum).
+rte4(692,contradiction,sum).
+rte4(693,entailment,sum).
+rte4(694,entailment,sum).
+rte4(695,entailment,sum).
+rte4(696,unknown,sum).
+rte4(697,entailment,sum).
+rte4(698,entailment,sum).
+rte4(699,unknown,sum).
+rte4(700,unknown,sum).
+rte4(701,entailment,ie).
+rte4(702,unknown,ie).
+rte4(703,contradiction,ie).
+rte4(704,contradiction,ie).
+rte4(705,contradiction,ie).
+rte4(706,unknown,ie).
+rte4(707,entailment,ie).
+rte4(708,entailment,ie).
+rte4(709,entailment,ie).
+rte4(710,unknown,ie).
+rte4(711,unknown,ie).
+rte4(712,unknown,ie).
+rte4(713,unknown,ie).
+rte4(714,entailment,ie).
+rte4(715,contradiction,ie).
+rte4(716,unknown,ie).
+rte4(717,entailment,ie).
+rte4(718,entailment,ie).
+rte4(719,unknown,ie).
+rte4(720,unknown,ie).
+rte4(721,entailment,ie).
+rte4(722,unknown,ie).
+rte4(723,entailment,ie).
+rte4(724,entailment,ie).
+rte4(725,entailment,ie).
+rte4(726,entailment,ie).
+rte4(727,entailment,ie).
+rte4(728,entailment,ie).
+rte4(729,unknown,ie).
+rte4(730,entailment,ie).
+rte4(731,unknown,ie).
+rte4(732,unknown,ie).
+rte4(733,entailment,ie).
+rte4(734,entailment,ie).
+rte4(735,unknown,ie).
+rte4(736,entailment,ie).
+rte4(737,entailment,ie).
+rte4(738,entailment,ie).
+rte4(739,unknown,ie).
+rte4(740,entailment,ie).
+rte4(741,entailment,ie).
+rte4(742,unknown,ie).
+rte4(743,entailment,ie).
+rte4(744,unknown,ie).
+rte4(745,unknown,ie).
+rte4(746,unknown,ie).
+rte4(747,unknown,ie).
+rte4(748,contradiction,ie).
+rte4(749,unknown,ie).
+rte4(750,entailment,ie).
+rte4(751,entailment,ie).
+rte4(752,unknown,ie).
+rte4(753,unknown,ie).
+rte4(754,entailment,ie).
+rte4(755,unknown,ie).
+rte4(756,entailment,ie).
+rte4(757,entailment,ie).
+rte4(758,contradiction,ie).
+rte4(759,entailment,ie).
+rte4(760,unknown,ie).
+rte4(761,entailment,ie).
+rte4(762,entailment,ie).
+rte4(763,entailment,ie).
+rte4(764,unknown,ie).
+rte4(765,unknown,ie).
+rte4(766,unknown,ie).
+rte4(767,unknown,ie).
+rte4(768,entailment,ie).
+rte4(769,entailment,ie).
+rte4(770,entailment,ie).
+rte4(771,entailment,ie).
+rte4(772,entailment,ie).
+rte4(773,contradiction,ie).
+rte4(774,unknown,ie).
+rte4(775,unknown,ie).
+rte4(776,entailment,ie).
+rte4(777,entailment,ie).
+rte4(778,entailment,ie).
+rte4(779,contradiction,ie).
+rte4(780,unknown,ie).
+rte4(781,entailment,ie).
+rte4(782,entailment,ie).
+rte4(783,entailment,ie).
+rte4(784,entailment,ie).
+rte4(785,entailment,ie).
+rte4(786,entailment,ie).
+rte4(787,contradiction,ie).
+rte4(788,entailment,ie).
+rte4(789,entailment,ie).
+rte4(790,entailment,ie).
+rte4(791,entailment,ie).
+rte4(792,entailment,ie).
+rte4(793,unknown,ie).
+rte4(794,contradiction,ie).
+rte4(795,entailment,ie).
+rte4(796,entailment,ie).
+rte4(797,unknown,ie).
+rte4(798,entailment,ie).
+rte4(799,entailment,ie).
+rte4(800,unknown,ie).
+rte4(801,entailment,ie).
+rte4(802,unknown,ie).
+rte4(803,contradiction,ie).
+rte4(804,entailment,ie).
+rte4(805,entailment,ie).
+rte4(806,entailment,ie).
+rte4(807,entailment,ie).
+rte4(808,unknown,ie).
+rte4(809,entailment,ie).
+rte4(810,entailment,ie).
+rte4(811,contradiction,ie).
+rte4(812,contradiction,ie).
+rte4(813,entailment,ie).
+rte4(814,entailment,ie).
+rte4(815,entailment,ie).
+rte4(816,entailment,ie).
+rte4(817,contradiction,ie).
+rte4(818,unknown,ie).
+rte4(819,unknown,ie).
+rte4(820,entailment,ie).
+rte4(821,entailment,ie).
+rte4(822,contradiction,ie).
+rte4(823,entailment,ie).
+rte4(824,unknown,ie).
+rte4(825,contradiction,ie).
+rte4(826,entailment,ie).
+rte4(827,unknown,ie).
+rte4(828,entailment,ie).
+rte4(829,entailment,ie).
+rte4(830,entailment,ie).
+rte4(831,entailment,ie).
+rte4(832,entailment,ie).
+rte4(833,entailment,ie).
+rte4(834,unknown,ie).
+rte4(835,unknown,ie).
+rte4(836,entailment,ie).
+rte4(837,entailment,ie).
+rte4(838,entailment,ie).
+rte4(839,contradiction,ie).
+rte4(840,entailment,ie).
+rte4(841,unknown,ie).
+rte4(842,entailment,ie).
+rte4(843,entailment,ie).
+rte4(844,entailment,ie).
+rte4(845,entailment,ie).
+rte4(846,entailment,ie).
+rte4(847,unknown,ie).
+rte4(848,entailment,ie).
+rte4(849,entailment,ie).
+rte4(850,entailment,ie).
+rte4(851,unknown,ie).
+rte4(852,contradiction,ie).
+rte4(853,entailment,ie).
+rte4(854,entailment,ie).
+rte4(855,entailment,ie).
+rte4(856,entailment,ie).
+rte4(857,unknown,ie).
+rte4(858,entailment,ie).
+rte4(859,unknown,ie).
+rte4(860,entailment,ie).
+rte4(861,entailment,ie).
+rte4(862,contradiction,ie).
+rte4(863,entailment,ie).
+rte4(864,entailment,ie).
+rte4(865,entailment,ie).
+rte4(866,entailment,ie).
+rte4(867,contradiction,ie).
+rte4(868,entailment,ie).
+rte4(869,entailment,ie).
+rte4(870,entailment,ie).
+rte4(871,entailment,ie).
+rte4(872,entailment,ie).
+rte4(873,unknown,ie).
+rte4(874,entailment,ie).
+rte4(875,entailment,ie).
+rte4(876,entailment,ie).
+rte4(877,unknown,ie).
+rte4(878,unknown,ie).
+rte4(879,entailment,ie).
+rte4(880,unknown,ie).
+rte4(881,unknown,ie).
+rte4(882,unknown,ie).
+rte4(883,unknown,ie).
+rte4(884,unknown,ie).
+rte4(885,contradiction,ie).
+rte4(886,contradiction,ie).
+rte4(887,contradiction,ie).
+rte4(888,unknown,ie).
+rte4(889,unknown,ie).
+rte4(890,unknown,ie).
+rte4(891,unknown,ie).
+rte4(892,unknown,ie).
+rte4(893,unknown,ie).
+rte4(894,entailment,ie).
+rte4(895,contradiction,ie).
+rte4(896,entailment,ie).
+rte4(897,entailment,ie).
+rte4(898,unknown,ie).
+rte4(899,entailment,ie).
+rte4(900,entailment,ie).
+rte4(901,unknown,ie).
+rte4(902,entailment,ie).
+rte4(903,contradiction,ie).
+rte4(904,unknown,ie).
+rte4(905,contradiction,ie).
+rte4(906,contradiction,ie).
+rte4(907,contradiction,ie).
+rte4(908,unknown,ie).
+rte4(909,contradiction,ie).
+rte4(910,unknown,ie).
+rte4(911,entailment,ie).
+rte4(912,entailment,ie).
+rte4(913,unknown,ie).
+rte4(914,entailment,ie).
+rte4(915,entailment,ie).
+rte4(916,contradiction,ie).
+rte4(917,unknown,ie).
+rte4(918,entailment,ie).
+rte4(919,entailment,ie).
+rte4(920,unknown,ie).
+rte4(921,contradiction,ie).
+rte4(922,unknown,ie).
+rte4(923,contradiction,ie).
+rte4(924,entailment,ie).
+rte4(925,entailment,ie).
+rte4(926,entailment,ie).
+rte4(927,entailment,ie).
+rte4(928,unknown,ie).
+rte4(929,entailment,ie).
+rte4(930,unknown,ie).
+rte4(931,unknown,ie).
+rte4(932,unknown,ie).
+rte4(933,unknown,ie).
+rte4(934,entailment,ie).
+rte4(935,entailment,ie).
+rte4(936,entailment,ie).
+rte4(937,entailment,ie).
+rte4(938,contradiction,ie).
+rte4(939,entailment,ie).
+rte4(940,entailment,ie).
+rte4(941,unknown,ie).
+rte4(942,contradiction,ie).
+rte4(943,unknown,ie).
+rte4(944,contradiction,ie).
+rte4(945,contradiction,ie).
+rte4(946,contradiction,ie).
+rte4(947,contradiction,ie).
+rte4(948,entailment,ie).
+rte4(949,unknown,ie).
+rte4(950,unknown,ie).
+rte4(951,entailment,ie).
+rte4(952,contradiction,ie).
+rte4(953,unknown,ie).
+rte4(954,entailment,ie).
+rte4(955,entailment,ie).
+rte4(956,entailment,ie).
+rte4(957,contradiction,ie).
+rte4(958,unknown,ie).
+rte4(959,unknown,ie).
+rte4(960,unknown,ie).
+rte4(961,entailment,ie).
+rte4(962,entailment,ie).
+rte4(963,unknown,ie).
+rte4(964,entailment,ie).
+rte4(965,entailment,ie).
+rte4(966,entailment,ie).
+rte4(967,unknown,ie).
+rte4(968,entailment,ie).
+rte4(969,entailment,ie).
+rte4(970,contradiction,ie).
+rte4(971,entailment,ie).
+rte4(972,unknown,ie).
+rte4(973,unknown,ie).
+rte4(974,unknown,ie).
+rte4(975,contradiction,ie).
+rte4(976,unknown,ie).
+rte4(977,contradiction,ie).
+rte4(978,unknown,ie).
+rte4(979,unknown,ie).
+rte4(980,entailment,ie).
+rte4(981,contradiction,ie).
+rte4(982,unknown,ie).
+rte4(983,unknown,ie).
+rte4(984,entailment,ie).
+rte4(985,unknown,ie).
+rte4(986,unknown,ie).
+rte4(987,entailment,ie).
+rte4(988,unknown,ie).
+rte4(989,entailment,ie).
+rte4(990,entailment,ie).
+rte4(991,unknown,ie).
+rte4(992,unknown,ie).
+rte4(993,contradiction,ie).
+rte4(994,unknown,ie).
+rte4(995,unknown,ie).
+rte4(996,unknown,ie).
+rte4(997,unknown,ie).
+rte4(998,entailment,ie).
+rte4(999,unknown,ie).
+rte4(1000,unknown,ie).
+

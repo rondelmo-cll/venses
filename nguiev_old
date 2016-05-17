@@ -1,0 +1,1182 @@
+﻿
+:- style_check(-singleton).
+:- use_module(library(pce)).
+:- use_module(library(sgml)).
+:- pce_autoload(finder, library(find_file)).
+:- pce_global(@finder, new(finder)).
+/*:- include(inits).
+:- make_all.*/
+
+
+
+/* gui/0: Predicato principale che chiama la finestra coi menu */
+
+gui :-
+	new(Frame, frame('GETARUNS - VENSES')),
+%	new(Frame, font(screen, roman, 13)),
+	send(Frame, append, new(MD, dialog)),
+	send(MD, append, new(MB, menu_bar)),
+        	send(MD, pen, 4),
+        	send(MD, gap, size(15, 40)),
+	send(new(BD, dialog),below(MD)),
+	send(BD, append, new(T, text('Università Ca\' Foscari\nLaboratory of Computational Linguistics\n\GEneral TExt and Reference UNderstanding\n System - Venice Semantic Evaluator',center,normal))),
+
+	send_list(MB, append, 
+		  [ new(File, popup(file)),
+		    new(Analyse_DRs, popup(analyze_drs)),
+		    new(Analyse_DM, popup(analyze_dm)),
+		    new(RTE_deep, popup(rte_deep)),
+		    new(RTE_quantity, popup(rte_quantity)),
+		    new(RTE_shallow, popup(rte_shallow)),
+                    new(Help, popup(help))
+                  ]),
+
+        send_list(File, append,
+		  [ menu_item(close, message(Frame, destroy))
+		  ]),
+
+	send_list(Analyse_DRs, append,
+		  [ menu_item(one_text_file,
+			      message(@prolog, loadfile1)),
+		    menu_item(all_text_files,
+			      message(@prolog, loadfiles1))
+		  ]),
+
+	send_list(Analyse_DM, append,
+		  [ menu_item(one_text_file,
+			      message(@prolog, loadfile11)),
+		    menu_item(rte_text_files,
+			      message(@prolog, loadfiles2))
+
+		  ]),
+
+	send_list(RTE_deep, append,
+		  [ menu_item(one_snippet,
+			      message(@prolog, loadfilec)),
+		    menu_item(all_snippets,
+			      message(@prolog, loadfilesc)),
+		    menu_item(tac_text_challenge,
+			      message(@prolog, loadfilest))
+		  ]),
+
+	send_list(RTE_quantity, append,
+		  [ menu_item(one_snippet,
+			      message(@prolog, loadfilep)),
+		    menu_item(all_snippets,
+			      message(@prolog, loadfilesp))
+		  ]),
+
+	send_list(RTE_shallow, append,
+		  [ menu_item(one_snippet,
+			      message(@prolog, loadfileh)),
+		    menu_item(all_snippets,
+			      message(@prolog, loadfilesh))
+		  ]),
+
+	send_list(Help, append,
+		  [ menu_item(help,
+			      message(@prolog, helpa)),
+		     menu_item(info,
+			      message(@prolog, info))
+		  ]),
+
+       send(Frame, open).
+
+/* loadfile/0: Chiama il file finder ed esegue l'analisi di un file di testo */
+
+
+loadfilest :-
+       abolish(th/4),
+       consult(testsetw),
+       findall(N-F-T-H,
+                 th(N,F,T,H), Files),
+       sommat(Files).
+
+loadfilec :-
+       get(@finder, file, exists := @on, FileName),
+       somma1(FileName).
+
+loadfilep :-
+       get(@finder, file, exists := @on, FileName),
+       somma2(FileName).
+
+loadfileh :-
+       get(@finder, file, exists := @on, FileName),
+       somma3(FileName).
+
+loadfile1 :-
+       get(@finder, file, exists := @on, FileName),
+       geta(FileName).
+
+loadfile11 :-
+       get(@finder, file, exists := @on, FileName),
+       getadm(FileName).
+
+/*
+loadfile :-
+       get(@finder, file, exists := @on, FileName),
+       file_directory_name(FileName,Dir),       
+       working_directory(_,Dir),
+       expand_file_name(*,Files),
+       somma(Files).
+*/
+
+/* loadfiles/0: Chiama il file finder ed esegue l'analisi di un folder di file di testo */
+
+loadfilesc :-
+       get(@finder, file, exists := @on, FileName),
+       file_directory_name(FileName,Dir),       
+       working_directory(_,Dir),
+       expand_file_name(*,Files),
+       evaluate1(Dir,Files).
+
+loadfilesp :-
+       get(@finder, file, exists := @on, FileName),
+       file_directory_name(FileName,Dir),       
+       working_directory(_,Dir),
+       expand_file_name(*,Files),
+       evaluate2(Dir,Files).
+
+loadfilesh :-
+       get(@finder, file, exists := @on, FileName),
+       file_directory_name(FileName,Dir),       
+       working_directory(_,Dir),
+       expand_file_name(*,Files),
+       evaluate3(Dir,Files).
+
+loadfiles1 :-
+       get(@finder, file, exists := @on, FileName),
+       file_directory_name(FileName,Dir),       
+       working_directory(_,Dir),
+       expand_file_name(*,Files),
+       getarun(Dir,Files).
+
+loadfiles11 :-
+       get(@finder, file, exists := @on, FileName),
+       file_directory_name(FileName,Dir),       
+       working_directory(_,Dir),
+       expand_file_name(*,Files),
+       getarundm(Dir,Files).
+
+loadfiles2 :-
+       get(@finder, file, exists := @on, FileName),
+       file_directory_name(FileName,Dir),       
+       working_directory(_,Dir),
+       expand_file_name(*,Files),
+       rtegetarun(Dir,Files).
+
+/* makeframe/1: crea la finestra per l'analisi ed indirizza l'output su di essa */
+
+makeframe(Str) :-
+   new(F, frame('Analysis')),
+   send(F, append(new(V, view))),
+%   send(V,font, bold),
+   send(F, open),
+   pce_open(V, append, Str),
+   tell(Str).
+
+makeframe2(Str) :-
+   new(F, frame('Model')),
+   send(F, append(new(V, view))),
+%   send(V,font, bold),
+   send(F, open),
+   pce_open(V, append, Str),
+   tell(Str).
+
+
+sommat(In) :-
+%       makeframe(Str),
+       tell(evaluation),
+       retractall(statsfp(_,_,_,_,_)),
+       asserta(statsfp(0,0,0,0,0)),
+       retractall(tac(_,_)),
+       thopenallfile(1,In,Out),
+       compute_ft_total(NFile,Stats),nl,
+       told, tell(tacevaluation),
+       writealltac,
+       told.
+
+
+somma1(In) :-
+       makeframe(Str), rteparseonetext1(In,Str).
+
+somma2(In) :-
+       makeframe(Str), rteparseonetext2(In,Str).
+
+somma3(In) :-
+       makeframe(Str), rteparseonetext3(In,Str).
+
+evaluate1(Dir,Files):-
+%       makeframe(Str),
+       tell('outs/evaluation'),
+       rte_all_texts1(Files,Str), told.
+
+evaluate2(Dir,Files):-
+%       makeframe(Str), 
+       tell('outs/evaluation'),
+       rte_all_texts2(Files,Str), told.
+
+evaluate3(Dir,Files):-
+%       makeframe(Str), 
+       tell('outs/evaluation'),
+       rte_all_texts3(Files,Str), told.
+
+geta(In) :-
+%       makeframe(Str),
+       tell(output),
+       getonetext(In,Str).
+
+getarun(Dir,Files):-
+       makeframe(Str), 
+       parseall_texts(Files,Str).
+
+getadm(In) :-
+       makeframe(Str), getdmonetext(In,Str).
+
+getarundm(Dir,Files):-
+       makeframe(Str), 
+       parseall_texts(Files,Str).
+       
+rtegetarun(Dir,Files):-
+       makeframe(Str), 
+       rteparseall_texts(Files,Str).
+
+thopenallfile(NoFr, [],[]):-
+   !.
+thopenallfile(NoFr, [N-T-Text-Hyp|Noms],[Eval|Evaluation]):-
+   retractall(current_num(_,_)),
+%     assert(fp(_,_)),
+%   extract_title(Text, Rest, Tops),
+   concat_atom(Txt,' ',Text),
+   callnewtager(N,Txt,Output),
+   concat_atom(Txth,' ',Hyp),
+   cnewtager(N,Txth,Outpu),
+   findall(Code,fp(Code,_), Codes),
+   length(Codes,L),
+   init_sems,
+%   composefilename(N,File),
+   composefilename1(N,File),
+   allparse_discourses(L,Input,Codes, 0, Nn, Evals),
+   evaluate_one_folder1(File,Evals, Stat),
+   NewNo is NoFr + 1,
+   thopenallfile(NewNo,Noms,Evaluation),
+   !.
+
+composefilename1(N,File):-
+   evl(N,True),
+   maketype(True,P),
+   mcon(id,'_',T),
+   mcon(T,N,T2),
+   mcon(T2,P,File),
+   !.
+ 
+ maketype(true,'T').
+ maketype(false,'F').
+ 
+composefilename(N,File):-
+   random(I),
+   term_to_atom(I,K),
+   stringof(List,K),
+   List=[0,'.',S|_],
+   decideodd(S,P),
+   mcon(id,'_',T),
+   mcon(T,N,T2),
+   mcon(T2,P,File),
+   !.
+
+decideodd(S,'F'):-
+   S=1;S=3;S=5;S=7,
+   !.
+decideodd(S,'T'):-
+   !.
+   
+getonetext(Text,Output):-
+  retractall(current_num(_,_)),
+   extract_title(Text, Tops),
+  newtager(Text,Output),
+  findall(Code,fp(Code,_), Codes),
+  init_sems,
+   nstart,
+   start,
+   newopen_file('Macintosh HD:dumps', Codes, Stats,1,1),
+  findall(Sym-A-B-C-D-E-F-G-H, sd_structure(Sym,A,B,C,D,E,F,G,H), Stru),
+  subtract(Stru,[nil-nil-nil-nil-nil-nil-nil-nil-nil],Str),
+  nl,
+  writenl(_,'Discourse Relations'),
+  writeseqnl(Str), told.
+
+getdmonetext(Text,Output):-
+  retractall(current_num(_,_)),
+  newtager(Text,Output),
+  findall(Code,fp(Code,_), Codes),
+  init_sems,
+   nstart,
+   start,
+  dmnewopen_file(Codes, Stats,1,1),
+  findall(Sym-A-B-C-D-E-F-G-H, sd_structure(Sym,A,B,C,D,E,F,G,H), Stru),
+  subtract(Stru,[nil-nil-nil-nil-nil-nil-nil-nil-nil],Str),
+  nl,
+  writenl(_,'Discourse Relations'),
+  writeseqnl(Str), 
+  told,
+     makeframe2(Str1), 
+   write_model(Text,Co),
+   told.
+
+writealldrs:-
+  findall(Sym-A-B-C-D-E-F-G-H, sd_structure(Sym,A,B,C,D,E,F,G,H), Stru),
+  subtract(Stru,[nil-nil-nil-nil-nil-nil-nil-nil-nil],Str),
+  nl,
+  writenl(_,'Discourse Relations'),
+  writeseqnl(Str), 
+  !.
+  
+dmnewopen_file([], [], _, _):-!.
+
+dmnewopen_file([Text|Noms], [Stat|Stats], NoFr, NoCl):-
+   writenl(_,Text),
+   getcfilename(Text,Outs,Name),
+   fp(Text,Sent),
+   writeseqnl(_,Sent),
+   dmnewparse_discourse(Text, Sent, NoFr, NoCl, NewCl, Stat),
+   NewNo is NoFr + 1,
+   nl,nl,
+   garb_coll(NoFr),
+   dmnewopen_file(Noms, Stats, NewNo, NewCl),
+   !.
+
+dmnewparse_discourse(Code, Sent, NoFr, NoCl, NewNoCl, [Evaluation-Code|Evals]) :-
+  retractall(frase_corrente(_,_)),
+  dmnewhypo_parse(NoFr, Code, Sent, Out, NoCl, NewNoCl, Input, Evaluation),
+  !.
+
+dmnewhypo_parse(NoFr, Symb, Sent, [Tags,Scored], NoCl, NewNoCl, Input, Alls):-
+   dyn_ext_pron,
+   writesymb_assert(NoFr, Symb),
+   tagging_disamb(NoFr, Sent, Disambs, Tags,  Scored, Input,Output,Frase),
+   allparsers(NoFr, Frase, Input, Disambs, Tags, Ibars, Scored, Output, Out, No),
+   discourse(NoFr, Symb, Input, Scored, Out, WeightedRefs),
+   pasbuild_dsr(NoFr,Symb, Ibars, AllPAS, NoCl, NewCl),
+%   append([DSR],[WeightedRefs],Alls),
+   betterrelsrefs(AllPAS,[], [],WeightedRefs,AllRefss, PAS),
+   ntopic_stack(Main-F, Sec-F1, Pot-F2, Ante-Pro),
+   historylist(NoFr,[Main-F, Sec-F1, Pot-F2, Ante-Pro],Mods,AllRefss,NRefs,Inds,RelCls),
+   recover_relative_clause(RelCls, PAS, NRefs, Aggs, Inds, NInds, AllRels, AllRef, AllAggs),
+   dmextract_properties(NoFr, AllRef, Out),
+   do_assertrels(AllRef,NoFr,AllRels, AllAggs,Control,NInds, RelIds),
+   nl,nl,write(' Discourse Model '), nl,nl,
+   nwrite_sentence_infons(model,NoFr),
+   findall(Symb-B-C-D-E-F-G-H, sd_structure(Symb,B,C,D,E,F,G,H,I), Stru),
+   updateCl(Stru,NoCl,NewNoCl),
+     !.
+
+parseall_texts(Files,Output):-
+   openallfile(Files,Output),
+   !.
+openallfile([],Output):-!.
+
+openallfile([outs|Noms],Output):-
+   openallfile(Noms,Output),
+   !.
+openallfile([Text|Noms],Output):-
+   parsetext(Text,Output,Out),
+   findall(Sym-A-B-C-D-E-F-G-H, sd_structure(Sym,A,B,C,D,E,F,G,H), Stru),
+   writeseqnl(Stru),
+   openallfile(Noms,Output),
+   !.
+
+rteparseall_texts(Files,Output):-
+   rteopenallfile(Files,Output,Evaluations,Sents),
+   cd(ipotesi),
+       expand_file_name(*,HFiles),
+   txtopenallfile(1,HFiles,Hypotheses),
+   match_text_hypoths(Sents,Evaluations,Hypotheses,Outs),
+   decomposeindices(Outs,Inds),
+   tell('outs/evaluation'),
+   writeseqnl(Inds), told,
+   !.
+
+txtopenallfile(N,[],[]):-!.
+
+txtopenallfile(NoFr, [outs|Noms],Evaluation):-
+   txtopenallfile(NoFr, Noms,Evaluation),
+   !.
+txtopenallfile(NoFr, [Text|Noms],[Eval|Evaluation]):-
+   newtager(Text,Output),
+   findall(Code,fp(Code,_), Codes),
+   init_sems,
+   nstart,
+   start,
+   writenl(_,Text),
+   fp(Code,Sent),
+   writeseqnl(_,Sent),
+   newparse_discourse(Logfile,Codes,NoFr, 0, NewCl, Eval),
+   NewNo is NoFr + 1,
+   txtopenallfile(NewNo,Noms,Evaluation),
+   !.
+
+rteopenallfile([],Output,[],[]):-!.
+
+rteopenallfile([ipotesi|Noms],Output,Evaluation,All):-
+   rteopenallfile(Noms,Output,Evaluation,All),
+   !.
+rteopenallfile([outs|Noms],Output,Evaluation,All):-
+   rteopenallfile(Noms,Output,Evaluation,All),
+   !.
+rteopenallfile([Text|Noms],Output,[Eval|Evaluation],[Sents|All]):-
+   extract_title(Text, Tops),
+   parsetext(Text,Output,Eval),
+   findall(Code-Sent,fp(Code,Sent), Sents),
+   rteopenallfile(Noms,Output,Evaluation,All),
+   !.
+
+evaluate_all_files(Dir,SubDirs,NFile):-
+   retractall(statsfp(_,_,_,_,_)),
+   asserta(statsfp(0,0,0,0,0)),
+   retractall(tac(_,_)),
+   tell(NFile),
+   open_rte_folders(Dir,NFile,SubDirs, Stats),
+   compute_ft_total(NFile,Stats),nl,
+   writealltac,
+   told,
+   !.
+open_rte_folders(Dir,NFile,[], []):-!.
+
+open_rte_folders(Dir,NFile,[Text|Noms], [Stat|Stats]):-
+       mcon(Dir,'/',NDir),
+       mcon(NDir,Text,NewDir),
+%       file_directory_name(NewDir,Dirs),       
+       working_directory(_, NewDir),
+       expand_file_name(*,Files),
+       evaluate_one_folder(Text,NFile, Files,Stat),
+   open_rte_folders(Dir,NFile,Noms, Stats),
+   !.
+
+
+/* helpa/0: Apre la finestra di aiuto */
+
+helpa :-
+   new(F, frame('Venses - Help')),
+   send(F, append(new(V, view))),
+   send(V,font, normal),
+   send(F, open),
+   pce_open(V, append, Str),
+   tell(Str),
+   writea.
+
+writea :- write('VENSES\n\Venses is a text understanding system for the English language which produces semantic interpretation and discourse relation automatic classification under the menu Analyze_DRs. It produces DRs and a Discourse Model which encompasses all entities and their properties and relations under the menu Analyze_DM. It also produces semantic evaluation under the menu Rte, according to the protocol introduced by the RTE Challenge where a sequence of sentences identified as the Text is followed by one or two sentences identified as Hypothesis: the system has to evaluate whether the Hypothesis is entailed or not by the Text. The versions of the evaluator are three:\n Deep - which uses semantic structure and measures semantic similarity trying inferences on the basis of WordNet, Roget\'s Thesaurus and other similar resources;\n Quantitative - which measures the quantity of common syntactic and semantic information shared on the basis of structural information and semantic roles;\n Hybrid - uses a light Logical Form derived from syntactic structure and checks semantic non contradictoriness at propositional level.'),nl.	
+
+/* info/0: Apre la finestra di info */
+
+info :-
+   new(FA, frame('Venses - Info')),
+   send(FA, append(new(DA,dialog))),
+   send(DA, append(new(TA,text('Venses v. alpha \(4/2005\)',center,bold)))),
+   send(new(TA1,text('Laboratory of Computational Linguistics\nUniversità Ca\' Foscari - Venezia\nemail: delmont@unive.it',center)),below,TA),
+   send(FA, open).
+
+
+/*
+new(@demo, dialog(√ïDemo Window√ï)),
+    send(@772024, x(15)),
+    send(@demo, append(text_item(name))),
+    send(@demo, open),
+    get(@demo, display, D),
+    get(@772024, distance(point(100,100)), Distance),
+    get(@display, size, Size),
+    get(Size, width, W),
+    get(Size, height, H),
+    get(@demo, member(name), TextItem),
+    get(TextItem, selection, Text).
+    
+free(@772024).
+free(@demo).
+free(@display).
+
+new(X, style(@default, @default, @default, @default, @on)).
+new(X, style(underline := @on)).
+area->set: x=[int], y=[int], width=[int], height=[int]
+new(A, area),
+send(A, set(y := 10, height := 50)).
+send(Box, colour(colour(red))),
+send(Box, x(√ï10√ï)), % atom --> int
+send(Box, selected(true)), % atom --> boolean
+send(Text, font(bold)), % atom --> font
+send(Text, string(10)), % int --> string
+send(Box, width(100)) = send(Box, width, 100)
+get(Point, distance(point(10,10), D) = get(Point, distance, point(10,1), D)
+
+wysiwyg(File) :-
+	new(Fr, frame(File)),
+	send(Fr, append, new(D, dialog)),
+	send(new(V, view), below, D),
+	send(V, font, normal),
+	send(D, append,
+	button(define_style,
+		message(@prolog, define_style, Fr))),
+	send(D, append,
+		menu(style, toggle,
+		and(message(@prolog, set_style, Fr, @arg1),
+		message(V, selection, 0, 0),
+		message(@receiver, clear_selection))),
+	right),
+	append_style(Fr, bold, style(font := bold)),
+	append_style(Fr, italic, style(font := italic)),
+	send(V, load, File),
+	send(Fr, open).
+	
+	
+set_style(Fr, Style) :-
+	get(Fr, member, view, V),
+	get(V, selection, point(Start, End)),
+	( Start == End
+		-> send(Fr, report, warning, √ïNo selection√ï)
+		; get(V, text_buffer, TB),
+		new(_, fragment(TB, Start, End-Start, Style))
+	).
+
+Define a new style and add it to the menu and the view.
+
+define_style(Fr) :-
+	ask_style(Fr, Name, Style),
+	append_style(Fr, Name, Style).
+	append_style(Fr, Name, Style) :-
+	get(Fr, member, dialog, D),
+	get(D, member, style, Menu),
+	send(Menu, append, Name),
+	send(Menu, active, @on),
+	get(Fr, member, view, View),
+	send(View, style, Name, Style).
+
+ask_style(Fr, Name, Style) :-
+	new(D, dialog(√ïDefine Style√ï)),
+	      send(D, append,
+		new(N, text_item(name, √ï√ï))),
+	send(D, append,
+		new(S, style_item(style))),
+	send(D, append,
+		button(ok, message(D, return, ok))),
+	send(D, append,
+		button(cancel, message(D, return, cancel))),
+	send(D, default_button, ok),
+	send(D, transient_for, Fr),
+	repeat,
+	get(D, confirm_centered, Fr?area?center, Answer),
+	( Answer == ok
+	-> get(N, selection, Name),
+	( Name == √ï√ï
+	-> send(D, report, error,
+	√ïPlease enter a name√ï),
+	fail
+	; !,
+	get(S, selection, Style),
+	send(Style, lock_object, @on),
+	send(D, destroy)
+	)
+	; !,
+	send(D, destroy),
+	fail
+	).
+
+*/
+
+evl(1,false).
+evl(2,false).
+evl(3,false).
+evl(4,true).
+evl(5,false).
+evl(6,true).
+evl(7,false).
+evl(8,true).
+evl(9,true).
+evl(10,false).
+evl(11,false).
+evl(12,false).
+evl(13,false).
+evl(14,true).
+evl(15,false).
+evl(16,true).
+evl(17,true).
+evl(18,false).
+evl(19,false).
+evl(20,true).
+evl(21,false).
+evl(22,true).
+evl(23,true).
+evl(24,false).
+evl(25,true).
+evl(26,true).
+evl(27,true).
+evl(28,true).
+evl(29,false).
+evl(30,false).
+evl(31,true).
+evl(32,false).
+evl(33,true).
+evl(34,false).
+evl(35,false).
+evl(36,true).
+evl(37,true).
+evl(38,false).
+evl(39,false).
+evl(40,false).
+evl(41,false).
+evl(42,true).
+evl(43,false).
+evl(44,false).
+evl(45,false).
+evl(46,true).
+evl(47,false).
+evl(48,true).
+evl(49,false).
+evl(50,true).
+evl(51,true).
+evl(52,true).
+evl(53,true).
+evl(54,true).
+evl(55,false).
+evl(56,true).
+evl(57,false).
+evl(58,true).
+evl(59,false).
+evl(60,true).
+evl(61,false).
+evl(62,false).
+evl(63,true).
+evl(64,false).
+evl(65,true).
+evl(66,false).
+evl(67,false).
+evl(68,true).
+evl(69,true).
+evl(70,true).
+evl(71,true).
+evl(72,false).
+evl(73,false).
+evl(74,false).
+evl(75,false).
+evl(76,false).
+evl(77,false).
+evl(78,true).
+evl(79,false).
+evl(80,false).
+evl(81,true).
+evl(82,false).
+evl(83,true).
+evl(84,false).
+evl(85,false).
+evl(86,true).
+evl(87,false).
+evl(88,false).
+evl(89,false).
+evl(90,false).
+evl(91,true).
+evl(92,false).
+evl(93,false).
+evl(94,true).
+evl(95,false).
+evl(96,true).
+evl(97,false).
+evl(98,true).
+evl(99,false).
+evl(100,false).
+evl(101,true).
+evl(102,false).
+evl(103,true).
+evl(104,true).
+evl(105,false).
+evl(106,true).
+evl(107,true).
+evl(108,true).
+evl(109,true).
+evl(110,false).
+evl(111,false).
+evl(112,true).
+evl(113,true).
+evl(114,false).
+evl(115,false).
+evl(116,true).
+evl(117,false).
+evl(118,false).
+evl(119,false).
+evl(120,true).
+evl(121,false).
+evl(122,false).
+evl(123,true).
+evl(124,true).
+evl(125,false).
+evl(126,true).
+evl(127,false).
+evl(128,true).
+evl(129,false).
+evl(130,false).
+evl(131,false).
+evl(132,false).
+evl(133,false).
+evl(134,true).
+evl(135,false).
+evl(136,false).
+evl(137,true).
+evl(138,false).
+evl(139,false).
+evl(140,true).
+evl(141,false).
+evl(142,true).
+evl(143,true).
+evl(144,true).
+evl(145,true).
+evl(146,true).
+evl(147,false).
+evl(148,false).
+evl(149,false).
+evl(150,false).
+evl(151,true).
+evl(152,true).
+evl(153,true).
+evl(154,true).
+evl(155,false).
+evl(156,true).
+evl(157,true).
+evl(158,true).
+evl(159,true).
+evl(160,false).
+evl(161,false).
+evl(162,false).
+evl(163,true).
+evl(164,true).
+evl(165,true).
+evl(166,true).
+evl(167,false).
+evl(168,true).
+evl(169,true).
+evl(170,true).
+evl(171,true).
+evl(172,false).
+evl(173,false).
+evl(174,true).
+evl(175,false).
+evl(176,true).
+evl(177,false).
+evl(178,true).
+evl(179,false).
+evl(180,false).
+evl(181,false).
+evl(182,false).
+evl(183,false).
+evl(184,false).
+evl(185,true).
+evl(186,false).
+evl(187,true).
+evl(188,false).
+evl(189,false).
+evl(190,true).
+evl(191,true).
+evl(192,false).
+evl(193,false).
+evl(194,false).
+evl(195,false).
+evl(196,false).
+evl(197,true).
+evl(198,false).
+evl(199,true).
+evl(200,false).
+evl(201,false).
+evl(202,true).
+evl(203,false).
+evl(204,false).
+evl(205,true).
+evl(206,false).
+evl(207,true).
+evl(208,false).
+evl(209,false).
+evl(210,false).
+evl(211,false).
+evl(212,true).
+evl(213,true).
+evl(214,true).
+evl(215,false).
+evl(216,true).
+evl(217,false).
+evl(218,false).
+evl(219,true).
+evl(220,true).
+evl(221,false).
+evl(222,true).
+evl(223,true).
+evl(224,true).
+evl(225,false).
+evl(226,true).
+evl(227,false).
+evl(228,true).
+evl(229,false).
+evl(230,false).
+evl(231,false).
+evl(232,true).
+evl(233,true).
+evl(234,false).
+evl(235,false).
+evl(236,true).
+evl(237,false).
+evl(238,true).
+evl(239,false).
+evl(240,true).
+evl(241,false).
+evl(242,true).
+evl(243,false).
+evl(244,false).
+evl(245,false).
+evl(246,true).
+evl(247,true).
+evl(248,false).
+evl(249,false).
+evl(250,true).
+evl(251,false).
+evl(252,false).
+evl(253,false).
+evl(254,false).
+evl(255,true).
+evl(256,false).
+evl(257,true).
+evl(258,false).
+evl(259,false).
+evl(260,true).
+evl(261,true).
+evl(262,false).
+evl(263,false).
+evl(264,true).
+evl(265,false).
+evl(266,true).
+evl(267,false).
+evl(268,false).
+evl(269,true).
+evl(270,true).
+evl(271,false).
+evl(272,false).
+evl(273,true).
+evl(274,false).
+evl(275,false).
+evl(276,false).
+evl(277,false).
+evl(278,true).
+evl(279,false).
+evl(280,false).
+evl(281,false).
+evl(282,true).
+evl(283,false).
+evl(284,false).
+evl(285,true).
+evl(286,true).
+evl(287,false).
+evl(288,true).
+evl(289,false).
+evl(290,false).
+evl(291,false).
+evl(292,false).
+evl(293,true).
+evl(294,false).
+evl(295,false).
+evl(296,true).
+evl(297,true).
+evl(298,true).
+evl(299,false).
+evl(300,true).
+evl(301,true).
+evl(302,false).
+evl(303,true).
+evl(304,false).
+evl(305,true).
+evl(306,true).
+evl(307,false).
+evl(308,false).
+evl(309,false).
+evl(310,false).
+evl(311,true).
+evl(312,false).
+evl(313,true).
+evl(314,true).
+evl(315,true).
+evl(316,true).
+evl(317,true).
+evl(318,true).
+evl(319,true).
+evl(320,false).
+evl(321,false).
+evl(322,false).
+evl(323,false).
+evl(324,false).
+evl(325,false).
+evl(326,false).
+evl(327,false).
+evl(328,false).
+evl(329,false).
+evl(330,true).
+evl(331,true).
+evl(332,false).
+evl(333,true).
+evl(334,true).
+evl(335,false).
+evl(336,true).
+evl(337,true).
+evl(338,true).
+evl(339,true).
+evl(340,false).
+evl(341,true).
+evl(342,false).
+evl(343,false).
+evl(344,false).
+evl(345,false).
+evl(346,false).
+evl(347,false).
+evl(348,true).
+evl(349,true).
+evl(350,false).
+evl(351,true).
+evl(352,true).
+evl(353,false).
+evl(354,true).
+evl(355,false).
+evl(356,false).
+evl(357,false).
+evl(358,true).
+evl(359,false).
+evl(360,false).
+evl(361,true).
+evl(362,false).
+evl(363,true).
+evl(364,false).
+evl(365,false).
+evl(366,false).
+evl(367,false).
+evl(368,false).
+evl(369,false).
+evl(370,true).
+evl(371,true).
+evl(372,false).
+evl(373,true).
+evl(374,true).
+evl(375,true).
+evl(376,false).
+evl(377,true).
+evl(378,true).
+evl(379,false).
+evl(380,false).
+evl(381,false).
+evl(382,false).
+evl(383,true).
+evl(384,true).
+evl(385,false).
+evl(386,false).
+evl(387,true).
+evl(388,false).
+evl(389,false).
+evl(390,true).
+evl(391,false).
+evl(392,false).
+evl(393,false).
+evl(394,true).
+evl(395,true).
+evl(396,true).
+evl(397,true).
+evl(398,false).
+evl(399,false).
+evl(400,false).
+evl(401,true).
+evl(402,false).
+evl(403,false).
+evl(404,true).
+evl(405,false).
+evl(406,true).
+evl(407,false).
+evl(408,true).
+evl(409,false).
+evl(410,true).
+evl(411,true).
+evl(412,false).
+evl(413,true).
+evl(414,true).
+evl(415,true).
+evl(416,true).
+evl(417,false).
+evl(418,true).
+evl(419,true).
+evl(420,false).
+evl(421,false).
+evl(422,false).
+evl(423,false).
+evl(424,true).
+evl(425,true).
+evl(426,true).
+evl(427,true).
+evl(428,true).
+evl(429,true).
+evl(430,false).
+evl(431,false).
+evl(432,false).
+evl(433,false).
+evl(434,true).
+evl(435,false).
+evl(436,true).
+evl(437,true).
+evl(438,false).
+evl(439,false).
+evl(440,false).
+evl(441,false).
+evl(442,true).
+evl(443,false).
+evl(444,true).
+evl(445,false).
+evl(446,false).
+evl(447,true).
+evl(448,false).
+evl(449,false).
+evl(450,false).
+evl(451,false).
+evl(452,false).
+evl(453,true).
+evl(454,true).
+evl(455,false).
+evl(456,true).
+evl(457,false).
+evl(458,true).
+evl(459,false).
+evl(460,false).
+evl(461,true).
+evl(462,false).
+evl(463,true).
+evl(464,false).
+evl(465,false).
+evl(466,true).
+evl(467,true).
+evl(468,false).
+evl(469,true).
+evl(470,true).
+evl(471,true).
+evl(472,false).
+evl(473,true).
+evl(474,false).
+evl(475,true).
+evl(476,false).
+evl(477,true).
+evl(478,true).
+evl(479,false).
+evl(480,true).
+evl(481,true).
+evl(482,false).
+evl(483,false).
+evl(484,false).
+evl(485,true).
+evl(486,true).
+evl(487,false).
+evl(488,true).
+evl(489,false).
+evl(490,true).
+evl(491,true).
+evl(492,true).
+evl(493,false).
+evl(494,true).
+evl(495,false).
+evl(496,true).
+evl(497,true).
+evl(498,true).
+evl(499,false).
+evl(500,true).
+evl(501,false).
+evl(502,true).
+evl(503,true).
+evl(504,true).
+evl(505,false).
+evl(506,false).
+evl(507,false).
+evl(508,false).
+evl(509,true).
+evl(510,true).
+evl(511,true).
+evl(512,true).
+evl(513,false).
+evl(514,false).
+evl(515,true).
+evl(516,false).
+evl(517,false).
+evl(518,false).
+evl(519,true).
+evl(520,true).
+evl(521,false).
+evl(522,false).
+evl(523,true).
+evl(524,false).
+evl(525,false).
+evl(526,false).
+evl(527,false).
+evl(528,false).
+evl(529,false).
+evl(530,true).
+evl(531,false).
+evl(532,true).
+evl(533,false).
+evl(534,true).
+evl(535,true).
+evl(536,false).
+evl(537,true).
+evl(538,false).
+evl(539,false).
+evl(540,true).
+evl(541,true).
+evl(542,false).
+evl(543,false).
+evl(544,true).
+evl(545,true).
+evl(546,true).
+evl(547,false).
+evl(548,true).
+evl(549,true).
+evl(550,true).
+evl(551,false).
+evl(552,true).
+evl(553,false).
+evl(554,false).
+evl(555,false).
+evl(556,true).
+evl(557,false).
+evl(558,false).
+evl(559,false).
+evl(560,false).
+evl(561,true).
+evl(562,false).
+evl(563,true).
+evl(564,false).
+evl(565,false).
+evl(566,false).
+evl(567,false).
+evl(568,true).
+evl(569,false).
+evl(570,true).
+evl(571,true).
+evl(572,true).
+evl(573,false).
+evl(574,true).
+evl(575,true).
+evl(576,false).
+evl(577,true).
+evl(578,false).
+evl(579,true).
+evl(580,false).
+evl(581,true).
+evl(582,false).
+evl(583,false).
+evl(584,true).
+evl(585,true).
+evl(586,true).
+evl(587,false).
+evl(588,false).
+evl(589,true).
+evl(590,true).
+evl(591,false).
+evl(592,true).
+evl(593,true).
+evl(594,false).
+evl(595,true).
+evl(596,true).
+evl(597,false).
+evl(598,true).
+evl(599,false).
+evl(600,false).

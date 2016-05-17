@@ -1,0 +1,3842 @@
+:- style_check(-singleton). 
+
+/*
+
+subj-[Prince_Laurent-n-sn, mod-[of-p-sp, Belgium-n-sn], appos-[the-art-sn, youngest-ag-sn, son-n-sn, mod-[of-p-sp, King_Albert-n-sn, II-n-sn, mod-[of-p-sp, Belgium-n-sn]]]]
+
+subj-[King_Albert-n-sn, II-n-sn, mod-[of-p-sp, Belgium-n-sn]]
+ibar-[ (is)-ause-ibar]
+xcomp-[the-art-sn, father-n-sn, mod-[of-p-sp, Prince_Laurent-n-sn]]
+
+1.T  'King_Albert' - ncmod / specif - 'Belgium' - sn6,
+     'Belgium' - ncmod / specif - of - 'King_Albert',
+     'King_Albert' - det - 'II' - sn5,
+    
+  H  'King_Albert' - ncmod / specif - 'Belgium' - sn3,
+     'Belgium' - ncmod / specif - of - 'King_Albert',
+     'King_Albert' - det - 'II' - sn1,
+
+2.T  'Prince_Laurent' - specif - son - sn1,
+     son - ncmod / specif - 'King_Albert' - sn5
+     'King_Albert' - ncmod / specif - of - son,
+     
+  H  father - ncmod / specif - 'Prince_Laurent' - sn4
+     be - xcomp / prop - father - sn2,
+     'King_Albert' - subj / theme_unaff - sn1,
+     father - xcomp / prop - sn2,
+     'Prince_Laurent' - ncmod / specif - of - father,
+
+[ 'King_Albert' - subj / theme_unaff - sn1,
+  father - xcomp / prop - sn2,
+  'Belgium' - ncmod / specif - of - 'King_Albert',
+  'King_Albert' - det - 'II' - sn1,
+  'King_Albert' - ncmod / specif - 'Belgium' - sn3,
+  'Prince_Laurent' - ncmod / specif - of - father,
+  be - xcomp / prop - father - sn2,
+  father - ncmod / specif - 'Prince_Laurent' - sn4
+]
+[ 'Prince_Laurent' - subj / actor - sn1,
+  'Prince_Laurent' - subj / theme_aff - sn1,
+  'Belgium' - ncmod / specif - of - 'King_Albert',
+  'Belgium' - ncmod / specif - of - 'Prince_Laurent',
+  'King_Albert' - det - 'II' - sn5,
+  'King_Albert' - ncmod / specif - 'Belgium' - sn6,
+  'King_Albert' - ncmod / specif - of - son,
+  'Prince_Laurent' - det - the - sn1,
+  'Prince_Laurent' - specif - son - sn1,
+  'Prince_Laurent' - ncmod / specif - 'Belgium' - sn7,
+  son - ncmod / specif - 'King_Albert' - sn5
+  ...
+
+269
+ crime - specif - art - sn8,
+  crime - coord / specif - of - prevalence_and_sophistication,
+  crime - ncmod / specif - of - prevalence,
+  crime - ncmod / specif - of - sophistication,
+  exhibition - ncmod / specif - forgery - sn6,
+  forgery - ncmod / specif - of - exhibition,
+  highlight - obj / result - prevalence_and_sophistication - [sn4, sn5],
+  organise - ncmod / prop - 'V&A' - sn3,
+  organise - xadj / result - highlight - cl2,
+  organise - xadj / result - to - cl1,
+  prevalence - mod - increasing - sn4,
+  prevalence - ncmod / specif - crime - sn8,
+  prevalence_and_sophistication - coord / specif - crime - sn8,
+  sophistication - mod - increasing - sn5,
+  sophistication - ncmod / specif - crime - sn8
+
+crime-subj/actor-sn1, 
+crime-specif-art-sn1
+cl9-increase-subj/actor-crime-sn1,
+
+[ cl6 - develop - subj / theme_aff - 'Ocean' - sn1,
+  'Ocean' - subj / theme_aff - sn1,
+  'Ocean' - specif - remote - sn1,
+  'Ocean' - specif - sensing - sn1
+]
+
+  cl1 - colour - subj / actor - 'Ocean' - sn1,
+  cl2 - make - subj / agent - 'Ocean' - sn1,
+  cl5 - develop - subj / actor - sensing - sn7
+    sensing - mod - remote - sn7,
+ 
+]  
+*/
+compl_rel(father,son).
+compl_rel(father,daughter).
+compl_rel(mother,son).
+compl_rel(mother,daughter).
+compl_rel(grandfather,niece).
+compl_rel(grandad,niece).
+compl_rel(grandfather,nephew).
+compl_rel(grandad,nephew).
+compl_rel(grandmother,niece).
+compl_rel(grandmother,nephew).
+
+remove1(Predss,Predss1):-
+    remove(Cl-Pred-F/R-Head-Sn,Predss,Rests),
+    remove(Cl1-Pred1-F/R1-Head-Sn1,Predss1,Rests1),
+    remove(Cl2-Pred-F/R2-Head1-Sn2,Rests1,Rests11),
+    remove(Head-subj/R-Sn,Rests,Rest),
+    remove(Head-specif-Head1-Sna,Rest,Res),
+    remove(Head1-mod-Mod-Sn3,Rests11,Rests12),
+    remove(Head-specif-Mod-Sna,Res,[]),
+    !.
+remove2(Predss,Predss1):-
+    remove(Cl-Pred-R-Head-Sn,Predss,Rests),
+    remove(Head1-mod-Pred1-Sn1,Predss1,Rest1),
+    verbgerund(Pred1),
+    lemmatize_dic_v(Pred1,Lemm,S),
+    Lemm=Pred,
+    remove(Head1-ncmod/specif-Head-Sn2,Rest1,Rest2),
+    remove(Head-subj/R1-Snn,Rests,Rest),
+    remove(Head-specif-Head3-Sna,Rest,[]),
+    remove(Head-specif-Head3-Snb,Rest2,Res),
+    !.
+remove3(Predss,Predss1):-
+    remove(Pred-xcomp/prop-Head1-Sn,Predss,Restss),
+    remove(Cl-Pred-F/R-Head1-Sn,Restss,Rests),
+    remove(Cl-Pred-subj/R1-Head-Sn1,Rests,Rest),
+    remove(Head-subj/R1-Sn1,Rest,Res),
+    remove(Head1-xcomp/prop-Sn,Res,Re),
+    remove(Head1-det-Det-Sn,Re,Re1),
+    (remove(Head-ncmod/specif-Head11-Sn3,Re1,Re2),
+     remove(Head-ncmod/specif-Head11-Sn33,Predss1,Preds1)
+     ;
+     remove(Head-specif-Head11-Sn3,Re1,Re2),
+     remove(Head-specif-Head11-Sn33,Predss1,Preds1)),
+     (remove(Head1-ncmod/specif-Head2-Sn4,Re2,[])
+     ;
+     remove(Head1-specif-Head2-Sn4,Re2,[])),
+     (remove(Head1-specif-Head2-Sn44,Preds1,Pred1)
+      ;
+      remove(Head11-specif-Head2-Sn44,Preds1,Pred1)),
+    !.
+remove4(Predss,Predss1):-
+    remove(Pred-xcomp/prop-Head1-Sn,Predss,Restss),
+    remove(Cl-Pred-F/R-Head1-Sn,Restss,Rests),
+    remove(Cl-Pred-subj/R1-Head-Sn1,Rests,Rest),
+    remove(Head-subj/R1-Sn1,Rest,Res),
+    remove(Cl1-Pred-xcomp/prop-Heads-Sn11,Predss1,Preds1),
+     (remove(Heads-ncmod/specif-Head-Sn4,Preds1,Pred1)
+     ;
+     remove(Heads-specif-Head-Sn4,Preds1,Pred1)),
+    remove(Head1-xcomp/prop-Sn,Res,Re),
+    remove(Head1-FR-Head11-Sn3,Re,Re2),
+    remove(Head11-FR-of-Head1,Re2,Res2),
+    remove(Head11-FR-Sn3,Res2,Rest2),
+    remove(of-FR-Head1,Rest2,Rests2),
+    remove(Sn-Head1-FR-Head11-Sn3,Rests2,Restss2),
+    remove(Sn3-Head11-FR-of-Head1,Restss2,[]),     
+     (remove(Head-specif-Head1-Sn44,Pred1,Pre1)
+      ;
+      remove(Head-specif-Head1-Sn44,Pred1,Pre1)),
+    !.
+remove8(Predss,Predss1):-
+    remove(Cl1-Pred1-arg_mod/R-Head-Sn1,Predss1,Restss1),
+    light_verbs(Pred1),
+    remove(Cl-Pred-subj/R-Head-Sn,Predss,Restss),
+    main_head_match(Pred,Pred1,L),
+    remove(Head-subj/R-Sn,Restss,Rests),
+    remove(Cl-Pred-F/R2-Head1-Sn2,Rests,Rest),
+    remove(Cl1-Pred1-subj/R1-Head1-Sn11,Restss1,Rests1),
+    remove(Head1-F/R2-Sn2,Rest,Res),
+    remove(Pred-F/R2-Head1-Sn2,Res,[]),
+    !.
+remove5(Predss,Predss1,Rests,Rests1):-
+    remove(Cl-Pred-F/R-Head-Sn,Predss,Rests),
+    remove(Cl1-Pred-F/R-Head-Sn1,Predss1,Rests1).
+
+remove6(Predss,Predss1,Rests,Rests1):-
+    remove(Cl-Pred-F/R-Head-Sn,Predss,Rests),
+    remove(Cl1-Pred-F/R-Head1-Sn1,Predss1,Rests1),
+    matchheads_depends(Head,Head1,Rests1,Rests,Rest1,Rest).
+
+remove7(Predss,Predss1,Sem,Rests,Rests1):-
+    remove(Cl-Pred-subj/R-Head-Sn,Predss,Restss),
+    light_verbs(Pred),
+    remove(Head-subj/R-Sn,Restss,Rests),
+    remove(Cl1-Pred-F/R-Head1-Sn1,Predss1,Rests1),
+    matchheads_depends(Head,Head1,Predss1,Rests,Rest1,Restt),
+    remove(Cl1-Pred-F/R1-Head2-Sn1,Restt,Resti),
+    remove(Sn1-Head2-F/R1-Sem-Pred,Resti,Resto),
+    prepos(Sem),
+    remove(Sem-F/R1-Pred,Resto,Rest).
+    
+searchmatchtemprels(Predss1,Predss):-
+    remove1(Predss,Predss1),
+    !.
+searchmatchtemprels(Predss1,Predss):-
+    remove2(Predss,Predss1),
+    !.
+searchmatchtemprels(Predss1,Predss):-
+    remove(Pred-xcomp/prop-Head1-Sn,Predss,Restss),
+    lightverbs(Pred),
+    remove(Cl-Pred-F/R-Head1-Sn,Restss,Rests),
+    relatives(Rels),
+    on(Head1,Rels),
+    remove(Head1-xcomp/prop-Sn2,Rests,Restt1),
+    remove(Cl1-Pred-F1/R1-Head-Sn1,Restt1,Restt),
+    remove(Head-subj/Rol-Sn1,Restt,Rest),
+    remove(Head-ncmod/specif-of-Rel1,Predss1,Rest11),
+    remove(Rel1-ncmod/specif-Head-Sn3,Rest11,Rest1),
+    on(Rel1,Rels),
+    eliminatecheckrels(Rest1,Rel1,Head,Rest,Head1),
+    !.
+searchmatchtemprels(Predss1,Predss):-
+    remove3(Predss,Predss1),
+      !.
+searchmatchtemprels(Predss1,Predss):-
+    remove4(Predss,Predss1),
+      !.
+searchmatchtemprels(Predss1,Predss):-
+    remove5(Predss,Predss1,Rests,Rests1),
+    eliminateallrels(Rests1,Rests,Out),
+    checkpredloc(Predss1,Out),
+    !.
+searchmatchtemprels(Predss1,Predss):-
+    remove6(Predss,Predss1,Rest,Rest1),
+    eliminateallrels(Rest1,Rest,Out),
+    checkpredloc(Predss1,Out),
+    !.
+searchmatchtemprels(Predss1,Predss):-
+    remove7(Predss,Predss1,Sem,Rests,Rests1),
+    eliminateallsemrels(Sem,Rest1,Rest,Out),
+    !.
+searchmatchtemprels(Predss1,Predss):-
+    remove8(Predss,Predss1),
+    !.
+
+checkpredloc(Predss1,Out):-
+   findall(Pred,(on(Cl-Pred-F/R-Head1-Sn,Predss1),
+                (
+                 yescreation_pred(Pred)
+                 ;
+                 non_creation_pred(Pred))
+                 ),
+                 Preds),
+    (Preds=[]
+    ;
+    Preds\=[],
+    findall(Head,(
+                  (on(Cl-Pred-F/R-Head-Sn,Out);
+                   on(Sn-Head-F/R-Sem-Pred,Out);
+                   on(Head-R-S-I,Out);
+                   on(Head-R-I,Out)),
+                   locwn(Head)),
+                   Heads), 
+                   Heads=[]),
+    !.
+                 
+matchheads_depends(Head,Head1,Rests1,Rests,Rest1,Rest):-
+    remove(Head-F/R-Sn2,Rests1,Rest1), Rest=Rests
+    ;
+    nonvar(Head1),
+    tolower(Head,Up), Head1=Up,
+    remove(Head1-F/R-Sn2,Rests1,Rest1), Rest=Rests
+    ;
+    nonvar(Head1),
+    tolower(Head1,Up), Head=Up,
+    remove(Head-F/R-Sn,Rests,Rest), Rest1=Rests1
+    ;
+    nonvar(Head1),
+    tolower(Head,Up),
+    tolower(Head1,Up1), Up1=Up,
+    remove(Head1-F/R-Sn2,Rests1,Rest1),
+    remove(Head-F/R-Sn,Rests,Rest),
+    !.
+matchheads_depends(Head,Head1,Predss1,Rests,Rest1,Rest):-
+    var(Head1),
+    remove(Cl-Pred-F/R-Head1-Sn,Predss1,Rests1),
+    recover_descs(Head1,Descs),
+    on(Head,Descs),
+    remove(Head1-F/R-Sn2,Rests1,Rest1),
+    (remove(Head-F/R-Sn,Rests,Rest);Rest=Rests),
+    !.
+
+eliminatecheckrels(Rest1,R1,Head1,Rest,R):-
+    (compl_rel(R1,R);
+     compl_rel(R,R1)),
+    remove(R-ncmod/specif-Head2-Sn3,Rest,Res),
+    remove(Head2-ncmod/specif-of-R,Res,Ress),
+    remove(Head2-specif-R1-Sn1,Rest1,Res1),
+    eliminateallrels(Res1,Ress,Out),
+    !.
+    
+eliminateallrels(Res1,[], Res1):-!.
+eliminateallrels(Res1,Ress,Out):-
+    remove(A-B-C-D-Id,Ress,Rest),
+    remove(A1-B-C-D-Ind,Res1,Ress1),
+    !,
+    eliminateallrels(Ress1,Rest,Out),
+    !.
+eliminateallrels(Res1,Ress,Out):-
+    remove(A-be-C-D-Id,Ress,Rest),
+    remove(A1-B-C-D-Ind,Res1,Ress1),
+    !,
+    eliminateallrels(Ress1,Rest,Out),
+    !.
+eliminateallrels(Res1,Ress,Out):-
+    remove(A-be-C-D-Id,Ress,Rest),
+    remove(A1-B-D-Ind,Res1,Ress1),
+    !,
+    eliminateallrels(Ress1,Rest,Out),
+    !.
+eliminateallrels(Res1,Ress,Out):-
+    remove(A-be-C-D-Id,Ress,Rest),
+    remove(A1-B-C-D1-Ind,Res1,Ress1),
+    n_wn(D,Type), Type=[18],
+    n_wn(D1,Type),
+    !,
+    eliminateallrels(Ress1,Rest,Out),
+    !.
+eliminateallrels(Res1,Ress,Out):-
+    remove(A-be-C-D-Id,Ress,Rest),
+    remove(A1-B-D1-Ind,Res1,Ress1),
+    n_wn(D,Type), Type=[18],
+    n_wn(D1,Type),
+    !,
+    eliminateallrels(Ress1,Rest,Out),
+    !.
+eliminateallrels(Res1,Ress,Out):-
+    remove(A-B-C-Id,Ress,Rest),
+    remove(A-B-C-Ind,Res1,Ress1),
+    !,
+    eliminateallrels(Ress1,Rest,Out),
+    !.
+eliminateallrels(Res1,Ress,Out):-
+    remove(A-B-Id,Ress,Rest),
+    remove(A-B-Ind,Res1,Ress1),
+    !,
+    eliminateallrels(Ress1,Rest,Out),
+    !.
+eliminateallrels(Res1,Ress,Out):-
+    remove(A-D-Id,Ress,Rest),
+    remove(A1-D1-Ind,Res1,Ress1),
+    n_wn(D,Type), Type=[18],
+    n_wn(D1,Type),
+    !,
+    eliminateallrels(Ress1,Rest,Out),
+    !.
+
+eliminateallsemrels(Sem,Res1,[]):-!.
+eliminateallsemrels(Sem,Res1,Ress):-
+    remove(A-B-C-D-Id,Ress,Rest),
+    remove(A-B-C-D-Ind,Res1,Ress1),
+    !,
+    eliminateallsemrels(Sem,Ress1,Rest),
+    !.
+eliminateallsemrels(Sem,Res1,Ress):-
+    remove(A-B-C-Id,Ress,Rest),
+    remove(A-B-C-Ind,Res1,Ress1),
+    !,
+    eliminateallsemrels(Sem,Ress1,Rest),
+    !.
+eliminateallsemrels(Sem,Res1,Ress):-
+    remove(A-B-C-Id,Ress,Rest),
+    (remove(A-ncmod/specif-C-Ind,Res1,Ress1);
+    remove(A-specif-C-Ind,Res1,Ress1)),
+    !,
+    eliminateallsemrels(Sem,Ress1,Rest),
+    !.
+eliminateallsemrels(Sem,Res1,Ress):-
+    remove(A-B-Id,Ress,Rest),
+    (remove(A-B-Ind,Res1,Ress1);
+     remove(A-ncmod/specif-C-Ind,Res1,Ress1);
+     remove(A-specif-C-Ind,Res1,Ress1)),
+    !,
+    eliminateallsemrels(Sem,Ress1,Rest),
+    !.
+
+match_templates22(RefExs,Hypo,Text,Predss1,Predss,Costs,LFHyp,LFText,True):-
+    recovercosts1(Costs,Rest,V-Hyp,Synts1),
+    recoverallcosts(Rest,AllC,SyntsAll),
+    checknegatedtags(Hyp,AllC),
+    continuetemplates22(RefExs,Hypo,Text,Predss1,Predss,Hyp,AllC,LFHyp,LFText,True),
+    !.
+
+continuetemplates22(RefExs,Hypo,Text,Predss1,Predss,Hyp,AllC,LFHyp,LFText,True):-
+    match_templates1(Predss1,Predss,Hyp,AllC),
+    checkpremodifiers(Hyp,AllC),
+        True=true-999,
+    !.
+
+continuetemplates22(RefExs,Hypo,Text,Predss1,Predss,Hyp,AllC,ArgsProp,AdjsProp,True):-
+    filtersubjectpreds([Hypo,Text],Hyp,AllC,RefExs, [ArgsProp,AdjsProp],HLFs,TLFs,Rest),
+    match_templates2(HLFs,Hyp,AllC,[],C,Rests),
+    (on(0,C), !,
+        True=true-888
+%     ;
+%     Rest=[], !,
+%        True=true-666
+     ;
+     refmatch_templates2(HLFs,TLFs,RefExs,Hyp,AllC,Rests),
+             True=true-777),
+    !.
+
+match_templates33(RefExs,Hypo,Text,Predss1,Predss,Costs,ArgsProp,AdjsProp,True):-
+%match_templates33(Predss1,Predss,Costs,True):-
+    recovercosts1(Costs,Rest,V-Hyp,Synts1),
+    recoverallcosts(Rest,AllC,SyntsAll),
+    checknegatedtags(Hyp,AllC),
+    continuetemplates33(RefExs,Synts1,Hypo,Text,Predss1,Predss,[ArgsProp,AdjsProp],Hyp,AllC,True),
+    !.
+    
+continuetemplates33(RefExs,Synts1,Hypo,Text,Predss1,Predss,[ArgsProp,AdjsProp],Hyp,AllC,True):-
+    match_templates1(Predss1,Predss,Hyp,AllC),
+    checkpremodifiers(Hyp,AllC),
+        True=true-999,
+    !.
+continuetemplates33(RefExs,Synts1,Hypo,Text,Predss1,Predss,[ArgsProp,AdjsProp],Hyp,AllC,True):-
+   filtersubjectpreds(Hypo,Text,RefExs, [ArgsProp,AdjsProp],HLFs,TLFs,Rest),
+    match_templates2(HLFs,Hyp,AllC,[],Cos,Rests),
+    sort(Cos,Cost), length(Cost,L),
+    matchsyntsalls(Synts1,SyntsAll,SyntRests),
+        True=true-888,
+    !.
+
+match_templates(Predss1,Predss,Costs):-
+    recovercosts1(Costs,Rest,V-Hyp,Synts1),
+    recoverallcosts(Rest,AllC,SyntsAll),
+    checknegatedtags(Hyp,AllC),
+    match_templates1(Predss1,Predss,Hyp,AllC),
+    checkpremodifiers(Hyp,AllC),
+    !.
+/*
+match_templates(Predss1,Predss,Costs):-
+    recovercosts1(Costs,Rest,V-Hyp,Synts1),
+    recoverallcosts(Rest,AllC,SyntsAll),
+    match_templates2(Hyp,AllC),
+    matchsyntsalls(Synts1,SyntsAll,SyntRests),
+    !.
+*/
+
+match_templates1(Predss1,Predss,Hyp,AllC):-
+    searchmatchtemp(Hyp,AllC),
+    !.
+match_templates1(Predss1,Predss,Hyp,AllC):-
+    searchmatchtemprels(Predss1,Predss),
+    !.
+
+refmatch_templates2(LFHyp,LFText,RefExs,[],AllC,Rests):-!.
+refmatch_templates2(LFHyp,LFText,RefExs,Hyp,Costs,[L-Rest-AllC|Rests]):-
+    (Rest=[], !
+     ;
+     Rest\=[], L=1,
+     tops_bridging(Rest,LFHyp,RefExs,Hyp,AllC)
+/*     ;
+     Rest\=[], L=1,
+     on(W,Rest),on(W-Cat,Hyp),
+     topsmatchallcosts(Cat,Rest,RefExs)
+*/     ;
+     refmatch_templates2(LFHyp,LFText,RefExs,Hyp,Costs,Rests)
+     ),
+    !.
+
+match_templates2(HLFs,Hyp,[], Cost, Cost, []):-!.
+match_templates2(HLFs,Hyp,[V-AllC|Rests], N, Cost, [L-Rest-AllC|Restss]):-
+    eliminateallwords(HLFs,Hyp,AllC,Rest),
+    length(Rest,L),
+    (Rest=[], !, Cost=[L|N]
+     ;
+     match_templates2(HLFs,Hyp,Rests, [L|N], Cost, Restss)
+     ),
+    !.
+
+topsmatchallcosts(Cat,[W],RefExs):-
+     (Cat=ag;locwn(W)),
+     RefExs=[Refs,RefEx],
+     Ref=ref_ex(Ind,W1,Tab,P,G,Num,C,Func/Ruolo)/S-_,
+     on(Ref, RefEx),
+     main_head_match(W,W1,_),
+     !.
+
+topsmatchallLFs([Cl-P-[Subj,LF]|HLFs],TLFs,RefExs):-
+     P\=bear,
+%     light_verbs(P),
+     on(Cl1-P1-[Sub1,TLF],TLFs),
+     searchsubjectnonverb(Subj,[Sub1,TLF],Sub),
+     (main_head_match(P,P1,_)
+     ;
+     lightverbs(P)),
+%      sloppy_match(P,P1,_)),
+     append(Subj,LF,LF1),
+     !,
+     matchTlfHlf(P,Sub,RefExs,[],[],LF1,TLF,TLFs),
+     !.
+
+matchpredHyp(Pred,AllC):-
+     on(W-Cat,AllC),
+     check_vcat(Cat),
+     lemmatize_dic(W,Lem,K),
+     consistent_preds(Pred,Lem,_),
+     !.
+located(located).
+located(placed).
+located(resident).
+located(locate).
+located(place).
+located(reside).
+located(locates).
+located(places).
+located(resides).
+
+tops_bridging([W],LF,RefExs,Hyp,AllC):-
+     generic_head(W,K),
+     on(W1-Cat,Hyp),
+     Cat=vsup,
+     !.
+tops_bridging([W],LF,RefExs,Hyp,AllC):-
+     generic_head(W,K),
+     wn_gend(W,Gend),
+     on(W1-_,AllC),
+    \+ stopw(W1),
+    (if_first_name(W1);
+     recover_descs(W,Desc),is_list(Desc),
+     Desc=[A,B],
+    if_first_name(A)),
+     wn_gend(A,Gend),
+     !.
+tops_bridging([W],LF,RefExs,Hyp,AllC):-
+    if_first_name(W),
+    on(W1-_,AllC),
+    \+ stopw(W1),
+    (if_first_name(W1);
+     recover_descs(W,Desc),is_list(Desc),
+     Desc=[A,B],
+    if_first_name(A)),
+    match_approximate(W,A),
+    !.
+tops_bridging([W],LF,RefExs,Hyp,AllC):-
+    risolto(N,Id,Pron,W),
+    on(Pron-_,AllC),
+    on(C-Pred-Lfs,LF),
+    \+light_verbs(Pred),
+    matchpredHyp(Pred,AllC),
+    !.
+tops_bridging([W],LF,RefExs,Hyp,AllC):-
+    on(Pron-_,AllC),
+    risolto(N,Id,Pron,W1),
+    on(C-Pred-Lfs,LF),
+    matchpredHyp(Pred,AllC),
+    n_wn(W,Type), 
+    (Type=[18];Type=[3];on(3,Type);
+    Type=[6];on(6,Type)),
+    n_wn(W1,Type1), 
+     checktype1(W1,Type,Type1),
+    !.
+tops_bridging([W],LF,RefExs,Hyp,AllC):-
+    (located(W);
+    on(C-Pred-Lfs,LF),
+    lightverbs(Pred)),
+    on(W1-_,AllC),
+    \+ stopw(W1),
+    (
+     locwn(W1), A=W1 
+         ;
+     recover_descs(W1,Desc),is_list(Desc),
+     Desc=[A,B]
+     ),
+    ((lw4(A,_,W,_);lw4(W,_,A,_));
+     natl(A,W,_);natl(A,_,W);
+        is_in(A,W)),
+    !.
+tops_bridging([W],LF,RefExs,Hyp,AllC):-
+    on(W1-_,AllC),
+    \+ stopw(W1),
+    lemmatize_dic_v(W1,Lem,_),
+    (S=passive;S=subject),
+    nbk(N,Lem,S),
+    N=W,
+    !.
+tops_bridging([W],LF,RefExs,Hyp,AllC):-
+    \+ if_first_name(W),
+    spy_lower(W,Low,P), P=0,
+    n_wn(W,Type), 
+    (Type=[18];Type=[3];on(3,Type);
+    Type=[6];on(6,Type)),
+    on(W1-_,AllC),
+    \+ stopw(W1),
+    (\+ if_first_name(W1),
+     spy_lower(W1,Low1,P1), P1=0,
+     n_wn(W1,Type1),
+     checktype1(W1,Type,Type1)
+    ;
+     recover_descs(W1,Desc),is_list(Desc),
+     Desc=[A,B],
+     \+ if_first_name(A),
+     spy_lower(A,Low1,P1), P1=0,
+     checktype1(A,Type,Type1)
+     ),
+    !.
+tops_bridging([W],LF,RefExs,Hyp,AllC):-
+    extract_top(W1,N1,AllC),
+    checkdefiniterefex(W1,RefExs),
+    (topps(Type,N,W,Id,Feat),
+      N < N1
+      ;
+      toupper(W,W2),
+      topps(Type,N,W2,Id,Feat),
+      N < N1
+      ;
+      tolower(W,W2),
+      topps(Type,N,W2,Id,Feat),
+      N < N1
+      ;
+      alltoupper(W,W2),
+      topps(Type,N,W2,Id,Feat),
+      N < N1),
+     !.
+    
+checktype1(A,Type,Type1):-
+     n_wn(A,Type);
+%     n_wn(B,Type);
+     tolower(A,A1),
+%     tolower(B,B1),
+     n_wn(A1,Type);
+%     n_wn(B1,Type);
+     n_wn(A,Type1),on(T,Type),on(T,Type1),
+     !.
+
+extract_top(W1,N1,AllC):-
+    on(W1-_,AllC),
+    \+ stopw(W1),
+    topps(Type1,N1,W1,Id1,Feat1).
+
+alltoupper(W,W2):-
+     stringof(List,W),
+     toupperlist(List,ListW2),
+     stringof(ListW2,W2).
+alltoupper(W,W2):-
+     recover_descs(W,Desc),is_list(Desc),
+     Desc=[A,B],
+     mcon(A,'_',A1),
+     mcon(A1,B,W2),
+     !.
+toupperlist([],[]):-!.
+toupperlist([W|List],[W1|ListW2]):-
+     toupper(W,W1),
+     toupperlist(List,ListW2),
+     !.
+
+
+checkdefiniterefex(W1, RefExs):-
+     RefExs=[Refs,RefEx],
+     Ref=ref_ex(Ind,W1,Tab,P,G,Num,C,Func/Ruolo)/S-_,
+     on(Ref, RefEx),
+     on(Def,Tab), Def = +def,
+     !.
+
+% eliminateallwords(Hyp,AllC,[]):- !.
+eliminateallwords(HLF,Hyp,AllC,Hyp3):-
+    elimhighfreq(Hyp,Hyp1),
+    eliminidentics(Hyp1,AllC,Hyp2,Txt),
+    eliminsimils(HLF,Hyp2,Txt,Hyp3),
+    !.
+eliminateallwords1(Hyp,AllC,Hyp3):-
+    elimhighfreq1(Hyp,Hyp1),
+    eliminidentics1(Hyp1,AllC,Hyp2,Txt),
+    eliminsimils(Hyp2,Txt,Hyp3),
+    !.
+eliminateallwords2(Hyp,AllC,Hyp3,Rest):-
+    elimhighfreq2(Hyp,Hyp1,Rest1),
+    eliminidentics2(Hyp1,AllC,Hyp2,Txt,Rest2),
+    eliminsimils2(Hyp2,Txt,Hyp3,Rest3),
+    append(Rest1,Rest2,Res),
+    append(Res,Rest3,Rest),
+    !.
+
+eliminsimils(HLF,[],[],[]):-!.
+eliminsimils(HLF,[],Hyp,[]):-!.
+eliminsimils(HLF,[W|Hyp],Hyp1,Hyp2):-
+    prepos(W),
+    eliminsimils(HLF,Hyp,Hyp1,Hyp2),
+    !.
+eliminsimils(HLF,[W|Hyp],Hyp1,Hyp2):-
+    nt(W),
+    eliminsimils(HLF,Hyp,Hyp1,Hyp2),
+    !.
+eliminsimils(HLF,[W|Hyp],Hyp1,Hyp2):-
+    isatype(W),
+    eliminsimils(HLF,Hyp,Hyp1,Hyp2),
+    !.
+eliminsimils(HLF,[W|Hyp],Hyp1,Hyp2):-
+    (spy_lower(W,Low,Pol),Pol=0
+     ;
+     \+if_first_name(W)),
+    lemmatize_dic_v(W,Lemm,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    lemmatize_dic(W1,Lem,H),
+    (Lem=Lemm;
+    nbk(Lem,Lemm,L);
+    consistent_preds(Lem,Lemm,_)),
+    eliminsimils(HLF,Hyp,Hyp1,Hyp2),
+    !.
+eliminsimils(HLF,[W|Hyp],Hyp1,Hyp2):-
+    (spy_lower(W,Low,Pol),Pol=0
+     ;
+     \+if_first_name(W)),
+    lemmatize_dic_v(W,Lem,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    main_head_match(Lem,W1,Sco),
+    eliminsimils(HLF,Hyp,Hyp1,Hyp2),
+    !.
+eliminsimils(HLF,[W|Hyp],Hyp1,Hyp2):-
+    (spy_lower(W,Low,Pol),Pol=0
+     ;
+     \+if_first_name(W)),
+    lemmatize_dic(W,Lem,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    lemmatize_dic(W1,Lem1,K1),
+    main_head_match(Lem,Lem1,Sco),
+    eliminsimils(HLF,Hyp,Hyp1,Hyp2),
+    !.
+eliminsimils(HLF,[W|Hyp],Hyp1,Hyp2):-
+    spy_lower(W,Low,Pol),Pol=0,
+    lemmatize_dic(W,Lem,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    lemmatize_dic(W1,Lem1,K1),
+    search_noun_inference(Lem,Lem1),
+    eliminsimils(HLF,Hyp,Hyp1,Hyp2),
+    !.
+eliminsimils(HLF,[W|Hyp],Hyp1,Hyp2):-
+    (spy_lower(W,Low,Pol),Pol=0
+     ;
+     \+if_first_name(W)),
+    lemmatize_dic(W,Lem,K),
+    light_verbs(Lem),
+    eliminsimils(HLF,Hyp,Hyp1,Hyp2),
+    !.
+eliminsimils(HLF,[W|Hyp],Hyp1,Hyp2):-
+    on(C-Pred-Lfs,HLF),
+    lightverbs(Pred),
+    (spy_lower(W,Low,Pol),Pol=0
+     ;
+     \+if_first_name(W)),
+    lemmatize_dic_v(W,Lem,K),
+    on(W1,Hyp1),
+    sloppy_match(Lem,W1,K1),
+    eliminsimils(HLF,Hyp,Hyp1,Hyp2),
+    !.
+eliminsimils(HLF,[W|Hyp],Hyp1,Hyp2):-
+    on(C-Pred-Lfs,HLF),
+    lightverbs(Pred),
+    (spy_lower(W,Low,Pol),Pol=0
+     ;
+     \+if_first_name(W)),
+    lemmatize_dic_v(W,Lem,K),
+    on(W1,Hyp1),
+    lemmatize_dic(W1,Lem1,K1),
+    sloppy_match(Lem,Lem1,S),
+    eliminsimils(HLF,Hyp,Hyp1,Hyp2),
+    !.
+
+eliminsimils(HLF,[W|Hyp],Hyp1,[W|Hyp2]):-
+    eliminsimils(HLF,Hyp,Hyp1,Hyp2),
+    !.
+eliminsimils(HLF,[],Hyp,Hyp1):-!.
+
+eliminsimils2([],[],[],[]):-!.
+eliminsimils2([],Hyp,[],[]):-!.
+eliminsimils2([W|Hyp],Hyp1,Hyp2,Match):-
+    prepos(W),
+    eliminsimils2(Hyp,Hyp1,Hyp2,Match),
+    !.
+eliminsimils2([W|Hyp],Hyp1,Hyp2,[W-W1-2|Match]):-
+    lemmatize_dic_v(W,Lemm,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    lemmatize_dic(W1,Lem,H),
+    (Lem=Lemm;
+    nbk(Lem,Lemm,L);
+    consistent_preds(Lem,Lemm,_)),
+    eliminsimils2(Hyp,Hyp1,Hyp2,Match),
+    !.
+eliminsimils2([W|Hyp],Hyp1,Hyp2,[W-W1-2|Match]):-
+    lemmatize_dic_v(W,Lem,K),
+    \+ stopw(W1),
+    on(W1,Hyp1),
+    strictmatch_approximate(Lem,W1),
+    eliminsimils2(Hyp,Hyp1,Hyp2,Match),
+    !.
+eliminsimils2([W|Hyp],Hyp1,Hyp2,[W-W1-2|Match]):-
+    lemmatize_dic(W,Lem,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    lemmatize_dic(W1,Lem1,K1),
+    strictmatch_approximate(Lem,Lem1),
+    eliminsimils2(Hyp,Hyp1,Hyp2,Match),
+    !.
+eliminsimils2([W|Hyp],Hyp1,Hyp2,[W-W1-2|Match]):-
+    lemmatize_dic_v(W,Lem,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    search_noun_inference(Lem,W1),
+    eliminsimils2(Hyp,Hyp1,Hyp2,Match),
+    !.
+eliminsimils2([W|Hyp],Hyp1,Hyp2,[W-W1-2|Match]):-
+    lemmatize_dic(W,Lem,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    lemmatize_dic(W1,Lem1,K1),
+    search_noun_inference(Lem,Lem1),
+    eliminsimils2(Hyp,Hyp1,Hyp2,Match),
+    !.
+eliminsimils2([W|Hyp],Hyp1,Hyp2,[W-W1-3|Match]):-
+    lemmatize_dic_v(W,Lem,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    strict_head_match(Lem,W1,Sco),
+    eliminsimils2(Hyp,Hyp1,Hyp2,Match),
+    !.
+eliminsimils2([W|Hyp],Hyp1,Hyp2,[W-W1-3|Match]):-
+    lemmatize_dic(W,Lem,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    lemmatize_dic(W1,Lem1,K1),
+    strict_head_match(Lem,Lem1,Sco),
+    eliminsimils2(Hyp,Hyp1,Hyp2,Match),
+    !.
+eliminsimils2([W|Hyp],Hyp1,Hyp2,[W-W1-4|Match]):-
+    lemmatize_dic_v(W,Lem,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    main_head_match1(Lem,W1,Sco),
+    eliminsimils2(Hyp,Hyp1,Hyp2,Match),
+    !.
+eliminsimils2([W|Hyp],Hyp1,Hyp2,[W-W1-4|Match]):-
+    lemmatize_dic(W,Lem,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    lemmatize_dic(W1,Lem1,K1),
+    main_head_match1(Lem,Lem1,Sco),
+    eliminsimils2(Hyp,Hyp1,Hyp2,Match),
+    !.
+eliminsimils2([W|Hyp],Hyp1,Hyp2,[W-W1-3|Match]):-
+    lemmatize_dic(W,Lem,K),
+    light_verbs(Lem),
+    eliminsimils2(Hyp,Hyp1,Hyp2,Match),
+    !.
+/*
+eliminsimils2([W|Hyp],Hyp1,Hyp2,[W-W1-5|Match]):-
+    lemmatize_dic_v(W,Lem,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    sloppy_match(Lem,W1,K1),
+    eliminsimils2(Hyp,Hyp1,Hyp2,Match),
+    !.
+eliminsimils2([W|Hyp],Hyp1,Hyp2,[W-W1-5|Match]):-
+    lemmatize_dic_v(W,Lem,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    lemmatize_dic(W1,Lem1,K1),
+    sloppy_match(Lem,Lem1,S),
+    eliminsimils2(Hyp,Hyp1,Hyp2,Match),
+    !.
+*/
+eliminsimils2([W|Hyp],Hyp1,[W|Hyp2], Match):-
+    eliminsimils2(Hyp,Hyp1,Hyp2,Match),
+    !.
+eliminsimils2([],Hyp,Hyp1,[]):-!.
+
+main_head_match1(Head,Head,10):-
+      !.
+main_head_match1(Head,Head1,10):-
+        Head\=Head1,
+        (toupper(Head,Nam),
+        Head\=Nam,
+         (Nam=Head1;
+          match_approximate(Nam,Head1))
+        ;
+         toupper(Head1,Nam),
+        Head1\=Nam,
+         (Nam=Head;
+          match_approximate(Nam,Head))
+       ),
+      !.
+
+main_head_match1(Headd,Headd1,10):-
+        Headd\=Headd1,
+      check_head_index(Headd,Headd1,Head,Head1),
+      valid_heads(Head,Head1),
+      (s_is_ax(Head1,Head);
+       s_is_ax(Head,Head1);
+       s_is_ax(Head,Head2),checkmatch_approximates(Head2,Head1);
+       s_is_ax(Head1,Head2),checkmatch_approximates(Head2,Head)
+      ), 
+     !.
+     
+main_head_match1(Headd,Headd1,10):-
+        Headd\=Headd1,
+      check_head_index(Headd,Headd1,Head,Head1),
+      (generic_head1(Head,CatSem),
+       recover_descs(Head1,Names), 
+       (is_list(Names),
+        on(Name,Names),
+        toupper(Name,Nam),
+        if_first_name(Nam), Head2=Nam
+        ;
+        atomic(Names),
+        if_first_name(Names), Head2=Names)
+       ;
+       generic_head1(Head1,CatSem),
+       recover_descs(Head,Names), 
+       (is_list(Names),
+        on(Name,Names),
+        toupper(Name,Nam),
+        if_first_name(Nam), Head2=Nam
+        ;
+        atomic(Names),
+        if_first_name(Names), Head2=Names)
+       ;
+       generic_head1(Head,CatS),
+       generic_head1(Head1,CatSem),Head2=Head1
+       ;
+       tolower(Head,Nam),
+       generic_head1(Nam,CatSem),Head2=Head1
+       ),
+%       search_wn_cats(Head,Cats),Cats\=[],
+%       search_wn_cats(Head1,Cats1),Cats1\=[],
+       trova_CatSem(C,Head2,Cats),Cats\=[],
+       trova_CatSem(C,Head,Cats1),Cats1\=[],
+       controlla_cats(Cats,Cats1),
+       intersection(Cats,Cats1, Ints), 
+       length(Ints,L), 
+       1=<L,
+       computediff(Cats1,Cats,Diff), Diff=<2,
+       (Cats=Cats1;alllengths(Cats,Cats1,L)),
+       privileged_classes(Cats,Cats1,Ints),
+      !.
+main_head_match1(Headd,Headd1,100):-
+        Headd\=Headd1,
+      check_head_index(Headd,Headd1,Head,Head1),
+      valid_heads(Head,Head1),
+      spy_lower(Head,LowHead,1),
+      spy_lower(Head1,LowHead1,1),
+       generic_head1(LowHead,Cats),
+       generic_head1(LowHead1,Cats1),
+       controlla_cats(Cats,Cats1),
+       intersection(Cats,Cats1, Ints), 
+       length(Ints,L), 
+       (1=<L;Cats=Cats1;alllengths(Cats,Cats1,L)),
+       privileged_classes(Cats,Cats1,Ints),
+      !.
+      
+tolowerall([],[]):-!.
+tolowerall([W-_|AllC],[W|Low]):-
+    tolower(W,L),
+    tolowerall(AllC,Low),
+    !.
+toloweralls([],[]):-!.
+toloweralls([V-Ws|AllC],[L|Low]):-
+    tolowerall(Ws,L),
+    toloweralls(AllC,Low),
+    !.
+eliminidentics2(Hyp1,AllC,Rest,Low,Out):-
+    toloweralls(AllC,Lows),
+    appiattisci(Lows,Low),
+    tolowerall(Hyp1,Low1),
+    eliminidentic2(Low1,Low,Rest,Out),
+    !.
+
+eliminidentics(Hyp1,AllC,Rest,Low):-
+    tolowerall(AllC,Low),
+    tolowerall(Hyp1,Low1),
+    eliminidentic(Low1,Low,Rest),
+    !.
+eliminidentic([],[],[]):-!.
+eliminidentic([],Hyp,[]):-!.
+eliminidentic([W|Hyp],Hyp1,Hyp2):-
+    on(W,Hyp1),
+    eliminidentic(Hyp,Hyp1,Hyp2),
+    !.
+eliminidentic([W|Hyp],Hyp1,Hyp2):-
+    tolower(W,W1),
+    on(W2,Hyp1),
+    tolower(W2,W3),
+    W1=W3,
+    eliminidentic(Hyp,Hyp1,Hyp2),
+    !.
+eliminidentic([W|Hyp],Hyp1,Hyp2):-
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    match_approximate(W,W1),
+    eliminidentic(Hyp,Hyp1,Hyp2),
+    !.
+eliminidentic([W|Hyp],Hyp1,Hyp2):-
+    lemmatize_dic_v(W,Lem,K),
+    on(Lem,Hyp1),
+    eliminidentic(Hyp,Hyp1,Hyp2),
+    !.
+eliminidentic([W-_|Hyp],Hyp1,Hyp2):-
+    locwn(W),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    (locwn(W1),  
+     (lw4(W1,_,W,_);lw4(W,_,W1,_));
+     natl(W1,W,_);natl(W1,_,W);
+        is_in(W1,W)),
+    eliminidentic(Hyp,Hyp1),
+    !.
+eliminidentic([W|Hyp],Hyp1,Hyp2):-
+    lemmatize_dic(W,Lem,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    lemmatize_dic(W1,Lem1,K1),
+    Lem=Lem1,
+    eliminidentic(Hyp,Hyp1,Hyp2),
+    !.
+eliminidentic([W|Hyp],Hyp1,Hyp2):-
+    recover_descs(W,Descs),is_list(Descs),
+    on(W1,Descs),
+    on(W1,Hyp1), 
+    on(W2,Descs), W1\=W2,
+    on(W2,Hyp1),
+    eliminidentic(Hyp,Hyp1,Hyp2),
+    !.
+eliminidentic([W|Hyp],Hyp1,Hyp2):-
+    recover_descs(W,Descs),is_list(Descs),
+    on(W1,Hyp1), 
+    recover_descs(W1,Descs1),is_list(Descs1),
+    on(W3,Descs),
+    on(W3,Descs1),
+    on(W2,Descs), W1\=W2,
+    on(W2,Descs1),
+    eliminidentic(Hyp,Hyp1,Hyp2),
+    !.
+eliminidentic([W|Hyp],Hyp1,Hyp2):-
+    on(W1,Hyp1), 
+    \+ stopw(W1),
+    recover_descs(W1,Descs1),is_list(Descs1),
+    on(W,Descs1),
+    eliminidentic(Hyp,Hyp1,Hyp2),
+    !.
+eliminidentic([W|Hyp],Hyp1,[W|Hyp2]):-
+    eliminidentic(Hyp,Hyp1,Hyp2),
+    !.
+eliminidentic([],Hyp,Hyp1):-!.
+
+
+eliminidentic2([],[],[],[]):-!.
+eliminidentic2([],Hyp,[],[]):-!.
+eliminidentic2([W|Hyp],Hyp1,Hyp2,[W-W-0|Rest]):-
+    on(W,Hyp1),
+    eliminidentic2(Hyp,Hyp1,Hyp2,Rest),
+    !.
+eliminidentic2([W|Hyp],Hyp1,Hyp2,[W-W2-0|Rest]):-
+    tolower(W,W1),
+    on(W2,Hyp1),
+    tolower(W2,W3),
+    W1=W3,
+    eliminidentic2(Hyp,Hyp1,Hyp2,Rest),
+    !.
+eliminidentic2([W|Hyp],Hyp1,Hyp2,[W-W1-1|Rest]):-
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    match_approximate(W,W1),
+    eliminidentic2(Hyp,Hyp1,Hyp2,Rest),
+    !.
+eliminidentic2([W|Hyp],Hyp1,Hyp2,[W-Lem-1|Rest]):-
+    lemmatize_dic_v(W,Lem,K),
+    on(Lem,Hyp1),
+    eliminidentic2(Hyp,Hyp1,Hyp2,Rest),
+    !.
+eliminidentic2([W-_|Hyp],Hyp1,Hyp2,[W-W1-1|Rest]):-
+    locwn(W),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    (locwn(W1),  
+     (lw4(W1,_,W,_);lw4(W,_,W1,_));
+     natl(W1,W,_);natl(W1,_,W);
+        is_in(W1,W)),
+    eliminidentic2(Hyp,Hyp1,Hyp2,Rest),
+    !.
+eliminidentic2([W|Hyp],Hyp1,Hyp2,[W-W1-1|Rest]):-
+    lemmatize_dic(W,Lem,K),
+    on(W1,Hyp1),
+    \+ stopw(W1),
+    lemmatize_dic(W1,Lem1,K1),
+    Lem=Lem1,
+    eliminidentic2(Hyp,Hyp1,Hyp2,Rest),
+    !.
+eliminidentic2([W|Hyp],Hyp1,Hyp2,[W-W-1|Rest]):-
+    recover_descs(W,Descs),is_list(Descs),
+    on(W1,Descs),
+    on(W1,Hyp1), 
+    on(W2,Descs), W1\=W2,
+    on(W2,Hyp1),
+    eliminidentic2(Hyp,Hyp1,Hyp2,Rest),
+    !.
+eliminidentic2([W|Hyp],Hyp1,Hyp2,[W-W1-1|Rest]):-
+    recover_descs(W,Descs),is_list(Descs),
+    on(W1,Hyp1), 
+    recover_descs(W1,Descs1),is_list(Descs1),
+    on(W3,Descs),
+    on(W3,Descs1),
+    on(W2,Descs), W1\=W2,
+    on(W2,Descs1),
+    eliminidentic2(Hyp,Hyp1,Hyp2,Rest),
+    !.
+eliminidentic2([W|Hyp],Hyp1,Hyp2,[W-W1-1|Rest]):-
+    on(W1,Hyp1), 
+    recover_descs(W1,Descs1),is_list(Descs1),
+    on(W,Descs1),
+    eliminidentic2(Hyp,Hyp1,Hyp2,Rest),
+    !.
+eliminidentic2([W|Hyp],Hyp1,[W|Hyp2],Rest):-
+    eliminidentic2(Hyp,Hyp1,Hyp2,Rest),
+    !.
+eliminidentic2([],Hyp,Hyp1,Rest):-!.
+
+strictgramms(Det):-
+   excep(Det,in)
+   ;
+   excep(Det,poss)
+   ;
+   coplbh(Det)
+   ;
+   support(Det)
+   ;
+   excep(Det,pers)
+   ;
+   deits(Det)
+   ;
+   grammw(Det,_)
+   ;
+   wwor(Det),
+   !.
+
+stopw(W):-
+    grw(W)
+    ;
+    lightsvbs(W)
+    ;
+    strictgramms(W)
+    ;
+    W=there
+    ;
+    chigh_rank(W,Lex),
+    !.
+    
+elimhighfreq([],[]):-!.
+elimhighfreq([W-_|Hyp],Hyp1):-
+    lightsvbs(W),
+    elimhighfreq(Hyp,Hyp1),
+    !.
+elimhighfreq([W-_|Hyp],Hyp1):-
+    strictgramms(W),
+    elimhighfreq(Hyp,Hyp1),
+    !.
+elimhighfreq([W-_|Hyp],Hyp1):-
+    W=there,
+    elimhighfreq(Hyp,Hyp1),
+    !.
+elimhighfreq([W-_|Hyp],Hyp1):-
+    (integer(W);qm(W);qmq(W)),
+    notexcept(W),
+    elimhighfreq(Hyp,Hyp1),
+    !.
+elimhighfreq([W-_|Hyp],Hyp1):-
+    chigh_rank(W,Lex),
+    elimhighfreq(Hyp,Hyp1),
+    !.
+elimhighfreq([W-_|Hyp],Hyp1):-
+    grw(W),
+    elimhighfreq(Hyp,Hyp1),
+    !.
+elimhighfreq([W-C|Hyp],[W-C|Hyp1]):-
+    elimhighfreq(Hyp,Hyp1),
+    !.
+
+elimhighfreq2([],[],[]):-!.
+elimhighfreq2([W-_|Hyp],Hyp1,[W-0|Rest]):-
+    lightsvbs(W),
+    elimhighfreq2(Hyp,Hyp1,Rest),
+    !.
+elimhighfreq2([W-_|Hyp],Hyp1,[W-0|Rest]):-
+    strictgramms(W),
+    elimhighfreq2(Hyp,Hyp1,Rest),
+    !.
+elimhighfreq2([W-_|Hyp],Hyp1,[W-0|Rest]):-
+    W=there,
+    elimhighfreq2(Hyp,Hyp1,Rest),
+    !.
+elimhighfreq2([W-_|Hyp],Hyp1,[W-0|Rest]):-
+    (integer(W);qm(W);qmq(W)),
+    notexcept(W),
+    elimhighfreq2(Hyp,Hyp1,Rest),
+    !.
+elimhighfreq2([W-_|Hyp],Hyp1,[W-0|Rest]):-
+    chigh_rank(W,Lex),
+    elimhighfreq2(Hyp,Hyp1,Rest),
+    !.
+elimhighfreq2([W-_|Hyp],Hyp1,[W-0|Rest]):-
+    grw(W),
+    elimhighfreq2(Hyp,Hyp1,Rest),
+    !.
+elimhighfreq2([W-C|Hyp],[W-C|Hyp1],Rest):-
+    elimhighfreq2(Hyp,Hyp1,Rest),
+    !.
+
+checkpremodifiers(Hyp,[V-Cos|AllC]):-
+    checkpremodifs(Hyp,Cos),
+    !.
+checkpremodifs([A,B,C,D,E|Hyp],[Pre,A,B,C,D,E|Cos]):-
+    Pre=Nom-Cat,
+    \+ nouncats(Cat),
+    \+ anncats(Cat),
+    !.
+checkpremodifs([A,B|Hyp],[Pre,A1,B1|Cos]):-
+    A\=A1; B\=B1;     
+    A=A1, B=B1,
+    Pre=Nom-Cat,
+    \+ nouncats(Cat),
+    \+ anncats(Cat),
+    !.
+searchmatchtemp(Hyp,AllC):-
+    searchmatchtemps(Hyp,AllC,Match),
+    !.
+
+searchmatchtemps(Hyp,[V-Cos|AllC],Match):-
+    matchtemp(Hyp,Cos,Match),
+    !.
+searchmatchtemps(Hyp,[V-Cos|AllC],Match):-
+    searchmatchtemps(Hyp,AllC,Match),
+    !.
+
+searchrestmatchtemp(Hyp,Cos):-
+    matchtemp(Hyp,Cos,Match),
+    !.
+
+lightsvbs(Is):-
+    Is=was;Is=were;Is=is;Is=are;Is=has;Is=have;Is=had,
+    !.
+getwordhealth(W,W1):-
+    lemmatize_dic(W,W1,K).
+getwordhealth(W,W1):-
+    recover_descs(W,Ws),is_list(Ws),
+    on(W1,Ws).
+
+uniscipiatt([],[]):-!.
+uniscipiatt([V-Tags|AllC],[Tags|All]):-
+    uniscipiatt(AllC,All),
+    !.     
+checknegatedtags(Hyp,AllC):-
+    uniscipiatt(AllC,Alls),
+    appiattisci(Alls,All),
+    findall(W,(on(W-_,Hyp),getwordhealth(W,Ww),health(Ww)),Ws),
+    findall(W1,(on(W1-_,All),getwordhealth(W1,Ww1),health(Ww1)),Ws1),
+    sort(Ws,Wss),
+    sort(Ws1,Wss1),
+    (Wss=[],Wss1=[];
+     Wss\=[],Wss1\=[];
+     Wss=[]),
+    !.
+
+matchtemp([A,B,C,D|Hyp],[A,B,C,D|Cos],[A,B,C,D|Hyp]):-
+    Hyp=[X-_],
+    !.
+/*118T*/
+matchtemp([resident-_,E-_|Hyp],Cos,[E1-_|Hyp]):-
+    remove(E1-_,Cos,Rest),
+    on(located-_,Rest),
+    on(was-_,Rest),
+    on(from-_,Rest),
+    recover_descs(E1,Des),
+    on(E,Des),
+    nth(Rest,N4,located-_),
+    nth(Rest,N3,from-_),
+    nth(Rest,N2,was-_),
+    nth(Cos,N1,E1-_),
+    N2 < N3, 
+    N4 < N1,
+    !.    
+
+matchtemp([said-_,D-_|Hyp],[D1-_,E,F,S-_|Cos],[D,E|Hyp]):-
+   lemmatize_dic_v(said,Lemm,K),
+   Lemm=S,
+   recover_descs(D,Des),
+   recover_descs(D1,Desc),
+   on(Dd,Des),
+   on(Dd,Des),
+   on(Dd1,Des),Dd1\=Dd,
+   on(Dd1,Des),
+    !. 
+
+matchtemp([longest|Hyp],[A,B,C,D,E,F,S-_|Cos],[D,E|Hyp]):-
+    Hyp=[A,B,C,D,E,F,S1-_|_],
+    recover_descs(S1,Desc),
+    on(S,Desc),
+    !.
+/* then-Vice President_Dick Cheney */
+matchtemp([then,D-_,E-_|Hyp],Cos,[D,E|Hyp]):-
+    on('then-E1'-_,Cos),
+    on(D1-_,Cos),
+    recover_descs(D,Des),
+    on(D1,Des),
+    recover_descs(E,Des1),
+    on(E1,Des1),
+    !.
+matchtemp([former,D-_,E-_|Hyp],Cos,[D,E|Hyp]):-
+    on(former-_,Cos),
+    on(D-_,Cos),
+    on(E1-_,Cos),
+    recover_descs(E1,Des1),
+    on(E,Des1),
+    !.
+matchtemp([former,D-_,E-_|Hyp],Cos,[D,E|Hyp]):-
+    on(D-_,Cos),
+    on(E-_,Cos),
+    !.
+matchtemp([then,D-_,E-_|Hyp],Cos,[D,E|Hyp]):-
+    on(D-_,Cos),
+    on(E-_,Cos),
+    !.
+
+matchtemp([through-_,D,E|Hyp],Cos,[D,E|Hyp]):-
+    on(D,Cos),
+    on(E,Cos),
+    Hyp=[],
+    !.
+matchtemp([winner,D,E,F|Hyp],[the-_,winner-_|Cos],[D,E|Hyp]):-
+    on(D,Cos),
+    on(E,Cos),
+    on(F,Cos),
+    !.
+matchtemp([in-_,D|Hyp],Cos,[D|Hyp]):-
+    on(in-_,Cos),
+    on(D,Cos),
+    Hyp=[],
+    !.
+matchtemp([found,in,D|Hyp],Cos,[D|Hyp]):-
+    on(in-_,Cos),
+    on(D,Cos),
+    !.
+matchtemp([director-_,D|Hyp],Cos,[D|Hyp]):-
+    on(director-_,Cos),
+    on(D,Cos),
+    !.
+matchtemp([leading-_,D-_,E-_|Hyp],Cos,[D,E|Hyp]):-
+    prepos(D),
+    on(D-_,Cos),
+    on(E-_,Cos),
+    !.
+matchtemp([proclaim-_,C,D,E|Hyp],Cos,[C,D,E|Hyp]):-
+    on(C,Cos),
+    on(D,Cos),
+    on(E,Cos),
+    !.
+matchtemp([has-_,C,E-_|Hyp],[A-_,B,C|Cos],[A,B1,C|Hyp]):-
+    E=origins,
+    A=from,
+    Hyp=[],
+    !.
+matchtemp([Verb,Num|Hyp],[C-_,Int-_|Cos],[A,B1,C|Hyp]):-
+   (once(inf_v(Verb,L));v(Verb,L)),
+   (nm(Int,L,Num);Num=Int,integer(Int)),
+   lemmatize_dic_v(C,Lemm,K),
+   Lemm=Verb,
+   !.
+matchtemp([Verb,Writer|Hyp],[C-_,Writer-_|Cos],[A,B1,C|Hyp]):-
+   (once(inf_v(Verb,L));v(Verb,L)),
+   \+ fct(Writer), \+ r(Writer), \+ jj(Writer), \+ grammw(Writer,K),
+   lemmatize_dic_v(C,Lemm,K),
+   Lemm=Verb,
+   !.
+
+matchtemp([Int-_,E-_|Hyp],[A,Int-_,Is-_,C-_|Cos],[A,B1,C|Hyp]):-
+   stringof([I|Lis],Int),
+   integer(I),
+   lemmatize_dic_v(C,Lemm,K),
+   consistent_preds(Lemm,E,L),
+   !.
+matchtemp([drug-_,D|Hyp],Cos,[D,E|Hyp]):-
+    remove(D,Cos,Rest),
+    length(Hyp,L),L=<4,
+    on(E-_,Rest),
+    lemmatize_dic(E,Lemm,K),
+    main_head_match(Lemm,drug,L1),
+    !.
+matchtemp([located-_,A,of-_,C|Hyp],Cos,[A,of-_,C|Hyp]):-
+    on(A,Cos),
+    on(C,Cos),
+    Hyp=[],
+    !.
+matchtemp([strain,of-_,S,G-_|Hyp],Cos,[strain-_,of-_,S,G1-_|Hyp]):-
+    sloppy_match(G,G1,L),
+    !.
+matchtemp([killed,G|Hyp],[Is-_,F,G1-_|Cos],Rest):-
+    lightsvbs(Is),
+    main_head_match(killed,G1,L),
+    !.
+    
+matchtemp([acquire,C,E,G|Hyp],[C-_,C1-_|Cos],[C,D,E|Hyp]):-
+    on(G1-_,Cos),
+    natl(G,G1,_),
+    consistent_preds(acquire,C1,K),
+    lemmatize_dic(E,Lemm,_),
+    on(E1-_,Cos),
+    lemmatize_dic(E1,Lemm1,_),
+    sloppy_match(Lemm,Lemm1,S),
+    !.    
+matchtemp([A,C-_,in-_,D-_,F,G|Hyp],[A,Vir,D-_,E,P-_,D-_,F,G|Cos],[A,B,C,D|Hyp]):-
+    lemmatize_dic(C,Lemm,K),
+    (light_verbs(Lemm);light_verbs(C)),
+    prepos(P),
+    !.
+matchtemp([A,C-_,to-_,D-_,E,F,G,H|Hyp],[E,P-_,A|Cos],[A,B,C,D|Hyp]):-
+    lemmatize_dic(C,Lemm,K),
+    (light_verbs(Lemm);light_verbs(C)),
+    chigh_rank(D,Lex),
+    on(F,Cos),
+    on(G,Cos),
+    on(H,Cos),
+    !.
+matchtemp([A,B,C,D,E,F,G,H,K,L,M,N,X],[A,B,C,D,E,F,G,H,K,L,M|Cos],[A,B,C,D|Hyp]):-
+    on(N,Cos),
+    !.
+matchtemp([A,B,C,D,E,F,G,H,K,L,N,X],[A,B,C,D,E,F,G,H,K,L|Cos],[A,B,C,D|Hyp]):-
+    on(N,Cos),
+    !.
+matchtemp([A,B,C,D,E,F,G,H,K,N,X],[A,B,C,D,E,F,G,H,K|Cos],[A,B,C,D|Hyp]):-
+    on(N,Cos),
+    !.
+matchtemp([A,B,C,D,E,F,G,H,N,X],[A,B,C,D,E,F,G,H|Cos],[A,B,C,D|Hyp]):-
+    on(N,Cos),
+    length(Cos,L),
+    L<4,
+    !.
+matchtemp([A,B,C,D,E,F,G,N,X],[A,B,C,D,E,F,G|Cos],[A,B,C,D|Hyp]):-
+    on(N,Cos),
+    length(Cos,L),
+    L<4,
+    !.
+matchtemp([A,B,C,D,E,F,G,X],[A,B,Vir,_,_,_,_,Vir,C,D,E,F,G|Cos],[A,B,C,D|Hyp]):-
+    (Vir=_-punt;Vir=_-par),
+    !.
+matchtemp([A,B,C,D,E,F,G,X],[A,B,Vir,_,_,_,Vir,C,D,E,F,G|Cos],[A,B,C,D|Hyp]):-
+    (Vir=_-punt;Vir=_-par),
+    !.
+matchtemp([A,B,C,D,E,F,G,X],[A,B,Vir,_,_,Vir,C,D,E,F,G|Cos],[A,B,C,D|Hyp]):-
+    (Vir=_-punt;Vir=_-par),
+    !.
+matchtemp([A,B-_,of-_,D,E,F,G,H-_,K-_,N,X],[N,Is-_,W,A,D1,to-_,B1-_,H1-_,_,E,F|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(K),
+    lightsvbs(Is),
+    recover_descs(H1,Des),
+    on(H,Des),
+    main_head_match(B,B1,L),
+    !.
+matchtemp([A-_,B,P-_,D,E,F-_,G-_,H-_,K-_,N,X],[C-_,B,W,Z,D1-_,_,_,_,_,_,_,_,_,_,D|Cos],[A,B,C,D|Hyp]):-
+    chigh_rank(A,Lex),
+    chigh_rank(C,Lex1),
+    prepos(P),
+    lightsvbs(G),
+    lightsvbs(Is),
+    integer(H),
+    recover_descs(D1,Des),
+    on(H,Des),
+    on(F1-_,Cos),
+    locwn(F),
+    recover_descs(F1,Desc),
+    on(F,Desc),
+    !.
+
+matchtemp([A,B-_,C,D,E,F,G,H,I,X],[A,Vir1,_,_,_,_,_,_,B1-_,of-_,C,Con-_,E,F,G,H,I|Cos],[A,B,C,D|Hyp]):-
+    lemmatize_dic(B,Lem,K),
+    lemmatize_dic(B1,Lemm,L),
+    consistent_preds(Lem,Lemm,S),
+    !.
+
+matchtemp([A,B,C,D,E,F-_,G,H,X],[A,B,Vir,_,_,_,_,_,_,_,_,_,_,_,Vir1,C,Is-_,_,_,F1-_,Con-_,_,_,G1-_,_,_,_,H|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(F,Des),
+    on(F1,Des),
+    on(G1,Des),
+    !.
+matchtemp([A,B,C,Is-_,E,F-_,G,X],[A,B,C,Is-_,E,F-_,_,_,_,_,_,_,G|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    !.
+
+matchtemp([A,Is-_,E-_,of-_,G,X],[A,Vir,E1-_,G|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    (Vir=_-punt;Vir=_-par),
+    (main_head_match(E,E1,L)
+     ;
+     recover_descs(E,Des),
+     on(F,Des),
+     main_head_match(E,F,L)),
+    !.
+
+matchtemp([A,Is-_,in-_,D-_,X],[A,Vir,E,D1-_|Cos],[A,B,C,D|Hyp]):-
+    lemmatize_dic_v(Is,Lem,K),
+    light_verbs(Lem),
+    (natl(D,D1,_);
+       natl(D,_,D1);
+       toupper(D1,D2),
+       (natl(D,_,D2);
+       natl(D,D2,_))
+       ),
+    !.
+
+matchtemp([A,B,C,Is-_,E-_,F,G-_,X],[A,B,C,Vir1,_,_,_,_,_,_,_,Vir,E1,F1-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    (Vir=_-punt;Vir=_-par;Vir1=_-punt;Vir1=_-par),
+    recover_descs(F1,Des),
+    on(E,Des),
+    on(G,Des),
+    !.
+matchtemp([A,Is-_,B,C-_,of-_,F,G,X],[G,C1-_,E1,F1,A|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    lemmatize_dic_v(C1,Lem,K),
+    nbk(C,Lemm,T),
+    main_head_match(Lem,Lemm,L),
+    !.
+matchtemp([A,B,C-_,D-_,E-_,X],[D1-_,Is-_,F,C1-_,_,_,_,_,A,B|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    lemmatize_dic_v(C,Lem,K),
+    (Lem=pay;C=pay),E=salary,
+    n_wn(C1,Type), Type=[18],
+    recover_descs(D1,Des),
+    recover_descs(D,Desc),
+    (on(S,Des),
+     on(S,Desc)
+     ;
+     on(S,Des),
+     on(S1,Desc),
+     checkcase(S,S1)),
+     !.
+matchtemp([A,Is-_,C-_,D-_,of-_,F-_,X],[F1-_,D1-_,A|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+     s_is_ax(F1,F),
+    main_head_match(D,D1,L),
+    !.
+matchtemp([A,B,Is-_,C-_,D-_,of-_,F,X],[D1-_,A,B|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(C,Lex),
+     n_wn(D,Cat),
+     Cat=[18],
+     (n_wn(D1,Cat1),
+      Cat1=[18]
+      ;
+      recover_descs(D1,Desc),
+      on(S,Desc),
+      toupper(S,S1),
+      on(T,Desc),T\=S,
+      toupper(T,T1),
+      mcon(S1,'_',S2),
+      mcon(S2,T1,T2),
+      n_wn(T2,Cat1),
+      Cat1=[18]),
+     on(F,Cos),
+     !.
+matchtemp([A,Is-_,C-_,D,B-_,E-_,F,X],[A,Iss-_,Be,C-_,D,B1-_,E-_,F|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    lightsvbs(Iss),
+    sloppy_match(B,B1,K),
+    !.
+
+matchtemp([A,B,C,D,E,F-_,Ab-_,_,Num1-_|Hyp],[A,B,C,D,E,F1-_,G1-_,_,Num-_|Cos],[A,B,C,D|Hyp]):-
+    prepos(F1),
+    prepos(F),
+    recover_descs(Num,Des),
+    on(Nm,Des),
+    (integer(Num1),Nm1=Num1;
+      term_to_atom(Nm1,Num1)),
+    (Ab=above,
+     Nm1 < Nm
+     ;
+     Ab=below,
+     Nm < Nm1),
+    !.
+matchtemp([A,Is-_,B-_,C-_,D-_|Hyp],[D1-_,E,F,A|Cos],[A,B,C,D,E|Hyp]):-
+    prepos(C),
+    lightsvbs(Is),
+    lemmatize_dic_v(B,Lem,K),
+    light_verbs(Lem),
+    (natl(D,D1,_);
+       natl(D,_,D1);
+       toupper(D,D2),
+       (natl(D2,_,D1);
+       natl(D2,D1,_))
+       ),
+    !.
+matchtemp([A,B-_,C-_,E|Hyp],[T,D1-_,E1-_,S,E,Vir,A|Cos],[A,B,C,D,E|Hyp]):-
+    prepos(C),
+    n_wn(D1,Cat),
+     Cat=[18],
+    prepos(E1),
+   lemmatize_dic_v(B,Lem,K),
+   light_verbs(Lem),
+    !.
+matchtemp([A-_,B-_,C-_,D-_,E,F|Hyp],[A-_,Vir,D-_,E1,P-_,D-_,E,F|Cos],[A,B,C,D,E|Hyp]):-
+    prepos(C),
+   lemmatize_dic_v(B,Lem,K),
+   light_verbs(Lem),
+    chigh_rank(D,Lex),
+    prepos(P),
+    !.
+
+matchtemp([A-_,Is-_,C-_,D-_,E-_|Hyp],[D-_,E1-_,P-_,A1-_,B1-_|Cos],[A,B,C,D,E|Hyp]):-
+    prepos(P),
+    lightsvbs(Is),
+    chigh_rank(C,Lex),
+    recover_descs(E,Des),
+    on(E1,Des),
+    recover_descs(A1,Desc),
+    on(S,Desc),
+    on(S,Des),
+    recover_descs(A,Descs),
+    on(S1,Descs),
+    on(S1,Desc),
+    on(B1,Descs),
+    !.
+matchtemp([A,B-_,C-_,D-_,E|Hyp],[D1-_,E1-_,C-_,B1,B2,B3,Vir,A|Cos],[A,B,C,D,E|Hyp]):-
+    prepos(C),
+    recover_descs(D1,Des),
+    on(D,Des),
+   lemmatize_dic_v(B,Lem,K),
+   light_verbs(Lem),
+    (n_wn(E1,Cat);
+     tolower(E1,E2),
+     n_wn(E2,Cat)),
+     Cat=[18],
+    !.
+matchtemp([A-_,B,Is-_,C-_,E-_,F-_,G-_|Hyp],[E1-_,_,_,F-_,G-_,_,L-_|Cos],[A,B,C,D|Hyp]):-
+    chigh_rank(C,Lex),
+    lemmatize_dic_v(Is,Lem,K),
+    lemmatize_dic_v(L,Lemm,K1),
+    main_head_match(Lem,Lemm,S),
+    stringof(Des,E1),
+    reverse(Des,Rev),
+    Rev=['_',s,'-'|Rest],
+    reverse(Rest,HVU),
+    stringof(HVU,E2),
+    (E2=E;checkcase(E2,E)),
+    !.
+
+matchtemp([A-_,B-_,Is-_,D-_,E-_|Hyp],[A1-_,Vir,_,Vir,Is1-_,B1-_,_,_,P-_,E1-_,B-_|Cos],[A,B,C,D,E|Hyp]):-
+    prepos(D),
+    lightsvbs(Is),
+    lightsvbs(Is1),
+    lemmatize_dic(B,Lem,K),
+    relatives(Rel),
+    on(Lem,Rel),
+    (natl(E,E1,_);natl(E,_,E1)),
+     recover_descs(A,Des),
+     recover_descs(A1,Desc),
+     on(C,Des),
+     on(C,Desc),
+     on(C1,Des),C1\=C,
+     (on(C1,Desc)
+     ;
+      on(C2,Desc),
+      checkcase(C1,C2)
+     ),
+     !.
+
+matchtemp([A1-_,B,C,D-_,E|Hyp],[E,E1,C,B1,of-_,A-_|Cos],[A,B,C,D,E|Hyp]):-
+    prepos(D),
+    (A1=A;
+    checkcase(A1,A)),
+    Hyp=[],
+    !.
+matchtemp([A,B,C,D-_,E,F-_,G|Hyp],[G|Cos],[A,B,C,D|Hyp]):-
+    prepos(D),
+    prepos(F),
+    searchrestmatchtemp([A,B,C,D-_,E],Cos),
+    !.
+matchtemp([A,Is-_,B-_,C-_,E-_,F-_,G-_|Hyp],[A,_,_,_,P-_,T-_,_,_,_,_,P1-_,F-_,G-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(B,Lex),
+    prepos(E),
+    chigh_rank(F,Lex1),
+    lemmatize_dic(P,Lem,K),
+    main_head_match(Lem,C,S),
+    prepos(T),
+    prepos(P1),
+    !.
+
+matchtemp([A-_,B,C,Is-_,E-_,F-_,G-_|Hyp],[A-_,C,P-_,T-_,B,_,_,Vir,N,S,Vir,Is-_,E1-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    prepos(F),
+    prepos(P),
+    chigh_rank(A,Lex),
+    chigh_rank(T,Lex1),
+    locwn(G),
+    on(Q-_,Cos),
+    lw4(Q,_,G,_),
+   lemmatize_dic_v(E,Lem,K),
+   lemmatize_dic_v(E1,Lemm,K1),
+   consistent_preds(Lemm,Lem,L),
+    !.
+matchtemp([P-_,B-_,C-_,M,S-_,Num-_,G-_|Hyp],[P-_,B-_,Vir,C-_,M,_,_,_,and-_,Ki-_,Nu-_,G1-_,E1-_|Cos],[A,B,C,D|Hyp]):-
+    prepos(P),
+    chigh_rank(C,Lex),
+    locwn(B),
+   lemmatize_dic_v(S,Lem,K),
+   lemmatize_dic_v(Ki,Lemm,K1),
+   consistent_preds(Lemm,Lem,L),
+   (integer(Num), nm(Nu,_,Num);
+    integer(Nu), nm(Num,_,Nu)),
+    main_head_match(G1,G,_),
+    !.
+
+
+matchtemp([A-_,V-_,Num-_,G-_|Hyp],[A-_|Cos],[A,B,C,D|Hyp]):-
+    lemmatize_dic_v(V,Lemm,K),
+   (once(inf_v(Lemm,L));v(Lemm,L)),
+    (nm(Int,L,Num);integer(Num)),
+    length(Hyp,L1),L1=<2,
+    searchrestmatchtemp([Lemm,Num],Cos),
+     !.
+
+
+matchtemp([A-_,Is-_,in-_,G-_|Hyp],[A1-_,B-_,D,in-_,F,Vir,G-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    locwn(G),
+     recover_descs(A,Des),
+     recover_descs(A1,Desc),
+     recover_descs(B,Descs),
+     on(C,Des),
+     on(C,Desc),
+     on(C1,Des),C1\=C,
+     on(C1,Desc),
+    !.
+matchtemp([A-_,Is-_,G-_|Hyp],[A1-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(A1,Des),
+    on(A,Des),
+    length(Hyp,L),L=<2,
+    searchrestmatchtemp([G,A],Cos),
+     !.
+
+matchtemp([A,Is-_,T-_,F-_,G|Hyp],[G,of-_,A,in-_,L-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(T,Lex),
+    locwn(L),
+    is_in(L,F1),
+    (natl(F1,F,_);natl(F1,_,F)),
+    !.
+
+matchtemp([T-_,F,A,Is-_,G|Hyp],[G,_,_,_,_,T-_,_,F,A|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(T,Lex),
+    !.
+
+matchtemp([A,Is-_,T-_,F-_,G-_|Hyp],[A,Vir,_,Vir,V-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(T,Lex),
+    pp_word_cat(V, Tense, Mood, Vinf),
+    (once(inf_v(Vinf,L));v(Vinf,L);v(V,L)),
+    Tense=pass, Mood=ind,
+    on(N-_,Cos),
+    (main_head_match(N,F,K);
+     main_head_match(N,G,K)),
+    !.
+    
+matchtemp([A,Is-_,V-_,G|Hyp],[A,Is-_,V-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+     on(G,Cos),
+    pp_word_cat(V, Tense, Mood, Vinf),
+    (once(inf_v(Vinf,L));v(Vinf,L);v(V,L)),
+    Tense=pass, Mood=ind,
+    length(Hyp,L1),L1=<2,
+    (\+ yescreation_pred(Pred), \+ non_creation_pred(Pred)
+     ;
+     findall(N,(on(N-_,Cos),locwn(N)),Locs),
+     Locs=[]),
+     !.
+
+matchtemp([A,Is-_,T-_,F-_,G|Hyp],[F1-_,G,A|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(T,Lex),
+    (recover_descs(F,Des),
+     on(F1,Des)
+     ;
+     recover_descs(F1,Des),
+     on(F,Des)),
+     !.
+
+matchtemp([A,Is-_,T-_,F-_,called-_,G|Hyp],[F1-_,K,Vir,M,Vir,L,and-_,A|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(T,Lex),
+    relatives(R),
+    on(F,R),
+    lemmatize_dic(F1,Lemm,_),
+    on(Lemm,R),
+    (G=K;G=M;G=L),
+    !.
+    
+matchtemp([A-_,Is-_,T-_,F-_,G-_|Hyp],[A1-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(T,Lex),
+    \+ prepos(G),
+    (recover_descs(A1,Desc), is_list(Desc),
+     on(A,Desc)
+     ;
+     recover_descs(A,Desc), is_list(Desc),
+     on(A1,Desc)
+     ),
+    recover_descs(F,Descs), \+ is_list(Descs),
+    length(Hyp,L1),L1=<2,
+    on(V-_,Cos),
+    pp_word_cat(V, Tense, Mood, Vinf),
+    (once(inf_v(Vinf,L));v(Vinf,L);v(V,L)),
+    \+ health(Vinf),
+    Tense=pass, Mood=part,
+    on(N-_,Cos),
+    recover_descs(N,Descss), \+ is_list(Descss),
+    main_head_match(N,F,K),
+    !.
+    
+matchtemp([A-_,Is-_,C-_,P-_,T-_,D-_,N-_,F,G-_|Hyp],[F,G1-_,Vir,C-_,P1-_,N1-_,N2-_,Vir,A-_|Cos],[A,B,C,D|Hyp]):-
+    locwn(A),
+    lightsvbs(Is),
+    prepos(P),
+    prepos(P1),
+    chigh_rank(D,Lex),
+    lemmatize_dic(G1,Lemm,K),
+    (G=G1;G=Lemm),
+     recover_descs(N,Descs),
+     on(N1,Descs),
+     on(N2,Descs),
+    !.
+    
+matchtemp([Num,A-_,Is-_,C,V,P-_,T-_,N,F,of-_,S,G|Hyp],[Num-_,par-_,G1-_,D,in-_,A1-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    prepos(P),
+    chigh_rank(T,Lex),
+    lemmatize_dic(A,Lemm,K),
+    locwn(A1),
+     (natl(A1,Lemm,_);natl(A1,_,Lemm)),
+    searchrestmatchtemp([strain,of-_,S,G],Cos),
+     !.
+
+matchtemp([A,Is-_,C-_,in-_,G-_|Hyp],[G1-_,D,of-_,A|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    locwn(G),
+    lemmatize_dic(C,Lemm,K),
+    (light_verbs(Lemm);light_verbs(C)),
+     !.
+
+matchtemp([A,Is-_,C-_,of-_,R-_|Hyp],[F-_,R1-_,C1-_,A1-_|Cos],[A,B,C,D,X]):-
+    lightsvbs(Is),
+    locwn(R),
+    pp_word_cat(Is, Tense, Mood, Vinf),
+    Tense=pass, Mood=ind,
+    (F=former;F='Former'),
+    (
+     (natl(R,R1,_);natl(R,_,R1))
+     ;
+     recover_descs(R1,Descs),
+     on(G2,Descs),
+     (natl(R,G2,_);natl(R,_,G2))
+    ),
+     recover_descs(C,Desc),
+     on(P,Descs),on(P,Desc), /* Prime */
+     recover_descs(C1,Desc1),
+     on(C2,Desc), C2\=P,
+     on(C2,Desc1),
+    !.
+
+matchtemp([A,B-_,Is-_,C-_,in-_,G-_|Hyp],[A,B1-_,Vir,_,_,V1-_,P-_,S,Vir,G-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    prepos(P),
+    locwn(G),
+    (B=B1;checkcase(B,B1)),
+    lemmatize_dic(C,Lemm,K),
+    (light_verbs(Lemm);light_verbs(C)),
+    lemmatize_dic(V1,Lem,K1),
+    (light_verbs(Lem);light_verbs(V1)),
+     !.
+
+matchtemp([A,Is-_,C-_,in-_,G-_|Hyp],[G1-_,D,of-_,A|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    locwn(G),
+    lemmatize_dic(C,Lemm,K),
+    (light_verbs(Lemm);light_verbs(C)),
+    (
+     (natl(G,G1,_);natl(G,_,G1))
+     ;
+     recover_descs(G1,Descs),
+     on(G2,Descs),
+     (natl(G,G2,_);natl(G,_,G2))
+    ),
+    !.
+matchtemp([A,Is-_,D-_,C-_,in-_,F,G|Hyp],[F,G,Vir,_,_,_,C1-_,H,A|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(D,Lex),
+    sloppy_match(C,C1,K),
+    !.
+
+matchtemp([A,V-_,F,G|Hyp],[A,Is-_,H-_,F,G|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    prepos(C),
+    prepos(P),
+    chigh_rank(D,Lex),
+    lemmatize_dic_v(V,Lemm,K),
+    (light_verbs(Lemm);light_verbs(V)),
+    lemmatize_dic_v(H,Lem,K1),
+    consistent_preds(Lemm,Lem,S),
+    !.
+
+matchtemp([A,V-_,C-_,G|Hyp],[A,Vir,Is-_,B,H-_,P-_,D-_,N,M,C-_,G|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    prepos(C),
+    prepos(P),
+    chigh_rank(D,Lex),
+    lemmatize_dic_v(V,Lemm,K),
+    (light_verbs(Lemm);light_verbs(V)),
+    lemmatize_dic_v(H,Lem,K1),
+    consistent_preds(Lem,Lemm,I),
+    !.
+
+matchtemp([A-_,Is-_,C-_,in-_,G-_|Hyp],[A-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    locwn(A),
+    lemmatize_dic(C,Lemm,K),
+    (light_verbs(Lemm);light_verbs(C)),
+    is_in(A,G),
+    !.
+matchtemp([A,B,Is-_,C-_,in-_,G-_|Hyp],[G2-_,A,I,B|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    locwn(A),
+    lemmatize_dic(C,Lemm,K),
+    (light_verbs(Lemm);light_verbs(C)),
+     recover_descs(G2,Descs),
+     on(G1,Descs),
+    (lw4(G1,_,G,_);citiesinfer(G,G1,S)),
+    !.
+matchtemp([A-_,Is-_,C-_,D-_,of-_,G-_|Hyp],[G1-_,A-_|Cos],[A,B,C,D|Hyp]):-
+     chigh_rank(C,Lex),
+     recover_descs(G1,Descs),
+     on(D,Descs),
+     on(G,Descs),
+    !.
+
+matchtemp([A-_,Is-_,C-_,D-_,of-_,G-_|Hyp],[G-_,X,A-_|Cos],[A,B,C,D|Hyp]):-
+    locwn(A),
+    chigh_rank(C,Lex),
+    lemmatize_dic(Is,Lemm,K),
+    (light_verbs(Lemm);light_verbs(C)),
+    (lw4(A,_,G1,_);citiesinfer(G,A,S)),
+    !.
+/*
+matchtemp([A-_,Is-_,C-_,D-_,of-_,G-_|Hyp],[A-_|Cos],[A,B,C,D|Hyp]):-
+    locwn(A),
+    lightsvbs(Is),
+    chigh_rank(C,Lex),
+    (lw4(A,_,G,_);citiesinfer(G,A,S)),
+    !.
+*/
+matchtemp([A-_,Is-_,C-_,in-_,G-_|Hyp],[G1-_,X,A-_,C-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    locwn(A),
+    lemmatize_dic(C,Lemm,K),
+    (light_verbs(Lemm);light_verbs(C)),
+    lw4(A,_,G1,_),
+    !.
+matchtemp([A-_,Is-_,C-_,in-_,G-_|Hyp],[A-_,_,_,Vir,G-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    locwn(G),
+    lemmatize_dic(C,Lemm,K),
+    (light_verbs(Lemm);light_verbs(C)),
+    lw4(A,_,G,_),
+    !.
+matchtemp([_-par,A-_,_-par,Is-_,C-_,by-_,G-_|Hyp],[A-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    lemmatize_dic_v(C,Lemm,K),
+    searchrestmatchtemp([Lemm,G],Cos),
+    !.
+
+matchtemp([_-par,A-_,Is-_,C-_,in-_,G-_|Hyp],[A-_,_,_,Vir,G-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    locwn(G),
+    lemmatize_dic(C,Lemm,K),
+    (light_verbs(Lemm);light_verbs(C)),
+    lw4(A,_,G,_),
+    !.
+
+matchtemp([A,Is-_,C,in-_,G-_|Hyp],[G1-_,X,A,C|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    locwn(G),
+    lw4(G,_,G2,_),
+    (natl(G2,G1,_);natl(G2,_,G1)),
+    !.
+
+matchtemp([A,Is-_,from-_,G-_|Hyp],[A,Vir,C-_,G1-_|Cos],[A,B,C,D|Hyp]):-
+    (lightsvbs(Is);Is=comes;Is=came),
+    locwn(G),
+    (natl(G,G1,_);natl(G,_,G1)),
+    !.
+
+matchtemp([A,B-_,Is-_,from-_,G-_|Hyp],[G1-_,X,A,C-_|Cos],[A,B,C,D|Hyp]):-
+    (lightsvbs(Is);Is=comes;Is=came),
+    locwn(G),
+    (natl(G,G1,_);natl(G,_,G1)),
+    recover_descs(C,Descs),
+    on(B,Descs),
+    on(s_,Descs),
+    !.
+
+matchtemp([A-_,Is-_,C-_,in-_,G-_|Hyp],Cos,[A,B,C,D|Hyp]):-
+    locwn(A),
+    lemmatize_dic(C,Lemm,K),
+    (light_verbs(Lemm);light_verbs(C)),
+    lw4(A,_,G,_),
+    on(A-_,Cos),
+    on(G-_,Cos),
+    !.
+
+matchtemp([A,Is-_,C-_,E,of-_,G-_|Hyp],[G1-_,_,_,_,A,P-_,D-_,_,E|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    lw4(X,_,G,_),
+    chigh_rank(D,Lex),
+    prepos(P),
+    recover_descs(G1,Descs),
+    on(G,Descs),
+    on(s_,Descs),
+    !.    
+
+matchtemp([A,Is-_,C-_,E,of-_,G|Hyp],[C1-_,in-_,A|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    lemmatize_dic(C,Lemm,K),
+    (light_verbs(Lemm);light_verbs(C)),
+    lemmatize_dic(C1,Lemm1,K1),
+    (light_verbs(Lemm1);light_verbs(C1)),
+    on(E,Cos),
+    on(G,Cos),
+    !.
+matchtemp([A,B-_,C,P-_,D-_,E,F,of-_,G-_|Hyp],[A,Vir,_,_,_,Loc-_,P1-_,D-_,Bor-_,of-_,C,and-_,D-_,E,F,of-_,G-_|Cos],[A,B,C,D|Hyp]):-
+    prepos(P),
+    prepos(P1),
+    chigh_rank(D,Lex),
+    lemmatize_dic_v(B,Lemm,K1),
+    sloppy_match(Lemm,Bor,K),
+    locwn(G),
+    lemmatize_dic_v(Loc,Lemmq,_),
+    (light_verbs(Lemm1);light_verbs(Loc)),
+    !.
+matchtemp([A-_,B,C,D,Is-_,E-_|Hyp],[A1-_,B1-_,B,C,D|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(A1,Descs),
+    on(E,Descs),
+    recover_descs(A,Descs1),
+    on(F,Descs),
+    on(F,Descs1),
+    !.
+
+matchtemp([A,B,C,Is-_,E-_,in-_,G-_|Hyp],[A,B,C,in-_,G-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    locwn(G),
+    lemmatize_dic_v(E,Lemm,K1),
+    (light_verbs(Lemm);light_verbs(E)),
+    !.
+
+matchtemp([A,B,C,D,Is-_,E-_,in-_,G-_|Hyp],[A,B,C,D,in-_,G1-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    locwn(G),
+    lemmatize_dic(E,Lemm,K),
+    (light_verbs(Lemm);light_verbs(C)),
+    recover_descs(G1,Descs),
+    on(G,Descs),
+    on(s_,Descs),
+    !.    
+matchtemp([A,Is-_,in-_,G-_|Hyp],[A,_,_,_,_,in-_,_,G-_|Cos],[A,B,C,D,X]):-
+    lightsvbs(Is),
+    locwn(G),
+    !.    
+
+matchtemp([A,Is-_,C-_,D,X],[A,Is-_,C1-_,B,E,D,X],[A,B,C,D,X]):-
+    lightsvbs(Is),
+    chigh_rank(C,Lex),
+    chigh_rank(C1,Lex1),
+    !.
+matchtemp([A,B-_,E,Is-_,C-_,D-_|Hyp],[A,B1-_|Cos],[A,B,C,D,X]):-
+    lightsvbs(Is),
+    prepos(C),
+    locwn(D),
+    on(E,Cos),
+    recover_descs(B,Descs),
+    on(B1,Descs),
+    on(s_,Descs),
+    on(D1-_,Cos),
+    stringof(Lis1,D),
+    stringof(Lis2,D1),
+    Lis1=[W,W1,W2,W3|_],
+    Lis2=[W,W1,W2,W3|_],
+    !.
+matchtemp([A-_,E,Is-_,C-_,D-_|Hyp],[C1-_,_,_,E|Cos],[A,B,C,D,X]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    recover_descs(C1,Descs),
+    lemmatize_dic(D,Lemm,K),
+    (on(D,Descs);on(Lemm,Descs)),
+    on(C,Descs),
+    !.
+matchtemp([A,Is-_,C-_,D-_|Hyp],[C1-_,A|Cos],[A,B,C,D,X]):-
+    lightsvbs(Is),
+    recover_descs(C1,Descs),
+    lemmatize_dic(D,Lemm,K),
+    (on(D,Descs);on(Lemm,Descs)),
+    on(C,Descs),
+    !.
+matchtemp([A,Is-_,C-_,D,of-_,R-_|Hyp],[R-_,_,_,C1-_,D,N-_,A|Cos],[A,B,C,D,X]):-
+    lightsvbs(Is),
+    chigh_rank(C,Lex),
+    locwn(R),
+    pp_word_cat(Is, Tense, Mood, Vinf),
+    Tense=pass, Mood=ind,
+    C1=former,
+    !.
+
+matchtemp([B-_,E,Is-_,C-_,D-_|Hyp],[B1-_|Cos],[A,B,C,D,X]):-
+    lightsvbs(Is),
+    prepos(C),
+    locwn(D),
+    on(E,Cos),
+    recover_descs(B,Descs),
+    recover_descs(B1,Descs1),
+    on(S,Descs),
+    on(S,Descs1),
+    on(T,Descs), T\=S,
+    on(T,Descs1),
+    on(s_,Descs),
+    on(D1-_,Cos),
+    stringof(Lis1,D),
+    stringof(Lis2,D1),
+    Lis1=[W,W1,W2,W3|_],
+    Lis2=[W,W1,W2,W3|_],
+    !.
+matchtemp([_-par,A-_,B,_-par,Is-_,E-_,G-_,C,D|Hyp],[C,D,Vir,E1-_,of-_,A-_,B|Cos],[A1-_,B,C,D1-_,E,F,G|Hyp]):-
+    chigh_rank(A,Lex),
+    lightsvbs(Is),
+    prepos(G), /* relation between write-author */
+    lemmatize_dic_v(E,Lemm,K),
+    consistent_preds(Lemm,E1,S),
+    !.
+matchtemp([A,B,Is-_,C,D,P-_,E|Hyp],[C,D,Vir,E,of-_,A,B|Cos],[A1-_,B,C,D1-_,E,F,G|Hyp]):-
+    prepos(P),
+    lemmatize_dic_v(Is,Lemm,K),
+    (Lemm=choose;Lemm=elect),
+    !.
+
+matchtemp([A-_,B,Is-_,E-_,G-_,C,D|Hyp],[C,D,Vir,E1-_,of-_,A,B|Cos],[A1-_,B,C,D1-_,E,F,G|Hyp]):-
+    chigh_rank(A,Lex),
+    lightsvbs(Is),
+    prepos(G), /* relation between write-author */
+    lemmatize_dic_v(E,Lemm,K),
+    consistent_preds(Lemm,E1,S),
+    !.
+matchtemp([A-_,B,C,T-_,E-_,G-_,D|Hyp],[D,Vir,Is-_,C1,P-_,A1-_,T1-_,P1-_,A-_,B,C|Cos],[A1-_,B,C,D1-_,E,F,G|Hyp]):-
+    chigh_rank(A,Lex),
+    chigh_rank(A1,Lex1),
+    lightsvbs(Is),
+    prepos(G), /* relation between team-agreement */
+    prepos(P),
+    prepos(P1),
+    lemmatize_dic_v(T,Lemm,K),
+    (consistent_preds(Lemm,T1,S);
+      sloppy_match(Lemm,T1,S)),
+    !.
+
+matchtemp([A,B,Is-_,E,F,G-_,C|Hyp],[C,P-_,A,B,Vir,E,F|Cos],[A1-_,B,C,D1-_,E,F,G|Hyp]):-
+    prepos(P),
+    prepos(G),
+    lemmatize_dic_v(Is,Lemm,K),
+    light_verbs(Lemm),
+    !.
+matchtemp([A,B,C,Is-_,E-_,G-_,H|Hyp],[E1-_,of-_,D-_,H,_,_,Vir,A,B,C|Cos],[A1-_,B,C,D1-_,E,F,G|Hyp]):-
+    lightsvbs(Is),
+    prepos(P),
+    prepos(G),
+    chigh_rank(D,Lex),
+    lemmatize_dic_v(Is,Lemm,K),
+    light_verbs(Lemm),
+    lemmatize_dic(E1,Lemm1,K1),
+    sloppy_match(Lemm,Lemm1,L),
+    !.
+matchtemp([A-_,B,C,Is-_,E,F,G-_|Hyp],[A1-_,B,C,D1-_,P-_,E,F,G-_|Cos],[A1-_,B,C,D1-_,E,F,G|Hyp]):-
+    chigh_rank(A,Lex),
+    chigh_rank(A1,Lex1),
+    light_verbs(Is),
+    prepos(P),
+    (sloppy_match(Is,D1,L);
+     recover_descs(D1,Desc),
+     on(V,Desc),
+     sloppy_match(Is,V,L)),
+    !.
+matchtemp([A,Is-_,B-_,of-_,E-_,F,G|Hyp],[A,I-_,V-_,B-_,of-_,E1-_,F,G|Cos],[A1-_,B,C,D1-_,E,F,G|Hyp]):-
+    lightsvbs(Is),
+    lightsvbs(I),
+    sloppy_match(E,E1,L),
+    !.
+matchtemp([A-_,B,C,H,M,Is-_,L-_,in-_,F-_|Hyp],[A-_,B,C,M,in-_,F1-_|Cos],[A1-_,B,C,D1-_,E,F,G|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    locwn(F),
+    lw4(F1,_,F,_),
+    !.
+
+matchtemp([A-_,Is-_,D-_,S-_,of-_,D-_,E-_,F-_|Hyp],[A1-_,I-_,Vir,F1-_,Vir,Age-_|Cos],[A1-_,B,C,D1-_,E,F,G|Hyp]):-
+    lightsvbs(Is),
+    relatives(R),
+    on(S,R),
+    on(I,R),
+    chigh_rank(D,Lex),
+    recover_descs(A,Desc),
+    recover_descs(A1,Desc1),
+    on(N,Desc),on(N,Desc1),
+    recover_descs(E,Descs),
+    on(Age,Descs),
+    recover_descs(F1,Des),
+    on(F,Des),
+    on(B,Des), B\=F,
+    on(B,Desc),
+    !.
+
+matchtemp([A,B,Is-_,in-_,G-_|Hyp],[A,B|Cos],[A,B|Hyp]):-
+    lightsvbs(Is),
+    on(in-_,Cos),
+    on(G-_,Cos),
+    locwn(G),
+    Hyp=[X-_],
+    !.
+
+matchtemp([A-_,Is-_,V1-_,in-_,F|Hyp],[V-_,in-_,F,Vir,after-_,A1-_,and-_,B-_|Cos],[A,B|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(A,Descs),
+    on(A1,Descs),
+    recover_descs(B,Desc),
+    on(B1,Desc),
+    on(B1,Descs),
+    lemmatize_dic_v(V1,Lemm,S1),
+    lemmatize_dic_v(V,Lem,S),
+    main_head_match(Lemm,Lem,K),
+    !.
+
+matchtemp([A,B,Is-_,C-_,D-_,at-_,E-_,F,of-_,G|Hyp],[A,B,Vir,C1-_,D1-_|Cos],[A,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(C,Lex),
+    chigh_rank(E,Lex1),
+    on(F,Cos),
+    on(G,Cos),
+    D=employee,D1=teacher,
+    !.
+matchtemp([A-_,Is-_,at-_,G-_,F|Hyp],[B-_,A1-_,of-_,G1-_,F|Cos],[A,B|Hyp]):-
+    recover_descs(A1,Descs),
+    on(A,Descs),
+    main_head_match(G,G1,K),
+    lemmatize_dic_v(Is,Lemm,S),
+    B='Professor',Lemm=teach,
+    !.
+matchtemp([A-_,V-_,at-_,G-_,F-_|Hyp],[A-_,Is-_,_,B-_,A1-_,_,at-_,C-_,F-_,of-_,M-_|Cos],[A,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(B,Lex),
+    chigh_rank(C,Lex1),
+    locwn(M),
+    main_head_match('Professor',A1,K),
+    lemmatize_dic_v(V,Lemm,S),
+    Lemm=teach,
+    on(G-_,Cos),
+    !.
+matchtemp([A-_,Is-_,B-_,by-_,C|Hyp],[C,Q,T,P,B1-_,A1-_|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(A1,Descs),
+    on(A,Descs),
+    lemmatize_dic_v(B,Lemm,S),
+    lemmatize_dic_v(B1,Lemm1,S1),
+    consistent_preds(Lemm,Lemm1,K),
+    !.
+matchtemp([A,Is-_,B,D,C-_|Hyp],[D,C1-_,Vir,A|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    Vir=Pun-_,grw(Pun),
+    main_head_match(C,C1,K),
+    !.
+matchtemp([A,Is-_,B-_,by-_,C|Hyp],[A,B1-_,C|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    lemmatize_dic_v(B,Lemm,S),
+    lemmatize_dic(B1,Lemm1,S1),
+    main_head_match(Lemm,Lemm1,K),
+    !.
+matchtemp([A,Is-_,C-_,D,P,Q|Hyp],[A,Vir,C1-_,D,P,Q|Cos],[A,B,C,D|Hyp]):-
+    lightsvbs(Is),
+    (Vir=_-punt;Vir=_-par),
+    chigh_rank(C,Lex),
+    chigh_rank(C1,Lex1),
+    !.
+
+
+/*100T*/
+matchtemp([A,B,C,D|Hyp],[A,B1-_,B,C,D|Cos],[A,B,C,D|Hyp]):-
+    recover_descs(B1,Descs),
+    on(W,Descs),
+    on(W-_,Hyp),
+    !.
+matchtemp([A,of,C,D|Hyp],[C,D,A,D1-_,E-_|Cos],[A,of,C,D|Hyp]):-
+    on(D1-_,Hyp),
+    on(E-_,Hyp),
+    !.
+matchtemp([D,B,of-_,A,Is-_,C|Hyp],[A,B,C|Cos],[A,B,C|Hyp]):-
+    lightsvbs(Is),
+    !.
+matchtemp([D,B-_,of-_,A,Is-_,C|Hyp],[A,B1-_,C|Cos],[A,B1,C|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(B1,Descs),
+    on(B,Descs),
+    !.
+/*108*/
+matchtemp([D,B-_,of-_,A,Is-_,C|Hyp],[A,B1-_,C|Cos],[A,B1,C|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(B1,Descs),
+    toupper(B,BU),
+    on(BU,Descs),
+    !.
+/*112,170,291*/
+matchtemp([B-_,Is-_,A-_,F-_,C-_|Hyp],[F1-_,N,M,H,I-_,E,D-_|Cos],[A,B,C|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    locwn(F),
+    recover_descs(F1,Descs),
+    on(L,Descs),
+    locwn(L),
+    on(s_,Descs),
+    stringof(Lis1,L),
+    stringof(Lis2,B),
+    Lis1=[W,W1,W2,W3,W4|_],
+    Lis2=[W,W1,W2,W3,W4|_],
+    recover_descs(C,Descs1),
+    on(I1,Descs1),
+    (I1=I;s_is_ax(I1,I);s_is_ax(I,I1)),
+    on(D1,Descs1),
+    (D1=D;
+    checkcase(D1,D)),
+    !.
+matchtemp([A-_,B,of-_,Dr-_,C,H-_,D-_,E-_|Hyp],[Can-_,Is-_,E1-_,and-_,E2,D1-_|Cos],[A,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(E1,Des),
+    remove(E,Des,Res),
+    on(anti,Res),
+    chigh_rank(A,Lex),
+    lemmatize_dic(D1,Lemm,K),
+    sloppy_match(Lemm,D,L),
+    lemmatize_dic(Dr,Lem,_),
+    main_head_match(Lem,Can,S),
+    !.
+    
+matchtemp([B-_,Is-_,A-_,in-_,C-_|Hyp],[B1-_|Cos],[A,B,C|Hyp]):-
+    lightsvbs(Is),
+    A=widespread,
+    locwn(C),
+    checkcase(B1,B),
+    illw(Ill),
+    on(B1,Ill),
+    searchrestmatchtemp([leading-_,in-_,C-_|Hyp],Cos),
+    !.
+matchtemp([A-_,Is-_,P-_,B,P1-_,D-_,C,E,of-_,F|Hyp],[B,P1-_,D-_,C,E,of-_,F,Par,A1-_|Cos],[A,C,D,B|Hyp]):-
+    lemmatize_dic_v(Is,Lemm,K),
+    Lemm=stand,
+    prepos(P),
+    prepos(P1),
+    chigh_rank(D,Lex),
+    tolower(A,Aa),
+    tolower(A1,Aa1), Aa=Aa1,
+    !.
+matchtemp([A,Is-_,P-_,B-_,G,of-_,C-_,E,P1-_,F|Hyp],[A,_,_,_,_,that-_,Is-_,P-_,B1-_,C-_,E,P1-_,F|Cos],[A,C,D,B|Hyp]):-
+    prepos(P),
+    prepos(P1),
+    chigh_rank(C,Lex),
+    consistent_preds(B,B1,K),
+    !.
+
+matchtemp([A,B,C,Is-_,D,E,of-_,F|Hyp],[A,B,C|Cos],[A,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    E=resident-_,
+    searchrestmatchtemp([resident-_,F|Hyp],Cos),
+    !.
+matchtemp([A,B,C,Is-_,D,E,of-_,_-par,F|Hyp],[A1,B1,C,Vir,D,E,of-_,D,_-par,F|Cos],[A,C,D,B|Hyp]):-
+    !.
+
+matchtemp([A,B,Is-_,C,D-_|Hyp],[B|Cos],[A,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    D=origins,
+    searchrestmatchtemp([has-_,C,D-_|Hyp],Cos),
+    !.
+matchtemp([A,B,Is-_,D-_,C|Hyp],[B|Cos],[A,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    prepos(D),
+    length(Hyp,L),L=<2,
+    searchrestmatchtemp([A,C|Hyp],Cos),
+    !.
+matchtemp([A,B,Is-_,C-_|Hyp],[A,B|Cos],[A,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(C,Des),
+    remove(drug,Des,Res),
+    on(D,Res),
+    length(Hyp,L),L=<2,
+    searchrestmatchtemp([drug-_,D-_|Hyp],Cos),
+    !.
+matchtemp([A,B,C-_,P-_,G|Hyp],[G|Cos],[F,C,D,B|Hyp]):-
+    P=through,
+    length(Hyp,L),L=<2,
+    searchrestmatchtemp([through-_,A,B,C-_|Hyp],Cos),
+    !.    
+
+matchtemp([B,Is-_,A-_,C-_,called-_,E-_|Hyp],[E1-_,C1-_,Vir,_,and-_,B|Cos],[A1,B,C,E|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    relatives(R),
+    on(C,R),
+    lemmatize_dic(C1,Lemm,K),
+    on(Lemm,R),
+    recover_descs(E1,Descs),
+    on(E,Descs),
+    !.    
+
+matchtemp([D,B,Is-_,A-_,C-_,of-_,E,F|Hyp],[E,F,P-_,_,D,B|Cos],[A1,B,C,E|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    prepos(P),
+    employers(List,List1),
+    (on(C,List);on(C,List1)),
+    !.    
+
+matchtemp([A-_,C-_,B-_,Is-_,to-_,E,F|Hyp],[A-_,C-_,B1-_,_,O-_,E,F|Cos],[A1,B1,C,D,B|Hyp]):-
+    lemmatize_dic_v(Is,Lemm,K),
+    light_verbs(Lemm),
+    nbk(O,S,L),
+    consistent_preds(S,Lemm,_),
+    (checkcase(B1,B);B=B1),
+    !.
+
+matchtemp([B-_,Is-_,A,C-_,of-_,E-_|Hyp],[A1-_,in-_,B-_|Cos],[A1,B,C,E|Hyp]):-
+    lightsvbs(Is),
+    locwn(B),
+    locwn(E),
+    lemmatize_dic_v(A1,Lemm,K),
+    light_verbs(Lemm),
+    searchrestmatchtemp([located-_,C-_,of-_,E-_|Hyp],Cos),
+    !.
+matchtemp([A-_,F-_,B,Is-_,C,in-_,E-_|Hyp],[C,A1-_,D-_,D1-_,_,_,_,B,in-_,E-_|Cos],[A1,B1,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    locwn(E),
+    tolower(A,Aa),
+    nm(Aa,_,A1),
+    recover_descs(F,Descs),
+    on(D,Descs),
+    on(D1,Descs),D\=D1,
+    !.
+
+matchtemp([D,B,Is-_,A,C,in-_,E-_|Hyp],[A1-_,B1,C,D,B|Cos],[A1,B1,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    locwn(E),
+    locwn(A1),
+    stringof(Lis1,A1),
+    stringof(Lis2,E),
+    Lis1=[W,W1|_],
+    Lis2=[W,W1|_],
+    !.    
+matchtemp([D,B,Is-_,A-_,C-_,from-_,E-_,F|Hyp],[D,B,And,J,T,P-_,P1-_,C1-_|Cos],[A1,B1,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    chigh_rank(E,Lex1),
+    prepos(P),
+    prepos(P1),
+    (main_head_match(C,C1,S);
+     lemmatize_dic(C1,Lem,Tt),
+     main_head_match(Lem,C,S)),
+    on(F,Cos),
+    !.
+matchtemp([D,B,Is-_,A-_,C-_,from-_,E-_,F|Hyp],[D,B,And,J,P-_,C1-_|Cos],[A1,B1,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    chigh_rank(E,Lex1),
+    prepos(P),
+    (main_head_match(C,C1,S);
+     lemmatize_dic(C1,Lem,Tt),
+     main_head_match(Lem,C,S)),
+    on(F,Cos),
+    !.
+matchtemp([A-_,C,of-_,E,Is-_,A-_,B,of-_,F-_,G,H|Hyp],[F,G,H,Vir,A1-_,B1-_,of-_,L,P-_,A-_,C,of-_,E|Cos],[A1,B1,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    chigh_rank(A1,Lex1),
+    prepos(P),
+    !.
+
+matchtemp([D,B,Is-_,A-_,C-_,of-_,E-_,F,G,H|Hyp],[F,G,H,A1,C1-_,D,B|Cos],[A1,B1,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    chigh_rank(E,Lex1),
+    main_head_match(C,C1,K),
+    !.
+matchtemp([_-par,D,B,Is-_,A-_,C-_,of-_,E-_,F,G,H|Hyp],[F,G,H,A1,C1-_,_-par,D,B|Cos],[A1,B1,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    chigh_rank(E,Lex1),
+    main_head_match(C,C1,K),
+    !.
+matchtemp([_-par,B,Is-_,C-_,at-_,E,F,G,H|Hyp],[B,Vir,C1-_|Cos],[A1,B1,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    lemmatize_dic_v(C,Lemm,S),
+    (main_head_match(Lemm,C1,K);
+     tolower(C1,L1),
+     main_head_match(Lemm,L1,K);
+     recover_descs(C1,Descs),
+     E=E1-_,
+     on(E1,Descs),
+     (main_head_match(Lemm,E1,K);
+     tolower(E1,L1),
+     main_head_match(Lemm,L1,K))
+     ),
+    on(E,Cos),
+    on(F,Cos),
+    on(G,Cos),
+    !.
+matchtemp([A-_,B,Is-_,through-_,E|Hyp],[E|Cos],[A,B,C,E|Hyp]):-
+    on(over-_,Cos),
+    on(A-_,Cos),
+    on(B,Cos),
+    nth(Cos,N3,over-_),
+    nth(Cos,N2,B),
+    N3 < N2,
+    !.
+
+matchtemp([A,B,Is-_,C-_,to-_,E,F|Hyp],[E,F,to-_|Cos],[A,B,C,E|Hyp]):-
+    lightsvbs(Is),
+    on(A,Cos),
+    on(B,Cos),
+    on(D-_,Cos),
+    lemmatize_dic_v(C,Lemm,K),
+    main_head_match(Lemm,D,S),
+    !.
+matchtemp([D-_,B-_,Is-_,A-_,C,H|Hyp],[A-_,C,H,Vir,D1-_|Cos],[A1,B1,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    recover_descs(D1,Descs),
+    on(B,Descs),
+    (on(D,Descs);
+     on(D2,Descs),main_head_match(D,D2,L)),
+    !.
+matchtemp([D-_,B,Is-_,A,C|Hyp],[C,_,_,_,_,D1-_,_,_,_,_,_,B|Cos],[A1,B1,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(D,Descs),
+    on(D2,Descs),
+    match_approximate(D2,D1),
+    !.
+
+matchtemp([D,B,Is-_,A-_,C,H|Hyp],[A-_,C,H,Vir,D,B|Cos],[A1,B1,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    !.
+matchtemp([D,B,Is-_,A-_,C,H,of-_,A-_,F|Hyp],[A-_,C,H,of-_,A-_,F,Vir,D,B|Cos],[A1,B1,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    !.
+
+matchtemp([A,B,Is-_,in-_,C-_,E-_|Hyp],[A,B,_,_,_,in-_,C-_,E-_,_,Is-_|Cos],[A,B,C,E|Hyp]):-
+    chigh_rank(C,Lex),
+    !.
+
+
+matchtemp([A,B,Is-_,C-_,in-_,E-_|Hyp],[A,B,in-_,E-_|Cos],[A,B,C,E|Hyp]):-
+    lightsvbs(Is),
+    locwn(E),
+    lemmatize_dic_v(C,Lemm,K),
+    light_verbs(Lemm),
+    on(V-_,Cos),\+lightsvbs(V),
+    lemmatize_dic_v(V,Lem,J), 
+    main_head_match(Lemm,Lem,S),
+    !.    
+matchtemp([A-_,Is-_,P-_,E-_|Hyp],[of-_,E1-_|Cos],[A,E|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(P,Lex),
+    recover_descs(E1,Descs),
+    on(A,Descs),
+    on(F1,Descs),
+    (F1=E;
+    checkcase(E,F1)),
+    !. 
+matchtemp([A,Is-_,P-_,E-_,of-_,F|Hyp],[F,G,Vir,E1-_,by-_,A|Cos],[A,E|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(P,Lex),
+    lemmatize_dic_v(E1,Lemm,K),
+    main_head_match(Lemm,E,S),
+    !.    
+matchtemp([A,L,E-_,F|Hyp],[F,by-_,A,L|Cos],[A,E|Hyp]):-
+    lemmatize_dic_v(E,Lemm,K),
+    yescreation_pred(Lemm),
+    !.
+
+matchtemp([A-_,Is-_,P-_,E-_,of-_,P-_,L,M,N,in-_,F-_|Hyp],[F1-_,L,M,N,Vir,P1-_,S-_,T-_|Cos],[A,E|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(P,Lex),
+    chigh_rank(P1,Lex1),
+    recover_descs(F,Descs),
+    recover_descs(F1,Descs1),
+    on(Ff,Descs),
+    on(Ff,Descs1),
+    on(Ff1,Descs),Ff1\=Ff,
+    on(Ff1,Descs1),
+    recover_descs(A,Desc),
+    on(S,Desc),
+    on(T,Desc),
+    !.    
+matchtemp([A-_,Is-_,P-_,E-_,Num-_,Pe-_,L-_,of-_,N,in-_,F|Hyp],[N,C,in-_,F,A-_,T,S,_,_,_,Is-_,P-_,Vir,E-_,Num-_,_,_,Fat-_|Cos],[A,E|Hyp]):-
+    Fat=fatal, L=died,
+    !.
+
+matchtemp([A-_,Is-_,P-_,E-_,F-_|Hyp],[C-_,E1-_|Cos],[A,E|Hyp]):-
+    lightsvbs(Is),
+    integer(P),
+    nt(E),
+    chigh_rank(C,Lex),
+    recover_descs(E1,Descs),
+    on(P,Descs),
+    on(F,Descs),
+    on(G,Descs), F\=G,
+    (F=G;
+    checkcase(G,E);
+    match_approximate(G,E)),
+    !.    
+matchtemp([A,Is-_,P-_,E|Hyp],[A,Vir,E|Cos],[A,E|Hyp]):-
+    lightsvbs(Is),
+    prepos(P),
+    length(Hyp,L),L=<2,
+    !.    
+matchtemp([A,Is-_,P-_,E|Hyp],[A|Cos],[A,E|Hyp]):-
+    lemmatize_dic_v(Is,Lemm,K),
+    (light_verbs(Is);light_verbs(Lemm)),
+    prepos(P),
+    length(Hyp,L),L=<2,
+    searchrestmatchtemp([director-_,E|Hyp],Cos),
+    !.
+    
+matchtemp([A,Is-_,P-_,E|Hyp],[E|Cos],[A,E|Hyp]):-
+    lemmatize_dic_v(Is,Lemm,K),
+    (light_verbs(Is);light_verbs(Lemm)),
+    prepos(P),
+    length(Hyp,L),L=<2,
+    searchrestmatchtemp([said-_,A|Hyp],Cos),
+    !.    
+matchtemp([A-_,Is-_|Hyp],[A1-_|Cos],[A,E|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(A,Descs),
+    on(A1,Descs),
+    searchrestmatchtemp([longest|Hyp],Cos),
+    !.    
+
+matchtemp([A,B,Is-_,P-_,E-_|Hyp],[E1-_,Vir,A,B|Cos],[A,E|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(P,Lex),
+    match_approximate(E,E1),
+    !.    
+matchtemp([A,B,C,Vir,P,E,Is-_,D|Hyp],[B,C,F-_|Cos],[A,B,C,E|Hyp]):-
+    lemmatize_dic_v(F,Lemm,K),
+    (Lemm=proclaim;Lemm=claim),
+    searchrestmatchtemp([proclaim-_,P,E,D|Hyp],Cos),
+    !.
+matchtemp([A,B,C,V-_,P-_,E,T,D|Hyp],[E,T,C,Vir,H,Vir,Vic,Vir,Is-_,_,_,F-_,P-_,A,B,C|Cos],[A,B,C,E|Hyp]):-
+    lightsvbs(Is),
+    lemmatize_dic_v(V,Lemm,K),
+    prepos(P),
+    sloppy_match(Lemm,F,S),
+    !.
+
+matchtemp([A,Is-_,P-_,E-_|Hyp],[E1-_,B,Vir,A|Cos],[A,B,C,E|Hyp]):-
+    lemmatize_dic_v(Is,Lemm,K),
+    light_verbs(Lemm),
+    prepos(P),
+    recover_descs(E1,Descs),
+    on(E,Descs),
+    !.    
+matchtemp([A-_,Is-_,P-_,D,E-_|Hyp],[A1-_,E-_|Cos],[A,B,C,E|Hyp]):-
+    lemmatize_dic_v(Is,Lemm,K),
+    light_verbs(Lemm),
+    prepos(P),
+    recover_descs(A,Descs),
+    recover_descs(A1,Descs1),
+    on(B,Descs),
+    on(B,Descs1),
+    on(s_,Descs1),
+    !.    
+matchtemp([A-_,Is-_,P,B-_,in-_,C-_|Hyp],[A-_|Cos],[A,B,C,E|Hyp]):-
+    citiesinfer(A,C,K),
+    on(C-_,Cos),
+    !.
+matchtemp([A-_,B-_,P-_,D-_,E-_|Hyp],[A-_,B-_,P1-_|Cos],[A,B,C,E|Hyp]):-
+    chigh_rank(A,Lex),
+    P=outbreak,P1=epidemic,
+    locwn(E),
+    on(E-_,Cos),
+    is_in(E,C),
+    on(E1-_,Cos),
+    recover_descs(E1,Descs),
+    on(F,Descs),
+    (natl(C,F,_);natl(C,_,F)
+    ;
+    toupper(F,F1),
+    natl(C,F1,_);natl(C,_,F1)),
+    !.
+
+matchtemp([X,D,B,C,Is-_,A-_,against-_,E,F,G|Hyp],[X,D,B,C|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    on(E,Cos),
+    (on(F,Cos),
+     on(G,Cos)
+     ;
+     on(F1-_,Cos),
+     recover_descs(F1,Descs),
+     F=F2-_,G=G2-_,
+     on(F2,Descs),
+     on(G2,Descs)),
+     lemmatize_dic(A,Lemm,K),
+     on(L-_,Cos),
+     (L=A;L=Lemm),
+    !.
+
+matchtemp([X,D,B,Is-_,A,C-_,of-_,E-_|Hyp],[E1-_,D|Cos],[E,C,D,B|Hyp]):-
+    light_verbs(Is),
+    C=age,
+    recover_descs(E1,Descs),
+    on(E,Descs),
+    on(old,Descs),
+    on(year,Descs),
+    !.    
+
+matchtemp([B,Is-_,A-_,C-_,of-_,E-_|Hyp],[E1-_,A1,C-_,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    recover_descs(E1,Descs),
+    (on(E,Descs)
+    ;
+    on(E2,Descs),
+    match_approximate(E2,E)),
+    !.    
+matchtemp([B,Is-_,A-_,C-_,of-_,E-_|Hyp],[E1-_,C-_,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    recover_descs(E1,Descs),
+    (on(E,Descs)
+    ;
+    on(E2,Descs),
+    match_approximate(E2,E)),
+    !.    
+
+/*122*/
+matchtemp([B,Is-_,A,C-_,of-_,E-_|Hyp],[E1-_,A1,C1-_,Vir,B,Vir|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(E1,Descs),
+    on(E,Descs),
+    toupper(C1,BU),
+    BU=C,
+    !.    
+matchtemp([B,Is-_,A,C,of-_,E-_|Hyp],[E1-_,A1,C,Vir,B,Vir|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(E1,Descs),
+    on(E,Descs),
+    !.
+matchtemp([D,B,Is-_,A,C,of-_,E-_|Hyp],[E1-_,A1,C,Vir,D,B,Vir|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(E1,Descs),
+    on(E,Descs),
+    !.    
+matchtemp([D,B-_,Is-_,A,C,by-_,E-_,F,G,of-_,H-_|Hyp],[D,_-par,H1,_-par,C1,in-_,B1-_|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    (main_head_match(B,B1,S);
+     lemmatize_dic(B,Lem,T),
+     main_head_match(Lem,B1,S)),
+    chigh_rank(E,Lex),
+    recover_descs(H,Descs),
+    on(I,Descs),
+    on(F,Cos),
+    on(M-_,Cos),
+    recover_descs(M,Descs1),
+    on(I,Descs1),
+    on(L,Descs), L\=I,
+    on(L1,Descs1), L1\=I,
+    sloppy_match(L1,L,K),
+    !.    
+matchtemp([D,B-_,Is-_,A,C,by-_,E-_,F,G,of-_,H-_|Hyp],[D,H1,C1,in-_,B1-_|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    (main_head_match(B,B1,S);
+     lemmatize_dic(B,Lem,T),
+     main_head_match(Lem,B1,S)),
+    chigh_rank(E,Lex),
+    recover_descs(H,Descs),
+    on(I,Descs),
+    on(F,Cos),
+    on(M-_,Cos),
+    recover_descs(M,Descs1),
+    on(I,Descs1),
+    on(L,Descs), L\=I,
+    on(L1,Descs1), L1\=I,
+    sloppy_match(L1,L,K),
+    !.    
+
+matchtemp([D,B,Is-_,A-_,C-_,of-_,E-_|Hyp],[E-_,C1-_,D,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    checkcase(C,C1),
+    !.    
+matchtemp([D,B,Is-_,A-_,C-_,of-_,E-_,F-_|Hyp],[F1-_,D,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    C=member,
+    chigh_rank(E,Le),
+    recover_descs(F,Descs),
+    on(F1,Descs),
+    !.    
+
+matchtemp([D,B,Is-_,A,C,of-_,E-_,F,P-_,Num,Day|Hyp],[F,C,D,B,Is-_,A|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(E,Le),
+    on(Num,Cos),
+    on(Day,Cos),
+    !.
+matchtemp([D-_,Is-_,A-_,C-_,of-_,E-_|Hyp],[E1-_,A1-_,B-_|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Le),
+    recover_descs(C,Descs),
+    recover_descs(E1,Descs1),
+    recover_descs(D,Descs2),
+    recover_descs(A1,Descs3),
+    on(B,Descs2),
+    on(W,Descs1), /* vice */
+    on(W,Descs),
+    on(W1,Descs3), /* president */
+    on(W1,Descs),
+    on(W2,Descs3), /* dick */
+    on(W2,Descs2),
+    !.    
+
+matchtemp([D-_,B-_,Is-_,A,C-_,in-_,E-_,U|Hyp],[D-_,B-_|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(E,Le),
+    searchrestmatchtemp([C,in,U],Cos),
+     !.
+
+/*161*/
+matchtemp([B,Is-_,A,C,D,of-_,E|Hyp],[D,of-_,E,B,Is-_|Cos],[E,C,B|Hyp]):-
+    lightsvbs(Is),
+    !.    
+matchtemp([B,Is-_,A,C,of-_,E,F|Hyp],[B,Vir,C,of-_,E,F|Cos],[E,C,B|Hyp]):-
+    lightsvbs(Is),
+    !.    
+matchtemp([D,B,Is-_,A,C,of-_,E-_|Hyp],[E1-_,A1,C,D,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(E1,Descs),
+    on(E2,Descs),
+    (E2=E;match_approximate(E2,E)),
+    !.    
+matchtemp([D-_,B-_,Is-_,A,C,B1-_,of-_,E-_|Hyp],[E1-_,A1-_,Vir,A,C,F-_|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(E1,Descs1),
+    recover_descs(D,Descs2),
+    on(W,Descs1),
+    on(W,Descs2),
+    recover_descs(A1,Descs),
+    on(B,Descs),
+    (B1=F;match_approximate(B1,F)),
+    !.    
+matchtemp([B-_,V-_,A,C,P-_,E-_|Hyp],[E-_,Is-_,_,Del-_,of-_,_,_,Shi-_,of-_,A,C,P1-_,B1-_|Cos],[E,C,B|Hyp]):-
+    lightsvbs(Is),
+    prepos(P),
+    prepos(P1),
+    recover_descs(B1,Descs),
+    on(B,Descs),
+    lemmatize_dic_v(V,Lemm,K),
+    sloppy_match(Lemm,Del,S),
+    !.    
+matchtemp([B-_,V-_,C,P-_,E-_|Hyp],[E-_,Is-_,_,Del-_,of-_,_,_,Shi-_,of-_,C,P1-_,B1-_|Cos],[E,C,B|Hyp]):-
+    lightsvbs(Is),
+    prepos(P),
+    prepos(P1),
+    recover_descs(B1,Descs),
+    on(B,Descs),
+    lemmatize_dic_v(V,Lemm,K),
+    sloppy_match(Lemm,Del,S),
+    !.    
+
+matchtemp([B,Is-_,A,C,of-_,E-_|Hyp],[E1-_,A1,C,B|Cos],[E,C,B|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(E1,Descs),
+    on(E2,Descs),
+    (E2=E;match_approximate(E2,E)),
+    !.    
+matchtemp([D-_,F,B-Cat,Is-_,A,C,in-_,E-_|Hyp],[E-_,Vir,Cl-_,that-_,P,Iss-_,C,D-_,F|Cos],[E,C,B|Hyp]):-
+    lightsvbs(Is),
+    lightsvbs(Iss),
+    chigh_rank(D,Lex),
+    locwn(E),
+    Cat=vsup,
+    lemmatize_dic_v(Cl,Lemm,K),
+    Lemm=claim,
+    !.
+matchtemp([A-_,D-_,F,B-Cat,C,E|Hyp],[E,Vir,_,_,_,that-_,A1-_,P-_,S,to-_,D1-_,I-_,B-Cat,C|Cos],[E,C,B|Hyp]):-
+    Cat=vsup,
+    qmq(A1),
+    (qmq(A);tolower(A,Low),qmq(Low)),
+    chigh_rank(D1,Lex),
+    (I=D;tolower(I,LowI),LowI=D),
+    !.
+
+matchtemp([B,Is-_,A,C,in-_,E-_|Hyp],[B,A1-_,C|Cos],[E,C,B|Hyp]):-
+    lightsvbs(Is),
+    locwn(E),
+    searchrestmatchtemp([in-_,E-_|Hyp],Cos),
+    !.
+matchtemp([B-_,Is-_,C-_,A-_,of-_,F-_|Hyp],Cos,[F,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(C,Lex),
+    on(B-_,Cos),
+    on(A-_,Cos),
+    lw4(B,K,F,_),
+    cts(K,A1),
+    (A=A1;checkcase(A,A1)),
+    !.    
+matchtemp([B-_,A-_,Is-_,in-_,F-_|Hyp],Cos,[F,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(C,Lex),
+    on(B-_,Cos),
+    on(A-_,Cos),
+    lw4(B,K,F,_),
+    cts(K,A1),
+    (A=A1;checkcase(A,A1)),
+    !.    
+matchtemp([B-_,Is-_,A-_,C,E,N-_,Can-Cat|Hyp],[B-_,Vir,T-_,L-_,C,E|Cos],[E,C,B|Hyp]):-
+    chigh_rank(A,Lex),
+    chigh_rank(T,Lex1),
+    qmq(N),
+    Cat=vsup,
+    L=collaborative,
+    !.
+matchtemp([B,A,Is-_,C-_,F|Hyp],[B,A,Vir,T,L,D,E,and-_,F|Cos],[F,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(C,Lex),
+    !.
+
+/* then-Vice President_Dick Cheney */
+matchtemp([B,Is-_,C-_,A,of-_,F|Hyp],[F|Cos],[F,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(C,Lex),
+    (searchrestmatchtemp([then,B,A|Hyp],Cos)
+     ;
+    searchrestmatchtemp([former,A,B|Hyp],Cos)),
+    !.
+matchtemp([B-_,Is-_,A-_,C-_,in-_,E-_|Hyp],[C1-_|Cos],[E,C,B|Hyp]):-
+    (B=there;B='There'),
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    recover_descs(C1,Descs),
+    on(C,Descs),
+    on(s_,Descs),
+    locwn(E),
+    on(E-_,Cos),
+    !.
+matchtemp([B-_,Is-_,A-_,C-_,in-_,E|Hyp],[C1-_,D,in-_,E|Cos],[E,C,B|Hyp]):-
+    (B=there;B='There'),
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    stringof(Lis1,C),
+    stringof(Lis2,C1),
+    Lis1=[W,W1,W2,W3,W4|_],
+    Lis2=[W0,W1,W2,W3,W4|_],
+    checkcase(W0,W),
+    !.
+matchtemp([B,and-_,C,Is-_,D-_,E-_|Hyp],[B,and-_,C,A1-_|Cos],[E,C,B|Hyp]):-
+    lightsvbs(Is),
+    lightsvbs(A1),
+    chigh_rank(D,Lex),
+    on(their-_,Cos),
+    on(B1-_,Cos),
+    nth(Cos,N3,their-_),
+    nth(Cos,N2,B1-_),
+    N3 < N2,
+    search_wn_cats(E,Cats),
+    search_wn_cats(B1,Cats1),
+    intersection(Cats,Cats1,Int),
+    length(Int,L),
+    length(Cats1,L1),
+    L=L1,
+    !.
+    
+/*160*/
+matchtemp([D,B,Is-_,A-_,C-_,of-_,E,F,H|Hyp],[D,B,X,A1-_,C1-_,_,_,_,_,_,_,E,F,H|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    chigh_rank(A1,Lex1),
+    main_head_match(C,C1,K),
+    !.
+    
+matchtemp([D,B,Is-_,A-_,C,of-_,E-_,O,F-_,E-_,G,of-_,E-_,N,Ac,H|Hyp],[E-_,C,of-_,E-_,O,F-_,E-_,G,of-_,E-_,N,Ac,H,Vir,P,D1,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    chigh_rank(E,Lex1),
+    prepos(F),
+    (D=D1;main_head_match(D,D1,K)),
+    !.
+
+matchtemp([D,B,Is-_,A,C-_,of-_,E,F-_,G-_,H|Hyp],[X,F1-_,G,F2-_,D,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    prepos(G),
+    /*F=nobel_prize*/
+    recover_descs(F,Descs1),
+    on(E1,Descs1),
+    (F1=E1;
+    checkcase(E1,F1)),
+    /*F2=prize_winner*/
+    recover_descs(F2,Descs2),
+    on(E2,Descs1),
+    on(E2,Descs2),
+    on(C,Descs2),
+    !.    
+
+matchtemp([H,B,I-_,A,in-_,D,in-_,M|Hyp],[H,Vir,G,of-_,I-_,M,A,in-_,D|Cos],[I,E,C,D,B|Hyp]):-
+    chigh_rank(I,Lex),
+    !.    
+
+matchtemp([H-_,B,A,in-_,D,Is-_,I-_,E-_,of-_,G,M|Hyp],[G,M,of-_,I-_,D,B,A|Cos],[I,E,C,D,B|Hyp]):-
+    chigh_rank(H,Lex),
+    lightsvbs(Is),
+    chigh_rank(I,Lex),
+    !.    
+matchtemp([D,B,Is-_,A-_,C-_,H-_,I,E,F,G,M|Hyp],[I,E,F,G,M|Cos],[I,E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    prepos(C),
+    chigh_rank(H,Lex),
+    on(D,Cos),
+    on(B,Cos),
+    lemmatize_dic(A,Lemm,S),
+    on(A1-_,Cos),
+    stringof(Lis1,A1),
+    stringof(Lis2,A),
+    Lis1=[W,W1|_],
+    Lis2=[W,W1|_],
+    lemmatize_dic(A1,Lemm1,S1),
+    match_approximate(Lemm,Lemm1),
+    !.
+matchtemp([D,B,Is-_,A-_,C-_,of-_,E,F,G,H-_|Hyp],[E,F,G,HX-_,C1-_,Vir,D,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    recover_descs(HX,Descs),
+    on(H,Descs),
+    check_main_head_roles(C,C1),
+    !.
+matchtemp([D,B,Is-_,A-_,C-_,that-_,E-_,F-_|Hyp],[D,B,that-_,E1-_|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    lemmatize_dic(E,Lemm,S),
+    lemmatize_dic(E1,Lemm1,S1),
+    consistent_preds(Lemm,Lemm1,K),
+    lemmatize_dic(F,Lem,L),
+    on(F1-_,Cos),
+    Lem=F1,
+    !.
+matchtemp([D-_,B,Is-Cat,A,C-_,E-_,F-_,G-_|Hyp],[D1-_|Cos],[E,C,D,B|Hyp]):-
+    Cat=vsup,
+    A=not-_,
+    prepos(F),
+    locwn(G),
+    natl(D1,D,_),
+    searchrestmatchtemp([acquire,not,E,G|Hyp],Cos),
+    !.
+    
+matchtemp([D,B,Is-_,A,C-_,of-_,E-_,F-_,G-_|Hyp],[D,B,Vir,A1,C1-_,of-_,E1-_|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    main_head_match(C,C1,L),
+    s_is_ax(E1,G1),
+    recover_descs(G1,Descs),
+    on(E,Descs),
+    on(F,Descs),
+    !.    
+matchtemp([D-_,Is-_,A,to-_,L-_,E|Hyp],[D1-_,B|Cos],[E,C,D,B|Hyp]):-
+    lemmatize_dic(D,Lemm,K),
+    (main_head_match(Lemm,D1,S);
+     tolower(Lemm,Low),
+     main_head_match(Low,D1,S)),
+    on(U-_,Cos),
+    lemmatize_dic_v(U,Lem,V),
+    consistent_preds(Lem,Is,I),
+    on(P-_,Cos),
+    sloppy_match(P,L,_),
+    on(A,Cos),
+    on(E,Cos),
+    A=A1-_,
+    nth(Cos,N3,U-_),
+    nth(Cos,N2,A1-_),
+    N3 < N2,
+    !.
+
+/*119,185.194*/
+matchtemp([D,B,Is-_,A,C-_,of-_,E-_|Hyp],[C1-_,D,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(C1,Descs),
+    on(E,Descs),
+    on(C2,Descs),
+    (C=C2;
+    checkcase(C2,C)),
+    !.    
+matchtemp([D-_,B,Pw,P-_,C,P-_,E|Hyp],[C,_,D1-_,B,Pw,P-_,E|Cos],[E,C,D,B|Hyp]):-
+    recover_descs(D1,Descs),
+    on(D,Descs),
+    !.    
+
+
+matchtemp([D,B,Is-_,A,C,of-_,E|Hyp],[E,C,D,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    !.    
+matchtemp([D,B-_,Is-_,A-_,C,of-_,Vir,E|Hyp],[D,B1-_,E|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    recover_descs(B1,Descs),
+    on(B,Descs),
+    on(s_,Descs),
+    !.    
+matchtemp([B,Is-_,A,C,of-_,E|Hyp],[A,C,of-_,E,Vir,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    !.    
+matchtemp([D-_,B,_-par,A,F,Is-_,V,C-_,P-_,E|Hyp],[A,F,C1-_,E|Cos],[E,C,D,B|Hyp]):-
+    chigh_rank(D,Lex),
+    lightsvbs(Is),
+    prepos(P),
+    lemmatize_dic_v(C,Lem,_),
+    main_head_match(Lem,C1,K),
+    !.
+
+matchtemp([D-_,B,Is-_,A-_,of-_,D1-_,C-_,of-_,E-_,F-_|Hyp],[B,Is1-_,_,C1-_,P-_,D1-_,A1-_,of-_,_,E1-_,F1-_|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    lightsvbs(Is1),
+    chigh_rank(D,Lex),
+    chigh_rank(D1,Lex1),
+    prepos(P),
+    lemmatize_dic_v(A,Lem,V),
+    lemmatize_dic_v(C1,Lem1,V1),
+    consistent_preds(Lem,Lem1,K),
+    main_head_match(C,A1,S),
+    recover_descs(E,Descs),
+    recover_descs(F1,Descs1),
+    on(Aa,Descs), /* Stephen */
+    on(Aa,Descs1),
+    on(Cc,Descs), Cc\=Aa,
+    (Cc=E1;
+    checkcase(E1,Cc)),
+    on(F,Descs1),
+    !.        
+
+
+matchtemp([B-_,Is-_,A-_,C-_,of-_,E-_|Hyp],[A-_,C1-_,Vir,B1-_|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    locwn(E),
+    recover_descs(C1,Desc),
+    on(C,Desc),
+    on(E1,Desc),
+    (natl(E,E1,_);natl(E,_,E1)),
+    recover_descs(B1,Descs),
+    on(B,Descs),
+    !.    
+
+matchtemp([D,B,Is-_,A,C,of-_,E|Hyp],[A,C,of-_,E,Vir,D,B|Cos],[E,C,D,B|Hyp]):-
+    (Is=is;Is=are;Is=has;Is=have),
+    !.    
+matchtemp([D,B,Is-_,A,C-_,of-_,E|Hyp],[E,C1-_,D,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    toupper(C1,C2),
+    C=C2,
+    !.    
+matchtemp([B,Is-_,C-_,in-_,D-_|Hyp],[H-_,C1-_,D-_|Cos],[B,C|Hyp]):-
+    lightsvbs(Is),
+    locwn(D),
+    on(B,Cos),
+    sloppy_match(C,C1,K),
+    !.
+matchtemp([B-_,Is-_,A-_,C-_,D-_|Hyp],[C-_,D1-_,B1-_|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    checkcase(D,D1),
+    recover_descs(B1,Desc1),
+    recover_descs(B,Desc),
+    on(F,Desc),
+    on(F,Desc1),
+    !.
+    
+matchtemp([B,Is-_,A-_,C-_,D|Hyp],[C1-_,D,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    checkcase(C,C1),
+    !.    
+matchtemp([B,Is-_,A-_,of-_,D-_|Hyp],[A-_,of-_,D-_,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    locwn(D),
+    !.    
+
+/*120,174,309*/
+matchtemp([B,Is-_,A,C|Hyp],[B,C|Cos],[B,C|Hyp]):-
+    lightsvbs(Is),
+    C=P-_, \+ prepos(P),
+    !.    
+matchtemp([B,Is-_,A,C,D|Hyp],[C,D1,B,Is-_|Cos],[B,C|Hyp]):-
+    lightsvbs(Is),
+    !.    
+matchtemp([B,Is-_,A,C,D|Hyp],[B,Vir,A,Vir|Cos],[B,C|Hyp]):-
+    lightsvbs(Is),
+    !.    
+matchtemp([B-_,Is-_,A,C-_,D|Hyp],[B-_,Vir,A1-_|Cos],[B,C|Hyp]):-
+    lightsvbs(Is),
+    locwn(B),
+    stringof(Lis1,A1),
+    stringof(Lis2,C),
+    Lis1=[W,W1|_],
+    Lis2=[W,W1|_],
+    !.    
+matchtemp([B-_,Is-_,A,C-_|Hyp],[B-_,A1-_,P-_,D-_,C1-_|Cos],[A,B,C|Hyp]):-
+    lightsvbs(Is),
+    prepos(P),
+    recover_descs(C,Descs),
+    recover_descs(C1,Descs1),
+    Descs=[W|Res],
+    Descs1=[W|Res1],
+    on(F,Res),
+    on(F1,Res1),
+    match_approximate(F,F1),
+    !.
+matchtemp([B-_,V-_,A-_,P-_,C-_,Is-_,B-_,D-_,of-_,O|Hyp],[O,of-_,B-_,C-_,V-_,A-_|Cos],[A,B,C|Hyp]):-
+    locwn(C),
+    prepos(P),
+    chigh_rank(B,Lex),
+    n_wn(D,Type),Type=[18],
+    !.
+matchtemp([B-_,Is-_,A-_,C-_,of-_,D-_,G-_,of-_,O|Hyp],[B-_,Is-_,A1-_,P-_,D-_,G-_,of-_,O|Cos],[A,B,C|Hyp]):-
+    lightsvbs(Is),
+    prepos(P),
+    chigh_rank(A,Lex),
+    chigh_rank(D,Lex1),
+    !.
+matchtemp([B-_,Is-_,A-_,C-_,V-_,P-_,A1-_,T,O|Hyp],[B-_,Vir,N,A1-_,T,O|Cos],[A,B,C|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(A,Lex),
+    chigh_rank(A1,Lex1),
+    prepos(P),
+    C=name,
+    !.
+    
+/*167,184*/
+matchtemp([B,Is-_,A,C-_,F-_|Hyp],[F1-_,B|Cos],[F,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    prepos(C),
+    recover_descs(F1,Descs),
+    on(F,Descs),
+    !.
+matchtemp([A,B,Is-_,A1,F-_|Hyp],[F1-_,P-_,A,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    prepos(P),
+    match_approximate(F,F1),
+    !.
+matchtemp([A,B,Is-_,A1,E,F-_|Hyp],[E,F1-_,P-_,A,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    prepos(P),
+    match_approximate(F,F1),
+    !.
+matchtemp([A,B,Is-_,A1,E-_,F-_|Hyp],[A,B,Vir,A2,E1-_,F1-_|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(E,Descs),
+    recover_descs(E1,Descs1),
+    on(E2,Descs),
+    on(E3,Descs1),
+    checkcase(E2,E3),
+    sloppy_match(F,F1,K),
+    !.    
+
+matchtemp([X-_,A-_,C-_,E,F-_,G-_|Hyp],[A-_,C1-_,Y-_,Is-_|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(X,Lex),
+    recover_descs(C1,Desc),
+    (on(C,Desc);
+     on(C2,Desc),
+     checkcase(C,C2)),
+    recover_descs(F,Descs),
+    recover_descs(Y,Descs1),
+    on(E1,Descs),
+    on(E1,Descs1),
+    on(E2,Descs), E1\=E2,
+    on(E2,Descs1),
+    !.    
+matchtemp([X-_,B,C-_,in-_,E-_|Hyp],[A-_,W-_,Is-_,Be,C1-_,in-_,E-_|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(C,Desc),
+    on(C1,Desc),
+    recover_descs(X,Descs),
+    recover_descs(A,Descs1),
+    on(Aa,Descs),
+    on(Aa,Descs1),
+    on(W,Descs),
+    !.
+matchtemp([X-_,B-_,C,E,F-_|Hyp],[A-_,W,Y-_,Is-_,C1-_,B1-_|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    recover_descs(X,Descs),
+    on(Y,Descs),
+    chigh_rank(C1,Lex),
+    recover_descs(B1,Descs1),
+    on(B,Descs1),
+    lemmatize_dic_v(F,Lemm,K),
+    lemmatize_dic_v(A,Lem,Z),
+    Lem=Lemm,
+    !.
+matchtemp([A,C-_,D-_,E,in-_,F,in-_,Date|Hyp],[A|Cos],[F,C,D,B|Hyp]):-
+    lemmatize_dic_v(C,Lemm,K),
+    chigh_rank(D,Lex),
+    main_head_match(Lemm,winner,S),
+    searchrestmatchtemp([winner,Date,E,F|Hyp],Cos),
+    !.
+matchtemp([A,C-_,Is-_,D,E-_,in-_,F-_,U|Hyp],[A,C1-_,Iss-_,D,E-_|Cos],[F,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    lightsvbs(Iss),
+    lemmatize_dic_v(C,Lemm,K),
+    chigh_rank(F,Lex),
+    lemmatize_dic(C,Lem,Z),
+    sloppy_match(Lem,C1,S),
+    searchrestmatchtemp([E,in,U|Hyp],Cos),
+    !.
+    
+matchtemp([X,A,B,C,R,Is-_,A1,E,F,G|Hyp],[X,A,B,C,R,Vir,Iss-_,_,_,P-_,A1,E,F,G|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    lightsvbs(Iss),
+    prepos(P),
+    !.
+    
+matchtemp([X,A,B,C,R,Is-_,A1,E,F,G|Hyp],[X,A,B,C,R,Vir,Iss-_,_,_,A1,E,F,G|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    lightsvbs(Iss),
+    !.    
+
+matchtemp([D-_,A,B,Is-_,V-_,E-_,F|Hyp],[F,Vir,V1-_,of-_,A,B|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    prepos(E),
+    chigh_rank(D,Lex),
+    lemmatize_dic_v(V,Lemm,S),
+    (light_verbs(Lemm);light_verbs(V)),
+    (    sloppy_match(V,V1,K);
+      main_head_match(V,V1,K)),
+    !.    
+matchtemp([A,Is-_,D-_,F-_|Hyp],[F1-_,Vir,B,C,A|Cos],[F,C,D,B|Hyp]):-
+    relatives(R),
+    on(F,R),
+    on(F1,R),
+    chigh_rank(D,Lex),
+    lightsvbs(Is),
+    !.    
+matchtemp([X,A,B,C,Is-_,A1,E,F|Hyp],[A,B,C,Vir,A1,Y,E,F|Cos],[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    !.    
+matchtemp([X,A,B,Par,C,Par1,Is-_,part-_,of-_,F|Hyp],Sent,[E,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    reverse(Sent,RevS),
+    RevS=[V,X,A,B,Par,C,Par1|Cos],
+    Sent=[F|_],
+    lemmatize_dic_v(V,Lemm,K),
+    Lemm=enter,
+    !.    
+matchtemp([A,C-_,F|Hyp],[F,C1-_,A|Cos],[F,C,D,B|Hyp]):-
+    lemmatize_dic_v(C,Lemm,K),
+    light_verbs(Lemm),
+    search_wn_cats(C1,Cats),
+    on(relat,Cats),on(sociale,Cats),
+    !.
+matchtemp([A,C-_,D,F|Hyp],[F,C1-_,A|Cos],[F,C,D,B|Hyp]):-
+    lemmatize_dic_v(C,Lemm,K),
+    light_verbs(Lemm),
+    search_wn_cats(C1,Cats),
+    on(relat,Cats),on(sociale,Cats),
+    !.
+matchtemp([A-_,C,D-_,F-_|Hyp],[A1-_,C,D1-_,E-_,Art,F1-_|Cos],[F,C,D,B|Hyp]):-
+    checkcase(A,A1),
+    prepos(E),
+    locwn(F),
+    lemmatize_dic_v(D,Lemm,K),
+    lemmatize_dic_v(D1,Lemm1,K1),
+    consistent_preds(Lemm,Lemm1,O),
+    stringof(Lis1,F),
+    stringof(Lis2,F1),
+    Lis1=[W,W1,W2,W3,W4,W5|_],
+    Lis2=[W,W1,W2,W3,W4,W5|_],
+    !.    
+matchtemp([A,B,of-_,D,F,Is-_,C-_,V,of-_,E,U|Hyp],[E,U,Vir,C1-_,S,at-_,C-_,A,B,of-_,D,F|Cos],[F,C,D,B|Hyp]):-
+    chigh_rank(C,Lex),
+    !.    
+
+matchtemp([A-_,B-_,C-_,D,Is-_,G,to-_,V-_,E-_,Es,of-_,E-_,U|Hyp],[T,S-_,D|Cos],[F,C,D,B|Hyp]):-
+    lemmatize_dic_v(C,Lemm,K),
+    light_verbs(Lemm),
+    checkcase(B,S),
+    chigh_rank(A,Lex),
+    chigh_rank(E,Lex1),
+    on(Es,Cos),
+    on(U,Cos),
+    !.    
+matchtemp([A-_,B-_,C-_,D-_,Is-_,G,to-_,V-_,E-_,Es,of-_,E-_,U|Hyp],[T,S-_|Cos],[F,C,D,B|Hyp]):-
+    lemmatize_dic_v(C,Lemm,K),
+    light_verbs(Lemm),
+    recover_descs(S,Descs),
+    on(D,Descs),
+    (on(B,Descs);
+     on(B1,Descs),
+     checkcase(B1,B)),
+    chigh_rank(A,Lex),
+    chigh_rank(E,Lex1),
+    on(Es,Cos),
+    on(U,Cos),
+    on(V1-_,Cos),
+    consistent_preds(V,V1,Z),
+    !.    
+
+matchtemp([A1-_,Is-_,B-_,I,L|Hyp],[B-_,I,L,called-_,A-_|Cos],[F,G,I,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(B,Lex),
+    (A=A1;checkcase(A1,A)),
+    !.    
+matchtemp([A1-_,Is-_,B-_,I|Hyp],[B-_,I,called-_,A-_|Cos],[F,G,I,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(B,Lex),
+    (A=A1;checkcase(A1,A)),
+    !.    
+
+matchtemp([A,Is-_,B-_,C-_,F,to-_,Ar-_,I,L|Hyp],[I,L,A|Cos],[F,G,I,B|Hyp]):-
+    lightsvbs(Is),
+    chigh_rank(Ar,Lex),
+    chigh_rank(B,Lex1),
+    C=name,
+    !.    
+
+matchtemp([A,B,C-_,F,G,H,and-_,I,L|Hyp],[B,Vir,Pro,Lem-_,H,and-_,I,L|Cos],[F,G,I,B|Hyp]):-
+    lemmatize_dic_v(C,Lemm,K),
+    Lemm=Lem,
+    !.    
+matchtemp([A,B,C-_,F,G,H,and-_,I,L|Hyp],[B,Vir,Pro,C-_,H,and-_,I,L|Cos],[F,G,I,B|Hyp]):-
+    !.    
+
+matchtemp([A,B,C-_,F,G|Hyp],[F,G,Vir,one-_,of-_,X,A1-_,Y,A,B|Cos],[F,C,D,B|Hyp]):-
+    lemmatize_dic_v(C,Lemm,K),
+    Lemm=include,
+    A1=candidates,
+    on(members-_,Hyp),
+    !.
+matchtemp([A,B,C-_,P-_,G-_|Hyp],[F-_,G-_,Vir,A,B|Cos],[F,C,D,B|Hyp]):-
+    lemmatize_dic_v(C,Lemm,K),
+    light_verbs(Lemm),
+    prepos(P),
+    prepos(F),
+    !.
+matchtemp([A,C1-_,P-_,Art,B-_,of-_,F,G-_|Hyp],[C-_,F,B1-_,A|Cos],[F,C,D,B|Hyp]):-
+    lemmatize_dic_v(C1,Lemm,K),
+    Lemm=C,
+    prepos(P),
+    (main_head_match(B,B1,L);
+     lemmatize_dic(B1,Lem,S),
+     main_head_match(B,Lem,L)),
+    locwn(G),
+    !.
+matchtemp([A,Is-_,in-_,C-_,U-_|Hyp],[A,Vir,G-_,K-_|Cos],[F,C,D,B|Hyp]):-
+    lightsvbs(Is),
+    s_is_ax(U,I),
+    recover_descs(I,Descs1),
+    on(G1,Descs1),
+    on(K1,Descs1),
+    (G=G1;checkcase(G,G1)),
+    (K=K1;checkcase(K,K1)),
+    !.
+
+/* three inmates who committed suicide */
+matchtemp([A-_,B-_,C,D,in-_,G1-_|Hyp],[A1-_,G-_,W,C,D|Cos],[F,C,D,B|Hyp]):-
+    checkcase(A,A1),
+    lemmatize_dic(G,Lemm,K),
+    main_head_match(B,Lemm,S),
+    sloppy_match(G1,Lemm,P),
+    !.
+
+matchtemp(Hyp,[A1|Cos],Match):-
+    matchtemp(Hyp,Cos,Match),
+    !.
+
+checkcase(E2,E3):-
+    spy_lower(E2,Low,1),
+    E3=Low
+    ;
+    spy_lower(E3,Low,1),
+    E2=Low
+    ;
+    tolower(E2,E),
+    tolower(E3,F),
+    E=F,
+    !.    
+recovercosts1([_-A|Costs],Costs,V1-Cos1,Synts1):-
+    A=[V1,Cos|Synts1],
+%    on(V,V1),
+%    light_verbs(V),
+    length(Cos,L),
+    L=<25,
+    filter_doublevir(Cos,Cos1),
+    !.
+recoverallcosts([],[],[]):-!.
+recoverallcosts([_-C1|Costs],[V1-Cos1|AllC],[Synts1|Synts]):-
+    C1=[V1,Cos|Synts1],
+    filter_doublevir(Cos,Cos1),
+    recoverallcosts(Costs,AllC,Synts),
+    !.
+
+filter_doublevir([],[]):-!.
+filter_doublevir([W-punt,W-punt|Cos],[W-punt|Cos1]):-
+    filter_doublevir(Cos,Cos1),
+    !.
+filter_doublevir([W-par,W-par|Cos],[W-par|Cos1]):-
+    filter_doublevir(Cos,Cos1),
+    !.
+filter_doublevir([W|Cos],[W|Cos1]):-
+    filter_doublevir(Cos,Cos1),
+    !.
+% matchsyntsalls(Synts1,SyntsAll,Rests):-!.
+matchsyntsalls(Synts1,SyntsAll,Rests):-
+   matchsyntsall(Synts1,SyntsAll,Restss,CostsAll),
+   length(Restss,L),
+   sort(Restss,Rests),
+   checkrepeat(L,Rests,CostsAll,Rests),
+   !.
+
+eliminateallwords2(Hyp,AllC,Hyp3):-
+    elimhighfreq2(Hyp,Hyp1),
+    eliminidentics1(Hyp1,AllC,Hyp2,Txt),
+    eliminsimils(Hyp2,Txt,Hyp3),
+    !.
+
+checkrepeat(0,Rests,SyntsAll,Repeats):-!.
+checkrepeat(L,[],SyntsAll,Repeats):-!.
+checkrepeat(L,[First|Rests],SyntsAll,Repeats):-
+   checkelimreps(First,Rests),
+   L1 is L - 1,
+   !,
+   checkrepeat(L1,Rests,SyntsAll,Repeats),
+   !.
+checkrepeat(L,[Hyp|Rests],CostsAlls,Repeats):-
+   appiattisci(CostsAlls,CostsAll),
+   on(F-Txt,CostsAll),
+%   make_list([F-Txts],Txt),
+   is_list(Txt),
+   eliminateallwords2(Hyp,Txt,Rest),
+   (Rest=[];
+    checkelimreps(Rest,Rests)),
+   L1 is L - 1,
+   !,
+   checkrepeat(L1,Rests,CostsAlls,Repeats),
+   !.
+checkrepeat(1,[First|[]],SyntsAll,Rests):-
+   checkelimreps(First,Rests),
+   !.
+checkelimreps([],Rests):-!.
+checkelimreps([W|First],Rests):-
+   on(Rest,Rests),
+   \+ on(W,Rest),
+   checkelimreps(First,Rests),
+   !.
+matchsyntsall(Synts1,[],[],[]):-!.
+matchsyntsall(Synts1,[Synts|All],[Res|AllRests],[CostsAll|SynCos]):-
+   appiattisci(Synts1,[Syns1|_]),
+   appiattisci(Synts,[SynAll|_]),
+   getcosts([Syns1],Costs1),
+   getcosts([SynAll],CostsAll),
+   matchsynts(Costs1,CostsAll,Rests),
+   appiattisci(Rests,Res),
+   matchsyntsall(Synts1,All,AllRests,SynCos),
+   !.
+   
+matchsynts([],CostsAll,[]):-!.
+matchsynts([F-Hyp-_],CostsAll,[]):-
+   !.
+matchsynts([F-Hyp|Costs1],CostsAll,[Rest|Rests]):-
+   (F=ibar;F=vcomp),
+   reverse(Hyp,[V-_-_|Rev]),
+   lemmatize_dic_v(V,Lem,K),
+   light_verbs(Lem),
+   matchsynts(Costs1,CostsAll,Rests),
+    !.
+matchsynts([F-Hyp|Costs1],CostsAll,[Rest|Rests]):-
+   on(F-Txt,CostsAll),
+   is_list(Txt),
+   eliminateallwords1(Hyp,Txt,Rest),Rest=[],
+   matchsynts(Costs1,CostsAll,Rests),
+    !.
+matchsynts([F-Hyp|Costs1],CostsAll,[Rest|Rests]):-
+   on(F1-Txt,CostsAll),
+   is_list(Txt),
+   samecostype(F,F1),
+   eliminateallwords1(Hyp,Txt,Rest),
+   matchsynts(Costs1,CostsAll,Rests),
+    !.
+matchsynts([F-Hyp|Costs1],CostsAll,[List|Rests]):-
+   make_list([F-Hyp],List),
+   matchsynts(Costs1,CostsAll,Rests),
+    !.
+
+samecostype(sn,subj).
+samecostype(subj,sn).
+samecostype(ibar,subj).
+samecostype(subj,ibar).
+samecostype(sp,savv).
+samecostype(spd,savv).
+samecostype(spda,savv).
+samecostype(savv,sp).
+samecostype(savv,spd).
+samecostype(savv,spda).
+samecostype(sn,spda).
+samecostype(spda,sn).
+samecostype(sp,spda).
+samecostype(spda,sp).
+samecostype(sp,spd).
+samecostype(spd,sp).
+samecostype(spd,spda).
+samecostype(spda,spd).
+samecostype(Cos,Cos).
+
+elimhighfreq2([],[]):-!.
+elimhighfreq2([W|Hyp],Hyp1):-
+    lightsvbs(W),
+    elimhighfreq2(Hyp,Hyp1),
+    !.
+elimhighfreq2([W|Hyp],Hyp1):-
+    strictgramms(W),
+    elimhighfreq2(Hyp,Hyp1),
+    !.
+elimhighfreq2([W|Hyp],Hyp1):-
+    W=there,
+    elimhighfreq2(Hyp,Hyp1),
+    !.
+elimhighfreq2([W|Hyp],Hyp1):-
+    (integer(W);qm(W);qmq(W)),
+    notexcept(W),
+    elimhighfreq2(Hyp,Hyp1),
+    !.
+elimhighfreq2([W|Hyp],Hyp1):-
+    chigh_rank(W,Lex),
+    elimhighfreq2(Hyp,Hyp1),
+    !.
+elimhighfreq2([W|Hyp],Hyp1):-
+    grw(W),
+    elimhighfreq2(Hyp,Hyp1),
+    !.
+elimhighfreq2([W|Hyp],Hyp1):-
+    (locwn(W);
+     natl(W1,W,_);natl(W1,_,W);
+        is_in(W1,W)),
+    elimhighfreq2(Hyp,Hyp1),
+    !.
+elimhighfreq2([W|Hyp],[W-C|Hyp1]):-
+    elimhighfreq2(Hyp,Hyp1),
+    !.
+elimhighfreq1([],[]):-!.
+elimhighfreq1([W-_-_|Hyp],Hyp1):-
+    lightsvbs(W),
+    elimhighfreq1(Hyp,Hyp1),
+    !.
+elimhighfreq1([W-_-_|Hyp],Hyp1):-
+    strictgramms(W),
+    elimhighfreq1(Hyp,Hyp1),
+    !.
+elimhighfreq1([W-_-_|Hyp],Hyp1):-
+    W=there,
+    elimhighfreq1(Hyp,Hyp1),
+    !.
+elimhighfreq1([W-_-_|Hyp],Hyp1):-
+    (integer(W);qm(W);qmq(W)),
+    notexcept(Qua),
+    elimhighfreq1(Hyp,Hyp1),
+    !.
+elimhighfreq1([W-_-_|Hyp],Hyp1):-
+    chigh_rank(W,Lex),
+    elimhighfreq1(Hyp,Hyp1),
+    !.
+elimhighfreq1([W-_-_|Hyp],Hyp1):-
+    grw(W),
+    elimhighfreq1(Hyp,Hyp1),
+    !.
+elimhighfreq1([W-_-_|Hyp],Hyp1):-
+    (locwn(W);
+     natl(W1,W,_);natl(W1,_,W);
+        is_in(W1,W)),
+    elimhighfreq1(Hyp,Hyp1),
+    !.
+elimhighfreq1([W-C|Hyp],Hyp3):-
+    is_list(C),
+    elimhighfreq1(C,Hyp1),
+    elimhighfreq1(Hyp,Hyp2),
+    append(Hyp1,Hyp2,Hyp3),
+    !.
+elimhighfreq1([W-C-_|Hyp],[W-C|Hyp1]):-
+    elimhighfreq1(Hyp,Hyp1),
+    !.
+
+eliminidentics1(Hyp1,AllC,Rest,Low):-
+    tolowerall1(AllC,Low),
+    tolowerall(Hyp1,Low1),
+    eliminidentic(Low1,Low,Rest),
+%    eliminidentic(Hyp1,AllC,Rest),
+    !.
+tolowerall1([],[]):-!.
+tolowerall1([W-_-_|AllC],[W|Low]):-
+    tolower(W,L),
+    tolowerall1(AllC,Low),
+    !.
+tolowerall1([W-Rest|AllC],Lows):-
+    tolowerall1(Rest,Low1),
+    tolowerall1(AllC,Low2),
+    append(Low1,Low2,Lows),
+    !.
+
+getcosts([],[]):-!.
+getcosts([F-Costss],Costs):-
+   (F=f2;F=fs;F=fc;F=dirsp;F=fac;F=cp;F=f;F=fint),
+   getcosts(Costss,Costs),
+   !.
+getcosts([fp-Cost|Costss],Costs):-
+   getcosts(Costss,Costs),
+   !.
+getcosts([F-[Cost]|Costss],Costs):-
+   (F=fs;F=fac;F=fc;F=fint;F=cp;F=f2),
+   getcosts(Costss,Costs),
+   !.
+getcosts([F-Cost|Costss],[F-Cost|Costs]):-
+   F\=f,F\=f2,F\=fs,F\=fc,F\=fac,F\=cp,F\=fint,F\=dirsp,
+   getcosts(Costss,Costs),
+   !.
+getcosts([F-Costs|Costss],Costs3):-
+   (F=f2;F=fs;F=fc;F=dirsp;F=fac;F=cp;F=f;F=fint),
+   getcosts(Costs,Costs1),
+   getcosts(Costss,Costs2),
+   append(Costs1,Costs2,Costs3),
+   !.
+
+searchsubjectnonverb2(P,Subj,[Cl-Pre-[Subs,TLF]|TLFs],Sub,Hyp3,[]):-!.
+searchsubjectnonverb2(P,Subj,[Cl-Pre-[Subs,TLF]|TLFs],Sub,Hyp3,Rest):-
+     is_list(Subs),
+     on(Sub-Pred,Subs),
+%     strict_head_match(P,Pre,_),
+     main_head_match(P,Pre,_),
+     newmatchsubject2(Subj,TLF,Sub,Hyp3,Rest),
+     !.
+searchsubjectnonverb2(P,Subj,[Cl-Pre-[Subs,TLF]|TLFs],Subs,Hyp3,Rest):-
+     atomic(Subs),
+     on(Subs,Subj),
+%     strict_head_match(P,Pre,_),
+     main_head_match(P,Pre,_),
+     !.
+searchsubjectnonverb2(P,Subj,[Cl-Pre-[Subs,TLF]|TLFs],Subs,Hyp3,Rest):-
+%     strict_head_match(P,Pre,_),
+     main_head_match(P,Pre,_),
+     newmatchsubject2(Subj,[Subs,TLF],Sub,Hyp3,Rest),
+     !.
+searchsubjectnonverb2(P,Subj,[Subs|TLF],Sub,Hyp3,Rest):-
+     searchsubjectnonverb2(P,Subj,TLF,Sub,Hyp3,Rest),
+     !.
+newmatchsubject2(Sub,[Subj,TLF],Subj,Hyp3,Rest):-
+     atomic(Sub),
+     (on(Sub-Pred,TLF)
+     ;on(Pred-Sub,TLF)),Subj=Sub,
+      !.
+newmatchsubject2(Sub,[Subj,TLF],Subj,Hyp3,Rest):-
+     is_list(Sub),
+     Sub=[Subs|_],
+     (on(Subs-Pred,TLF)
+     ;on(Pred-Subs,TLF)),Subj=Subs,
+      !.
+newmatchsubject2(Sub,[Subj,TLF],Subj,Hyp3,Rest):-
+     atomic(Sub),atomic(Subj),
+     (on(Subj-Pred,TLF)
+     ;on(Pred-Subj,TLF)),
+     (on(Subs-Subj-L,Hyp3)
+      ;
+      on(Subj-Subs-L,Hyp3)
+      ;
+      on(Sub-L,Hyp3)
+      ;
+      on(Subs-L,Hyp3)
+      ;
+      on(Subj1-Subs1-L,Hyp3),
+      lemmatize_dic(Subs1,Lemm,K),
+      lemmatize_dic(Subj1,Lem,K1),
+      (Lem=Sub;Lemm=Sub),
+      (on(Lemm-Lem,TLF)
+       ;
+       on(Lem-Lemm,TLF)
+       ;
+       on(Lem-_,TLF)
+       ;
+       on(Lemm-_,TLF))
+      ),
+      !.
+newmatchsubject2(Sub,[Subj,TLF],Subj,Hyp3,Rest):-
+     is_list(Sub),
+     Sub=[Subs|_],
+     (on(Subj-Pred,TLF)
+     ;on(Pred-Subj,TLF)),
+     \+ grammw(Subj,K),
+     (on(Subs-Subj-L,Hyp3)
+      ;
+      on(Sub-L,Hyp3)
+      ;
+      on(Subs-L,Hyp3)
+      ;
+      on(Subj1-Subs1-L,Hyp3),
+      lemmatize_dic(Subs1,Lemm,K),
+      lemmatize_dic(Subj1,Lem,K1),
+      (Lem=Subs;Lemm=Subs),
+      (on(Lemm-Lem,TLF)
+       ;
+       on(Lem-Lemm,TLF)
+       ;
+       on(Lem-_,TLF)
+       ;
+       on(Lemm-_,TLF))
+      ),
+      !.
+
+evaluateweights(Rest,Score-L):-
+    recoverNumbs(Rest,Stats),
+    sommatoria(Stats, Score,_),
+    length(Rest,L),
+    nl,
+    write(Score),
+    write('  '),
+    write(L),
+    nl,nl,
+     !.    
+
+recoverNumbs([],[]):-!.
+recoverNumbs([_-N|Rest],[N|Stats]):-
+   recoverNumbs(Rest,Stats),
+   !.
+recoverNumbs([_-_-N|Rest],[N|Stats]):-
+   recoverNumbs(Rest,Stats),
+   !.

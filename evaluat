@@ -1,0 +1,5139 @@
+:- style_check(-singleton). 
+
+rte_evaluation_module3(L,True, RefExs,[QuestEval|AnswEval],Costs):-
+    match_propositional([QuestEval,AnswEval],Hypo,Text),
+    pproposall([QuestEval,AnswEval],ArgsProp,Predsh,AdjsProp,Predst,OutText,OutHypo),
+    general_consistency_check(RefExs,AdjsProp, OutText,OutHypo),
+    intersectivity_consistency(RefExs, Predsh,Predst),
+    sort(Predsh,Predss),
+    sort(Predst,Predss1),
+    pargument_parafs(ArgsProp,Predss,AdjsProp,Predss1,RefExs, Hypo,Text,True),
+    !.
+
+rte_evaluation_module3(L,True, RefExs,[QuestEval|AnswEval],Costs):-
+    Costs=[Rte|Tex],
+    newevaluate_output(Rte,Tex,Score),
+    Score=[[EvSynt-_],[EvLf-_]],
+    writeshallev(EvSynt,EvLf),
+    Sco is EvSynt + EvLf,
+    True=true-Sco,
+%    trycontinueeval(EvSynt,EvLf,Costs,RefExs,[QuestEval|AnswEval],True),
+    !.
+
+rte_evaluation_module3(L,false, RefExs,QuestEval,Costs):-
+    !.
+
+trycontinueeval(EvSynt,EvLf,Costs,RefExs,[QuestEval|AnswEval],True):-
+     match_propositional([QuestEval,AnswEval],Hypo,Text),
+     pproposall([QuestEval,AnswEval],ArgsProp,Predss,AdjsProp,Predss1,OutText,OutHypo),
+     (
+     (0=EvSynt;0=EvLf), 
+      lexicalmatching_module(Costs,ArgsProp,Predss,AdjsProp,Predss1,RefExs, Hypo,Text,True)
+     ;
+      verify_ident_propos(ArgsProp,AdjsProp, RefExs, Predss,Predss1),
+      general_consistency_check(RefExs,AdjsProp, OutText,OutHypo),
+      intersectivity_consistency(RefExs, Predss,Predss1),
+      verify_ident_propos(ArgsProp,AdjsProp, RefExs, Predss,Predss1),
+      matchpropositionalgen([],Hypo,Text,A,A1),
+      T is EvSynt + EvLf,
+      True=true-T
+     ),
+    !.
+
+lexicalmatching_module(Costs,ArgsProp,Predss,AdjsProp,Predss1,RefExs, Hypo,Text,True):-
+      ArgsProp=[RteArg,TextArgs|Hyps],
+      AdjsProp=[RteAdj,TextAdjs|Texs],
+      on(Cl1-P1-R1-Hea1-Id,TextArgs),
+      nbk(Hea1,A,B), Hea1\=A,
+      (
+        passive_and_role(B,Hea1,Id,TextAdjs,Role,Hea)
+        ;
+      passive_no_role(B,Cl1,P1,TextAdjs,Hea)
+      ),
+     append([cl99-A-R1-Hea-nil],TextArgs,TextArgs1),
+     build_prop_new(A,Text,Text1),
+     NArgsProps=[RteArg,TextArgs1|Hyps],
+    shpargument(Costs,NArgsProps,Predss,AdjsProp,Predss1,RefExs, Hypo,Text1,True).
+      
+lexicalmatching_module(Costs,ArgsProp,Predss,AdjsProp,Predss1,RefExs, Hypo,Text,True):-
+      ArgsProp=[RteArg,TextArgs|Hyps],
+      AdjsProp=[RteAdj,TextAdjs|Texs],
+      on(Id-Hea1-poss-Poss,TextArgs),
+      nbk(Hea1,A,B), Hea1\=A,
+      append([cl99-A-actor-Hea1-nil],TextArgs,TextArgs1),
+      build_prop_new(A,Text,Text1),
+      NArgsProps=[RteArg,TextArgs1|Hyps],
+      shpargument(Costs,NArgsProps,Predss,AdjsProp,Predss1,RefExs, Hypo,Text1,True).
+      
+lexicalmatching_module(Costs,ArgsProp,Predss,AdjsProp,Predss1,RefExs, Hypo,Text,True):-
+      ArgsProp=[RteArg,TextArgs|Hyps],
+      AdjsProp=[RteAdj,TextAdjs|Texs],
+      on(Cl1-P1-R1-Hea1-Id,RteArg),
+      nbk(Hea1,A,B),Hea1\=A,
+      (
+        passive_and_role(B,Hea1,Id,RteArg,Role,Hea)
+        ;
+      passive_no_role(B,Cl1,P1,RteArg,Hea)
+      ),
+      append([cl99-A-R1-Hea-nil],RteArg,RteArg1),
+     build_prop_new(A,Hypo,Hypo1),
+      NArgsProps=[RteArg1,TextArgs|Hyps],
+    shpargument(Costs,NArgsProps,Predss,AdjsProp,Predss1,RefExs, Hypo1,Text,True).
+      
+lexicalmatching_module(Costs,ArgsProp,Predss,AdjsProp,Predss1,RefExs, Hypo,Text,True):-
+      ArgsProp=[RteArg,TextArgs|Hyps],
+      AdjsProp=[RteAdj,TextAdjs|Texs],
+      on(Cl1-P1-R1-Hea1-Id,TextArgs),
+      on(Id-Hea1-appos-Hea,TextAdjs),
+      nbk(Hea,A,B),Hea\=A,
+        (B=subject;B=alt),
+      gethead_nominal(TextAdjs,TextArgs,Predss,Predss1,Hea2,Id1),
+%      on(Hea-Def-Fea-Id1,RefExs),
+      getroles(A,LArgsV,R11,R12),
+      append([cl99-A-R11-Hea1-nil],TextArgs,TextAr),
+      append([cl99-A-R12-Hea2-nil],TextAr,TextArgs1),
+      build_prop_new(A,Text,Text1),
+      NArgsProps=[RteArg,TextArgs1|Hyps],
+    shpargument(Costs,NArgsProps,Predss,AdjsProp,Predss1,RefExs, Hypo,Text1,True).
+
+lexicalmatching_module(Costs,ArgsProp,Predss,AdjsProp,Predss1,RefExs, Hypo,Text,True):-
+      ArgsProp=[RteArg,TextArgs|Hyps],
+      AdjsProp=[RteAdj,TextAdjs|Texs],
+      on(Cl1-P1-R1-Hea-Id,RteArg),
+      nbk(Hea,A,B),Hea\=A,
+        (B=subject;B=alt),
+      gethead_nominal(RteAdj,RteArg,Predss1,Predss,Hea2,Id1),
+%      on(Hea-Def-Fea-Id1,RefExs),
+      getroles(A,LArgsV,R11,R12),
+      append([cl99-A-R11-Hea-nil],RteArg,TextAr),
+      append([cl99-A-R12-Hea2-nil],TextAr,RteArg1),
+      build_prop_new(A,Hypo,Hypo1),
+      NArgsProps=[RteArg1,TextArgs|Hyps],
+    shpargument(Costs,NArgsProps,Predss,AdjsProp,Predss1,RefExs, Hypo1,Text,True).
+
+lexicalmatching_module(Costs,ArgsProp,Predss,AdjsProp,Predss1,RefExs, Hypo,Text,True):-
+      ArgsProp=[RteArg,TextArgs|Hyps],
+      AdjsProp=[RteAdj,TextAdjs|Texs],
+      Hypo=[be-pres-active-nil-nil-nil-nil-nil-attivita],
+      on(Cl1-P2-prop-Hea2-Id2,RteArg),
+      on(Cl1-P1-R1-Hea1-Id1,RteArg),
+      Hea1\=Hea2,
+      (Mod=specif;Mod=mod),
+      on(Id-Hea3-Mod-Hea2,RteAdj),
+      on(Id11-H-Role-Hea11,TextAdjs),
+      main_head_match(Hea11,Hea1,Sco),
+      on(Id12-Hea11-Mod-Hea22,TextAdjs),
+      main_head_match(Hea22,Hea2,Sco),
+      on(Id13-Hea11-Mod-Hea33,TextAdjs),
+      main_head_match(Hea33,Hea3,Sco),
+      True=true-011.
+
+lexicalmatching_module(Costs,ArgsProp,Predss,AdjsProp,Predss1,RefExs, Hypo,Text,True):-
+      ArgsProp=[RteArg,TextArgs|Hyps],
+      AdjsProp=[RteAdj,TextAdjs|Texs],
+      (Hypo=[be-pres-active-nil-nil-nil-nil-nil-attivita],
+      on(Cl1-P2-prop-Hea2-Id2,RteArg)
+       ;
+      Hypo=[have-pres-active-nil-nil-nil-nil-nil-attivita],
+      on(Cl1-P2-theme_aff-Hea2-Id2,RteArg)),
+      on(Cl1-P1-R1-Hea1-Id1,RteArg),
+      Hea1\=Hea2,
+      (Mod=specif;Mod=mod),
+      on(Id-Hea2-Mod-Hea3,RteAdj),
+      on(Id11-H-Role-Hea11,TextAdjs),
+      main_head_match(Hea11,Hea1,Sco),
+      on(Id12-Hea11-Mod-Hea22,TextAdjs),
+      main_head_match(Hea22,Hea2,Sco),
+      on(Id13-Hea11-Mod-Hea33,TextAdjs),
+      main_head_match(Hea33,Hea3,Sco),
+      True=true-011.
+
+lexicalmatching_module(Costs,ArgsProp,Predss,AdjsProp,Predss1,RefExs, Hypo,Text,True):-
+      ArgsProp=[RteArg,TextArgs|Hyps],
+      AdjsProp=[RteAdj,TextAdjs|Texs],
+      (Hypo=[be-pres-active-nil-nil-nil-nil-nil-attivita],
+      on(Cl1-P2-prop-Hea2-Id2,RteArg)
+       ;
+      Hypo=[have-pres-active-nil-nil-nil-nil-nil-attivita],
+      on(Cl1-P2-theme_aff-Hea2-Id2,RteArg)),
+      on(Cl1-P1-R1-Hea1-Id1,RteArg),
+      Hea1\=Hea2,
+      (Mod=specif;Mod=mod),
+      on(Id-Hea2-Mod-Hea3,RteAdj),
+      on(Id12-Hea2-Mod-Hea22,TextAdjs),
+      on(Hea33-Mod-Id13,Predss1),
+      main_head_match(Hea33,Hea3,Sco),
+      on(Hea2-Rol-Id13,Predss1),
+      match_noun_adj_wn(Hea1,Hea22),
+      True=true-011.
+
+lexicalmatching_module(Costs,ArgsProp,Predss,AdjsProp,Predss1,RefExs, Hypo,Text,True):-
+      ArgsProp=[RteArg,TextArgs|Hyps],
+      AdjsProp=[RteAdj,TextAdjs|Texs],
+      Hypo=[Pred-past-passive-nil-nil-nil-Aux-nil-attivita],
+      induce_noun_adj_wn(Pred,Pres),
+      on(Cl1-P2-R2-Hea2-Id2,RteArg),
+      on(Cl1-P1-R1-Hea1-Id1,RteArg),
+      Hea1\=Hea2,
+      (Mod=specif;Mod=mod),
+      on(Hea22,Pres),
+      on(Id-Hea22-Mod-Hea3,TextAdjs),
+      main_head_match(Hea2,Hea3,Sco),
+      on(Hea1-Rol-Id13,Predss1),
+      matchpropositionalgen([],Hypo,Text,A,A1),
+      True=true-011.
+      
+lexicalmatching_module(Costs,ArgsProp,Predss,AdjsProp,Predss1,RefExs, Hypo,Text,True):-
+      ArgsProp=[RteArg,TextArgs|Hyps],
+      AdjsProp=[RteAdj,TextAdjs|Texs],
+      Hypo=[Pred-pres-active-nil-nil-nil-nil-nil-attivita],
+      induce_noun_adj_wn(Pred,Pres),
+      on(Cl1-P2-R2-Hea2-Id2,RteArg),
+      on(Cl1-P1-R1-Hea1-Id1,RteArg),
+      Hea1\=Hea2,
+      (Mod=specif;Mod=mod),
+      on(Hea22,Pres),
+      on(Id-Hea2-Mod-Hea22,TextAdjs),
+      main_head_match(Hea22,Pred,Sco),
+      on(Hea1-Rol-Id13,Predss1),
+      matchpropositionalgen([],Hypo,Text,A,A1),
+      True=true-011.
+
+shpargument(Costs,ArgsProp,Predss,AdjsProp,Predss1,RefExs, Hypo,Text,True):-
+    Costs=[Rte|Tex],
+    newevaluate_output(Rte,Tex,Score),
+    Score=[[EvSynt-_],[EvLf-_]],
+    writeshallev(EvSynt,EvLf),
+    ((0=EvSynt;0=EvLf), 
+      True=false
+     ;
+      verify_ident_propos(ArgsProp,AdjsProp, RefExs, Predss,Predss1),
+      general_consistency_check(RefExs,AdjsProp, OutText,OutHypo),
+      intersectivity_consistency(RefExs, Predss,Predss1),
+      verify_ident_propos(ArgsProp,AdjsProp, RefExs, Predss,Predss1),
+      matchpropositionalgen([],Hypo,Text,A,A1),
+      T is EvSynt + EvLf,
+      True=true-T
+       ),
+    !.
+
+ 
+writeshallev(EvSynt,EvLf):-
+    nl,nl,
+    write('*********** SHALLOW EVALUATION SCORES ********'),
+    nl,
+    write('*********** Syntactic score ********'),
+    nl,
+    writenl(_,EvSynt),
+    write('*********** Logical Form score ********'),
+    nl,
+    writenl(_,EvLf),
+    nl,nl,
+        !.
+
+getrankgoo(First,[],F,[]):-
+    stringof(S1,First),
+    reverse(S1,[F|_]),
+    !.
+getrankgoo(First,Second,F,G):-
+    stringof(S1,First),
+    stringof(S2,Second),
+    reverse(S1,[F|_]),
+    reverse(S2,[G|_]),
+    !.
+   
+match_google(First,[],Pol):-
+    nl,nl,
+    fp(First,Frase),
+    write('Snippet No.  '),
+    writenl(_,First),
+    writeseqnl(_,Frase),
+    getrankgoo(First,[],F,G),
+    nl,nl,
+    (F=1,
+      writenl(_,'Evaluation coincides with Google'),
+     Pol=yes
+     ;
+     F=2,
+     writenl(_,'Evaluation partially coincides with Google'),
+     Pol=yesno
+     ;
+      writenl(_,'Evaluation does NOT coincide with Google'),
+     Pol=no
+     ).
+
+match_google(First,Second,Pol):-
+    nl,nl,
+    fp(First,Frase),
+    write('Snippet No.  '),
+    writenl(_,First),
+    writeseqnl(_,Frase),
+    fp(Second,Frase1),
+    nl,nl,
+    write('Snippet No.  '),
+    writenl(_,Second),
+    writeseqnl(_,Frase1),
+    getrankgoo(First,Second,F,G),
+    nl,nl,
+    ((F=1;G=1),
+      writenl(_,'Evaluation coincides with Google'),
+     Pol=yes
+     ;
+     (F=2;G=2),
+     writenl(_,'Evaluation partially coincides with Google'),
+     Pol=yesno
+     ;
+      writenl(_,'Evaluation does NOT coincide with Google'),
+     Pol=no
+     ).
+
+search_answer([],Evsort,Pol):-
+     writenl(_,'Google\'s answers are empty'),
+     Pol=no,
+     !.
+
+search_answer(Bests,Evsort,Pol):-
+    Bests=[L-Best-_,L1-Best1-_|Rest],
+    reverse(Evsort,[E-First, F-Second|_]),
+    nl,nl,
+    (First=Best,
+     writenl(_,'Google\'s best answer coincides with Getaruns\''),
+     Pol=yes
+     ;
+     (
+      (First=Best1;Second=Best;Second=Best1)
+      ;
+      on(L3-Best3-_,Rest),
+      (First=Best3;Second=Best3)),
+     writenl(_,'Google\'s best answer partially coincides with Getaruns\''),
+     Pol=yesno
+     ;
+     writenl(_,'Google\'s best answers do NOT coincide with Getaruns\''),
+     Pol=no
+     ),
+     !.
+    
+search_answer(Bests,Evsort,Pol):-
+    Bests=[L-Best-_,L1-Best1-_|Rest],
+    reverse(Evsort,[E-First]),
+    nl,nl,
+    (First=Best,
+     writenl(_,'Google\'s best answer coincides with Getaruns\''),
+     Pol=yes
+     ;
+     First=Best1,
+     writenl(_,'Google\'s best answer partially coincides with Getaruns\''),
+     Pol=yesno
+     ;
+     writenl(_,'Google\'s best answers do NOT coincide with Getaruns\''),
+     Pol=no
+     ),
+     !.
+    
+search_answer(Bests,Evsort,Pol):-
+    Bests=[L-Best-_],
+    reverse(Evsort,[E-First, F-Second|_]),
+    nl,nl,
+    (First=Best,
+     writenl(_,'Google\'s best answer coincides with Getaruns\''),
+     Pol=yes
+     ;
+     Second=Best,
+     writenl(_,'Google\'s best answer partially coincides with Getaruns\''),
+     Pol=yesno
+     ;
+     writenl(_,'Google\'s best answer does NOT coincide with Getaruns\''),
+     Pol=no
+     ),
+     !.
+    
+search_answer(Bests,[],Pol):-
+    Bests=[L-Best-_|_],
+    nl,nl,
+     writenl(_,'Google\'s best answer does NOT coincide with Getaruns\''),
+     Pol=no,
+     !.
+    
+search_answer(Bests,Evsort,Pol):-
+    Bests=[L-Best-_],
+    reverse(Evsort,[E-First]),
+    nl,nl,
+    (First=Best,
+     writenl(_,'Google\'s best answer coincides with Getaruns\''),
+     Pol=yes
+     ;
+     writenl(_,'Google\'s best answer does NOT coincide with Getaruns\''),
+     Pol=no
+     ),
+     !.
+    
+/*this index says two things: 
+     a. whether Google's snippets contain the answer Pol = 1 / 2 only one
+     b. whether the best snippets containing the answer are also the best candidates by Google - Po = 1 / 2 only one
+     c. Google's snippets do not contain the answer - Pol = 0
+     d. Google's best snippets do not contain the answer Po = 0
+     */
+     
+specifypol([],[],0-0):-!.
+specifypol(Best,[],Po-Pol):-
+    getrankgoo(Best,[],F,G),
+    (F=1, Po=2
+     ;
+     Po=0),
+     Pol=2,
+      !.
+specifypol(Best,Best1,Po-Pol):-
+    getrankgoo(Best,Best1,F,G),
+    ((F=1;G=1),
+       (Best1=[], Po=2
+         ;
+         Best1\=[], Po=1)
+     ;
+     (F=2;G=2),Best1=[], Po=1
+     ;
+     Po=0),
+     (Best1=[], Pol=2
+      ;
+      Best1\=[], Pol=1
+      ;
+      Pol=0),
+      !.
+      
+match_answer(Text,Ev1,Tagsall,Bests,Pol):-
+    concat_atom(Text, ' ', Q),
+	fq(X,Q),
+	ans(X,Ans),
+    concat_atom(TextAns, ' ', Ans),
+    nl,nl,
+    writenl(_,'The right answer is  '),
+    writeseqnl(_,TextAns),
+    assessanswer(TextAns,Po,NewAns),
+    matchtagsans(NewAns,Po,Tagsall,Evs),
+    select_best(Po,NewAns,Evs,Bests),
+    (Bests=[L-Best-_,L1-Best1-_|_],
+     nl,nl,
+     writenl(_,'Google\'s best snippets containing the right answer are  '),
+     writenl(_,Best),
+     fp(Best,Frase1),
+     writeseqnl(_,Frase1),
+     writenl(_,Best1),
+     fp(Best1,Frase2),
+     writeseqnl(_,Frase2),
+     specifypol(Best,Best1,Pol)
+%     Pol=yes
+     ;
+     Bests=[L-Best-_],
+     nl,nl,
+     writenl(_,'Google\'s best snippet containing the right answer is  '),
+     writenl(_,Best),
+     fp(Best,Frase1),
+     writeseqnl(_,Frase1),
+     specifypol(Best,[],Pol)
+%     Pol=yesone
+     ;
+     Bests=[],
+     writenl(_,'Google\'s snippets do not contain the right answer'),
+     specifypol([],[],Pol)
+%     Pol=no
+     ),
+     !.
+
+evalintg([Fig|TextAns],sharp):-
+      integer(Fig)
+      ;
+      stringof([I|Ints],Fig),
+      integer(I)
+      ;
+      term_to_atom(Fig,F),
+      stringof([I|Ints],F),
+      integer(I)
+      ;
+      stringof([M,I|Ints],Fig),
+      integer(I), money_simb(M),
+     !.      
+evalintg([Fig|TextAns],includes):-
+     stringof(Ints,Fig),
+     reverse(Ints,[s|Rev]),
+     reverse(Rev,Date),
+     stringof(Date,Dat),
+     integer(Dat),
+     Dat < 3000,
+     !.
+evalintg([Q,Fig|TextAns],more):-
+     Q=more_than;Q=more;Q=over;Q=at_least,!.
+evalintg([Q,Fig|TextAns],less):-
+     Q=less;Q=minor,!.
+evalintg([Q,Fig|TextAns],about):-
+     Q=about;Q=approximately;Q=some;Q=around,
+     !.
+% 1 hour 4 minutes ; 1:04 / 1 hour 11 minutes ; 1:11
+
+recoverabbrv([A,B|Rev],Abbr,Meas,Num):-
+     mcon(B,A,Abbr),
+     convertmeas(Abbr,Meas),
+     reverse(Rev,Nu),
+     stringof(Nu,Num),
+     !.
+
+recoverabbrv([A,B,C|Rev],Abbr,Meas,Num):-
+     mcon(C,B,Abb),
+     mcon(Abb,A,Abbr),
+     convertmeas(Abbr,Meas),
+     reverse(Rev,Nu),
+     stringof(Nu,Num),
+     !.
+
+modifyanswer(TextAns,NewAns):-
+     (remove(Fig,TextAns,Rest);
+     remove(Fig-_,TextAns,Rest)),
+     (stringof([I|Ints],Fig),
+      integer(I),
+      concat_atom(TextAns,Ans),
+      stringof(Nums,Ans),
+      reverse(Nums,Rev),
+      recoverabbrv(Rev,Abbr,Meas,Num),
+      (checknum(Num,M,Nu),
+        NewAns=[M,Nu,Fig,Meas|Rest]
+        ;
+       NewAns=[Num,Fig,Meas|Rest])
+      ;
+      stringof([I|Ints],Fig),
+      integer(I),
+      on(Abbr,TextAns),
+      checkmeasur(Abbr,Meas),
+      NewAns=[Fig,Meas|Rest]
+      ;
+      stringof([I|Ints],Fig),
+      integer(I),
+      NewAns=[Fig|Rest]
+      ;
+      stringof([M,I|Ints],Fig),
+      integer(I), 
+      money_simb(M),
+      stringof([I|Ints],Num),
+      NewAns=[M,Num|Rest]),
+      !.
+
+assessanswer(TextAns,Pol,TextAns):-
+     (on(I,TextAns);
+     on(I-_,TextAns)),
+     integer(I),
+     evalintg(TextAns,Pol1),
+     checkpol(TextAns,Pol1,Pol),
+     !.
+assessanswer(TextAns,date,NewAns):-
+     (on(Int,TextAns);
+     on(Int-_,TextAns)),
+     stringof([I|Ints],Int),
+     integer(I),
+     on(s,Ints),
+     modifyanswer(TextAns,NewAns),
+     !.
+assessanswer(TextAns,Pol,NewAns):-
+     (on(Int,TextAns);
+     on(Int-_,TextAns)),
+     stringof([I|Ints],Int),
+     integer(I),
+     modifyanswer(TextAns,NewAn),
+     sort(NewAn,NewAns),
+     evalintg([Int],Pol1),
+     checkpol(NewAns,Pol1,Pol),
+     !.
+assessanswer(TextAns,Pol,NewAns):-
+     (on(Int,TextAns);
+     on(Int-_,TextAns)),
+     stringof([M,I|Ints],Int),
+      money_simb(M),
+     integer(I),
+     modifyanswer(TextAns,NewAn),
+     sort(NewAn,NewAns),
+     evalintg([Int],Pol1),
+     checkpol(NewAns,Pol1,Pol),
+     !.
+assessanswer(TextAns,no,TextAns):-
+     findall(I,((on(I-_,TextAns);
+                 on(I,TextAns)),integer(I)),Is),
+     Is=[],
+     !.     
+
+checkpol(TextAns,sharp,Pol):-
+     on(W,TextAns),
+     spy_lower(W,Lo,P),
+     (P=1,Low=Lo;P=0,Low=W),
+     (Low=some, Pol=about
+      ;
+      Low=more, Pol=more
+      ;
+      Low=approximately, Pol=about
+      ;
+      Low=at_least, Pol=more
+      ;
+      Low=less, Pol=less
+      ;
+      Low=over, Pol=more
+      ;
+      Low=around, Pol=about
+      ;
+      Low=minor, Pol=less
+      ;
+      Low=more_than, Pol=more
+      ;
+      Low=range, Pol=includes
+      ;
+      Low=from_to, Pol=includes
+      ),!.
+     
+checkpol(NewAns,Pol,Pol):-!.
+
+checknum(Fig,M,Nu):-
+      stringof([M,I|Ints],Fig),
+      integer(I), 
+      money_simb(M),
+      stringof([I|Ints],Nu),
+     !.     
+select_best(Pol,Ans,Evs,Best):-
+    selectbest(Pol,Ans,Evs,Bes),
+    (Bes\=[],
+    sort(Bes,Bests),
+    reverse(Bests,Best)
+    ;
+    Bes=[], Best=[]),
+    !.
+
+selectbest(Pol,Ans,[],[]):-!.
+selectbest(Pol,Ans,[I-[]|Evs],Bes):-
+    selectbest(Pol,Ans,Evs,Bes),
+    !.
+selectbest(Pol,Ans,[I-Ts|Evs],[L-I-NEvs|Bes]):-
+    Ts\=[],
+    evalresultsans(Ts,Pol,Ans,NEvs),
+    NEvs\=[],
+    length(NEvs,L),
+    selectbest(Pol,Ans,Evs,Bes),
+    !.
+selectbest(Pol,Ans,[I-Ts|Evs],Bes):-
+    selectbest(Pol,Ans,Evs,Bes),
+    !.
+
+evalresultsans([],Pol,Ans,[]):-!.
+evalresultsans([T1|Evs],date,Ans,[T1|New]):-
+     stringof([I|Ints],T1),
+     integer(I),
+    convertmeas(T1,Mes),
+    on(Mes,Ans),
+    evalresultsans(Evs,Pol,Ans,New),
+    !.
+evalresultsans([T1|Evs],Pol,Ans,[T1|New]):-
+      Pol\=no,
+      integer(T1),
+      evalintegerinput(T1,Pol,Ans),
+    evalresultsans(Evs,Pol,Ans,New),
+    !.
+evalresultsans([T1|Evs],Pol,Ans,[T1|New]):-
+     Pol\=no,
+     stringof([I|Ints],T1),
+     integer(I),
+     evalintegerinput(T1,Pol,Ans),
+    evalresultsans(Evs,Pol,Ans,New),
+    !.
+evalresultsans([T1|Evs],Pol,Ans,[T|New]):-
+     Pol\=no,
+     term_to_atom(T1,T),
+     stringof([I|Ints],T),
+     integer(I),
+     evalintegerinput(T,Pol,Ans),
+    evalresultsans(Evs,Pol,Ans,New),
+    !.
+evalresultsans([T1|Evs],Pol,Ans,[T1|New]):-
+     Pol\=no,
+      stringof([M,I|Ints],T1),
+      integer(I), money_simb(M),
+      stringof([I|Ints],T2),
+     evalintegerinput(T2,Pol,Ans),
+    evalresultsans(Evs,Pol,Ans,New),
+    !.
+
+evalresultsans([T1|Evs],Pol,Ans,[T1|New]):-
+    Pol=no,
+    (stringof([I|Ints],T1),
+      \+ integer(I)
+      ;
+      stringof([M,I|Ints],T1),
+      \+ integer(I)),
+    length(Ans,L),
+    verifynames(L,Ans,T1),
+    evalresultsans(Evs,Pol,Ans,New),
+    !.
+
+evalresultsans([T1|Evs],Pol,Ans,New):-
+    evalresultsans(Evs,Pol,Ans,New),
+    !.
+
+    
+verifynames(1,Ans,T1):-!.
+verifynames(L,Ans,T1):-
+    on(N,Ans),
+    if_first_name(N),
+    checknames(T1,Ans),
+    !.
+verifynames(L,Ans,T1):-
+    on(N,Ans),
+    \+ if_first_name(N),
+    !.
+verifynames(L,Ans,T1):-
+    on(N,Ans),
+    \+ if_first_name(N),
+%    locwn(T1),
+    checkgeocities(Ans,State),
+    T1=State,
+    !.
+
+checkgeocities(Ans,State):-
+    on(City,Ans),
+    citiespreds(City,P),
+    !.
+
+checkgeocities(Ans,State):-
+    on(City,Ans),
+    city(City,State)
+    ;
+    on(City,Ans),
+    state(City,State),
+    !.
+checkgeocities(Ans,State):-
+    on(State,Ans),
+    city(City,State)
+    ;
+    on(State,Ans),
+    state(City,State)
+    ;
+    on(State,Ans),
+    state(State,St),
+    !.
+checkgeocities(Ans,State):-
+    on(Stat,Ans),
+    changestate(Stat,Sta),
+    city(City,Sta), State=Sta
+    ;
+    on(Stat,Ans),
+    changestate(Stat,Sta),
+    (state(City,Sta), State=Sta
+     ;
+     state(Sta,St), 
+     State=St
+     ;
+     stabbr(Sta,Sts), 
+     on(St,Sts),
+     State=St
+     ;
+     stabbr(St,Sts), 
+     on(Sta,Sts),
+     State=St
+     ;
+     stabbr(Sts,Stas), 
+     on(Stt,Stas),
+     stringof(List,Stt),
+     remove_all(['_'],List,Stts),
+     stringof(Stts,St),
+     State=Sts).
+
+changestate(Stat,State):-
+    toupper(Stat,State)
+    ;
+    tolower(Stat,State)
+    ;
+    stringof([S,T],Stat),
+    mcon(S,'_',S1),
+    mcon(S1,T,S2),
+    mcon(S2,'_',State),
+    !.
+
+getborough(Bor,City):-
+    tolower(Bor,Boro),
+    borough(Boro,Cit),
+    state(Cit,Stas),
+    city(Stas,Cit,_,_),
+    toupper(Stas,City),
+    !.
+    
+
+    
+% city(abilene,tx,coordinates_of='3227n9944w',population_of=106654).
+% city(annapolis,md).
+% state(ak,alaska).
+% state(ny,new_york,coordinates_of='4300n7500w',surface_area_of='49576mi').
+% borough(queens,ny).
+
+checknames(Name,Ans):-
+    if_first_name(Name),
+    (on(Name,Ans),
+     \+ namefirst(Name),!
+     ;
+     \+ on(Name,Ans),
+     \+ namefirst(Name)
+     ;
+     reverse(Ans,Rev),
+     Rev=[No|_],
+     Name=No
+     ),
+     !.
+     
+abbrevts(W):-
+    checkt(W);
+    chabbr(W);
+    charl(W);
+    checkab(W),
+     !.
+
+namefirst(W):-
+    name_new_hm(W,Cats),
+    (on(nmf,Cats);on(nmm,Cats)),
+    findall(Loc,(
+                 on(Loc,Cats), 
+                 s_included(Loc,llc)),
+                 Locs),
+    Locs=[]
+    ;
+    abbrevts(W),
+    !.
+    
+checkmeasur(T3,T1):-
+    convertmeas(T3,Mes),
+    Mes=T1,
+    !.
+checkmeasur(T3,T1):-
+    assessanswer([T1],P,Ntex),
+    on(T,Ntex), T=T3,
+    !.
+/* 
+EKGs
+ZIPs
+RBIs
+CEOs
+HMOs
+MIAs
+VCRs
+CDs
+PCs
+MGs
+MPs
+GIs
+TVs
+UFOs
+OEMs
+POWs
+VIPs
+ADollar
+CDollar
+MDollar
+USDollar
+HKDollar
+NZDollar
+SKr
+NKr
+FFr
+SFr
+DKr
+BFr
+ECUs
+*/
+
+convertmeas(km,kilometer).
+convertmeas('kW',kilowatt).
+convertmeas('mW',megawatt).
+convertmeas('KW',kilowatt).
+convertmeas('MW',megawatt).
+convertmeas(kv,kilovolt).
+convertmeas(bn,billion).
+convertmeas(oz,ounce).
+convertmeas(ozs,ounces).
+convertmeas(yd,yard).
+convertmeas(yds,yards).
+convertmeas(lb,pound).
+convertmeas(lbs,pounds).
+convertmeas(doz,dozen).
+convertmeas(ft,foot).
+convertmeas(ft,feet).
+convertmeas(foot,feet).
+convertmeas(mm,millimeter).
+convertmeas(mms,millimeters).
+convertmeas(mhz,megahertz).
+convertmeas('MHz',megahertz).
+convertmeas(m,million).
+convertmeas(mt,meter).
+convertmeas(mts,meters).
+convertmeas(mpg,mile).
+convertmeas(mi,mile).
+convertmeas(mis,miles).
+convertmeas(min,minute).
+convertmeas(mins,minutes).
+convertmeas(sec,second).
+convertmeas(secs,seconds).
+convertmeas(hr,hour).
+convertmeas(hrs,hours).
+convertmeas(h,hour).
+convertmeas(hs,hours).
+convertmeas('%',percent).
+convertmeas('%',percentage).
+convertmeas('%',limit).
+convertmeas('%',rate).
+convertmeas('km.',kilometer).
+convertmeas('kv.',kilovolt).
+convertmeas('kW.',kilowatt).
+convertmeas('mW.',megawatt).
+convertmeas('KW.',kilowatt).
+convertmeas('MW.',megawatt).
+convertmeas('bn.',billion).
+convertmeas('oz.',ounce).
+convertmeas('ozs.',ounces).
+convertmeas('yd.',yard).
+convertmeas('yds.',yards).
+convertmeas('lb.',pound).
+convertmeas('lbs.',pounds).
+convertmeas('doz.',dozen).
+convertmeas('ft.',foot).
+convertmeas('ft.',feet).
+convertmeas(foot,feet).
+convertmeas('mm.',millimeter).
+convertmeas('mms.',millimeters).
+convertmeas('m.',million).
+convertmeas('mt.',meter).
+convertmeas('mts.',meters).
+convertmeas('mpg.',mile).
+convertmeas('mi.',mile).
+convertmeas('mis.',miles).
+convertmeas('min.',minute).
+convertmeas('mins.',minutes).
+convertmeas('sec.',second).
+convertmeas('secs.',seconds).
+convertmeas('hr.',hour).
+convertmeas('hrs.',hours).
+convertmeas('h.',hour).
+convertmeas('hs.',hours).
+convertmeas(Num,A):-
+     stringof(List,Num),
+     reverse(List,[s|Rest]),
+     length(Rest,L),
+     (L=2,
+      reverse(Rest,Nus),
+      stringof(Nus,Nu),
+      nm(A,B,Nu)
+      ;
+      L=4,
+      Rest=[U,D|_],
+      stringof([D,U],Nu),
+      nm(A,B,Nu)
+      ),
+     !.
+
+evalintegerinput(T1,Pol,Ans):-
+     on(I,Ans),
+     evalintg([I],sharp),
+     checknumb(I,P),
+     (P=0, I1=I
+       ;
+       P=1,
+      pname(I1,I)),
+     checknumb(T1,P1),
+     (P1=0, TI=T1
+       ;
+       P1=1,
+      pname(TI,T1),
+      ( P1=1,
+      Pol=more, I1<TI
+      ;
+      P1=1,Pol=less, TI<I1
+      ;
+      Pol=sharp, TI=I1
+      ;
+      Pol=about, 
+       P1=1,
+      T3 is TI - I1,
+      T4 is II / 4,
+      T3 =< T4
+      ;
+      Pol=includes,
+      stringof(Num,I1),
+      stringof(Date,T1),
+      Date=[A,B,C|_],
+      Num=[A,B,C|_]
+      )),!.
+ evalintegerinput(T1,Pol,Ans):-
+     on(I,Ans),
+     evalintg([I],sharp),
+     stringof(Num,I),
+     on(',',Num),
+     name(I,List),
+     remove(44,List,Rest),
+     name(I1,Rest),
+     checknumb(T1,P1),
+     (P1=0, TI=T1
+       ;
+       P1=1,
+      pname(TI,T1),
+     (P1=1,Pol=more, I1<TI
+     ;
+      P1=1,Pol=less, TI<I1
+      ;
+      Pol=sharp, TI=I1
+      ;
+      Pol=about, 
+       P1=1,
+      T3 is TI - I1,
+      T4 is I1 / 4,
+      0 < T3,
+      T3 =< T4
+      ;
+      Pol=includes,
+      stringof(Date,T1),
+      Date=[A,B,C|_],
+      Num=[A,B,C|_]
+      )),!.
+
+checknumb(I,Pol):-
+    (stringof(K,I);
+      term_to_atom(I,I1),
+      stringof(K,I1)),
+     \+ on(',',K),
+    findall(N,(
+             on(N,K),\+ integer(N), \+ grw(N)),
+             Nums),
+             (Nums=[],Pol=1
+             ;
+             concatenate(Nums,Val),
+             convertmeas(Val,_),Pol=0
+             ;
+             Nums=[A],
+             \+integer(A),Pol=0),!.
+
+concatenate([A,B],Val):-
+    concat(A,B,Val),!.
+concatenate([A,B,C],Val):-
+    concat(A,B,V1),
+    concat(V1,C,Val),!.
+matchtagsans(Ans,Pol,[],[]):-!.
+matchtagsans(Ans,Pol,[I-Tags|Tagsall],[I-Tss|Evs]):-
+    findall(T,(
+             on(T-C,Tags),
+             nonvar(T),
+             tolower(T,T1),
+             \+ grw(T1),
+%             (\+ grammw(T1,_);integer(T1);nt(T1)),
+             on(T2,Ans), 
+             nonvar(T2),
+             tolower(T2,T3),
+             (Pol \= no,
+              checkmeasur(T3,T1)
+              ;
+              Pol= no,
+              constr_main_head_roles(T3,T1),
+              length(Ans,L),
+              verifynames(L,Ans,T)
+              ;
+              (Pol=sharp;Pol=about;Pol=more;Pol=less;Pol=includes),
+              C=num, 
+              evalintg([T1],sharp))
+             ), Ts),
+             sort(Ts,Tss),
+    matchtagsans(Ans,Pol,Tagsall,Evs),
+	!.
+
+nevmatchtagsans(Ans,Pol,[],[]):-!.
+nevmatchtagsans(Ans,Pol,[T-Tag|Tagsall],[I-Tss|Evs]):-
+    findall(T,(
+             nonvar(T),
+             tolower(T,T1),
+             \+ grw(T1),
+%             (\+ grammw(T1,_);integer(T1);nt(T1)),
+             on(T2-_,Ans), 
+             nonvar(T2),
+             tolower(T2,T3),
+             (Pol \= no,
+              checkmeasur(T3,T1)
+              ;
+              Pol= no,
+              constr_main_head_roles(T3,T1),
+              length(Ans,L),
+              verifynames(L,Ans,T)
+              ;
+              (Pol=sharp;Pol=about;Pol=more;Pol=less;Pol=includes),
+              C=num, 
+              evalintg([T1],sharp))
+             ), Ts),
+             sort(Ts,Tss),
+    nevmatchtagsans(Ans,Pol,Tagsall,Evs),
+	!.
+
+writealllfs([]):-!.
+writealllfs([Ind-LF|LFs]):-
+    writenl(_,Ind),
+    writeseqnl(_,LF),
+    writealllfs(LFs),
+    !.
+    
+multiplyevalsynt([],[],[]):-!.
+multiplyevalsynt([N-Ind|Ev1],[],[]):-
+    !.
+multiplyevalsynt([N-Ind|Ev1],[Ind-Lf|Ev2],[N1-Ind|Ev3]):-
+    appiattisci(Lf,Lff),
+    length(Lff,L),
+    (5<L, M=7;3<L, M=5;1<L, M=3;L=1,M=2),
+    (N\=0,
+     N0 is N / 2,
+     N1 is N0 * M
+     ;
+     N=0, N1=0),
+%     N1 is 1 * M),
+    multiplyevalsynt(Ev1,Ev2,Ev3),
+    !.
+multiplyevalsynt([N-Ind|Ev1],Ev2,[N-Ind|Ev3]):-
+    multiplyevalsynt(Ev1,Ev2,Ev3),
+    !.
+multiplyevalsynt([N-Ind],Ev2,[0-Ind]):-
+    !.
+
+eraseempty([],[]):-!.
+eraseempty([P-[]|Outs],Ev2):-
+    eraseempty(Outs,Ev2),
+    !.
+eraseempty([P-R|Outs],[P-R|Ev2]):-
+    eraseempty(Outs,Ev2),
+    !.
+
+/*     
+LF=[pred(Pred),
+        arg([Arg1,mod(Mod1)],[Arg2,mod(Mod2)],[Vcomps,arg([Arg22,mod(Mod22)]),adj([])]),
+        adj([Adj,mod([Mod3])])],
+*/
+
+evaluateLF(Pred,QLF,LF,Verb,Snip-Outs):-
+   LF=Snip-LFs,
+   allevallf(QLF,LFs,Out),
+   appiattisci(Out,Outs),
+   !.
+evaluateLF(Pred,QLF,LF,Verb,Snip-[]):-
+   LF=Snip-LFs,
+   !.
+
+checkQw(QW,QW):-
+   atomic(QW),
+   !.
+checkQw(QW,Q1-Q):-
+   is_list(QW),
+   QW=[Q1|_],
+   reverse(QW,[Q|_]),
+   !.
+   
+highevalsadjarg(P,P1,A,A1,J,J1,Outs):-
+   evalmainargs(P,P1,A,A1,Ev0),
+   evalmainadjs(P,P1,J,J1,Ev01),
+   evalmainargadjs(P,P1,A,J1,Ev02),
+   evalmainargadjs(P,P1,A1,J,Ev022),
+   append(Ev0,Ev01,Out4),
+   append(Ev02,Out4,Out33),
+   append(Ev022,Out33,Out),
+   appiattisci(Out,Outs),
+   Outs\=[],
+   !.
+
+lowevalargsadjsmods(A,A1,J,J1,Out):-
+   evalargs(A,A1,Ev1),
+   evaladjs(J,J1,Ev2),
+   evalargs(A,J1,Ev3),
+   evaladjs(J,A1,Ev4),
+   append(Ev1,Ev2,Out1),
+   append(Out1,Ev3,Out2),
+   append(Out2,Ev4,Out),
+   !.
+
+allevallf(QLF,[],[]):-!.
+allevallf(QLF,[LF|LFs],[Out|Outs]):-
+   QLF=[_-[[P,A,J]]],
+   LF=[P1,A1,J1],
+   (highevalsadjarg(P,P1,A,A1,J,J1,Out)
+    ;
+    lowevalargsadjsmods(A,A1,J,J1,Out)
+    ),
+   allevallf(QLF,LFs,Outs),
+   !.
+allevallf(QLF,[LF|LFs],[Out|Outs]):-
+   QLF=[Id-[[P,A,J]|Rest]],
+   LF=[P1,A1,J1],
+   (highevalsadjarg(P,P1,A,A1,J,J1,Out)
+    ;
+    lowevalargsadjsmods(A,A1,J,J1,Out)
+    ),
+   allevallf(QLF,LFs,Outs),
+   !.
+allevallf(QLF,[LF|LFs],[Out|Outs]):-
+   QLF=[Id-[[P,A,J]|Rest]],
+   QLF1=[Id-[[P,A,J]]],
+   QLF2=[Id-Rest],   
+   allevallf(QLF1,LFs,Outs),
+   allevallf(QLF2,LFs,Outs),
+   !.
+allevallf(QLF,LFs,[]):-!.
+   
+defunct([],[]):-!.
+defunct([H-L|Head1],[L|Hea1]):-
+   defunct(Head1,Hea1),
+   !.
+defunct([L|Head1],[L|Hea1]):-
+   is_list(L),
+   defunct(Head1,Hea1),
+   !.
+defunct([L|Head1],[L|Hea1]):-
+   atomic(L),
+   defunct(Head1,Hea1),
+   !.
+defunct(Head1,Head1):-
+   atomic(Head1),
+   !.
+
+aaevalhms(Ar,[],[]):-!.
+aaevalhms(Ar,[[]],[]):-!.
+aaevalhms([],Ar,[]):-!.
+aaevalhms([[]],Ar,[]):-!.
+aaevalhms(Head-Mo,[Arg|Args],[Ev1|Evs]):-
+   Arg=[Head1,Mod1],
+   Mod1=..[mod,Mo1],
+   defunct(Head1,Hea1),
+   catmatchheadmod(Head,Hea1,[Mo],Mo1,Ev1),
+   aaevalhms(Head-Mo,Args,Evs),
+   !.
+aaevalhms(Head-Mo,[Arg|Args],[Ev1|Evs]):-
+   Arg=[Verb,arg([Head1,Mod1]),adj(Adj)],
+   Mod1=..[mod,Mo1],
+   matchheadmod1(Head,Head1,Verb,[Mo],Mo1,Ev1),
+   aaevalhms(Head-Mo,Args,Evs),
+   !.
+aaevalhms(Head-Mo,[Arg|Args],[Ev1|Evs]):-
+   Arg=[Verb,arg(ArgV),adj(AdjV)],
+   Mod1=..[mod,Mo1],
+   aaevalhms(Head-Mo,[ArgV],Ev11),
+   aaevalhms(Head-Mo,[AdjV],Ev12),
+   (constr_main_head_roles(Head,Verb),Ev=[Head-Verb];Ev=[]),
+   append(Ev11,Ev12,Evs2),
+   append(Evs1,Ev,Evss),
+   appiattisci(Evss,Ev1),
+   aaevalhms(Head-Mo,Args,Evs),
+   !.
+evalmainargadjs(Pred1,Pred2,[],[],[]):-!.
+evalmainargadjs(Pred1,Pred2,Aa,Aa1,[Ev0|Evs]):-
+   Aa=..[arg|Ar1],
+   Aa1=..[adj|Ars],
+   Ar1=[Arg1|Rest1],
+   Ars=[Arg2|Rest2],
+   Pred1=..[pred,P1],
+   Pred2=..[pred,P2],
+   Arg1=[As1|_],
+   Arg2=[As2|_],
+   ((As1=A1-_;atomic(As1),A1=As1);
+    (is_list(As1),defunct(As1,A11),on(A1,A11))),
+
+   ((As2=A2-_;atomic(As2),A2=As2);
+    (is_list(As2),defunct(As2,A22),on(A2,A22))),
+   (P1=P2,
+    sloppymain_head_match(A1,A2,Sco2),
+    Ev0=[[P1-P2]-1]
+    ;
+    light_verbs(P1),
+    light_verbs(P2),
+    sloppymain_head_match(A1,A2,Sco2),
+    Ev0=[[P1-P2]-Sco2]
+    ;
+    consistent_preds(P1,P2,Sco1),
+    sloppymain_head_match(A1,A2,Sco2),
+    Ev0=[Sco1-Sco2]
+    ;
+    aaevalhms(P1-A1,Ars,Ev0)
+    ;
+    Ev0=[]),
+    Res1=..[arg|Rest1],
+    Res2=..[adj|Rest2],
+   evalmainargadjs(Pred1,Pred2,Res1,Aa1,Evs),
+   !.
+evalmainargadjs(Pred1,Pred2,Aa,Aa1,[]):-
+   !.
+qevalmainargadjs(Pred1,Pred2,[],[],[]):-!.
+qevalmainargadjs(Pred1,Pred2,Aa,Aa1,Ev0):-
+   Aa=..[arg|Ar1],
+   Aa1=..[adj|Ars],
+   Ar1=[Arg1|Rest1],
+   Ars=[Arg2|Rest2],
+   Pred1=..[pred,P1],
+   Pred2=..[pred,P2],
+   Arg1=[As1|_],
+   Arg2=[As2|_],
+   (As1=A1-_;atomic(As1),A1=As1),
+   ((As2=A2-_;atomic(As2),A2=As2);
+    (is_list(As2),defunct(As2,A22),on(A2,A22))),
+   (P1=P2,
+    integer(A2),
+    Ev0=[[P1-P2]-1]
+    ;
+    light_verbs(P1),
+    light_verbs(P2),
+    integer(A2),
+    Ev0=[[P1-P2]-Sco2]
+    ;
+    main_head_match(P1,P2,Sco1),
+    integer(A2),
+    Ev0=[Sco1-Sco2]
+    ;
+    Ev0=[]),
+   !.
+qevalmainargadjs(Pred1,Pred2,Aa,Aa1,[]):-
+   !.
+   
+evalmainadjs(Pred1,Pred2,[],[],[]):-!.
+evalmainadjs(Pred1,Pred2,Aa,Aa1,[Ev0|Evs]):-
+   Aa=..[adj|Ar1],
+   Aa1=..[adj|Ars],
+   Ar1=[Arg1|Rest1],
+   Ars=[Arg2|Rest2],
+   Pred1=..[pred,P1],
+   Pred2=..[pred,P2],
+   Arg1=[As1|_],
+   Arg2=[As2|_],
+   ((As1=A1-_;atomic(As1),A1=As1);
+    (is_list(As1),defunct(As1,A11),on(A1,A11))),
+
+   ((As2=A2-_;atomic(As2),A2=As2);
+    (is_list(As2),defunct(As2,A22),on(A2,A22))),
+   (P1=P2,
+    sloppymain_head_match(A1,A2,Sco2),
+    Ev0=[[P1-P2]-1]
+    ;
+    light_verbs(P1),
+    light_verbs(P2),
+    sloppymain_head_match(A1,A2,Sco2),
+    Ev0=[[P1-P2]-Sco2]
+    ;
+    consistent_preds(P1,P2,Sco1),
+    sloppymain_head_match(A1,A2,Sco2),
+    Ev0=[Sco1-Sco2]
+    ;
+    (light_verbs(P1);
+     light_verbs(P2)),
+    evallightverbs(P1,P2,Ar1,Ars,A1,A2,Ev0)
+    ;
+    aaevalhms(P1-A1,Ars,Ev0)
+    ;
+    Ev0=[]),
+    Res1=..[adj|Rest1],
+    Res2=..[adj|Rest2],
+   evalmainadjs(Pred1,Pred2,Res1,Aa1,Evs),
+   !.
+evalmainadjs(Pred1,Pred2,Aa,Aa1,[]):-
+   !.
+
+qevalmainadjs(Pred1,Pred2,[],[],[]):-!.
+qevalmainadjs(Pred1,Pred2,Aa,Aa1,Ev0):-
+   Aa=..[adj|Ar1],
+   Aa1=..[adj|Ars],
+   Ar1=[Arg1|Rest1],
+   Ars=[Arg2|Rest2],
+   Pred1=..[pred,P1],
+   Pred2=..[pred,P2],
+   Arg1=[As1|_],
+   Arg2=[As2|_],
+   ((As1=A1-_;atomic(As1),A1=As1);
+    (is_list(As1),defunct(As1,A11),on(A1,A11))),
+
+   ((As2=A2-_;atomic(As2),A2=As2);
+    (is_list(As2),defunct(As2,A22),on(A2,A22))),
+   (P1=P2,
+    integer(A2),
+    Ev0=[[P1-P2]-1]
+    ;
+    light_verbs(P1),
+    light_verbs(P2),
+    sloppymain_head_match(A1,A2,Sco2),
+    Ev0=[[P1-P2]-Sco2]
+    ;
+    (light_verbs(P1);
+     light_verbs(P2)),
+    evallightverbs(P1,P2,Ar1,Ars,A1,A2,Ev0)
+    ;
+    sloppymain_head_match(P1,P2,Sco1),
+    integer(A2),
+    Ev0=[Sco1-Sco2]
+    ;
+    Ev0=[]),
+    Res1=..[adj|Rest1],
+    Res2=..[adj|Rest2],
+   qevalmainadjs(Pred1,Pred2,Res1,Res2,Evs),
+   !.
+qevalmainadjs(Pred1,Pred2,Aa,Aa1,[]):-
+   !.
+
+qevalmainargs(Pred1,Pred2,Aa,Aa1,Ev0):-
+   Aa=..[arg|Ar1],
+   Aa1=..[arg|Ars],
+   Ar1=[Arg1|_],
+   Ars=[Arg2|_],
+   Pred1=..[pred,P1],
+   Pred2=..[pred,P2],
+   Arg1=[As1|_],
+   Arg2=[As2|_],
+   (As1=A1-_;atomic(As1),A1=As1),
+   (As2=A2-_;atomic(As2),A2=As2),
+   (P1=P2,
+    integer(A2),
+    Ev0=[[P1-P2]-1]
+    ;
+    light_verbs(P1),
+    light_verbs(P2),
+    integer(A2),
+    Ev0=[[P1-P2]-Sco2]
+    ;
+    (light_verbs(P1);
+     light_verbs(P2)),
+    evallightverbs(P1,P2,Ar1,Ars,A1,A2,Ev0)
+    ;
+    sloppymain_head_match(P1,P2,Sco1),
+    integer(A2),
+    Ev0=[Sco1-Sco2]
+    ;
+    Ev0=[]),
+    Res1=..[arg|Rest1],
+    Res2=..[arg|Rest2],
+   qevalmainargs(Pred1,Pred2,Res1,Res2,Evs),
+   !.
+qevalmainargs(Pred1,Pred2,Aa,Aa1,[]):-
+   !.
+
+
+evallightverbs(P1,P2,Ar1,Ars,A1,A2,Ev0):-
+    (Ar1=[Arg1,Xco1|_],
+    Ars=[Arg2,Xco2|_]
+    ;
+    Ar1=[[Arg1,Xco1|_]],
+    Ars=[[Arg2,Xco2|_]]),
+    (Xco1=[X1|_],
+     Xco2=[X2|_]
+     ;
+     Xco1=..[_,X1|_],
+     Xco2=..[_,X2|_]),
+    (
+    aaevalhms(X1-A1,Ars,Ev0),
+    appiattisci(Ev0,E),E\=[]
+    ;
+    aaevalhms(X2-A2,Ar1,Ev0),
+    appiattisci(Ev0,E),E\=[]
+    ;
+    aaevalhms(X1-A2,Ars,Ev0),
+    appiattisci(Ev0,E),E\=[]
+    ;
+    aaevalhms(X2-A1,Ar1,Ev0),
+    appiattisci(Ev0,E),E\=[]
+    ;
+    P1=P2,
+    (main_head_match(X1,X2,Sco2)
+     ;
+     main_head_match(X1,X2,Sco2)
+     ;
+     main_head_match(X1,A2,Sco2)
+     ;
+     main_head_match(A1,X2,Sco2)
+     ),
+    Ev0=[[P1-P2]-1]),
+    !.
+
+evalmainargs(Pred1,Pred2,[],[],[]):-!.
+evalmainargs(Pred1,Pred2,Aa,Aa1,[Ev0|Evs]):-
+   Aa=..[arg|Ar1],
+   Aa1=..[arg|Ars],
+   Ar1=[Arg1|Rest1],
+   Ars=[Arg2|Rest2],
+   Pred1=..[pred,P1],
+   Pred2=..[pred,P2],
+   Arg1=[As1|_],
+   Arg2=[As2|_],
+   ((As1=A1-_;atomic(As1),A1=As1);
+    (is_list(As1),defunct(As1,A11),on(A1,A11))),
+   ((As2=A2-_;atomic(As2),A2=As2);
+    (is_list(As2),defunct(As2,A22),on(A2,A22))),
+   (P1=P2,
+    sloppymain_head_match(A1,A2,Sco2),
+    Ev0=[[P1-P2]-1]
+    ;
+    light_verbs(P1),
+    light_verbs(P2),
+    sloppymain_head_match(A1,A2,Sco2),
+    Ev0=[[P1-P2]-Sco2]
+    ;
+    consistent_preds(P1,P2,Sco1),
+    sloppymain_head_match(A1,A2,Sco2),
+    Ev0=[Sco1-Sco2]
+    ;
+    (light_verbs(P1);
+     light_verbs(P2)),
+    evallightverbs(P1,P2,Ar1,Ars,A1,A2,Ev0)
+    ;
+    aaevalhms(P1-A1,Ars,Ev0)
+    ;
+    Ev0=[]),
+    Res1=..[arg|Rest1],
+    Res2=..[arg|Rest2],
+   evalmainargs(Pred1,Pred2,Res1,Aa1,Evs),
+   !.
+evalmainargs(Pred1,Pred2,Aa,Aa1,[]):-
+   !.
+
+qevalargs(A,A1,Ev1):-
+   A=..[arg|Ar1],
+   A1=..[arg|Ars],
+   Ar1=[Ar|_],
+   qevalhms(Ar,Ars,Ev1),
+   !.
+qevalargs(A,A1,Ev1):-
+   A=..[arg|Ar1],
+   A1=..[adj|Ars],
+   Ar1=[Ar|_],
+   qevalhms(Ar,Ars,Ev1),
+   !.
+qevaladjs(A,A1,Ev1):-
+   A=..[adj|Ar1],
+   A1=..[adj|Ars],
+   Ar1=[Ar|_],
+   qevalhms(Ar,Ars,Ev1),
+   !.
+qevaladjs(A,A1,Ev1):-
+   A=..[adj|Ar1],
+   A1=..[arg|Ars],
+   Ar1=[Ar|_],
+   qevalhms(Ar,Ars,Ev1),
+   !.
+
+evalargs(A,A1,Ev1):-
+   A=..[arg|Ar1],
+   A1=..[arg|Ars],
+   Ar1=[Ar|_],
+   evalhms(Ar,Ars,Ev1),
+   !.
+evalargs(A,A1,Ev1):-
+   A=..[arg|Ar1],
+   A1=..[adj|Ars],
+   Ar1=[Ar|_],
+   evalhms(Ar,Ars,Ev1),
+   !.
+evaladjs(A,A1,Ev1):-
+   A=..[adj|Ar1],
+   A1=..[adj|Ars],
+   Ar1=[Ar|_],
+   evalhms(Ar,Ars,Ev1),
+   !.
+evaladjs(A,A1,Ev1):-
+   A=..[adj|Ar1],
+   A1=..[arg|Ars],
+   Ar1=[Ar|_],
+   evalhms(Ar,Ars,Ev1),
+   !.
+
+evalhms(Ar,[],[]):-!.
+evalhms(Ar,[[]],[]):-!.
+evalhms([],Ar,[]):-!.
+evalhms([[]],Ar,[]):-!.
+evalhms(Ar,[Arg|Args],[Ev1|Evs]):-
+   Ar=[Head,Mod],
+   Arg=[Head1,Mod1],
+   Mod=..[mod,Mo],
+   Mod1=..[mod,Mo1],
+   defunct(Head1,Hea1),
+   defunct(Head,Hea),
+   catmatchheadmod(Hea,Hea1,Mo,Mo1,Ev1),
+   evalhms(Ar,Args,Evs),
+   !.
+evalhms(Ar,[Arg|Args],[Ev2|Evs]):-
+   Ar=[Head,Mod],
+   Arg=[Verb,arg([Head1,Mod1]),adj(Adj)],
+   Mod=..[mod,Mo],
+   Mod1=..[mod,Mo1],
+   matchheadmod1(Head,Head1,Verb,Mo,Mo1,Ev1),
+   matchheadmod1(Head,Adj,Verb,Mo,Mo1,Ev11),
+   append(Ev1,Ev11,Ev2),
+   evalhms(Ar,Args,Evs),
+   !.
+evalhms(Ar,[Arg|Args],[Ev1|Evs]):-
+   Ar=[Head,Mod],
+   Arg=[Verb,arg(ArgV),adj(AdjV)],
+   Mod=..[mod,Mo],
+   Mod1=..[mod,Mo1],
+   evalhms(Ar,[ArgV],Ev11),
+   evalhms(Ar,[AdjV],Ev12),
+   (constr_main_head_roles(Head,Verb),Ev=[Head-Verb];Ev=[]),
+   append(Ev11,Ev12,Evs2),
+   append(Evs1,Ev,Evss),
+   appiattisci(Evss,Ev1),
+   evalhms(Ar,Args,Evs),
+   !.
+
+qevalhms(Ar,[],[]):-!.
+qevalhms(Ar,[[]],[]):-!.
+qevalhms([],Ar,[]):-!.
+qevalhms([[]],Ar,[]):-!.
+qevalhms(Ar,[Arg|Args],[Ev1|Evs]):-
+   Arg=[Head1,Mod1],
+   Mod1=..[mod,Mo1],
+    appiattisci(Mo1,Mos1),
+    findall(Mo, (
+                  on(Mo,Mos1),integer(Mo)), Ev0),
+    integer(Head1),
+    append([Head1],Ev0,Ev1),
+%   matchheadmod(Head,Head1,Mo,Mo1,Ev1),
+   qevalhms(Ar,Args,Evs),
+   !.
+qevalhms(Ar,[Arg|Args],[Ev1|Evs]):-
+   Ar=[Head,Mod],
+   Arg=[Verb,arg([Head1,Mod1]),adj(Adj)],
+   Mod1=..[mod,Mo1],
+   (constr_main_head_roles(Head,Verb),Ev=[Head-Verb];Ev=[]),
+    appiattisci(Mo1,Mos1),
+    findall(Mo, (
+                  on(Mo,Mos1),integer(Mo)), Ev0),
+    append(Ev,Ev0,Ev1),
+%   matchheadmod1(Head,Head1,Verb,Mo,Mo1,Ev1),
+   qevalhms(Ar,Args,Evs),
+   !.
+qevalhms(Ar,[Arg|Args],[Ev1|Evs]):-
+   Ar=[Head,Mod],
+   Arg=[Verb,arg(ArgV),adj(AdjV)],
+   Mod=..[mod,Mo],
+   Mod1=..[mod,Mo1],
+   qevalhms(Ar,[ArgV],Ev11),
+   qevalhms(Ar,[AdjV],Ev12),
+   (constr_main_head_roles(Head,Verb),Ev=[Head-Verb];Ev=[]),
+   append(Ev11,Ev12,Evs2),
+   append(Evs1,Ev,Evss),
+   appiattisci(Evss,Ev1),
+   qevalhms(Ar,Args,Evs),
+   !.
+
+matchheadmod(Head,Head1-_,Mo,Mo1,[]):-list(Head1),!.
+matchheadmod(Head1-_,Head,Mo,Mo1,[]):-list(Head1),!.
+matchheadmod(Head-_,Head1-_,Mo,Mo1,[]):-list(Head),list(Head1),!.
+matchheadmod(Head,Head1,Mmos,Mmos1,Evss):-
+    list(Head1),
+    appiattisci(Mmos,Mos),
+    appiattisci(Mmos1,Mos1),
+    appiattisci(Head1,Heads1),
+    findall(Ev-Ev1,(
+               on(Hea1,Heads1),
+               on(Mo,Mos),
+               on(Mo1,Mos1),
+               sloppymain_head_match(Head,Hea1,K),Ev=[Head-Hea1],
+               sloppymain_head_match(Mo,Mo1,L),Ev1=[Mo-Mo1]
+             ), Evs1),
+    findall(Ev-Ev1,(
+               on(Hea1,Heads1),
+               on(Mo,Mos),
+             sloppymain_head_match(Hea1,Mo,K),Ev1=[Hea1-Mo], Ev=nil
+             ), Evs2),
+     appiattisci(Evs1,Evss1),
+     appiattisci(Evs2,Evss2),
+     append(Evss1,Evss2,Evss),
+     !.
+matchheadmod(Head,Head1,Mmos,Mmos1,Evss):-
+    atomic(Head1),
+    appiattisci(Mmos,Mos),
+    appiattisci(Mmos1,Mos1),
+    findall(Ev-Ev1,(
+                on(Mo,Mos),
+               on(Mo1,Mos1),
+            (sloppymain_head_match(Head,Head1,K),Ev=[Head-Head1],
+               sloppymain_head_match(Mo,Mo1,L),Ev1=[Mo-Mo1]
+               ;
+             sloppymain_head_match(Head1,Mo,K),Ev1=[Head1-Mo], Ev=nil)
+             ), Evs),
+     appiattisci(Evs,Evss),
+     !.
+matchheadmod(Head,Head1-Mods,Mmos,Mmos1,Evss):-
+    atomic(Head1),is_list(Mods),
+    appiattisci(Mmos,Mos),
+    appiattisci(Mmos1,Mos1),
+    findall(Ev-Ev1,(
+               on(Mo,Mos),
+               on(Mo1,Mos1),
+             (sloppymain_head_match(Head,Head1,K),Ev=[Head-Head1],
+              (on(Mod,Mods),
+               sloppymain_head_match(Head,Mod,L),Ev1=[Head-Mod]
+               ;
+             sloppymain_head_match(Mo,Mo1,P),Ev1=[Mo-Mo1]
+             ;
+             sloppymain_head_match(Head1,Mo,I),Ev1=[Head1-Mo]))
+             ), Evs),
+     appiattisci(Evs,Evss),
+     !.
+
+/* testi modificatore con aggiunto, argomento con aggiunto
+Head	= company
+Head1	= [['Peugeot', motor, company, 'Plc'], [new, cars]]
+Mmos = Mos	= ['Peugeot']
+Mmos1	= [[only]]
+Evss = Evs2 = Evss1 = Evss2	= []
+Mos1	= [only]
+Heads1	= ['Peugeot', motor, company, 'Plc', new, cars]
+*/
+catmatchheadmod(Head,Head1-_,Mo,Mo1,[]):-list(Head1),!.
+catmatchheadmod(Head1-_,Head,Mo,Mo1,[]):-list(Head1),!.
+catmatchheadmod(Head-_,Head1-_,Mo,Mo1,[]):-list(Head),list(Head1),!.
+catmatchheadmod(Head,Head1,Mmos,Mmos1,Evss):-
+    list(Head1),
+    appiattisci(Mmos,Mos),
+    appiattisci(Mmos1,Mos1),
+    appiattisci(Head1,Heads1),
+    findall(Ev-Ev1,(
+               on(Hea1,Heads1),
+               on(Mo,Mos),
+               on(Mo1,Mos1),
+             (check_main_head_roles(Head,Hea1),Ev=[Head-Hea1],
+             (check_main_head_roles(Mo,Mo1),Ev1=[Mo-Mo1]
+             ;
+             check_main_head_roles(Hea1,Mo),Ev1=[Hea1-Mo])
+             ;
+             check_main_head_roles(Head,Mo),Ev1=[Head-Mo]
+             ;
+             check_main_head_roles(Hea1,Mo),Ev1=[Hea1-Mo])
+             ), Evs2),
+     appiattisci(Evs2,Evss),
+     !.
+catmatchheadmod(Head,Head1,Mmos,Mmos1,Evss):-
+    atomic(Head1),
+    appiattisci(Mmos,Mos),
+    appiattisci(Mmos1,Mos1),
+    findall(Ev-Ev1,(
+               on(Mo,Mos),
+               on(Mo1,Mos1),
+             (check_main_head_roles(Head,Head1),Ev=[Head-Head1],
+              (check_main_head_roles(Mo,Mo1),Ev1=[Mo-Mo1]
+              ;
+              check_main_head_roles(Head1,Mo),Ev1=[Head1-Mo])
+             ;
+             check_main_head_roles(Head,Mo),Ev1=[Head-Mo]
+             ;
+             check_main_head_roles(Head1,Mo),Ev1=[Head1-Mo])
+             ), Evs),
+     appiattisci(Evs,Evss),
+     !.
+catmatchheadmod(Head,Head1-Mods,Mmos,Mmos1,Evss):-
+    atomic(Head1),is_list(Mods),
+    appiattisci(Mmos,Mos),
+    appiattisci(Mmos1,Mos1),
+    findall(Ev-Ev1,(
+               on(Mo,Mos),
+               on(Mo1,Mos1),
+             check_main_head_roles(Head,Head1),Ev=[Head-Head1],
+              (on(Mod,Mods),
+             check_main_head_roles(Head,Mod),Ev1=[Head-Mod]
+               ;
+             (check_main_head_roles(Mo,Mo1),Ev1=[Mo-Mo1]
+             ;
+             check_main_head_roles(Head1,Mo),Ev1=[Head1-Mo]))
+             ), Evs),
+     appiattisci(Evs,Evss),
+     !.
+
+matchheadmod1(Head,Head1-_,Verb,Mo,Mo1,[]):-list(Head1),!.
+matchheadmod1(Head1-_,Head,Verb,Mo,Mo1,[]):-list(Head1),!.
+matchheadmod1(Head-_,Head1-_,Verb,Mo,Mo1,[]):-list(Head),list(Head1),!.
+matchheadmod1(Head,Head1-Mods,Verb,Mmos,Mmos1,Evss):-
+    is_list(Head1),is_list(Mods),
+    appiattisci(Mmos,Mos),
+    appiattisci(Mmos1,Mos1),
+    appiattisci(Head1,Heads1),
+    findall(Ev-Ev1,(
+                on(Hea1,Heads1),
+             (sloppymain_head_match(Head,Hea1,K),Ev=[Head-Hea1]
+               ;
+               sloppymain_head_match(Head,Verb,L),Ev=[Head-Verb]),
+               on(Mo,Mos),
+               on(Mo1,Mos1),
+               (on(Mod,Mods),
+             sloppymain_head_match(Head,Mod,J),Ev1=[Head-Mod]
+               ;
+             (sloppymain_head_match(Mo,Mo1,H),Ev1=[Mo-Mo1]
+             ;
+             sloppymain_head_match(Hea1,Mo,P),Ev1=[Hea1-Mo]))
+             ), Evs),
+     appiattisci(Evs,Evss),
+     !.
+matchheadmod1(Head,Head1-Mods,Verb,Mmos,Mmos1,Evss):-
+    atomic(Head1),is_list(Mods),
+    appiattisci(Mmos,Mos),
+    appiattisci(Mmos1,Mos1),
+    findall(Ev-Ev1,(
+             (sloppymain_head_match(Head,Head1,K),Ev=[Head-Head1]
+               ;
+               sloppymain_head_match(Head,Verb,L),Ev=[Head-Verb]),
+               on(Mo,Mos),
+               on(Mo1,Mos1),
+               (on(Mod,Mods),
+             sloppymain_head_match(Head,Mod,O),Ev1=[Head-Mod]
+               ;
+             (sloppymain_head_match(Mo,Mo1,J),Ev1=[Mo-Mo1]
+             ;
+             sloppymain_head_match(Head1,Mo,H),Ev1=[Head1-Mo]))
+             ), Evs),
+     appiattisci(Evs,Evss),
+     !.
+matchheadmod1(Head,Head1,Verb,Mmos,Mmos1,Evss):-
+    atomic(Head1),
+    appiattisci(Mmos,Mos),
+    appiattisci(Mmos1,Mos1),
+    findall(Ev-Ev1,(
+               on(Mo,Mos),
+               on(Mo1,Mos1),
+             (sloppymain_head_match(Head,Head1,K),Ev=[Head-Head1]
+              ;
+              sloppymain_head_match(Head,Verb,L),Ev=[Head-Verb]),
+             (sloppymain_head_match(Mo,Mo1,J),Ev1=[Mo-Mo1]
+             ;
+             sloppymain_head_match(Head1,Mo,H),Ev1=[Head1-Mo])
+             ), Evs),
+     appiattisci(Evs,Evss),
+     !.
+
+matchheadmod2(Head,Head1-_,Verb,Mo,Mo1,[]):-list(Head1),!.
+matchheadmod2(Head1-_,Head,Verb,Mo,Mo1,[]):-list(Head1),!.
+matchheadmod2(Head-_,Head1-_,Verb,Mo,Mo1,[]):-list(Head),list(Head1),!.
+matchheadmod2(Head,Head1-Mods,Verb,Mmos,Mmos1,Evss):-
+    is_list(Head1),is_list(Mods),
+    appiattisci(Mmos,Mos),
+    appiattisci(Mmos1,Mos1),
+    findall(Ev-Ev1,(
+              on(Hea1,Head1),
+             (check_main_head_roles(Head,Hea1),Ev=[Head-Hea1]
+               ;
+               check_main_head_roles(Head,Verb),Ev=[Head-Verb]),
+               on(Mo,Mos),
+               on(Mo1,Mos1),
+               (on(Mod,Mods),
+               check_main_head_roles(Head,Mod),Ev1=[Head-Mod]
+               ;
+             (check_main_head_roles(Mo,Mo1),Ev1=[Mo-Mo1]
+             ;
+             check_main_head_roles(Hea1,Mo),Ev1=[Hea1-Mo]))
+             ), Evs),
+     appiattisci(Evs,Evss),
+     !.
+matchheadmod2(Head,Head1-Mods,Verb,Mmos,Mmos1,Evss):-
+    atomic(Head1),is_list(Mods),
+    appiattisci(Mmos,Mos),
+    appiattisci(Mmos1,Mos1),
+    findall(Ev-Ev1,(
+             (check_main_head_roles(Head,Head1),Ev=[Head-Head1]
+               ;
+               check_main_head_roles(Head,Verb),Ev=[Head-Verb]),
+               on(Mo,Mos),
+               on(Mo1,Mos1),
+               (on(Mod,Mods),
+             check_main_head_roles(Head,Mod),Ev1=[Head-Mod]
+               ;
+             (check_main_head_roles(Mo,Mo1),Ev1=[Mo-Mo1]
+             ;
+             check_main_head_roles(Head1,Mo),Ev1=[Head1-Mo]))
+             ), Evs),
+     appiattisci(Evs,Evss),
+     !.
+matchheadmod2(Head,Head1,Verb,Mmos,Mmos1,Evss):-
+    atomic(Head1),
+    appiattisci(Mmos,Mos),
+    appiattisci(Mmos1,Mos1),
+    findall(Ev-Ev1,(
+             (check_main_head_roles(Head,Head1),Ev=[Head-Head1]
+              ;
+              check_main_head_roles(Head,Verb),Ev=[Head-Verb]),
+               on(Mo,Mos),
+               on(Mo1,Mos1),
+             (check_main_head_roles(Mo,Mo1),Ev1=[Mo-Mo1]
+             ;
+             check_main_head_roles(Head1,Mo),Ev1=[Head1-Mo])
+             ), Evs),
+     appiattisci(Evs,Evss),
+     !.
+sloppymain_head_match(A,B,Score):-
+     main_head_match(A,B,Score)
+     ;
+     sloppy_match(A,B,Score),
+     !.
+     
+evaluateLFs(Pred,LF,[],[],[]):-!.
+evaluateLFs(Pred,QLF,[LF|LFs],[Verb|Verbs],[Out|Outs]):-
+    evaluateLF(Pred,QLF,LF,Verb,Out),
+    evaluateLFs(Pred,QLF,LFs,Verbs,Outs),
+    !.
+evaluateLFs(Pred,LF,LFs,Verbs,[Out|Outs]):-
+    evaluateLFs(Pred,LF,LFs,Verbs,Out),
+    !.
+
+searchanswerLF(QLF,[],[],[],[]):-!.
+searchanswerLF(QLF,[LF|LFs],[Verb|Verbs],[Out|Outs],[New|News]):-
+    sanswers(QLF,LF,Verb,Out,New),
+    searchanswerLF(QLF,LFs,Verbs,Outs,News),
+    !.
+searchanswerLF(QLF,[LF|LFs],[Verb|Verbs],[Out|Outs],[Out|News]):-
+    searchanswerLF(QLF,LFs,Verbs,Outs,News),
+    !.
+
+checkoutpreds(Out,L):-
+    elimina(Match-I,Out,Rest),
+    integer(I),
+    nonvar(Match),Match\=[],
+    on(V-V1,Match),
+    lightverbs(V), 
+    length(Rest,L),
+    !.
+checkoutpreds(Out,L):-
+    \+ on(Match-1,Out),
+    length(Out,L),
+    !.
+    
+sanswers(QLF,LF,Verb,Snip-Out,Snip-Out):-!.
+sanswers(QLF,LF,Verb,Snip-Out,Snip-New):-
+   (QLF=[_-[[Pred,A,J]]]
+     ;
+    QLF=[Id-[[Pred,A,J]|Rest]]),
+    length(Out,L),
+    Pred=..[pred,P],
+    (lightverbs(P), 1<L, 
+        checkoutpreds(Out,L1), 1<L1
+     ;
+     \+lightverbs(P)),
+     New=Out,
+    !.
+
+sanswers(QLF,LF,Verb,Snip-Out,Snip-[]):-
+    !.
+
+sanswall(Head,Queri,[],[]):-!.
+sanswall(Head,Queri,[ArgsAdjs|Rest],[Evv|Evss]):-
+    ArgsAdjs=[P1,Args,Adjs],
+    Args=..[arg|Ar1],
+    Adjs=..[adj|Ars],
+    sansw(Head-Queri,Ar1,Evs1),
+    sansw(Head-Queri,Ars,Evs2),
+    append(Evs1,Evs2,Evv),
+    sanswall(Head,Queri,Rest,Evss),
+    !.
+    
+sansw(Ar,[],[]):-!.
+sansw(Ar,[[]],[]):-!.
+sansw([],Ar,[]):-!.
+sansw([[]],Ar,[]):-!.
+sansw(Head-Mo,[],[]):-!.
+sansw(Head-Mo,[Arg|Args],[Ev1|Evs]):-
+   Arg=[Head1,Mod1],
+   Mod1=..[mod,Mo1],
+   catmatchheadmod(Head,Head1,[Mo],Mo1,Ev1),
+   sansw(Head-Mo,Args,Evs),
+   !.
+sansw(Head-Mo,[Arg|Args],[Ev1|Evs]):-
+   Arg=[Verb,arg([Head1,Mod1]),adj(Adj)],
+   Mod1=..[mod,Mo1],
+   matchheadmod2(Head,Head1,Verb,[Mo],Mo1,Ev1),
+   sansw(Head-Mo,Args,Evs1),
+   sansw(Head-Mo,Adj,Evs2),
+   append(Evs1,Evs2,Evs),
+   !.
+sansw(Head-Mo,[Arg|Args],[Ev1|Evs]):-
+   Arg=[Verb,arg(ArgV),adj(AdjV)],
+   Mod1=..[mod,Mo1],
+   sansw(Head-Mo,[ArgV],Ev11),
+   sansw(Head-Mo,[AdjV],Ev12),
+   (check_main_head_roles(Head,Verb),Ev=[Head-Verb];Ev=[]),
+   append(Ev11,Ev12,Ev22),
+   append(Ev22,Ev,Evss),
+   appiattisci(Evss,Ev1),
+   sansw(Head-Mo,Args,Evs1),
+   sansw(Head-Mo,Adj,Evs2),
+   append(Evs1,Evs2,Evs),
+   !.
+sansw(Head-Mo,[Arg|Args],[Ev1|Evs]):-
+   sansw(Head-Mo,Args,Evs),
+   !.
+
+inspect([], []):-!.
+inspect(OutStruc, OutStruc):-
+    on(I-Sent,OutStruc),
+    integer(I),
+    !.
+inspect(OutStruc, OutStruc):-
+    (F=f;F=fs;F=fac;F=fint;F=f2),
+    on(F-Sent,OutStruc),
+    Sent\=[A],
+    !.
+inspect(OutStruc, [f3-OutStruc]):-
+    !.
+
+getfuns([f,fs,fc,fac,f2,f3]).
+
+extractlfs([],[],[]):-!.
+extractlfs([Symb-Out|Output],[Symb-LF|LFs],[Symb-Verb|Verbs]):-
+    inspect(Out, BestStruc),
+    extractalllf(BestStruc,LF,Verb),
+    extractlfs(Output,LFs,Verbs),
+    !.
+extractlfs([Out|Output],LFs,Verbs):-
+    extractlfs(Output,LFs,Verbs),
+    !.
+
+extractalllf([],[],[]):-!.
+extractalllf([N-[_-Punt-_]|OutStruc],LFs,Verbs):-
+    (Punt=punt;Punt=par;Punt=punto;Punt=puntint;Punt=dirs),
+    extractalllf(OutStruc,LFs,Verbs),
+    !.
+extractalllf(Structs,[LF|LFs],[Verb|Verbs]):-
+    (Fun=f;Fun=fs;Fun=fc;Fun=fac;Fun=f2;Fun=f3),
+    elimina(Fun-F,Structs,OutStruc),
+    F\=[A],
+    findall(S,(getfuns(Funs),
+               on(Fu,Funs),
+               on(Fu-_,F)),
+               Ss),Ss=[],
+    extractlf(nil,[Fun-F],LF,Verb),
+    inspect(OutStruc, BestStruc),
+    extractalllf(BestStruc,LFs,Verbs),
+    !.
+extractalllf(Structs,[LF,LF1|LFs],[Verb,Verb1|Verbs]):-
+    (Fun=f;Fun=fs;Fun=fc;Fun=fac;Fun=f2;Fun=f3),
+    elimina(Fun-F,Structs,OutStruc),
+    F\=[A],
+    findall(S,(getfuns(Funs),
+               on(Fu,Funs),
+               on(Fu-_,F)),
+               Ss),
+                Ss\=[],
+    (Fun1=fs;Fun1=fc;Fun1=fac;Fun1=f2;Fun1=f3),
+    elimina(Fun1-F1,F,OutSt),
+    extractlf(nil,[Fun1-F1],LF1,Verb1),
+    inspect([Fun-OutSt], BestSt),
+    extractlf(nil,BestSt,LF,Verb),
+    inspect(OutStruc, BestStruc),
+    extractalllf(BestStruc,LFs,Verbs),
+    !.
+extractalllf([N-Struct|OutStruc],[LF|LFs],[Verb|Verbs]):-
+    extractlf(nil,Struct,LF,Verb),
+    extractalllf(OutStruc,LFs,Verbs),
+    !.
+extractalllf([[_-Punt-_]|OutStruc],LFs,Verbs):-
+    (Punt=punt;Punt=par;Punt=punto;Punt=puntint),
+    extractalllf(OutStruc,LFs,Verbs),
+    !.
+extractalllf(Struct,LFs,Verbs):-
+    appiattisci(Struct,OutStruc),
+    Struct\=OutStruc,
+    extractalllf(OutStruc,LFs,Verbs),
+    !.
+extractalllf([Struct|OutStruc],[LF|LFs],[Verb|Verbs]):-
+    extractlf(nil,Struct,LF,Verb),
+    extractalllf(OutStruc,LFs,Verbs),
+    !.
+extractalllf([Struct|OutStruc],LFs,Verbs):-
+    extractalllf(OutStruc,LF,Verbs),
+    !.
+
+multiplyfocus([Ext1,_|Qwery],Text,Ev,Ev12):-
+    findall(Ex,on(Ext1,Text), Tx),
+     (Tx=[], Ev11=Ev; Tx\=[], Ev11 is Ev * 2),
+    findall(Ext,(
+                on(Ext,Qwery),
+                on(W,Text),
+                nonvar(W),
+                tolower(W,W1),
+                W1=Ext
+                ;
+                quantities(Quants),
+                on(Ext,Quants),
+                 on(W,Text),
+                 integer(W)
+                ), Tx1),
+     (Tx1=[], Ev12=Ev11; Tx1\=[], Ev12 is Ev11 * 2),
+     !.
+
+multiplyfocus(Qword-Pred,Text,Ev,Ev1):-
+    checkQw(Qword,QW),
+    findall(Ext,
+              (qwordext(QW,Pred,Ext,Ws),
+               (on(Ext,Text)
+                 ;
+                on(W,Text),
+                nonvar(W),
+                tolower(W,W1),
+                W1=Ext
+                 ;
+                (
+                 (Ext=distance;Ext=quantity;Ext=time;
+                  Ext=height;Ext=depth;Ext=temperature;Ext=noise),
+                 on(W,Text),
+                 integer(W)
+                 ;
+                 Ext=time,
+                 on(W,Text),
+                 nt(W))
+                )), Tx),
+     (Tx=[], Ev1=Ev; Tx\=[], Ev1 is Ev + 10),
+     !.
+subtractfocus(Qword-Pred,Text,Ev,Ev1):-
+    checkQw(Qword,QW),
+    findall(W,
+               (qwordext(QW,Pred,Ext,Ws),
+                 on(W,Ws),
+                 on(W,Text)
+                 ), Tx),
+     (Tx=[], Ev1=Ev; Tx\=[], Ev1 = 0),
+     !.
+
+qwordext(how,W,manner,[how,'How']).
+qwordext(how_much,W,quantity,[]).
+qwordext(how_many,W,quantity,[]).
+qwordext(how_far,W,distance,[]).
+qwordext(how_long,W,time,[]).
+qwordext(how_often,W,time,[how,'How']).
+qwordext(how_large,W,quantity,[]).
+qwordext(how_big,W,quantity,[]).
+qwordext(how_tall,W,height,[how,'How']).
+qwordext(how_deep,W,depth,[how,'How']).
+qwordext(how_high,W,height,[how,'How']).
+qwordext(how_loud,W,noise,[how,'How']).
+qwordext(how_hot,W,temperature,[how,'How']).
+qwordext(who,be,biography,[who,whom,'Who','Whom']):-!.
+qwordext(who,write,writer,[who,whom,'Who','Whom']):-!.
+qwordext(who,invent,inventor,[who,whom,'Who','Whom']):-!.
+qwordext(who,build,builder,[who,whom,'Who','Whom']).
+qwordext(who,build,architect,[who,whom,'Who','Whom']):-!.
+qwordext(who,discovered,scientist,[who,whom,'Who','Whom']):-!.
+qwordext(who,W,person,[who,whom,'Who','Whom']).
+qwordext(who,W,institution,[who,whom,'Who','Whom']).
+qwordext(who,W,legal,[who,whom,'Who','Whom']).
+qwordext(whom,W,person,[who,whom,'Who','Whom']).
+qwordext(whom,W,institution,[who,whom,'Who','Whom']).
+qwordext(whom,W,legal,[who,whom,'Who','Whom']).
+qwordext(why,W,reason,[why,'Why']).
+qwordext(why,W,because,[why,'Why']).
+qwordext(why,W,why,[why,'Why']).
+qwordext(which,W,thing,[which,'Which']).
+qwordext(what,W,thing,[what,'What']).
+qwordext(what,W,object,[what,'What']).
+qwordext(where,W,place,[where,'Where',how,what]).
+qwordext(where,W,location,[where,'Where',how,what]).
+qwordext(where,W,located,[where,'Where',how,what]).
+qwordext(where,W,street,[where,'Where',how,what]).
+qwordext(where,W,city,[where,'Where',how,what]).
+qwordext(when,W,time,[when,'When',how]).
+
+qwordext(Q-day_of_the_week,V,time,[what,which,'What','Which']).
+qwordext(Q-Q1,V,Q2,[what,which,'What','Which']):-
+          quantities(Qs), on(Q1,Qa), Q2=quantity
+          ;
+          Q2=Q1.
+
+gethcost(Cost,H):-
+   make_list(Cost,List),
+   reverse(List,[H|_]),
+   !.
+
+matchtagscosts(Tags1,Tags,Costs1,Costs,Ev):-
+    findall(T,(
+             on(T-C,Tags1),
+             nonvar(T),
+             tolower(T,T1),
+             on(T2-C,Tags), 
+             nonvar(T2),
+             tolower(T2,T3),
+             constr_main_head_roles(T3,T1)
+%             T3=T2
+             ), Ts),
+    findall(C-H,(
+             on(C-Cost,Costs1),
+             gethcost([C-Cost],H),
+             on(C1-Cost1,Costs),
+             gethcost([C1-Cost1],H1),
+             constr_main_head_roles(H,H1),
+            C=C1), Cs),
+    length(Ts,L1),
+    length(Cs,L2),
+    Ev is L1 + L2,
+    !.
+
+dividequery(Queri,L,Q11,Q2):-
+    reverse(Queri,[Q,W|RevQue]),
+    N is L / 2,
+    N1 is N - 1,
+    dividequeries(Queri,N1,Q1,Q2),
+    append(Q1,[W,Q],Q11),
+    !.
+
+dividequeries(Queri,N,[],Queri):-
+     N<1,!.
+dividequeries([Q|Queri],N,[Q|Q1],Q2):-
+    N1 is N - 1,
+    dividequeries(Queri,N1,Q1,Q2),
+    !.
+
+launchgooglequery(LF, L,Qword,Verb,Query,Text,Alls,Queri,Eval):-
+    nl,nl,
+    writenl(_,'Query launched to Google API'),
+    nl,
+    writenl(_,Queri),
+    told,
+    concat_atom(Text,' ',Text1),
+    querytext(Text1,Output),
+%    querytext(Queri,Output),
+    Output\=[],Output\=nil,
+    getpredverb(Verb,Pred),
+    makeframe3(Str1),
+    tell(Str1),
+    evaluate_output(LF, Qword-Pred-Query,Text,Alls,Output,Eval),
+    told,
+    !.
+/*
+launchquery(LF, L,Qword,Verb,Query,Text,Alls,Queri,Eval):-
+    nl,nl,
+    writenl(_,'Query launched to Google API'),
+    nl,
+    writenl(_,Queri),
+    told,
+    querytext(Queri,Output),
+    Output\=[],Output\=nil,
+    getpredverb(Verb,Pred),
+    makeframe3(Str1),
+    tell(Str1),
+    evaluate_output(LF, Qword-Pred-Query,Text,Alls,Output,Eval),
+    told,
+    !.
+*/
+launchgooglequery(LF, L,Qword,Verb,Query,Text,Alls,Queri,Eval):-
+    dividequery(Query,L,Q1,Q2),
+    nl,nl,
+    writenl(_,'New Query launched to Google API'),
+    nl,
+    writeseqnl(_,Q1),
+    told,
+    launchqueries(LF, Qword,Verb,[Q1,Q2],Text,Alls,Query,Eval),
+    !.
+    
+launchqueries(LF, Qword,Verb,[],Text,Alls,Queri,Eval):-!.
+launchqueries(LF, Qword,Verb,[Q1],Text,Alls,Queri,Eval):-
+    concat_atom(Q1,',',Query),
+    querytext(Query,Output),
+    Output\=[],Output\=nil,
+    getpredverb(Verb,Pred),
+    makeframe3(Str1),
+    tell(Str1),
+    evaluate_output(LF, Qword-Pred-Queri,Text,Alls,Output,Eval),
+    told,
+    !.
+launchqueries(LF, Qword,Verb,[Q1|Q2],Text,Alls,Queri,[Eval|Evals]):-
+    concat_atom(Q1,',',Query),
+    querytext(Query,Output),
+    Output\=[],Output\=nil,
+    getpredverb(Verb,Pred),
+    makeframe3(Str1),
+    tell(Str1),
+    evaluate_output(LF, Qword-Pred-Queri,Text,Alls,Output,Eval),
+    told,
+    launchqueries(LF, Qword,Verb,Q2,Text,Alls,Queri,Evals),
+    !.
+launchqueries(LF, Qword,Verb,[Q1|Q2],Text,Alls,Queri,Eval):-
+    launchqueries(LF, Qword,Verb,Q2,Text,Alls,Queri,Eval),
+    !.
+
+call_recursive:-
+    abolish(statsgg/6),
+    asserta(statsgg(0,0,0,0,0,0)),
+    findall(Code,fq(Code,Sent),Codes),
+    callrecursive(Codes,Outs),
+    getcfilename(evalall,Output,L),
+    tell(Output),
+%    precisrecall(Outs),
+    writeseqnl(Outs),
+    told,
+    !.
+
+precisrecall([]):-!.
+precisrecall([[E1,E2,E3]|Output]):-
+    precisrecall(Output),
+    !.
+
+/* E1 Getaruns finds snippets that coincide or not with Google's ranking - recall */
+/* E2 Google finds the answer or not - recall 
+   if = no then also E3 = no*/
+/* E3 Google's best answer-snippet coincides with Getaruns or not :-
+    it may coincide with original Google's ranking or not 
+    if yes, precision increases for Google
+    if not precision increases for Getaruns*/
+/* statsgg(Gf,Gt,Bf,Bt,G,T) Gf = E3no, Gt = E3yes-yesno, Bf = E2no, Bt = E2yes-yesno, G = E1no, T = E1yes-yesno      
+                        */
+
+match_score_gg(E1,E2,E3):-
+   E3=no,
+   retract(statsgg(Gf,Gt,Bf,Bt,G,T)),
+   F1 is G + 1,
+   Sco is Scor + 1,
+   asserta(statsgg(Gf1,Gt1,Bf1,Bt1,G1,T1)),
+   !.
+    
+frase_estr(N,R) :- 
+	fq(N,Q),
+    concat_atom(R, ' ', Q),
+	!.
+
+callrecursive([],[]):-!.
+callrecursive([Text|Codes],[Out|All]):-
+    mcon(quest,'_',Txt),
+    mcon(Txt,Text,Txt1),
+    getcfilename(Txt1,Outs,L),
+    tell(Outs),
+    frase_estr(Text,Sent),
+    newgooglequery(Sent,Out),
+    told,
+    callrecursive(Codes,All),
+    !.
+
+newquerytext(Query,Stats):-
+  abolish(fp/2),
+  googleToList(Query,Texts),
+    nl,nl,
+    writenl(_,'Snippets retrieved by Google API'),
+    nl,nl,
+  snippetswriteseq(Texts),
+  Texts\=[],
+  convert_answer(google,Texts,Text),
+  retractall(current_num(_,_)),
+  findall(Code,fp(Code,_), Codes),
+%  init_sems,
+  qopen_file(1, Codes, Stats),
+  !.
+newquerytext(Query,nil):-!.
+  
+appendallsymb(Sym,D,'.',R,Int):-
+  concat(Sym,D,A1),
+  concat(A1,'.',A2),
+  concat(A2,R,Int),
+  !.
+google_parseq(NoFr, Frase, Out, N, Input, [Frase, Tags,  Costs, Output]):-
+   googmults(Frase,NuovaFrase,Mults),
+   googletagging_disamb(NoFr, NuovaFrase, Tensed, Tags,  Costs, Input,Output,NFrase),
+  !.
+
+googletagging_disamb(NoFr, [], Tagged, Costs, Input,Out,NFrase):-!.
+googletagging_disamb(NoFr, Frase, Tagged, Costs, Input,Out,NFrase):-
+  Frase\=[],
+  Cont = 0,
+  sentence_inits,
+  ncheck_lexs(NoFr,Cont,Frase,NFra),
+%  evaluate_garden_path(NFrase,NFra),
+   initheaps,
+   findall_poss(NWords),
+   reverse(NWords,[LToks-_|_]),
+   associate_tags(NFra, NWords, Tags),
+   np_chunking(NoFr-Tags, Disambs, Parse),
+   reorg(Parse, Parse1),
+   collect_np(Parse1, Costs, Tagged),
+%   disamb_all(Tagged),
+   assert_ibars(NoFr,Disambs, Parse, Tensed),
+   retag_verb(Tensed, Tagged, NTagged),
+   matchtt(Tagged, NTagged,True),
+   parse_costs(Costs, PCosts,True),
+   ctofmaps(Symb,PCosts, Out),
+   ndump_output(FileName,NoFr, NTagged,Out,PCosts),
+   !.
+
+checkngs([],[]):-!.
+checkngs([W|Querr],[W1|Querrs]):-
+   stringof(List,W),
+   reverse(List, ['_',s,'-'|Rest]),
+   reverse(Rest,Wor),
+   stringof(Wor,Word),
+   mcon(Word,'\'s',W1),
+   checkngs(Querr,Querrs),
+   !.
+checkngs([W|Querr],[W|Querrs]):-
+   checkngs(Querr,Querrs),
+   !.
+
+checkfuncts(Querrey,Querrs):-
+   on(Head-Text,Querrey),
+   defunct(Querrey,Quer),
+   appiattisci(Quer,Querr),
+   checkngs(Querr,Querrs),
+   !.
+checkfuncts(Querry,Querrs):-
+   checkngs(Querry,Querrs),
+   !.
+newgooglequery(Text,Out):-
+    init_lexicon,
+    google_parseq(0, Text, Out, N, Input, Alls),
+    extract_query(Alls,Queries,Qword,Verb,Passive),
+    getpredverb(Verb,Pred),    
+    Alls=[Tags,  Costs, Input, OutStruc],
+    append_qwords(Costs,Queries,Passive,Qword,Pred,Query,LF),
+    nl,nl,
+    writenl(_, 'Logical Form'),
+    writeseqnl(_,LF),
+    nl,nl,
+    appiattisci(Query,Querrys),
+    appiattisci(Query,Querry),
+%    append(Querri,[Pred],Querry),
+    length(Querry,L),
+    concat_atom(Querry,' ',Queri),
+    newlaunchquery(L,LF,Qword,Verb,Querry,Text,Alls,Queri,Out),
+%    newgooglelaunchquery(L,LF,Qword,Verb,Querry,Text,Alls,Queri,Out),
+    !.
+    
+newgooglequery(Text,[nil]):-
+    nl,nl,
+    writenl(_,'Impossible to evaluate the output'),
+    !.
+    
+searchsynsverb(Verb,[]):-
+    coplt(Verb),!.
+searchsynsverb(Verb,Ww):-
+    findall(L,nbk(L,Verb,K),I),
+    stringof([F|_],Verb),
+    select_closews(Verb,F,I,Ws),
+    (Ws\=[],
+     Ws=[W|_], Ww=[W]
+     ;
+     Ws=[], W=[]),
+    !.
+select_closews(Verb,F,[],[]):-!.
+select_closews(Verb,F,[W|I],[W|Ws]):-
+    stringof([F1|_],W),F1=F,W\=Verb,
+    ht(W,_),
+    select_closews(Verb,F,I,Ws),    
+    !.
+select_closews(Verb,F,[W|I],Ws):-
+    select_closews(Verb,F,I,Ws),    
+    !.
+
+filterqueriesngs([],[]):-!.
+filterqueriesngs([W|Queries],[W1|NQueries]):-
+   stringof(Word,W),
+   reverse(Word,['_',s,'-'|Rev]),
+   reverse(Rev,Wv),
+   stringof(Wv,W1),
+   filterqueriesngs(Queries,NQueries),
+    !.
+
+filterqueriesngs([W|Queries],NQueries):-
+   recover_descs(W,Preds), 
+   append(Preds,Queries,Quer),
+   filterqueriesngs(Quer,NQueries),
+    !.
+filterqueriesngs([name-List|Queries],NQueries):-
+   reverse(Queries,[V|_]),
+   append(List,Queries,Querr),
+   (
+     (V=is;V=was),
+     append(Querr,[called],Quer)
+     ;
+     V\=is,V\=was,
+     append(Querr,[is,called],Quer)
+     ),
+   filterqueriesngs(Quer,NQueries),
+    !.
+filterqueriesngs([W-List|Queries],NQueries):-
+   append(List,Queries,Quer),
+   filterqueriesngs(Quer,NQueries),
+    !.
+filterqueriesngs([W|Queries],[W|NQueries]):-
+   filterqueriesngs(Queries,NQueries),
+    !.
+
+append_qwords(Tags,[Queries,LF],Passive,Qword,Verb,Query,LF):-
+   filterqueriesngs(Queries,NQuery),
+   assessqueryatom(Tags,Verb,NQuery,NQueries),
+   append_qword(Tags,NQueries,Passive,Qword,Verb,Query,LF),
+   !.
+   
+assessqueryatom(Tags,be,NQuery,NQueries):-
+   on(V-ause,Tags),
+   \+ on(V,NQuery),
+   append(NQuery,[V],NQueries),
+   !.
+assessqueryatom(Tags,V,NQuery,NQuery):-
+   !.
+
+findnts(Queries):-
+    findall(D,(on(D,Queries),nt(D)),Ds), 
+    Ds\=[],
+   !.
+   
+appendOr(Quer,[],Quer):-!.
+appendOr(Queries,I,Quer):-
+    append(Queries,['OR'],Querr),
+    append(Querr,I,Quer),
+   !.
+append_qword(Tags,Queries,Passive,'.',Verb,Query,LF):-
+    (Verb=call;Verb=name),
+    append(Queries,[is,called,*],Query),
+    !.
+append_qword(Tags,Queries,Passive,'.',Verb,Query,LF):-
+    Verb=describe,
+    append(Queries,[biography,*],Query),
+    !.
+append_qword(Tags,Queries,Passive,'.',Verb,Query,LF):-
+    append(Queries,[*],Query),
+    !.
+append_qword(Tags,Queries,Passive,Qword,Verb,Query,LF):-
+    Qword=why,
+    append(Queries,[because],Query)
+    ;
+    list(Qword),
+    on(which,Qword),
+    append(Queries,[],Query)
+    ;
+    Qword=which,
+    append(Queries,[],Query)
+    ;
+    Qword=when,
+    searchsynsverb(Verb,I),
+    appendOr(Queries,I,Quer),
+    append(Quer,[in, *],Query)
+    ;
+    Qword=what,
+    findall(D,(on(D,Queries),nt(D)),Ds), Ds\=[],
+    searchsynsverb(Verb,I),
+    appendOr(Queries,I,Query)
+    ;
+    Qword=where,
+    (Verb=locate,Ads=[in, *]
+      ;
+     Verb\=locate,
+     (reverse(Queries,[Last|_]),
+       on(Last-Tag,Tags),
+       check_vcat(Tag),
+       Ads=[in, *]
+       ;
+       Ads=[locate]
+       )),
+    append(Queries,Ads,Query)
+    ;
+    (Qword=who;Qword=whom),
+    Verb=be,
+    checkbiography(LF,Bio),
+    append(Queries,Bio,Query)
+    ;
+    (Qword=who;Qword=whom),Verb=write,
+    append([*,author],Queries,Query)
+    ;
+    Qword=who,
+    (Passive=passive,
+        append(Queries,[*],Quer),
+        searchsynsverb(Verb,I),
+        append(Quer,I,Query)
+        ;
+     Passive=active,
+      append(Queries,[by, *],Quer),
+      searchsynsverb(Verb,I),
+      append(Quer,I,Query))
+    ;
+    Qword=whom,
+    append(Queries,[],Query)
+    ;
+    Qword=how,
+    searchsynsverb(Verb,I),
+    append(Queries,I,Query)
+    ;
+    Qword=how_far,
+    composequery(distance,Verb,Queries,Query)
+    ;
+    Qword=how_large,
+    append(Queries,[],Query)
+    ;
+    Qword=how_much,
+    append(Queries,[],Query)
+    ;
+    Verb=live, Qword=how_many,
+    composequery(population,Verb,Queries,Query)
+    ;
+    Qword=how_many,
+    append(Queries,[],Query)
+    ;
+    Qword=how_often,
+    composequery(repeat,Verb,Queries,Query)
+    ;
+    Qword=how_long,
+    composequery(duration,Verb,Queries,Query)
+    ;
+    Qword=how_big,
+    composequery(quantity,Verb,Queries,Query)
+    ;
+    Qword=how_tall,
+    composequery(height,Verb,Queries,Query)
+    ;
+    Qword=how_deep,
+    composequery(depth,Verb,Queries,Query)
+    ;
+    Qword=how_high,
+    composequery(height,Verb,Queries,Query)
+    ;
+    Qword=how_loud,
+    composequery(noise,Verb,Queries,Query)
+    ;
+    Qword=how_hot,
+    composequery(temperature,Verb,Queries,Query)
+    ;
+    list(Qword),
+    on(what,Qword),
+    (reverse(Queries,[Last|_]),
+     on(Last-Tag,Tags),
+     (check_vcat(Tag),
+      append(Queries,[*],Query))
+      ;
+      elimina(what,Qword,Res),
+      append(Queries,Res,Quer),
+      append(Quer,[*],Query))
+    ;
+    Qword=what,
+    reverse(Queries,[Last|_]),
+    (on(Last-Tag,Tags),
+     check_vcat(Tag), 
+     Querries=Queries
+     ;
+     on(W-Tag,Tags),
+     check_vcat(Tag),
+     elimina(W,Queries,Qrest),
+     append(Qrest,[W],Querries)
+     ;
+     on(Verb-Tag,Tags)
+     ),
+    append(Queries,[*],Query)
+    ;
+    Qword=what,
+    append(Queries,[],Query),
+    !.
+append_qword(Tags,Queries,Qword,Verb,Queries,LF):-
+    !.
+
+checkbiography(LF,Bio):-
+    LF=[Pred,Arg,Adjs],
+    Arg=..[arg,Args],
+    Args=[Head|_],
+    findrelsprofs([Head]),
+    Bio=[],
+    !.
+checkbiography(Queries,[biography]):-
+    !.
+
+findrelsprofs([W|Queries]):-
+    gwn(W),
+    !.
+findrelsprofs([W|Queries]):-
+    lemmatize_dic(W,W1,_),
+    gwn(W1),
+    !.
+findrelsprofs([W|Queries]):-
+    findrelsprofs(Queries),
+    !.
+    
+getargsmods(Subj,Arg,Mod):-
+    atomic(Subj),Arg=Subj, Mod=[],
+    !.
+    
+getargsmods(Subj,Arg,Mod):-
+     Subj=[Arg-Sub],
+     is_list(Sub),
+     remove(Arg,Sub,Modd),
+     (findall(B,(on(B-_-_,Modd);on(B-_,Modd)),Bs),Bs\=[],
+       make_list([sp-Modd],Mod)
+       ;
+       Mod=Modd),
+      !.
+
+getargsmods(Subj,Arg,Mod):-
+     is_list(Subj),
+     Subj=[sp-[A-List]],
+     removeallmods(List,Args,Mod),
+     (Mod\=[], Args=[],
+      findall(B,(on(B-_-_,Args);on(B-R,Args), R\='s_'),Bs),
+       Bs\=[],
+       make_list([sp-Args],Arg), Arg\=[]
+       ;
+       make_list([sp-Args],Arg), Arg\=[]
+       ;
+       Arg=Args),
+       !.
+
+getargsmods(Subj,Arg,Mod):-
+     is_list(Subj),
+     Subj=[sp-[A-List|Rest]],
+     removeallmods([List|Rest],Args,Mod),
+     (Mod\=[], Args=[],
+      findall(B,(on(B-_-_,Args);on(B-R,Args), R\='s_'),Bs),
+       Bs\=[],
+       make_list([sp-Args],Arg)
+       ;
+       Arg=Args),
+       !.
+       
+getargsmods(Subj,Arg,Mod):-
+     is_list(Subj),
+     reverse(Subj,[Ar|Mo]),
+     Ar\=sp-[A],
+     removeallmods(Subj,Args,Mod),
+     (Mod\=[], Args=[],
+      findall(B,(on(B-_-_,Args);on(B-R,Args), R\='s_'),Bs),
+       Bs\=[],
+       make_list([sp-Args],Arg)
+       ;
+       Arg=Args),
+       !.
+
+getargsmods(Subj,Arg,Mod):-
+     is_list(Subj),
+     reverse(Subj,[Argg|Modd]),
+     Argg\=sp-[A],
+     (findall(B,(on(B-_-_,Modd);on(B-R,Modd), R\='s_'),Bs),Bs\=[],
+       make_list([sp-Modd],Mod)
+       ;
+       Mod=Modd),
+     (Args=[],
+      (atomic(Argg), Argg\=A-B-C, Arg=Argg
+      ;
+       Argg=Arg-_-_)
+      ),
+       !.
+
+/*
+getargsmods(Subj,Arg,Mod):-
+   (atomic(Subj),Arg=Subj, Mod=[]
+     ;
+     Subj=[Arg-Sub],
+     is_list(Sub),
+     remove(Arg,Sub,Modd),
+     (findall(B,(on(B-_-_,Modd);on(B-_,Modd)),Bs),Bs\=[],
+       make_list([sp-Modd],Mod)
+       ;
+       Mod=Modd)
+     ;
+     is_list(Subj),
+     Subj=[sp-[A-List]],
+     removeallmods(List,Args,Mod),
+     (Mod\=[], Args=[],
+      findall(B,(on(B-_-_,Args);on(B-R,Args), R\='s_'),Bs),
+       Bs\=[],
+       make_list([sp-Args],Arg)
+       ;
+       Arg=Args)
+      ;
+     is_list(Subj),
+     Subj=[sp-[A-List|Rest]],
+     removeallmods([List|Rest],Args,Mod),
+     (Mod\=[], Args=[],
+      findall(B,(on(B-_-_,Args);on(B-R,Args), R\='s_'),Bs),
+       Bs\=[],
+       make_list([sp-Args],Arg)
+       ;
+       Arg=Args)
+    ;
+     is_list(Subj),
+     reverse(Subj,[Ar|Mo]),
+     Ar\=sp-[A],
+     removeallmods(Subj,Args,Mod),
+     (Mod\=[], Args=[],
+      findall(B,(on(B-_-_,Args);on(B-R,Args), R\='s_'),Bs),
+       Bs\=[],
+       make_list([sp-Args],Arg)
+       ;
+       Arg=Args)
+     ;
+     is_list(Subj),
+     reverse(Subj,[Argg|Modd]),
+     Argg\=sp-[A],
+     (findall(B,(on(B-_-_,Modd);on(B-R,Modd), R\='s_'),Bs),Bs\=[],
+       make_list([sp-Modd],Mod)
+       ;
+       Mod=Modd),
+     (Args=[],
+      (atomic(Argg), Argg\=A-B-C, Arg=Argg
+      ;
+       Argg=Arg-_-_)
+      )
+      ;
+      Args\=[], Arg=Args),
+     !.
+*/
+getargsmods(Subj,[],[]):-!.
+
+removeallmods(List,Cost,Modss):-
+     (remove(mod-Modd,List,Rest);
+     remove(appos-Modd,List,Rest);
+     remove(adj-Modd,List,Rest);
+     remove(obl-Modd,List,Rest)),
+     make_list([sp-Modd],Mod),
+     removeallmods(Rest,Cost,Mods),
+     appiattisci([Mod|Mods],Modss),
+     !.
+removeallmods(List,Cost,Modss):-
+     List=[sp-SP],
+     (remove(mod-Modd,SP,Rest);
+     remove(appos-Modd,SP,Rest)),
+     make_list([sp-Modd],Mod),
+     removeallmods(Rest,Cost,Mods),
+     appiattisci([Mod|Mods],Modss),
+     !.
+removeallmods(List,Args,Mod):-
+     List=[sp-SP],
+     appiattisci(SP, Sp),
+     removeallmods(Sp,Args,Mod),
+     !.
+     
+removeallmods(List,Args,Mod):-
+     List=[sp-SP],
+     remove(Head-Adj,SP,Rest),
+     make_list([sp-Adj],Arg),
+     (Rest\=[],
+      elimina(Hea-Adj1,Rest,Res),
+      make_list([sp-Adj1],Arg1),
+      append([Head-Arg],[Hea-Arg1],Args)
+      ;
+      Rest=[],
+      Arg1=[], Args=[Head-Arg]),
+      (Res=[], Mod=[]
+      ;
+      Res\=[],
+      appiattisci(Res,Ress),
+     make_list([sp-Ress],Mod)),
+     !.
+removeallmods(List,[Arg],Mod):-
+     List=[sp-SP],
+     reverse(SP,[Arg|Modd]),
+     make_list([sp-Modd],Mod),
+     !.
+removeallmods(List,Cost,Modss):-
+     elimina(f2-Mo,List,Rest),
+     elimina(f-Modd,Mo,Res),
+     make_list([f-Modd],Mod),
+     append(Res,Rest,Rests),
+     removeallmods(Rests,Costs,Mods),
+     (findall(B,(on(B-_-_,Costs);on(B-R,Costs), R\='s_'),Bs),Bs\=[],
+       make_list([sp-Costs],Cost)
+       ;
+       Cost=Costs),
+     appiattisci([Mod|Mods],Modss),
+     !.
+removeallmods(List,Cost,Modss):-
+     elimina(f2-Mo,List,Rest),
+     elimina(_-Modd,Mo,Res),
+     make_list([f-Modd],Mod),
+     append(Res,Rest,Rests),
+     removeallmods(Rests,Costs,Mods),
+     (findall(B,(on(B-_-_,Costs);on(B-R,Costs), R\='s_'),Bs),Bs\=[],
+       make_list([sp-Costs],Cost)
+       ;
+       Cost=Costs),
+     appiattisci([Mod|Mods],Modss),
+     !.
+removeallmods([List|Lists],[Cost|Costs],Modss):-
+     is_list(List),
+     removeallmods([sp-List],Cost,Mod),
+     removeallmods(Lists,Costs,Mods),
+     appiattisci([Mod|Mods],Modss),
+     !.
+
+removeallmods([List|Lists],[Costt|Costs],Modss):-
+     List=P-L,
+     prepos(P),
+     removeallmods([sp-L],Cost,Mod),
+     append([P],Cost,Costt),
+     removeallmods(Lists,Costs,Mods),
+     appiattisci([Mod|Mods],Modss),
+     !.
+
+removeallmods(List,Args,[]):-
+     on(_-_-_,List),
+     make_list([sp-List],Args)
+     ;
+     List\=[A],
+     \+ on(_-_-_,List),
+     Args=List,
+     !.
+removeallmods(List,List,[]):-
+     !.
+
+lfs1(Pred,Subj,LF):-
+    getargsmods(Subj,Arg,Mod),
+    LF=[pred(Pred),arg([Arg,mod(Mod)]),adj([])],
+    !.
+
+lfs11(Pred,Adjs,LF):-
+    getargsmods(Adjs,Adj,Mod1),
+    sort(Mod1,Heas),
+    Heas=[Hea],
+    LF=[pred(Pred),arg([]),adj([Hea,mod(Adj)])],
+    !.
+lfs11(Pred,Adjs,LF):-
+    getargsmods(Adjs,Adj,Mod1),
+    LF=[pred(Pred),arg([]),adj([Adj,mod([Mod1])])],
+    !.
+lfs2(Pred,Subj,Adjs,LF):-
+    getargsmods(Subj,Arg,Mod),
+    getargsmods(Adjs,Adj,Mod1),
+    sort(Mod1,Heas),
+    Heas=[Hea],
+    LF=[pred(Pred),arg([Arg,mod(Mod)]),adj([Hea,mod(Adj)])],
+    !.
+lfs2(Pred,Subj,Adjs,LF):-
+    getargsmods(Subj,Arg,Mod),
+    getargsmods(Adjs,Adj,Mod1),
+    LF=[pred(Pred),arg([Arg,mod(Mod)]),adj([Adj,mod(Mod1)])],
+    !.
+lfs3(Pred,Subj,Obj,LF):-
+    getargsmods(Subj,Arg1,Mod1),
+    getargsmods(Obj,Arg2,Mod2),
+    LF=[pred(Pred),arg([Arg1,mod(Mod1)],[Arg2,mod(Mod2)]),adj([])],
+    !.
+lfs33(Pred,Obj,Vcomps,LF):-
+    getargsmods(Subj,Arg1,Mod1),
+    LF=[pred(Pred),arg([Arg1,mod(Mod1)],[Vcomps,arg([]),adj([])]),adj([])],
+    !.
+lfs4(Pred,Subj,Obj,Adjs,LF):-
+    getargsmods(Subj,Arg1,Mod1),
+    getargsmods(Obj,Arg2,Mod2),
+    getargsmods(Adjs,Adj,Mod3),
+    sort(Mod3,Heas),
+    Heas=[Hea],
+    LF=[pred(Pred),arg([Arg1,mod(Mod1)],[Arg2,mod(Mod2)]),adj([Hea,mod(Adj)])],
+    !.
+lfs4(Pred,Subj,Obj,Adjs,LF):-
+    getargsmods(Subj,Arg1,Mod1),
+    getargsmods(Obj,Arg2,Mod2),
+    getargsmods(Adjs,Adj,Mod3),
+    LF=[pred(Pred),arg([Arg1,mod(Mod1)],[Arg2,mod(Mod2)]),adj([Adj,mod(Mod3)])],
+    !.
+lfs44(Pred,Subj,Vcomps,Arg,LF):-
+    getargsmods(Subj,Arg1,Mod1),
+    getargsmods(Arg,Arg2,Mod2),
+    LF=[pred(Pred),arg([Arg1,mod(Mod1)],[Vcomps,arg([Arg2,mod(Mod2)]),adj([])]),adj([])],
+    !.
+lfs55(Pred,Subj,Vcomps,Adjs,LF):-
+    getargsmods(Subj,Arg1,Mod1),
+    getargsmods(Adjs,Adj,Mod3),
+    sort(Mod3,Heas),
+    Heas=[Hea],
+    LF=[pred(Pred),arg([Arg1,mod(Mod1)],[Vcomps,arg([]),adj([])]),adj([Hea,mod(Adj)])],
+    !.
+lfs55(Pred,Subj,Vcomps,Adjs,LF):-
+    getargsmods(Subj,Arg1,Mod1),
+    getargsmods(Adjs,Adj,Mod3),
+    LF=[pred(Pred),arg([Arg1,mod(Mod1)],[Vcomps,arg([]),adj([])]),adj([Adj,mod(Mod3)])],
+    !.
+
+/*
+lfs1(Be,Obj,LF)
+lfs11(Pred,Adjs,LF)
+lfs2(Pred,Subj,Adjs,LF)
+lfs3(Pred,Subj,Obj,LF)
+lfs33(Pred,Obj,Vcomps,LF)
+lfs4(Pred,Subj,Obj,Adjs,LF)
+lfs44(Pred,Subj,Vcomps,Arg,LF)
+lfs55(Pred,Subj,Vcomps,Adjs,LF)
+lfs5(Be,Obj,Vcomps,Arg,Adjs,LF)
+lfs6(Pred,Vcomps,Arg,Adjs,LF)
+lfs7(Pred,Subj,Obj,Vcomps,Arg,Adjs,LF)
+lfs77(Pred,Subj,Obj,Vcomps,Arg,LF)
+    LF=[pred(Pred),arg([],[Vcomps,arg([Arg2,mod(Mod2)]),adj([])]),adj([Adj,mod([Mod3])])],
+    LF=[pred(Pred),arg([Arg1,mod(Mod1)],[Arg2,mod(Mod2)],[Vcomps,arg([Arg22,mod(Mod22)]),adj([])]),adj([Adj,mod([Mod3])])],
+    LF=[pred(Pred),arg([Arg1,mod(Mod1)],[Arg2,mod(Mod2)],[Vcomps,arg([Arg22,mod(Mod22)]),adj([])]),adj([])],
+*/
+lfs5(Pred,Subj,Vcomps,Arg,Adjs,LF):-
+    getargsmods(Subj,Arg1,Mod1),
+    getargsmods(Arg,Arg2,Mod2),
+    getargsmods(Adjs,Adj,Mod3),
+    sort(Mod3,Heas),
+    Heas=[Hea],
+    LF=[pred(Pred),arg([Arg1,mod(Mod1)],[Vcomps,arg([Arg2,mod(Mod2)]),adj([])]),adj([Hea,mod(Adj)])],
+    !.
+lfs5(Pred,Subj,Vcomps,Arg,Adjs,LF):-
+    getargsmods(Subj,Arg1,Mod1),
+    getargsmods(Arg,Arg2,Mod2),
+    getargsmods(Adjs,Adj,Mod3),
+    LF=[pred(Pred),arg([Arg1,mod(Mod1)],[Vcomps,arg([Arg2,mod(Mod2)]),adj([])]),adj([Adj,mod([Mod3])])],
+    !.
+lfs6(Pred,Vcomps,Arg,Adjs,LF):-
+    getargsmods(Arg,Arg2,Mod2),
+    getargsmods(Adjs,Adj,Mod3),
+    sort(Mod3,Heas),
+    Heas=[Hea],
+    LF=[pred(Pred),arg([],[Vcomps,arg([Arg2,mod(Mod2)]),adj([])]),adj([Hea,mod(Adj)])],
+    !.
+lfs6(Pred,Vcomps,Arg,Adjs,LF):-
+    getargsmods(Arg,Arg2,Mod2),
+    getargsmods(Adjs,Adj,Mod3),
+    LF=[pred(Pred),arg([],[Vcomps,arg([Arg2,mod(Mod2)]),adj([])]),adj([Adj,mod([Mod3])])],
+    !.
+lfs7(Pred,Subj,Obj,Vcomps,Arg,Adjs,LF):-
+    getargsmods(Subj,Arg1,Mod1),
+    getargsmods(Obj,Arg2,Mod2),
+    getargsmods(Arg,Arg22,Mod22),
+    getargsmods(Adjs,Adj,Mod3),
+    sort(Mod3,Heas),
+    Heas=[Hea],
+    LF=[pred(Pred),arg([Arg1,mod(Mod1)],[Arg2,mod(Mod2)],[Vcomps,arg([Arg22,mod(Mod22)]),adj([])]),adj([Hea,mod(Adj)])],
+    !.
+lfs7(Pred,Subj,Obj,Vcomps,Arg,Adjs,LF):-
+    getargsmods(Subj,Arg1,Mod1),
+    getargsmods(Obj,Arg2,Mod2),
+    getargsmods(Arg,Arg22,Mod22),
+    getargsmods(Adjs,Adj,Mod3),
+    LF=[pred(Pred),arg([Arg1,mod(Mod1)],[Arg2,mod(Mod2)],[Vcomps,arg([Arg22,mod(Mod22)]),adj([])]),adj([Adj,mod([Mod3])])],
+    !.
+lfs77(Pred,Subj,Obj,Vcomps,Arg,LF):-
+    getargsmods(Subj,Arg1,Mod1),
+    getargsmods(Obj,Arg2,Mod2),
+    getargsmods(Arg,Arg22,Mod22),
+    LF=[pred(Pred),arg([Arg1,mod(Mod1)],[Arg2,mod(Mod2)],[Vcomps,arg([Arg22,mod(Mod22)]),adj([])]),adj([])],
+    !.
+
+
+newgooglelaunchquery(L,LF,Qword,Verb,Query,Text,Alls,Queri,Eval):-
+    nl,nl,
+    writenl(_,'Query launched to Google API'),
+    nl,
+    writenl(_,Queri),
+    concat_atom(Text,' ',Text1),
+    newquerytext(Text1,Output),
+    Output\=[],Output\=nil,
+    getpredverb(Verb,Pred),
+    evaluate_output(LF,Qword-Pred-Query,Text,Alls,Output,Eval),
+    !.
+
+newlaunchquery(L,LF,Qword,Verb,Query,Text,Alls,Queri,Eval):-
+    nl,nl,
+    writenl(_,'Query launched to Google API'),
+    nl,
+    writenl(_,Queri),
+    concat_atom(Text,' ',Text1),
+    newquerytext(Text1,Output),
+%    newquerytext(Queri,Output),
+    Output\=[],Output\=nil,
+    getpredverb(Verb,Pred),
+    evaluate_output(LF,Qword-Pred-Query,Text,Alls,Output,Eval),
+    !.
+newlaunchquery(L,LF,Qword,Verb,Query,Text,Alls,Queri,Eval):-
+    dividequery(Query,L,Q1,Q2),
+    nl,nl,
+    writenl(_,'New Query launched to Google API'),
+    nl,
+    writeseqnl(_,Q1),
+    newlaunchqueries(LF,Qword,Verb,[Q1,Q2],Text,Alls,Query,Eval),
+    !.
+    
+newlaunchqueries(LF,Qword,Verb,[],Text,Alls,Queri,Eval):-!.
+newlaunchqueries(LF,Qword,Verb,[Q1],Text,Alls,Queri,Eval):-
+    concat_atom(Q1,',',Query),
+    newquerytext(Query,Output),
+    Output\=[],Output\=nil,
+    getpredverb(Verb,Pred),
+    evaluate_output(LF,Qword-Pred-Queri,Text,Alls,Output,Eval),
+    !.
+newlaunchqueries(LF,Qword,Verb,[Q1|Q2],Text,Alls,Queri,[Eval|Evals]):-
+    concat_atom(Q1,',',Query),
+    newquerytext(Query,Output),
+    Output\=[],Output\=nil,
+    getpredverb(Verb,Pred),
+    evaluate_output(LF,Qword-Pred-Queri,Text,Alls,Output,Eval),
+    newlaunchqueries(LF,Qword,Verb,Q2,Text,Alls,Queri,Evals),
+    !.
+newlaunchqueries(LF,Qword,Verb,[Q1|Q2],Text,Alls,Queri,Eval):-
+    newlaunchqueries(LF,Qword,Verb,Q2,Text,Alls,Queri,Eval),
+    !.
+
+googmults([],[], []):-!.
+googmults([Lex1|RestoFrase],[Lex1|NuovaFrase],Mults):-
+   grw(Lex1),
+   googmults(RestoFrase,NuovaFrase,Mults),
+   !.
+googmults([Lex1,Lex2|RestoFrase],[Lex1,Lex2|NuovaFrase], Mults):-
+   grw(Lex2),
+   googmults(RestoFrase,NuovaFrase,Mults),
+   !.
+googmults([Lex1,Lex2|RestoFrase],[C|NuovaFrase], [t(C, [Lex1,Lex2], T)|Mults]):-
+   googmults2(Lex1,Lex2,C,T),
+   C\=[],
+   googmults(RestoFrase,NuovaFrase,Mults),
+   !.
+
+googmults([Lex1,Lex2|RestoFrase],[C|NuovaFrase], [t(C, [Lex1,Lex2], T)|Mults]):-
+   qws(Lex1),
+   tolower(Lex1,Low),
+   googmults2(Low,Lex2,C,T),
+   C\=[],
+   googmults(RestoFrase,NuovaFrase,Mults),
+   !.
+
+googmults([Lex1,Lex2,Lex3|RestoFrase],[Lex1,Lex2,Lex3|NuovaFrase], Mults):-
+   grw(Lex3),
+   googmults(RestoFrase,NuovaFrase,Mults),
+   !.
+
+googmults([Lex1,Lex2,Lex3|RestoFrase],[D|NuovaFrase], [t(D, [Lex1,Lex2,Lex3], T)|Mults]):-
+   mults3(Lex1,Lex2,Lex3,D,T),
+   D\=[],
+   googmults(RestoFrase,NuovaFrase,Mults),
+   !.
+
+googmults([Lex1,Lex2,Lex3,Lex4|RestoFrase],[Lex1,Lex2,Lex3,Lex4|NuovaFrase], Mults):-
+   grw(Lex4),
+   googmults(RestoFrase,NuovaFrase,Mults),
+   !.
+
+googmults([Lex1,Lex2,Lex3,Lex4|RestoFrase],[E|NuovaFrase], [t(E, [Lex1,Lex2,Lex3,Lex4], T)|Mults]):-
+   mults4(Lex1,Lex2,Lex3,Lex4,E,T),
+   E\=[],
+   googmults(RestoFrase,NuovaFrase,Mults),
+   !.
+googmults([Lex1|RestoFrase],[Lex1|NuovaFrase],Mults):-
+   fct(Lex1),
+   googmults(RestoFrase,NuovaFrase,Mults),
+   !.
+/*
+googmults([Lex1,Lex2,Lex3,Lex4,Lex5|RestoFrase],[Lex1,Lex2,Lex3,Lex4,Lex5|NuovaFrase], Mults):-
+   grw(Lex5),
+   googmults(RestoFrase,NuovaFrase,Mults),
+   !.
+
+googmults([Lex1,Lex2,Lex3,Lex4,Lex5|RestoFrase],[E|NuovaFrase], [t(E, [Lex1,Lex2,Lex3,Lex4,Lex5], T)|Mults]):-
+   mults5(Lex1,Lex2,Lex3,Lex4,Lex5,E,T),
+   E\=[],
+   googmults(RestoFrase,NuovaFrase,Mults),
+   !.
+googmults([Lex1,Lex2,Lex3,Lex4,Lex5,Lex6|RestoFrase],[E|NuovaFrase], [t(E, [Lex1,Lex2,Lex3,Lex4,Lex5,Lex6], T)|Mults]):-
+   mults6(Lex1,Lex2,Lex3,Lex4,Lex5,Lex6,E,T),
+   E\=[],
+   googmults(RestoFrase,NuovaFrase,Mults),
+   !.
+
+googmults([Lex1,Lex2,Lex3,Lex4,Lex5,Lex6,Lex7|RestoFrase],[E|NuovaFrase], [t(E, [Lex1,Lex2,Lex3,Lex4,Lex5,Lex6,Lex7], T)|Mults]):-
+   mults7(Lex1,Lex2,Lex3,Lex4,Lex5,Lex6,Lex7,E,T),
+   E\=[],
+   googmults(RestoFrase,NuovaFrase,Mults),
+   !.
+*/
+googmults([Lex1|RestoFrase],[Lex1|NuovaFrase],Mults):-
+   googmults(RestoFrase,NuovaFrase,Mults),
+   !.
+
+googmults2(A,B,C,44):-
+   mcon(A,'_',Bb),
+   mcon(Bb,B,C),
+   r(C).
+
+googmults2(A,B,C,4):-
+   mcon(A,'_',Bb),
+   mcon(Bb,B,C),
+   j(C).
+
+googmults2(A,B,C,44):-
+   mcon(A,'_',Bb),
+   mcon(Bb,B,C),
+   prepos(C).
+
+googmults2(A,B,C,4):-
+   prag([A,B],C).
+
+googmults2(A,B,C,44):-
+   avvl1([A,B],C).
+
+googmults2(A,B,C,44):-
+   mcon(A,'_',B1),
+   mcon(B1,B,C),
+   sub_w(C),!.
+
+googmults2(A,B,C,44):-
+   mcon(A,'_',B1),
+   mcon(B1,B,C),
+   sub_w_sn(C,_),!.
+
+googmults2(A,B,C,4):-
+   mcon(A,'_',Bb),
+   mcon(Bb,B,C),
+   check_form(C,S),
+   !.
+googmults2(A,B,C,Type):-
+  spy_lower(A,Low,Pol), Pol=1,
+  googmults2(Low,B,C,Type),
+  !.
+
+googmults2(A,B,C,Type):-
+  spy_lower(A,Lowa,Pol),
+  spy_lower(B,Low,Pol), Pol=1,
+  googmults2(Lowa,Low,C,Type),
+  !.
+/*
+googmults2(A,B,C,4):-
+   mcon(A,'_',Bb),
+   mcon(Bb,B,C),
+   new_mults_wn(C, Feats),
+   !.
+*/
+qws('How').
+qws('What').
+qws('Which').
+qws('Whose').
+
+coplt(appears).
+coplt(seems).
+coplt(looks).
+coplt(smells).
+coplt(tastes).
+coplt(appear).
+coplt(seem).
+coplt(look).
+coplt(smell).
+coplt(taste).
+coplt(appeared).
+coplt(seemed).
+coplt(looked).
+coplt(smelled).
+coplt(tasted).
+coplt(feel).
+coplt(feels).
+coplt(sounded).
+coplt(sound).
+coplt(become).
+coplt(became).
+coplt(sounds).
+coplt(becomes).
+coplt(be).
+coplt(felt).
+coplt(have).
+coplt(was).
+coplt(were).
+coplt(is).
+coplt(are).
+coplt(am).
+coplt(had).
+coplt(has).
+coplt(being).
+coplt(been).
+coplt(having).
+coplt(remain).
+coplt(remains).
+coplt(remained).
+coplt(V):-
+  coplcontr(V, _).
+coplt(V):-
+  coplsoggcontr(V, _, _, _).
+  
+coplcontr('weren-t_', were).
+coplcontr('aren-t_', are).
+coplcontr('ain-t_', is).
+coplcontr('isn-t_', is).
+coplcontr('wasn-t_', was).
+coplcontr('hadn-t_', had).
+coplcontr('haven-t_', have).
+coplcontr('hasn-t_', has).
+coplsoggcontr('you-re_', prone, you, are).
+coplsoggcontr('you-ve_', prona, you, have).
+coplsoggcontr('who-s_', prone, who, is).
+coplsoggcontr('we-re_', prone, we, are).
+coplsoggcontr('we-ve_', pronm, we, have).
+coplsoggcontr('What-s_', prone, what, is).
+coplsoggcontr('what-s_', prone, what, is).
+coplsoggcontr('where-s_', prone, where, is).
+coplsoggcontr('they-re_', prone, they, are).
+coplsoggcontr('they-ve_', prona, they, have).
+coplsoggcontr('we-d_', pronm, we, had).
+coplsoggcontr('she-s_', prone, she, is).
+coplsoggcontr('that-s_', pronl, that, is).
+coplsoggcontr('here-s_', pronl, here, is).
+coplsoggcontr('there-s_', pronl, there, is).
+coplsoggcontr('they-d_', pronm, they, had).
+coplsoggcontr('I-m_', prona, i, am).
+coplsoggcontr('I-ve_', prona, i, have).
+coplsoggcontr('i-m_', prone, i, am).
+coplsoggcontr('i-ve_', prona, i, have).
+coplsoggcontr('she-d_', pronm, she, had).
+coplsoggcontr('I-d_', pronm, i, had).
+coplsoggcontr('i-d_', pronm, i, had).
+coplsoggcontr('he-s_', prone, he, is).
+coplsoggcontr('it-s_', prone, it, is).
+coplsoggcontr('he-d_', pronm, he, had).
+coplsoggcontr('now-s_', prone, now, is).
+
+getheadlist(CostV,Verb,Passive):-
+    (reverse(CostV,[Head-Ca-_|_]), Ca\=vsup, \+ check_auxcat(Ca)
+    ;
+    CostV=[Head-Ca-_], Ca\=vsup, \+ check_auxcat(Ca)),
+    buildtensedv(Head,CostV,Verb),
+    lemmatize_dic_v(Head,Hea,K),
+    qassertpassive(CostV,Hea,Passive),
+    !.
+getheadlistcopl(Sent,CostV,Verb,Passive):-
+    (reverse(CostV,[Head-Ca-_|_]), Ca\=vsup, coplt(Head)
+    ;
+    CostV=[Head-Ca-_], Ca\=vsup, coplt(Head)),
+    buildtensedv(Head,CostV,Verb),
+    lemmatize_dic_v(Head,Hea,K),
+    qassertpassive(CostV,Hea,Passive),
+    !.
+
+getheadlistcopl(Sent,CostV,Verb,Passive):-
+    (reverse(CostV,[Head-Ca-_|_]), Ca\=vsup
+    ;
+    CostV=[Head-Ca-_], Ca\=vsup),
+    buildtensedv(Head,CostV,Verb),
+    lemmatize_dic_v(Head,Hea,K),
+    qassertpassive(CostV,Hea,Passive),
+    !.
+
+buildtensedv(Head,[Testa-Ca-_|CostV],Verb):-
+    on(Head-C-_,CostV),
+    get_vfeats(Testa, Feats),
+    on(mood=Mood,Feats),
+    Mood\=ger,
+    coplt(Testa),
+    on(pers=P,Feats),
+    stringof(Heads,Head),
+    (
+    reverse(Heads,[d,e|_]), Verb=Head
+    ;
+    genverb(pass,P,Head,Verb)),
+    !.
+buildtensedv(Head,[Testa-Ca-_|CostV],Verb):-
+    on(Head-C-_,CostV),
+    get_vfeats(Testa, Feats),
+    on(mood=Mood,Feats),
+    Mood\=ger,
+    \+ coplt(Testa),
+    on(tense=T,Feats),
+    on(pers=P,Feats),
+    genverb(T,P,Head,Verb),
+    !.
+buildtensedv(Head,CostV,Head):-
+    !.
+
+selecttenseirr(pass,P,V,Verb):-
+    vir(V,Verbs,_),
+    (Verbs=A/Verb
+    ;
+    Verb=Verbs).
+
+genverb(pres,3,V,Verb):-
+   composeverbs(pres,3,V,Verb),
+   !.
+    
+genverb(Tense,P,V,Verb):-
+   m_lex(V, Codes, radiciario),
+   findall(Reg-Lemma,
+          (on(CodeAtm, Codes),
+            atom_to_term(CodeAtm, Code, Atm),
+            irr_code(Code, Lemma, Reg)),Codess),
+   Codess\=[],
+   on(Co-Lemma,Codess),
+   selecttenseirr(Tense,P,V,Verb).
+   
+genverb(Tense,P,Root,Verb):-
+   nonvar(Root),
+   dc(Root, Codes),
+   Codes\=[],
+   on(CodeAtm, Codes),
+   atom_to_term(CodeAtm, Code, Atm),
+   ir_code(Code),
+   composeverbs(Tense,P,Root,Verb),
+   !.
+
+genverb(pres,P,Root,Verb):-
+   nonvar(Root),
+   vir(Root,Verbs,_),
+   composeverbs(pres,3,Root,Verb),
+   !.
+
+genverb(pass,P,Root,Verb):-
+   nonvar(Root),
+   vir(Root,Verbs,_),
+    (Verbs=A/Verb
+    ;
+    Verb=Verbs).
+
+composeverbs(pres,3,Root,Verb):-
+   stringof(Ver,Root),
+   reverse([S,E|Rev],Ver),
+   S\=s,E\=e,
+   findall(Verb,(
+             mcon(Root,s,Verb);
+             mcon(Root,es,Verb);
+             reverse(Ver,[y,C|Rev]),
+             \+ is_vow(C),
+             reverse([C|Rev],NewV),
+             stringof(NewV,Nv),
+             mcon(Nv,ies,Verb)
+             ),Verbs),
+   chooseverb(Verbs,Verb),
+             !.
+composeverbs(pass,P,Root,Verb):-
+   stringof(Ver,Root),
+   reverse([D,E|Rev],Ver),
+   D\=d,E\=e,
+   findall(Verb,(
+             mcon(Root,d,Verb);
+             mcon(Root,ed,Verb);
+             reverse(Ver,[C,V|Rev]),
+             (C=r;C=l), is_vow(V),
+             reverse([C,C,V|Rev],Ve),
+             mcon(Ve,ed,Verb)
+             ;
+             stringof(Ver,Root),
+             reverse(Ver,[y,C|Rev]),
+             \+ is_vow(C),
+             reverse([C|Rev],NewV),
+             stringof(NewV,Nv),
+             mcon(Nv,ied,Verb)
+             ),Verbs),
+   chooseverb(Verbs,Verb),
+             !.
+composeverbs(T,P,Root,Root):-
+             !.
+
+chooseverb([Verb|Verbs],Verb):-
+     stringof(Ver,Verb),
+     reverse(Ver,[S|Rest]),
+     gen_forms(S, Rest, Lemma, I),
+             !.
+chooseverb([Verb|Verbs],Verb):-
+   dc(Verb,Codes),
+   Codes\=[],
+   on(CodeAtm, Codes),
+   atom_to_term(CodeAtm, Code, Atm),
+   ir_code(Code),
+             !.
+chooseverb([Ver|Verbs],Verb):-
+   chooseverb(Verbs,Verb),
+             !.
+     
+gen_forms(s, Rest, Lemma, ss):-
+   Rest=[s|R],
+   append([s],Rest,Resto),
+   reverse(Resto, Lemm), 
+   cerca_lem_string(2, Lemm,Lemma),
+   !.
+
+gen_forms(s, Rest, Lemma, s):-
+   Rest=[e,i|R],
+   Resto=[y|R],
+   reverse(Resto, Lemm), 
+   stringof(Lemm,Lemmas),
+   Lemmas=Lemma,
+   !.
+
+gen_forms(s, Rest, Lemma, S):-
+   Rest=[e|Resto],
+   Resto=[S|R],
+   \+ is_vow(S),
+%   sibil(S),
+   reverse(Resto, Lemm), 
+   reverse(Rest, Lemm1), 
+   (stringof(Lemm,Lemmas),
+     Lemmas=Lemma
+     ;
+   stringof(Lemm1,Lemmas),
+   Lemmas=Lemma
+   ),
+   !.
+
+gen_forms(s, Rest, Lemma, S1):-
+   Rest=[e|Resto],
+   Resto=[S|R],
+   \+ is_vow(S),
+%   sibil(S),
+   reverse(Resto, Lemm), S1=s,
+   stringof(Lemm,Lemmas),
+   Lemmas=Lemma,
+   !.
+
+gen_forms(s, Rest, Lemma, s):-
+   reverse(Rest, Lemm), 
+   Rest=[S|_], S\=s,
+   \+ is_vow(S),
+   stringof(Lemm,Lemmas),
+   Lemmas=Lemma,
+   !.
+
+gen_forms(d, Rest, Lemma, d):-
+    Rest=[e,i,C|R],
+   consonant(C),
+   reverse(R, Le), 
+   stringof(Le, Lem),
+   mcon(Lem, C, Lemm),
+   mcon(Lemm, y, Lemma),
+   !.
+
+gen_forms(d, Rest, Lemma, d):-
+   (Rest=[e,y|R],
+    Resto=[e,y|R]
+    ;
+    Rest=[e|R],
+    (Resto=Rest
+      ;
+     R=[C,C|R1],
+     \+ is_vow(C),
+     R2=[C|R1],
+     Resto=R2
+      ;
+     Resto=R
+      )),
+   reverse(Resto, Lemm), 
+   stringof(Lemm, Lemmas),
+   Lemmas=Lemma,
+   !.
+
+/*
+gen_forms(d, Rest, Lemma, d):-
+    Rest\=[i|R],
+    Rest\=[y|R],
+    Rest\=[e|R],
+    Resto=Rest,
+   reverse(Resto, Lemm), 
+   stringof(Lemm, Lemmas),
+   Lemmas=Lemma,
+   !.
+*/
+
+gen_forms(g, Rest, Lemma, g):-
+   Rest=[n,i,C,C|R],
+   reverse(R, Lemm), 
+   append(Lemm,[C],Lemms),
+   stringof(Lemms, Lemmas),
+   Lemmas=Lemma,
+   !.
+
+gen_forms(g, Rest, Lemma, g):-
+   Rest=[n,i|R],
+   append([e],R,Restt),
+    (Resto=Restt
+      ;
+     Resto=R),
+   reverse(Resto, Lemm), 
+   stringof(Lemm, Lemmas),
+   Lemmas=Lemma,
+   !.
+
+/*
+gen_forms(S, Resto, Lemma, S1):-
+   append([S],Resto,Rest),
+   reverse(Rest, Lemm), 
+   stringof(Lemm, Lemmas),
+   Lemmas=Lemma,
+   !.
+*/
+ 
+extrq1(Q1,Sent,[Testa-N],V,Passive):-
+    (Q1\=who;var(Q1)),
+    (on(subj-Subj,Sent), Costs=Subj
+    ;
+     on(ibar-CostV,Sent),
+     reverse(CostV,[Head-Ca-_|_]), 
+     (Ca=vsup; coplt(Head)),
+     nth(Sent,N2,ibar-CostV),
+     on(ibar-Verb,Sent),
+     Verb\=CostV,
+     nth(Sent,N1,ibar-Verb),
+     findall(Subj, (
+               on(sn-Subj,Sent),
+               nth(Sent,N11,sn-Subj),
+               N11 < N1, N2 < N11), Subjs),
+      appiattisci(Subjs,Costs)),
+    mod_make_list(Costs,N,Testa),
+    on(ibar-Verb,Sent),
+    getheadlist(Verb,V,Passive),
+    !.
+extrq1(Q1,Sent,[Testa-N],V,Passive):-
+    (Q1\=who;var(Q1)),
+    (on(subj-Subj,Sent)
+    ;
+     on(ibar-Verb,Sent),
+     nth(Sent,N1,ibar-Verb),
+     on(sn-Subj,Sent),
+     nth(Sent,N11,sn-Subj),
+     N11 < N1),
+    mod_make_list(Subj,N,Testa),
+    on(ibar-Verb,Sent),
+    getheadlist(Verb,V,Passive),
+    !.
+extrq1(Q1,Sent,[Testa-N],V,Passive):-
+    (Q1\=who;var(Q1)),
+    (on(subj-Subj,Sent)
+    ;
+     on(ibar-Verb,Sent),
+     nth(Sent,N1,ibar-Verb),
+     on(sn-Subj,Sent),
+     nth(Sent,N11,sn-Subj),
+     N11 < N1
+    ;
+     on(ibar-Verb,Sent),
+     nth(Sent,N1,ibar-Verb),
+     on(sn-Subj,Sent),
+     (on(sn-Pred,Sent),Pred\=Subj;on(sa-Pred,Sent)),
+     nth(Sent,N11,sn-Subj),
+     N1 < N11),
+    mod_make_list(Subj,N,Testa),
+    on(ibar-Verb,Sent),
+    getheadlistcopl(Sent,Verb,V,Passive),
+    !.
+extrq1(Q1,Sent,[],[],nil).
+
+extrq4(Verb,Passive,Sent,V,[Testa-N1]):-
+    on(vcomp-Ver,Sent),
+    reverse(Ver,[V-_-_|_]),
+    nth(Sent,N,vcomp-Ver),
+    (on(sn-Obj,Sent);
+     on(sp-Obj,Sent);
+     on(sa-Obj,Sent);
+     on(savv-Obj,Sent);
+     on(spda-Obj,Sent)),
+    mod_make_list(Obj, N1,Testa),
+    nth(Sent,N11,_-Obj),
+    N < N11,
+    !.
+extrq4(Ver,Passive,Sent,V,[Testa-N1]):-
+    coplt(Ver),
+    on(ibar-Verb,Sent),
+    nth(Sent,N,ibar-_),
+    (on(sn-Obj,Sent);
+    on(sa-Obj,Sent);
+    on(sp-Obj,Sent)),
+    mod_make_list(Obj, N1,Testa),
+    nth(Sent,N11,_-Obj),
+    N < N11,
+    !.
+extrq4(Verb,Passive,Sent,V,[Testa-Nounx]):-
+    on(cp-[that-_-_],Sent),
+    nth(Sent,N,cp-[that-_-_]),
+    on(ibar-Verbs,Sent),
+    nth(Sent,N1,ibar-Verbs),
+    N < N1,
+    reverse(Verbs,[V-_-_|_]),
+    collectfac(Sent,cp-[that-_-_],Sen),
+    extrq22(nil,Sen,Noun1,V1,Passiv),
+    on(sn-Obj,Sent),
+    mod_make_list(Obj, Noun2,Testa),
+    nth(Sent,N11,sn-Obj),
+    N1 < N11,
+    append(Noun1,[V1],Noun),
+    append(Noun,Noun2,Nounx),
+    !.
+extrq4(Verb,Passive,Sent,[],[]).
+
+extrq22(Q1,Sent,[Testa-Ob],V,Passive):-
+    (on(obj-Obj,Sent);
+    on(sn-Obj,Sent);
+    on(sa-Obj,Sent)),
+     on(ibar-CostV,Sent),
+     reverse(CostV,[Head-Ca-_|_]), 
+     (Ca=vsup; coplt(Head)),
+     nth(Sent,N2,ibar-CostV),
+     on(ibar-Verb,Sent),
+     Verb\=CostV,
+     nth(Sent,N1,ibar-Verb),
+     on(sn-Obj,Sent),
+     nth(Sent,N11,sn-Obj),
+     N11 < N1, N11 < N2,
+    mod_make_list(Obj, List,Testa),
+    \+ on(pron,Testa),
+    Ob=List,
+    getheadlist(Verb,V,Passive),
+    !.
+extrq22(Q1,Sent,[Testa-Ob],V,Passive):-
+    (on(obj-Obj,Sent);
+    on(sn-Obj,Sent);
+    on(sa-Obj,Sent)),
+    nth(Sent,N11,sn-Obj),
+    mod_make_list(Obj, List,Testa),
+    \+ on(pron,Testa),
+    Ob=List,
+%    (on(ibar-Verb,Sent);on(vcomp-Verb,Sent)),
+    on(ibar-Verb,Sent),
+    nth(Sent,N1,ibar-Verb),
+    N1 < N11,
+    getheadlist(Verb,V,Passive),
+    !.
+extrq22(Q1,Sent,[Testa-Ob],V,Passive):-
+    (on(obj-Obj,Sent);
+    on(sn-Obj,Sent);
+    on(sa-Obj,Sent)),
+    nth(Sent,N11,sn-Obj),
+    mod_make_list(Obj, List,Testa),
+    Ob=List,
+%    (on(ibar-Verb,Sent);on(vcomp-Verb,Sent)),
+    on(ibar-Verb,Sent),
+    nth(Sent,N1,ibar-Verb),
+    N1 < N11,
+    getheadlistcopl(Sent,Verb,V,Passive),
+    !.
+extrq22(Q1,Sent,[Testa-Ob],V,Passive):-
+    (on(obj-Obj,Sent);
+    on(sn-Obj,Sent);
+    on(sa-Obj,Sent)),
+    mod_make_list(Obj, List,Testa),
+    Ob=List,
+    on(vcomp-Verb,Sent),
+    getheadlist(Verb,V,Passive),
+    !.
+extrq22(Q1,Sent,[],[],nil).
+
+
+extrq2(Q1,Sent,[Testa-Ob]):-
+    (on(obj-Obj,Sent);
+    on(sn-Obj,Sent);
+    on(sa-Obj,Sent)),
+    nth(Sent,N11,sn-Obj),
+    on(ibar-Verb,Sent),
+    nth(Sent,N1,ibar-Verb),
+    N1 < N11,
+    mod_make_list(Obj, List,Testa),
+    Ob=List,
+    !.
+extrq2(Q1,Sent,[Testa-Ob]):-
+    (on(obj-Obj,Sent);
+    on(sn-Obj,Sent);
+    on(sa-Obj,Sent)),
+    mod_make_list(Obj, List,Testa),
+    Ob=List,
+    !.
+extrq2(Q1,Sent,[]).
+
+mod_make_list1(Obj, Lists):-
+    (subtract(Obj,[mod-Mod],Rest);
+    subtract(Obj,[appos-Mod],Rest)),
+    Mod\=[],
+    make_list(Mod,List1),
+    make_list(Rest,List2),
+    append(List2,List1,Listss),
+    removefcts(Listss,Lists),
+    !.
+mod_make_list1(Obj, Lists):-
+    subtract(Obj,[_-[]],Rest),
+    Rest\=Obj,
+    mod_make_list1(Rest, Lists),
+    !.
+mod_make_list1(Obj, Lists):-
+    make_list(Obj,List),
+    removefcts(List,Lists),
+    !.
+mod_make_list(Obj, Lists, Testa):-
+    (subtract(Obj,[mod-Mod],Rest);
+    subtract(Obj,[appos-Mod],Rest)),
+    Mod\=[],
+    make_list(Mod,List1),
+    make_list(Rest,List2),
+    prendi_testa(Func,Rest,Testa),
+    append(List1,List2,Listss),
+    removefcts(Listss,Lists),
+    !.
+mod_make_list(Obj, Lists, Testa):-
+    subtract(Obj,[_-[]],Rest),
+    Rest\=Obj,
+    mod_make_list(Rest, Lists, Testa),
+    !.
+mod_make_list(Obj, Lists, Testa):-
+    make_list(Obj,List),
+    prendi_testa(Func,Obj,Testa),
+    removefcts(List,Lists),
+    !.
+removefcts([],[]):-!.
+removefcts([A|List],Lists):-
+    A=name,
+    removefcts(List,Lists),
+    !.
+removefcts([A|List],[population|Lists]):-
+    A=people,
+    removefcts(List,Lists),
+    !.
+removefcts([A|List],[A|Lists]):-
+    spy_lower(A,Low,P),
+    integer(Low),
+    removefcts(List,Lists),
+    !.
+removefcts([A|List],Lists):-
+    grammw(A,I),
+    \+ jj(A),
+    \+ nm(A,K,I),
+    \+ qm(A),
+    \+ r(A),
+    removefcts(List,Lists),
+    !.
+removefcts([A|List],Lists):-
+    tolower(A,Low),
+    grammw(Low,I),
+    \+ jj(Low),
+    \+ nm(A,K,I),
+    \+ qm(A),
+    \+ r(A),
+    removefcts(List,Lists),
+    !.
+removefcts([A|List],Lists):-
+    grw(A),
+    removefcts(List,Lists),
+    !.
+removefcts([A|List],[A|Lists]):-
+    removefcts(List,Lists),
+    !.
+     
+extract_query(Alls,Queries,Q1,Verb,Passive):-
+    Alls=[Tags,  Costs, Input, Output],
+    (Cp=cp;Cp=fs;Cp=fint;Cp=f2),
+    recoverqword(Cp,Output,Rest,Q1),
+    extractquery(Rest,Queries,Verb,Passive,Q1),
+    !.
+extract_query(Alls,Queries,Q1,Verb,Passive):-
+    Alls=[Tags,  Costs, Input, Output],
+    (Output=[fint-Fint];Output=[fint-Fint|_]),
+    (Cp=cp;Cp=fs;Cp=fint;Cp=f2),
+    recoverqword(Cp,Fint,Rest,Q1),
+    extractquery(Rest,Queries,Verb,Passive,Q1),
+    !.
+extract_query(Alls,Queries,Q1,Verb,Passive):-
+    Alls=[Tags,  Costs, Input, Output],
+    (Output=[N-[fs-Fint]];Output=[N-[fs-Res],fint-Fint], Fint\=[A];Output=[N-[fs-Fint],fint-Res], Fint\=[A]),
+    (Cp=cp;Cp=fs;Cp=fint;Cp=f2),
+    recoverqword(Cp,Fint,Rest,Q1),
+    append(Res,Rest,Rests),
+    extractquery(Rests,Queries,Verb,Passive,Q1),
+    !.
+    
+extract_query(Alls,Queries,Q1,Verb,Passive):-
+    Alls=[Tags,  Costs, Input, Output],
+    (Output=[fint-Fints];Output=[fint-Fints|_]),
+    (
+    (Fints=[fint-Fint,f2-F2];Fints=[fint-Fint,f2-F2|_]),
+    Cp=f2
+    ;
+    (Fints=[fint-Fint,fs-F2];Fints=[fint-Fint,fs-F2|_]),
+    Cp=fs),
+    recoverqword(Cp,F2,Rest,Q1),
+    extractquery(Rest,Queries,Verb,Passive,Q1),
+    !.
+extract_query(Alls,Queries,Q1,Verb,Passive):-
+    Alls=[Tags,  Costs, Input, Output],
+    (Output=[N-[f2-Fint]];Output=[N-[f2-Fint],fint-_]),
+    Cp=f2,
+    recoverqword(Cp,Fint,Rest,Q1),
+    extractquery(Rest,Queries,Verb,Passive,Q1),
+    !.
+extract_query(Alls,Queries,Q1,Verb,Passive):-
+    Alls=[Tags,  Costs, Input, Output],
+    (Output=[N-[cp-CP]],
+         integer(N),
+         CP=[ibar-[name-_-_|_]|Rest]
+         ;
+     Output=[N-[f-CP]],
+         integer(N),
+         CP=[subj-Subj, ibar-[name-_-_|_]|Res],
+         append(Res,[subj-Subj],Rest)
+         ;
+      Output=[fint-CP],
+      CP=[_,ibar-[name-_-_|_]|Rest]),
+    CP1=[ibar-[is-ause-_, called-vppt-_]|Rest],
+    extractquery(CP1,Queries,Verb,Passive,Q1),
+    !.
+extract_query(Alls,Queries,Q1,Verb,Passive):-
+    Alls=[Tags,  Costs, Input, Output],
+    (Output=[fint-[Fint|CP1]];
+      Output=[cp-[Fint|CP1]]),
+    Fint=fint-['?'-puntint-_],
+    (Cp=fint,
+     recoverqword(Cp,CP1,Rest,Q1)
+     ;     
+     Rest=CP1), 
+    extractquery(Rest,Queries,Verb,Passive,Q1),
+    !.
+    
+extract_query(Alls,Queries,Q1,Verb,Passive):-
+    Alls=[Tags,  Costs, Input, Output],
+    Output=[N-[f-CP1],fint-Fint|Resto],
+    Fint=['?'-puntint-_],
+    Cp=fint,
+    recoverqword(Cp,Resto,Rest,Q1),
+    append(Rest,[N-[f-CP1]],Rests),
+    extractquery(Rests,Queries,Verb,Passive,Q1),
+    !.
+extract_query(Alls,Queries,Q1,Verb,Passive):-
+    Alls=[Tags,  Costs, Input, Output],
+    (Output=[N-[F-CP1]|_]
+      ;
+      Output=[F-CP1|_]),
+    extractquery(CP1,Queries,Verb,Passive,Q1),
+    !.
+
+extract_query(Alls,Queries,Q1,Verb,Passive):-
+    Alls=[Tags,  Costs, Input, Output],
+    elimina(I-[cp-CP],Output,Res),
+    CP=[Fint|Sent],
+    (Fint=fint-['?'-puntint-_];Fint=fint-[fint-['?'-puntint-_]|CP1]),
+     recoverqword(Cp,CP1,Re,Q1),
+    append(Sent,Res,Rests),
+    extractquery(Rests,Queries,Verb,Passive,Q1),
+    !.
+extract_query(Alls,Queries,Q1,Verb,Passive):-
+    Alls=[Tags,  Costs, Input, Output],
+    elimina(I-[cp-CP],Output,Res),
+    defunct(CP,Fint),
+    appiattisci(Fint,Fin),
+    Fin=[fint-['?'-puntint-_],CP1|Rest],
+     recoverqword(Cp,[CP1],Re,Q1),
+    /*
+    remove(Qword-_-_,Fin,Rest),
+     (qwordext(Qword,W,T,Ws), Q1=Qword
+     ;
+      downcase_atom(Qword,Q1),
+      qwordext(Q1,W,T,Ws)),
+      */
+%     mod_make_list([sp-Rest],Queries,Testa),
+    extractquery([cp-CP],Queries,Verb,Passive,Q1),
+    !.
+    
+searchadjs(Costs,Adjs):-
+     findall(SP,(on(sp-SP,Costs);
+      on(savv-SP,Costs)),SPs),
+      appiattisci(SPs,SPP),
+%      Adjs=[sp-SPP],
+     mod_make_list([sp-SPP],Adjs,Testa),
+     !.
+searchadjs(Costs,[]):-
+     !.
+
+extractquery(Costs,[NQueries,LF],Verb,Passive,Q1):-
+    on(f-Sent,Costs),
+    Sent\=[A],
+    on(sn-SN,Costs),
+    searchadjs(Costs,HAdjs),
+    mod_make_list([sn-SN],Obj,Testa),
+    extrq1(Q1,Sent,Subj,Verb,Passive),
+    extrq3(Sent,Adjs),
+    append(HAdjs,Adjs,Adjss),
+    NAdjs=[sp-Adjss],
+    getpredverb(Verb,Pred),
+    extrq4(Pred,Passive,Sent,Vcomps,Arg),
+    buildqueries(Passive,Verb,Pred,Subj,Obj,NAdjs,Vcomps,Arg,Queries,LF),
+    togli_doppi(Queries,NQueries),
+    !.
+
+extractquery(Costs,[Queries,LF],Verb,Passive,Q1):-
+    on(I-[f-Sent],Costs),
+    integer(I),
+    Sent\=[A],
+    findall(Adj, (
+             (on(sn-Adj,Costs);
+              on(savv-Adj,Costs))
+              ), HAdjs1),
+    findall(Head-Adj, (
+             (on(sp-Adj,Costs), Adj=[Head|_];
+              on(sa-Adj,Costs), Adj=[Head|_];
+              on(spd-Adj,Costs), Adj=[Head|_];
+              on(spda-Adj,Costs), Adj=[Head|_])
+              ), HAdjs2),
+    append(HAdjs1,HAdjs2,HAdjss),
+    (HAdjss\=[],appiattisci(HAdjss,HAdjs),
+     mod_make_list(HAdjs,Obj,Testa)
+     ;
+     HAdjss=[],Obj=[]),
+    extrq1(Q1,Sent,Subj,Verb,Passive),
+    extrq3(Sent,Adjs),
+    getpredverb(Verb,Pred),
+    extrq4(Pred,Passive,Sent,Vcomps,Arg),
+    buildqueries(Passive,Verb,Pred,Subj,Obj,Adjs,Vcomps,Arg,Queries,LF),
+    !.
+
+extractquery(Costs,[NQueries,LF],Verb,Passive,Q1):-
+    on(f-Sent,Costs),
+    Sent\=[A],
+    searchadjs(Costs,HAdjs),
+    extrq1(Q1,Sent,Subj,Verb,Passive),
+    extrq2(Q1,Sent,Obj),
+    extrq3(Sent,Adjs),
+    append(HAdjs,Adjs,Adjss),
+    NAdjs=[sp-Adjss],
+    getpredverb(Verb,Pred),
+    extrq4(Pred,Passive,Sent,Vcomps,Arg),
+    buildqueries(Passive,Verb,Pred,Subj,Obj,NAdjs,Vcomps,Arg,Queries,LF),
+    togli_doppi(Queries,NQueries),
+    !.
+
+extractquery(Costs,[Queries,LF],Verb,Passive,Q1):-
+    \+ on(f-Sent,Costs),
+    extrq1(Q1,Costs,Subj,Verb1,Passive1),
+    extrq22(Q1,Costs,Obj,Verb2,Passive2),
+    extrq3(Costs,Adjs),
+    (Verb1\=[],Verb=Verb1;Verb=Verb2),
+    (Passive1\=nil,Passive=Passive1;Passive=Passive2),
+    getpredverb(Verb,Pred),
+    extrq4(Pred,Passive,Costs,Vcomps,Arg),
+    buildqueries(Passive,Verb,Pred,Subj,Obj,Adjs,Vcomps,Arg,Queries,LF),
+    !.
+extractquery(Costs,[Queries,LF],Verb,Passive,Q1):-
+    \+ on(f-Sent,Costs),
+    \+ on(ibar-Sent,Costs),
+    remove(sn-Subj,Costs,Rest),
+    mod_make_list(Subj,Sub,Testa),
+    findall(Adj, (
+             (on(sn-Adj,Rest);
+              on(savv-Adj,Rest))
+              ), HAdjs1),
+    findall(Head-Adj, (
+             (on(sp-Adj,Rest), Adj=[Head|_];
+              on(sa-Adj,Rest), Adj=[Head|_];
+              on(spd-Adj,Rest), Adj=[Head|_];
+              on(spda-Adj,Rest), Adj=[Head|_])
+              ), HAdjs2),
+    append(HAdjs1,HAdjs2,HAdjss),
+    (HAdjss\=[],appiattisci(HAdjss,HAdjs),
+     mod_make_list(HAdjs,Adjs,Testa1)
+     ;
+     HAdjss=[],Adjs=[]),
+    append(Sub,Adjs,Queries),
+    Verb=be,
+    lfs2(be,Sub,Adjs,LF),
+    !.
+    
+extractquery(Costs,[Queries,LF],Verb,Passive,Q1):-
+    \+ on(f-Sent,Costs),
+    \+ on(ibar-Sent,Costs),
+    remove(sn-Adj,Costs,Rest),
+    findall(Adj, (
+             (on(sn-Adj,Costs);
+              on(savv-Adj,Costs))
+              ), HAdjs1),
+    findall(Head-Adj, (
+             (on(sp-Adj,Costs), Adj=[Head|_];
+              on(sa-Adj,Costs), Adj=[Head|_];
+              on(spd-Adj,Costs), Adj=[Head|_];
+              on(spda-Adj,Costs), Adj=[Head|_])
+              ), HAdjs2),
+    append(HAdjs1,HAdjs2,HAdjss),
+    (HAdjss\=[],appiattisci(HAdjss,HAdjs)
+     ;
+     HAdjss=[],HAdjs=Costs),
+     mod_make_list(HAdjs,Queries,Testa),
+    Verb=be,
+    lfs11(be,Queries,LF),
+    !.
+extractquery(Costs,Queries,Verb,Passive,Q1):-
+    remove(f-Sent,Costs,Rest),
+    Sent=[A],
+    extractquery(Rest,Queries,Verb,Passive,Q1),
+    !.
+extractquery(Costs,[Queries,LF],Verb,Passive,Q1):-
+    mod_make_list(Costs,Queries,Testa),
+    Verb=be, Queries\=[],
+    lfs11(be,Queries,LF),
+    !.
+
+extractlf(Q1,Costs,LF,Verb):-
+    on(f-Sent,Costs),
+    Sent\=[A],
+    on(sn-SN,Costs),
+    searchadjs(Costs,HAdjs),
+    mod_make_list([sn-SN],Obj,Testa),
+    extrq1(Q1,Sent,Subj,Verb,Passive),
+    extrq3(Sent,Adjs),
+    append(HAdjs,Adjs,Adjss),
+    NAdjs=[sp-Adjss],
+    getpredverb(Verb,Pred),
+    extrq4(Pred,Passive,Sent,Vcomps,Arg),
+    getlf(Passive,Pred,Subj,Obj,NAdjs,Vcomps,Arg,LF),
+    !.
+extractlf(Q1,Costs,LF,Verb):-
+    on(I-[f-Sent],Costs),
+    integer(I),
+    Sent\=[A],
+    findall(Adj, (
+             (on(sn-Adj,Costs);
+              on(savv-Adj,Costs))
+              ), HAdjs1),
+    findall(Head-Adj, (
+             (on(sp-Adj,Costs), Adj=[Head|_];
+              on(sa-Adj,Costs), Adj=[Head|_];
+              on(spd-Adj,Costs), Adj=[Head|_];
+              on(spda-Adj,Costs), Adj=[Head|_])
+              ), HAdjs2),
+    append(HAdjs1,HAdjs2,HAdjss),
+    (HAdjss\=[],appiattisci(HAdjss,HAdjs),
+     mod_make_list(HAdjs,Obj,Testa)
+     ;
+     HAdjss=[],Obj=[]),
+    extrq1(Q1,Sent,Subj,Verb,Passive),
+    extrq3(Sent,Adjs),
+    getpredverb(Verb,Pred),
+    extrq4(Pred,Passive,Sent,Vcomps,Arg),
+    getlf(Passive,Pred,Subj,Obj,Adjs,Vcomps,Arg,LF),
+    !.
+extractlf(Q1,Costs,LF,Verb):-
+    on(f-Sent,Costs),
+    Sent\=[A],
+    searchadjs(Costs,HAdjs),
+    extrq1(Q1,Sent,Subj,Verb,Passive),
+    extrq2(Q1,Sent,Obj),
+    extrq3(Sent,Adjs),
+    append(HAdjs,Adjs,Adjss),
+    NAdjs=[sp-Adjss],
+    getpredverb(Verb,Pred),
+    extrq4(Pred,Passive,Sent,Vcomps,Arg),
+    getlf(Passive,Pred,Subj,Obj,NAdjs,Vcomps,Arg,LF),
+    !.
+extractlf(Q1,Costs,LF,Verb):-
+    \+ on(f-Sent,Costs),
+    extrq1(Q1,Costs,Subj,Verb1,Passive1),
+    extrq22(Q1,Costs,Obj,Verb2,Passive2),
+    extrq3(Costs,Adjs),
+    (Verb1\=[],Verb=Verb1;Verb=Verb2),
+    (Passive1\=nil,Passive=Passive1;Passive=Passive2),
+    getpredverb(Verb,Pred),
+    extrq4(Pred,Passive,Costs,Vcomps,Arg),
+    getlf(Passive,Pred,Subj,Obj,Adjs,Vcomps,Arg,LF),
+    !.
+extractlf(Q1,Costs,LF,Verb):-
+    \+ on(f-Sent,Costs),
+    \+ on(ibar-Sent,Costs),
+    remove(sn-Subj,Costs,Rest),
+    mod_make_list(Subj,Sub,Testa),
+    findall(Adj, (
+             (on(sn-Adj,Rest);
+              on(savv-Adj,Rest))
+              ), HAdjs1),
+    findall(Head-Adj, (
+             (on(sp-Adj,Rest), Adj=[Head|_];
+              on(sa-Adj,Rest), Adj=[Head|_];
+              on(spd-Adj,Rest), Adj=[Head|_];
+              on(spda-Adj,Rest), Adj=[Head|_])
+              ), HAdjs2),
+    append(HAdjs1,HAdjs2,HAdjss),
+    (HAdjss\=[],appiattisci(HAdjss,HAdjs),
+      mod_make_list(HAdjs,Adjs,Testa1)
+     ;
+     HAdjss=[],Adjs=[]),
+    Verb=be,
+    lfs2(be,Sub,Adjs,LF),
+    !.
+    
+extractlf(Q1,Costs,LFs,Verb):-
+    \+ on(f-Sent,Costs),
+    \+ on(ibar-Sent,Costs),
+    on(f3-Sent,Costs),
+    remove(f3-Sent,Costs,Rests),
+    remove(sn-Subj,Sent,Rest),
+    mod_make_list(Subj,Sub,Testa),
+    findall(Adj, (
+             (on(sn-Adj,Rest);
+              on(savv-Adj,Rest))
+              ), HAdjs1),
+    findall(Head-Adj, (
+             (on(sp-Adj,Rest), Adj=[Head|_];
+              on(sa-Adj,Rest), Adj=[Head|_];
+              on(spd-Adj,Rest), Adj=[Head|_];
+              on(spda-Adj,Rest), Adj=[Head|_])
+              ), HAdjs2),
+    append(HAdjs1,HAdjs2,HAdjss),
+    (HAdjss\=[],appiattisci(HAdjss,HAdjs),
+      mod_make_list(HAdjs,Adjs,Testa1)
+     ;
+     HAdjss=[],Adjs=[]),
+    Verb=be,
+    lfs2(be,Sub,Adjs,LF),
+    (Rests=[], LFs=LF
+    ;
+    Rests\=[],
+    extractlf(Q1,Rests,Queries,Verb1),
+    append(LF,Queries,LFs),
+    Verbs=[Verb,Verb1]
+    ),
+    !.
+    
+extractlf(Q1,Costs,Queries,Verb):-
+    remove(f-Sent,Costs,Rest),
+    Sent=[A],
+    extractlf(Q1,Rest,Queries,Verb),
+    !.
+extractlf(Q1,Costs,Queries,Verb):-
+    remove(cp-Sent,Costs,[]),
+    extractlf(Q1,Sent,Queries,Verb),
+    !.
+extractlf(Q1,Costs,LF,Verb):-
+    \+ on(f-Sent,Costs),
+    \+ on(ibar-Sent,Costs),
+    findall(Adj, (
+             (on(sn-Adj,Costs);
+              on(savv-Adj,Costs))
+              ), HAdjs1),
+    findall(Head-Adj, (
+             (on(sp-Adj,Costs), Adj=[Head|_];
+              on(spd-Adj,Costs), Adj=[Head|_];
+              on(sa-Adj,Costs), Adj=[Head|_];
+              on(spda-Adj,Costs), Adj=[Head|_])
+              ), HAdjs2),
+    append(HAdjs1,HAdjs2,HAdjss),
+    (HAdjss\=[],appiattisci(HAdjss,HAdjs)
+     ;
+     HAdjss=[],HAdjs=Costs),
+    mod_make_list(HAdjs,Queries,Testa),
+    Verb=be,
+    lfs11(be,Queries,LF),
+    !.
+extractlf(Q1,Costs,LF,Verb):-
+    mod_make_list(Costs,Queries,Testa),
+    Verb=be,
+    lfs11(be,Queries,LF),
+    !.
+
+getlf(Passive,Pred,Subj,[],[],[],[],LF):-
+     lfs1(Pred,Subj,LF),
+    !.
+getlf(Passive,Pred,[],Obj,[],[],[],LF):-
+    lfs1(Pred,Obj,LF),
+    !.
+getlf(Passive,Pred,[],[],Adjs,[],[],LF):-
+    lfs11(Pred,Adjs,LF),
+    !.
+getlf(Passive,Pred,Subj,[],Adjs,[],[],LF):-
+    lfs2(Pred,Subj,Adjs,LF),
+    !.
+getlf(Passive,Pred,Subj,Obj,[],[],[],LF):-
+    lfs3(Pred,Subj,Obj,LF),
+    !.
+getlf(Passive,Pred,[],Obj,[],Vcomps,[],LF):-
+    lfs33(Pred,Obj,Vcomps,LF),
+    !.
+getlf(Passive,Pred,Subj,Obj,Adjs,[],[],LF):-
+    lfs4(Pred,Subj,Obj,Adjs,LF),
+    !.
+getlf(Passive,Pred,Subj,Obj,Adjs,[],Obj,LF):-
+    lfs4(Pred,Subj,Obj,Adjs,LF),
+    !.
+getlf(Passive,Pred,Subj,[],[],Vcomps,Arg,LF):-
+    lfs44(Pred,Subj,Vcomps,Arg,LF),
+    !.
+getlf(Passive,Pred,Subj,[],Adjs,[],Arg,LF):-
+    lfs4(Pred,Subj,Arg,Adjs,LF),
+    !.
+getlf(Passive,Pred,Subj,[],Adjs,Vcomps,[],LF):-
+    lfs55(Pred,Subj,Vcomps,Adjs,LF),
+    !.
+getlf(Passive,Pred,[],[],Adjs,Vcomps,Arg,LF):-
+    lfs6(Pred,Vcomps,Arg,Adjs,LF),
+    !.
+getlf(Passive,Pred,[],Obj,Adjs,Vcomps,Arg,LF):-
+    lfs5(Pred,Obj,Vcomps,Arg,Adjs,LF),
+    !.
+getlf(Passive,Pred,Subj,Obj,[],Vcomps,Arg,LF):-
+    lfs77(Pred,Subj,Obj,Vcomps,Arg,LF),
+    !.
+getlf(Passive,Pred,Subj,Obj,Adjs,Vcomps,Arg,LF):-
+    lfs7(Pred,Subj,Obj,Vcomps,Arg,Adjs,LF),
+    !.
+
+/*
+cp-[fint-[? -puntint-fint], cp-[why-int-cp], 
+f-[subj-[Bush-n-sn], ibar-[did-vsup-ibar, put-vin-ibar], 
+sn-[the-art-sn, veto-n-sn], sp-[against-p-sp, concession-n-sn, mod-[of-p-sp, pension-n-sn]], 
+sp-[to-p-sp, poor-ag-sn, people-n-sn]]] 
+*/
+
+recoverqword(Cp,Output,Rest,Q1):-
+    elimina(I-Que,Output,[]),
+    integer(I),
+    elimina(Cp-Qwest,Que,[]),
+    (Qwest=[fint-Fint], Rest=Resto;Qwest=[fint-Fint|Rest]),
+    (Cp1=cp;Cp1=fs;Cp1=fint),
+    recoverqword(Cp1,Fint,Resto,Q1),
+    !.
+
+recoverqword(Cp,Output,Rest,Q1):-
+    elimina(I-Que,Output,[]),
+    integer(I),
+    on(Cp-Qw,Que),
+    (Cp1=cp;Cp1=fs;Cp1=fint),
+    recoverqword(Cp1,Qw,Rest,Q1),
+    !.
+
+recoverqword(Cp,Output,Rest,Q11):-
+    remove(Cp-Qw,Output,Rest),
+    Qw=[Qword-_-_],
+    Qword\='How',
+    \+ grw(Qword),
+    downcase_atom(Qword,Q1),
+    (Q1=what;Q1=which),
+%    qwordext(Q1,W,T,Ws),
+    on(sn-SN,Rest),
+    nth(Rest,N11,sn-SN),
+    on(ibar-Verb,Rest),
+    nth(Rest,N1,ibar-Verb),
+    N11 < N1,
+    reverse(SN, [Head-_-_|_]),
+    Q11=[Q1,Head],
+    !.
+
+recoverqword(Cp,Output,Rest,Q1):-
+    remove(Cp-Qw,Output,Rest),
+    Qw=[Qword-_-_],
+    Qword\='How',
+    \+ grw(Qword),
+    downcase_atom(Qword,Q1),
+    qwordext(Q1,W,T,Ws),
+    !.
+
+recoverqword(Cp,Output,Rests,Q1):-
+    remove(Cp-Qw,Output,Resto),
+    Qw=[Qwor-_-_],
+    Qwor='How',
+    (Sn=sn;Sn=sa;Sn=savv;Sn=subj;Sn=f),
+    elimina(Sn-Qwe,Resto,Restt),
+    (Sn=f,
+     elimina(subj-Q,Qwe,Ress), Que=Q, Rest=Ress
+     ;
+     Sn\=f,Que=Qwe, Rest=Restt),
+    Que=[Much-_-_|Res],
+    (Sn=sn, Much=much, makeqword(Qwor,Much,Qword)
+    ;
+    Sn=sn, Much=many, makeqword(Qwor,Much,Qword)
+    ;
+    Sn=savv, Much=often, makeqword(Qwor,Much,Qword)
+    ;
+    (Sn=savv;Sn=f), Much=long, makeqword(Qwor,Much,Qword)
+    ;
+    (Sn=savv;Sn=f), Much=large, makeqword(Qwor,Much,Qword)
+    ;
+    (Sn=savv;Sn=f), Much=hot, makeqword(Qwor,Much,Qword)
+    ;
+    (Sn=savv;Sn=f), Much=far, makeqword(Qwor,Much,Qword)
+    ;
+    (Sn=sa;Sn=f), Much=large, makeqword(Qwor,Much,Qword)
+    ;
+    (Sn=sa;Sn=f), Much=deep, makeqword(Qwor,Much,Qword)
+    ;
+    (Sn=sa;Sn=f), Much=loud, makeqword(Qwor,Much,Qword)
+    ;
+    (Sn=sa;Sn=f), Much=far, makeqword(Qwor,Much,Qword)
+    ;
+    (Sn=sa;Sn=f), Much=big, makeqword(Qwor,Much,Qword)
+    ;
+    (Sn=sa;Sn=f), Much=tall, makeqword(Qwor,Much,Qword)
+    ),
+    downcase_atom(Qword,Q1),
+    (Res=[], Rests=Rest
+    ;
+    Res\=[], append([Sn-Res],Rest,Rests)),
+    !.
+recoverqword(Cp,Output,Rests,Q1):-
+    remove(Cp-Qw,Output,Resto),
+    Qw=[sp-SP],
+    prepos(P1),
+    (Qwo=which;Qwo=what),
+    elimina(Qwo-_-_,SP,Rest),
+    downcase_atom(Qwo,Q1),
+    append([sp-Rest],Resto,Rests),
+    !.
+recoverqword(Cp,Output,Rests,Q1):-
+    remove(Cp-Qw,Output,Resto),
+    (Qw=[P-_-_|SP]; on(P-_-_,Qw)),
+    tolower(P,P1),
+    prepos(P1),
+    (Qwo=which;Qwo=what),
+    elimina(Qwo-_-_,SP,Rest),
+    downcase_atom(Qwo,Q1),
+    append([sp-Rest],Resto,Rests),
+    !.
+    
+
+recoverqword(Cp,Output,Rest,Q1):-
+    remove(Cp-Qw,Output,Rest),
+    Qw=[Qword-_-_],
+    Qword='How',
+    downcase_atom(Qword,Q1),
+    !.
+
+recoverqword(Cp,Output,Rests,Qwo):-
+    remove(Cp-Qw,Output,Output1),
+    Qw=[Qword-_-_],
+    Qword='?',
+    elimina(sn-SN,Output1,Rest),
+    elimina(Qwo-_-_,SN,Res),
+    qwordext(Qwo,W,M,_),
+    append([sp-Res],Rest,Rests),
+    !.
+    
+makeqword(Qwor,Much,Qword):-
+    mcon(Qwor,'_',Q),
+    mcon(Q,Much,Qword),
+    !.
+    
+getheadcost(Subj,N):-
+    Subj\=[],
+    !.
+
+buildqrs(A,be,C,[A,C]):-!.
+buildqrs(A,B,C,[A,B,C]):-
+    atomic(A),
+    atomic(C),
+    !.
+buildqrs(A,B,C,Q):-
+    atomic(A),
+    is_list(C),
+    append([A],[B],Q1),
+    append(Q1,C,Q),
+    !.
+buildqrs(A,B,C,Q):-
+    atomic(C),
+    is_list(A),
+    append(A,[B],Q1),
+    append(Q1,[C],Q),
+    !.
+buildqrs(A,B,C,Q):-
+    is_list(A),
+    is_list(C),
+    append(A,[B],Q1),
+    append(Q1,C,Q),
+    !.
+    
+buildqrss(A,be,C,D,[A,C|D]):-!.
+buildqrss(A,name,C,D,[A,C|D]):-!.
+buildqrss(A,B,C,D,Q):-
+    atomic(A),
+    atomic(C),
+    atomic(D),
+    append([A],[B],Q1),
+    append(Q1,[C],Q2),
+    append(Q2,[D],Q),
+    !.
+buildqrss(A,B,C,D,Q):-
+    atomic(A),
+    atomic(C),
+    is_list(D),
+    append([A],[B],Q1),
+    append(Q1,[C],Q2),
+    append(Q2,D,Q),
+    !.
+buildqrss(A,B,C,D,Q):-
+    atomic(A),
+    is_list(C),
+    is_list(D),
+    append([A],[B],Q1),
+    append(Q1,C,Q2),
+    append(Q2,D,Q),
+    !.
+buildqrss(A,B,C,D,Q):-
+    is_list(A),
+    is_list(C),
+    is_list(D),
+    append(A,[B],Q1),
+    append(Q1,C,Q2),
+    append(Q2,D,Q),
+    !.
+buildqrss(A,B,C,D,Q):-
+    is_list(A),
+    atomic(D),
+    atomic(C),
+    append(A,[B],Q1),
+    append(Q1,[C],Q11),
+    append(Q11,[D],Q),
+    !.
+buildqrss(A,B,C,D,Q):-
+    is_list(A),
+    is_list(D),
+    atomic(C),
+    append(A,[B],Q1),
+    append(Q1,[C],Q11),
+    append(Q11,D,Q),
+    !.
+
+buildqrsss(A,be,C,D,E,[A,C,D,E]):-!.
+buildqrsss(A,name,C,D,E,[A,C,D,E]):-!.
+buildqrsss(A,B,C,D,E,[A,B,C,D,E]):-
+    atomic(A),
+    atomic(C),
+    atomic(E),
+    atomic(D),
+    !.
+buildqrsss(A,B,C,D,E,Q):-
+    is_list(A),
+    is_list(C),
+    is_list(E),
+    atomic(D),
+    append(A,[B],Q1),
+    append(Q1,C,Q11),
+    append(Q11,[D],Q2),
+    append(Q2,E,Q),
+    !.
+buildqrsss(A,B,C,D,E,Q):-
+    atomic(A),
+    is_list(C),
+    is_list(E),
+    atomic(D),
+    append([A],C,Q11),
+    append(Q11,[D],Q2),
+    append(Q2,E,Q1),
+    append(Q1,[B],Q),
+    !.
+buildqrsss(A,B,C,D,E,Q):-
+    atomic(C),
+    is_list(A),
+    is_list(E),
+    atomic(D),
+    append(A,[B],Q11),
+    append(Q11,[C],Q2),
+    append(Q2,[D],Q1),
+    append(Q1,E,Q),
+    !.
+buildqrsss(A,B,C,D,E,Q):-
+    atomic(E),
+    is_list(C),
+    is_list(A),
+    atomic(D),
+    append(A,[B],Q11),
+    append(Q11,C,Q2),
+    append(Q2,[D],Q1),
+    append(Q1,[E],Q),
+    !.
+buildqrsss(A,B,C,D,E,Q):-
+    atomic(A),
+    atomic(C),
+    is_list(E),
+    atomic(D),
+    append([A],[B],Q11),
+    append(Q11,[C],Q2),
+    append(Q2,[D],Q1),
+    append(Q1,E,Q),
+    !.
+buildqrsss(A,B,C,D,E,Q):-
+    atomic(A),
+    atomic(E),
+    is_list(C),
+    atomic(D),
+    append([A],[B],Q11),
+    append(Q11,C,Q2),
+    append(Q2,[D],Q1),
+    append(Q1,[E],Q),
+    !.
+
+/*
+buildqrs(A,be,C,[A,C]):-!.
+buildqrs(A,B,C,[A,B,C]):-
+    atomic(A),
+    atomic(C),
+    !.
+buildqrs(A,B,C,[A,B|C]):-
+    atomic(A),
+    is_list(C),
+    !.
+buildqrs(A,B,C,Q):-
+    atomic(C),
+    is_list(A),
+    append(A,[B],Q1),
+    append(Q1,[C],Q),
+    !.
+buildqrs(A,B,C,Q):-
+    is_list(A),
+    is_list(C),
+    append(A,[B],Q1),
+    append(Q1,C,Q),
+    !.
+    
+buildqrss(A,be,C,D,[A,C|D]):-!.
+buildqrss(A,name,C,D,[A,C|D]):-!.
+buildqrss(A,B,C,D,[A,B,C|D]):-
+    atomic(A),
+    is_list(D),
+    !.
+buildqrss(A,B,C,D,Q):-
+    is_list(A),
+    atomic(D),
+    append(A,[B],Q1),
+    append(Q1,[C],Q11),
+    append(Q11,[C],Q),
+    !.
+buildqrss(A,B,C,D,Q):-
+    is_list(A),
+    is_list(D),
+    append(A,[B],Q1),
+    append(Q1,[C],Q11),
+    append(Q11,D,Q),
+    !.
+
+buildqrsss(A,be,C,D,E,[A,C,D,E]):-!.
+buildqrsss(A,name,C,D,E,[A,C,D,E]):-!.
+buildqrsss(A,B,C,D,E,[A,B,C,D,E]):-
+    atomic(A),
+    atomic(C),
+    atomic(E),
+    !.
+buildqrsss(A,B,C,D,E,Q):-
+    is_list(A),
+    is_list(C),
+    is_list(E),
+    append(A,[B],Q1),
+    append(Q1,C,Q11),
+    append(Q11,[D],Q2),
+    append(Q2,E,Q),
+    !.
+buildqrsss(A,B,C,D,E,Q):-
+    atomic(A),
+    is_list(C),
+    is_list(E),
+    append([A],[B],Q1),
+    append(Q1,C,Q11),
+    append(Q11,[D],Q2),
+    append(Q2,E,Q),
+    !.
+buildqrsss(A,B,C,D,E,Q):-
+    atomic(C),
+    is_list(A),
+    is_list(E),
+    append(A,[B],Q1),
+    append(Q1,[C],Q11),
+    append(Q11,[D],Q2),
+    append(Q2,E,Q),
+    !.
+buildqrsss(A,B,C,D,E,Q):-
+    atomic(E),
+    is_list(C),
+    is_list(A),
+    append(A,[B],Q1),
+    append(Q1,C,Q11),
+    append(Q11,[D],Q2),
+    append(Q2,[E],Q),
+    !.
+buildqrsss(A,B,C,D,E,Q):-
+    atomic(A),
+    atomic(C),
+    is_list(E),
+    append([A],[B],Q1),
+    append(Q1,[C],Q11),
+    append(Q11,[D],Q2),
+    append(Q2,E,Q),
+    !.
+buildqrsss(A,B,C,D,E,Q):-
+    atomic(A),
+    atomic(E),
+    is_list(C),
+    append([A],[B],Q1),
+    append(Q1,C,Q11),
+    append(Q11,[D],Q2),
+    append(Q2,[E],Q),
+    !.
+*/
+buildqueries(Passive,Verb,Be,Subj,[],[],[],[],Queries,LF):-
+    Be\=[],
+    (Be=be;Be=name;Be=call),
+    Subj\=[],
+    (atomic(Subj),
+    Queries=[Subj]
+     ;
+    list(Subj),
+    Queries=Subj),
+    lfs1(Be,Subj,LF),
+    !.
+buildqueries(Passive,Verb,Pred,Subj,[],[],[],[],Queries,LF):-
+    Subj\=[],
+    Verb\=[],
+    (atomic(Subj),
+    Queries=[Subj,Verb]
+     ;
+    list(Subj),
+    append(Subj,[Verb],Queries)),
+    lfs1(Pred,Subj,LF),
+    !.
+buildqueries(Passive,Verb,Be,Subj,[],Adjs,[],[],Queries,LF):-
+    Be\=[],
+    (Be=be;Be=name;Be=call),
+    Subj\=[],
+    mod_make_list(Adjs, List,Testa),
+    (atomic(Subj),
+    Querie=[Subj]
+     ;
+    list(Subj),
+    Querie=Subj),
+    append(Querie,List,Queries),
+    lfs2(Be,Subj,Adjs,LF),
+    !.
+buildqueries(Passive,Verb,Pred,Subj,[],Adjs,[],[],Queries,LF):-
+    Subj\=[],
+    Verb\=[],
+    mod_make_list(Adjs, List,Testa),
+    (atomic(Subj),
+    Querie=[Subj,Verb]
+     ;
+    list(Subj),
+    append(Subj,[Verb],Querie)),
+    checkpassivequery(Passive,Querie,List,Queries),
+    lfs2(Pred,Subj,Adjs,LF),
+    !.
+buildqueries(Passive,Verb,Pred,Subj,Obj,[],[],[],Queries,LF):-
+    Subj\=[],
+    Obj\=[],
+    Verb\=[],
+    buildqrs(Subj,Verb,Obj,Queries),
+    lfs3(Pred,Subj,Obj,LF),
+    !.
+buildqueries(Passive,Verb,Be,[],Obj,[],[],[],Queries,LF):-
+    Be\=[],
+    (Be=be;Be=name;Be=call),
+    Obj\=[],
+    (atomic(Obj),
+    Queries=[Obj]
+     ;
+    list(Obj),
+    Queries=Obj),
+    lfs1(Be,Obj,LF),
+    !.
+buildqueries(Passive,Verb,Pred,[],Obj,[],[],[],Queries,LF):-
+    Obj\=[],
+    Verb\=[],
+    (atomic(Obj),
+    Queries=[Obj,Verb]
+     ;
+    list(Obj),
+    append(Obj,[Verb],Queries)
+%    Queries=[Verb|Obj]
+    ),
+    lfs1(Pred,Obj,LF),
+    !.
+buildqueries(Passive,Verb,Be,[],Obj,[],[],Arg,Queries,LF):-
+    Be\=[],
+    (Be=be;Be=name;Be=call),
+    Obj\=[],
+    Verb\=[],
+    Obj=Arg,
+    (atomic(Obj),
+    Queries=[Obj]
+     ;
+    list(Obj),
+    Queries=Obj),
+    lfs1(Be,Obj,LF),
+    !.
+buildqueries(Passive,Verb,Pred,[],Obj,[],[],Arg,Queries,LF):-
+    Obj\=[],
+    Verb\=[],
+    Obj=Arg,
+    (atomic(Obj),
+    Queries=[Verb,Obj]
+     ;
+    list(Obj),
+    append(Obj,[Verb],Queries)
+%    Queries=[Verb|Obj]
+    ),
+    lfs1(Pred,Obj,LF),
+    !.
+buildqueries(Passive,Verb,Be,[],Obj,Adjs,[],[],Queries,LF):-
+    Be\=[],
+    (Be=be;Be=name;Be=call),
+    Obj\=[],
+    mod_make_list(Adjs, List,Testa),
+    (atomic(Obj),
+    Querie=[Obj]
+     ;
+    list(Obj),
+    Querie=Obj),
+    append(Querie,List,Queries),
+    lfs2(Be,Obj,Adjs,LF),
+    !.
+buildqueries(Passive,Verb,Pred,[],Obj,Adjs,[],[],Queries,LF):-
+    Obj\=[],
+    Verb\=[],
+    mod_make_list(Adjs, List,Testa),
+    (atomic(Obj),
+    Querie=[Verb,Obj]
+     ;
+    list(Obj),
+    append(Obj,[Verb],Querie)
+%    Querie=[Verb|Obj]
+    ),
+    checkpassivequery(Passive,Querie,List,Queries),
+    lfs2(Pred,Obj,Adjs,LF),
+    !.
+buildqueries(Passive,Verb,Pred,Subj,Obj,Adjs,[],[],Queries,LF):-
+    Subj\=[],
+    Obj\=[],
+    Verb\=[],
+    Adjs\=[],
+    buildqrs(Subj,Verb,Obj,Querie),
+    mod_make_list(Adjs, List,Testa),
+    checkpassivequery(Passive,Querie,List,Queries),
+    lfs4(Pred,Subj,Obj,Adjs,LF),
+    !.
+buildqueries(active,Verb,Be,[],Obj,Adjs,[],Arg,Queries,LF):-
+    Be\=[],
+    (Be=be;Be=name;Be=call),
+    Adjs\=[],
+    Arg\=[],
+    Obj=Arg,
+    mod_make_list(Adjs, List,Testa),
+    checkpassivequery(active,Obj,List,Queries),
+    lfs4(Be,Obj,Arg,Adjs,LF),
+    !.
+buildqueries(active,Verb,Be,[],Obj,Adjs,Vcomps,Arg,Queries,LF):-
+    Be\=[],
+    (Be=be;Be=name;Be=call),
+    Adjs\=[],
+    Vcomps\=[],
+    Arg\=[],
+    Obj=Arg,
+    buildqrss(Subj,be,Vcomps,Arg,Q),
+    mod_make_list(Adjs, List,Testa),
+    checkpassivequery(active,Q,List,Queries),
+%    mod_make_list1(Adjs, List1),
+    lfs4(Be,Obj,Vcomps,Adjs,LF),
+    !.
+buildqueries(Passive,Verb,Pred,[],Obj,Adjs,Vcomps,Arg,Queries,LF):-
+    Adjs\=[],
+    Vcomps\=[],
+    Arg\=[],
+    Obj\=Arg,
+    buildqrss(Obj,Verb,Vcomps,Arg,Q),
+    mod_make_list(Adjs, List,Testa),
+    checkpassivequery(Passive,Q,List,Queries),
+%    mod_make_list1(Adjs, List1),
+    lfs5(Pred,Obj,Vcomps,Arg,Adjs,LF),
+    !.
+buildqueries(Passive,Verb,Pred,Subj,Obj,Adjs,Vcomps,Arg,Queries,LF):-
+    Subj\=[],
+    Verb\=[],
+    Adjs\=[],
+    Vcomps\=[],
+    Arg\=[],
+    Obj=Arg,
+    buildqrss(Subj,Verb,Vcomps,Arg,Q),
+    mod_make_list(Adjs, List,Testa),
+    checkpassivequery(Passive,Q,List,Queries),
+%    mod_make_list1(Adjs, List1),
+    lfs5(Pred,Subj,Vcomps,Arg,Adjs,LF),
+    !.
+buildqueries(active,Verb,Be,[],Obj,[],Vcomps,Arg,Queries,LF):-
+    Be\=[],
+    (Be=be;Be=name;Be=call),
+    Vcomps\=[],
+    Arg\=[],
+    Obj=Arg,
+    append(Vcomps,Arg,Queries),
+    lfs33(Be,Obj,Vcomps,LF),
+    !.
+buildqueries(Passive,Verb,Pred,Subj,Obj,[],Vcomps,Arg,Queries,LF):-
+    Subj\=[],
+    Verb\=[],
+    Vcomps\=[],
+    Arg\=[],
+    Obj=Arg,
+    buildqrss(Subj,Verb,Vcomps,Arg,Queries),
+    lfs44(Pred,Subj,Vcomps,Arg,LF),
+    !.
+buildqueries(Passive,Verb,Pred,Subj,[],[],Vcomps,Arg,Queries,LF):-
+    Subj\=[],
+    Verb\=[],
+    Vcomps\=[],
+    Arg\=[],
+    buildqrss(Subj,Verb,Vcomps,Arg,Queries),
+    lfs44(Pred,Subj,Vcomps,Arg,LF),
+    !.
+buildqueries(active,Verb,Be,[],Obj,[],Vcomps,Arg,Queries,LF):-
+    Be\=[],
+    (Be=be;Be=name;Be=call),
+    Vcomps\=[],
+    Arg\=[],
+    Obj\=Arg,
+    buildqrs(Obj,Vcomps,Arg,Queries),
+    lfs44(Be,Obj,Vcomps,Arg,LF),
+    !.
+buildqueries(Passive,Verb,Pred,[],Obj,[],Vcomps,Arg,Queries,LF):-
+    Verb\=[],
+    Vcomps\=[],
+    Arg\=[],
+    Obj\=Arg,
+    buildqrss(Obj,Verb,Vcomps,Arg,Queries),
+    lfs44(Pred,Obj,Vcomps,Arg,LF),
+    !.
+buildqueries(Passive,Verb,Pred,[],Obj,[],Vcomps,Arg,Queries,LF):-
+    Verb\=[],
+    Vcomps\=[],
+    Arg\=[],
+    Obj=Arg,
+    buildqrs(Obj,Verb,Vcomps,Queries),
+    lfs44(Pred,Obj,Vcomps,Arg,LF),
+    !.
+buildqueries(active,Verb,Be,[],Obj,[],[],Arg,Queries,LF):-
+    Be\=[],
+    (Be=be;Be=name;Be=call),
+    Arg\=[],
+    Obj\=Arg,
+    append(Obj,Arg,Queries),
+    lfs3(Be,Obj,Arg,LF),
+    !.
+buildqueries(active,Verb,Be,[],Obj,[],[],Arg,Arg,LF):-
+    Be\=[],
+    (Be=be;Be=name;Be=call),
+    Arg\=[],
+    Obj=Arg,
+    lfs1(Be,Obj,LF),
+    !.
+buildqueries(active,Verb,Pred,[],[],Adj,[],[],Adj,LF):-
+    Adj\=[],
+    lfs11(Pred,Adj,LF),
+    !.
+buildqueries(Passive,Verb,Pred,[],[],Adjs,Vcomps,Arg,Queries,LF):-
+    Verb\=[],
+    Adjs\=[],
+    Vcomps\=[],
+    Arg\=[],
+    buildqrs(Verb,Arg,Vcomps,Q),
+    mod_make_list(Adjs, List,Testa),
+    checkpassivequery(Passive,Q,List,Queries),
+    lfs6(Pred,Vcomps,Arg,Adjs,LF),
+    !.
+buildqueries(Passive,Verb,Pred,Subj,Obj,Adjs,Vcomps,Arg,Queries,LF):-
+    Subj\=[],
+    Verb\=[],
+    Adjs\=[],
+    Vcomps\=[],
+    Arg\=[],
+    Obj\=Arg,
+    Obj\=Subj,
+    buildqrsss(Subj,Verb,Obj,Vcomps,Arg,Q),
+    mod_make_list(Adjs, List,Testa),
+    checkpassivequery(Passive,Q,List,Queries),
+    lfs7(Pred,Subj,Obj,Vcomps,Arg,Adjs,LF),
+    !.
+buildqueries(Passive,Verb,Pred,Subj,Obj,Adjs,[],Arg,Queries,LF):-
+    Subj\=[],
+    Verb\=[],
+    Adjs\=[],
+    Arg\=[],
+    Subj\=Arg,
+    Obj=Arg,
+    buildqrs(Subj,Verb,Obj,Q),
+    mod_make_list(Adjs, List,Testa),
+    checkpassivequery(Passive,Q,List,Queries),
+    lfs7(Pred,Subj,Obj,Vcomps,Arg,Adjs,LF),
+    !.
+buildqueries(Passive,Verb,Pred,Subj,Obj,Adjs,[],Arg,Queries,LF):-
+    Subj\=[],
+    Verb\=[],
+    Adjs\=[],
+    Arg\=[],
+    Subj=Arg,
+    Obj=Arg,
+    buildqrs(Subj,Verb,[],Q),
+    mod_make_list(Adjs, List,Testa),
+    checkpassivequery(Passive,Q,List,Queries),
+    lfs7(Pred,Subj,Obj,Vcomps,Arg,Adjs,LF),
+    !.
+buildqueries(Passive,Verb,Pred,Subj,Obj,[],Vcomps,Arg,Queries,LF):-
+    Subj\=[],
+    Verb\=[],
+    Vcomps\=[],
+    Arg\=[],
+    Obj\=Arg,
+    buildqrsss(Subj,Verb,Obj,Vcomps,Arg,Queries),
+    lfs77(Pred,Subj,Obj,Vcomps,Arg,LF),
+    !.
+buildqueries(Passive,Verb,Pred,Subj,Obj,[],[],Arg,Queries,LF):-
+    Subj\=[],
+    Verb\=[],
+    Arg\=[],
+    Obj=Arg,
+    buildqrs(Subj,Verb,Obj,Queries),
+    lfs2(Pred,Subj,Obj,LF),
+    !.
+buildqueries(Passive,Verb,Pred,Subj,[],Adjs,Vcomps,[],Queries,LF):-
+    Subj\=[],
+    Verb\=[],
+    Adjs\=[],
+    Vcomps\=[],
+    buildqrs(Subj,Verb,Vcomps,Q),
+    mod_make_list(Adjs, List,Testa),
+    append(Q,List,Queries),
+    lfs55(Pred,Subj,Vcomps,Adjs,LF),
+    !.
+buildqueries(Passive,Verb,Pred,Subj,[],Adjs,Vcomps,Arg,Queries,LF):-
+    Subj\=[],
+    Verb\=[],
+    Adjs\=[],
+    Vcomps\=[],
+    Arg\=[],
+    buildqrss(Subj,Verb,Vcomps,Arg,Q),
+    mod_make_list(Adjs, List,Testa),
+    append(Q,List,Queries),
+    lfs5(Pred,Subj,Vcomps,Arg,Adjs,LF),
+    !.
+buildqueries(Passive,Verb,Pred,Subj,Obj,Adjs,Vcomps,Arg,Queries,LF):-
+    (buildqrss(Subj,Verb,Vcomps,Obj,Q), Arg1=Obj
+    ;
+    buildqrss(Subj,Verb,Vcomps,Arg,Q), Arg1=Arg),
+    mod_make_list(Adjs, List,Testa),
+    append(Q,List,Queries),
+    lfs5(Pred,Subj,Vcomps,Arg1,Adjs,LF),
+    !.
+    
+checkpassivequery(passive,Input,Adjs,Output):-
+    append(Adjs,Input,Output),
+    !.
+checkpassivequery(active,Input,Adjs,Output):-
+    reverse(Input,[Verb|Rev]),
+    reverse(Rev,Inpu),
+    append(Inpu,Adjs,Outpu),
+    append(Outpu,[Verb],Output),
+    !.
+
+qassertpassive(Rest,Lem,passive):-
+    Lem\=be,
+    remove_part_pass(Rest, NRest),
+    on(Testa-Cat-_, NRest),
+    (check_auxbe(Cat);
+      coplb(Testa)),
+    !.
+qassertpassive(Rest,Lem,active):-
+    !.
+collectfac([A|Rest],A,Rest):-
+     !.
+collectfac([B|Sent],A,Rest):-
+     collectfac(Sent,A,Rest),
+     !.
+
+extrq3(Sent,Adjs):-
+    findall(Cos-Adj, (
+             (on(adj-Adj,Sent);
+              on(sp-Adj,Sent);
+              on(sa-Adj,Sent);
+              on(spd-Adj,Sent);
+              on(savv-Adj,Sent);
+              on(spda-Adj,Sent)), Cos=adj
+              ;
+              (on(cp-[_-dirs-_],Sent), Cp=cp;
+               on(fp-[_-_-_],Sent), Cp=fp;
+               on(fs-[_-_-_],Sent), Cp=fs), 
+              nth(Sent,N,Cp-[_-_-_]),
+              on(sn-Adj,Sent),
+              nth(Sent,N11,sn-Adj),
+              N < N11, Cos=sn
+              ;
+              on(f2-F22,Sent),
+              (on(ibar-Ibar,F22), Fra=F22
+                ;
+               on(f-Fra,F22),
+               on(ibar-Ibar,Fra)),
+               F2=Fra,
+               nth(F2,N,ibar-Ibar),
+              (on(sn-SN,F2),              
+                nth(F2,N11,sn-SN)
+                ;
+               on(sa-SN,F2),              
+                nth(F2,N11,sa-SN)
+                 ;
+               on(sa-SN,Sent),              
+                nth(Sent,N11,sa-SN)
+               ;
+               on(sn-SN,Sent),              
+                nth(Sent,N11,sn-SN)
+                 ;
+               on(sp-SN,Sent),              
+                nth(Sent,N11,sp-SN)
+                ;
+               on(spda-SN,Sent),              
+                nth(Sent,N11,spda-SN)
+               ;
+               on(sp-SN,F2),              
+                nth(F2,N11,sp-SN)
+                ;
+               on(spda-SN,F2),              
+                nth(F2,N11,spda-SN)
+                ),
+                 N < N11,
+               append([ibar-Ibar],[adj-SN],Adj),
+               Cos=f2), Adjss),
+     organizeadjsheads(Adjss,Adjjs),
+     sort(Adjjs,Adjs),
+     Adjs\=[].
+extrq3(Sent,[]).
+
+organizeadjsheads([],[]):-!.
+organizeadjsheads([Adj|Adjss],[Head-Adj1|Adjjs]):-
+     (Adj=[Head-p-_|Adj1];
+      Adj=[Head-pd-_|Adj1];
+      Adj=[Head-pda-_|Adj1]),
+     organizeadjsheads(Adjss,Adjjs),
+   !.
+organizeadjsheads([Adj|Adjss],[Adj|Adjjs]):-
+     organizeadjsheads(Adjss,Adjjs),
+   !.
+
+getpredverb(Verb,Pred):-
+   atomic(Verb),
+   lemmatize_dic_v(Verb,Pred,S),
+   !.
+getpredverb(Verb,Pred):-
+   is_list(Verb), reverse(Verb,[Pred|Revv]),
+   !.
+
+remarkablevents(V):-
+   rsv(Evs), on(V,Evs)
+   ;
+   nlv(Evs), on(V,Evs)
+   ;
+   amv(Evs), on(V,Evs)
+   ;
+   dvv(Evs), on(V,Evs)
+   ;
+   perv(Evs), on(V,Evs)
+   ;
+   pnw(Evs), on(V,Evs)
+   ;
+   mdangr(Evs), on(V,Evs)
+   ;
+   illw(Evs), on(V,Evs)
+   ;
+   guilt(Evs), on(V,Evs)
+   ;
+   danger_item(V),
+   !.
+
+newevaluate_output(Rte,[Id-[V,Tags1, Costs1, Struct1]|Alls],[Ev1,Ev2]):-
+    Rte=Id1-[PPs, Tags, Costss, Struct],
+    getcosts(Costss,Costs),
+    evaloutssynt(Tags,Costs,[Id-[Tags1,Costs1]],Ev1),
+    evaloutssems([Id1-Struct],[Id-Struct1],Ev1,Ev2),
+    sort(Ev2,Evsort),
+    newmatch_answer(Tags,Ev2,Tags1,Bests,Pol2),
+    !.
+newevaluate_output(Rte,[Id-[V1,Tags1, Costs1, Struct1]|Alls],[Ev1,Ev2]):-
+    Rte=Id1-[V,Tags, Costs, Struct],
+    evaloutssynt(Tags,Costs,[Id-[Tags1,Costs1]],Ev1),
+    evaloutssems([Id1-Struct],[Id-Struct1],Ev1,Ev2),
+    sort(Ev2,Evsort),
+    newmatch_answer(Tags,Ev2,Tags1,Bests,Pol2),
+    !.
+
+newmatch_answer(Tags,Ev1,Tagsall,Bests,Pol):-
+    newassessanswer(Tags,Po),
+    nevmatchtagsans(Tags,Po,Tagsall,Evs),
+    select_best(Po,TextAns,Evs,Bests),
+     !.
+
+newassessanswer(Tags,Po):-!.
+
+evaloutssems(Rte,Output,Ev1,Ev3):-
+    extractlfs(Rte,LF,Verb),
+    nl,nl,
+    writealllfs(LF),
+    extractlfs(Output,LFs,Verbs),
+    nl,nl,
+    writealllfs(LFs),
+    evaluateLFs(Pred,LF,LFs,Verbs,Outs),
+    searchanswerLF(LF,LFs,Verbs,Outs,NewOuts),
+    eraseempty(NewOuts,Ev2),
+%    eraseempty(Outs,Ev2),
+    multiplyevalsynt(Ev1,Ev2,Ev3),
+    !.
+
+evaloutssynt(Tags1,Costs1,[],[]):-!.
+evaloutssynt(Tags1,Costs1,[Text-Out|Output],[Ev-Text|Evs]):-
+    Out=[Tags,Costss],
+    writenl(_,Text),
+    writenl(_,'Evaluation Score from Words and Tags'),
+    getcosts(Costss,Costs),
+    matchtagscosts(Tags1,Tags,Costs1,Costs,Ev),
+    evaloutssynt(Tags1,Costs1,Output,Evs),
+    !.
+ evaloutssynt(Tags1,Costs1,[Text-Out|Output],Evs):-
+    evaloutssynt(Tags1,Costs1,Output,Evs),
+    !.
+    
