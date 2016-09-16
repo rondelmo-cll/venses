@@ -52,7 +52,9 @@ thopenonefile(Text,Evals):-
    length(Codes,L),
    init_sems,
 %   composefilename1(N,File),
+   format("DEBUG thopenonefile: about to call allparse_discourses, L=~d~n",[L]),
    allparse_discourses(L,Input,Codes, 0, Nn, Evals),
+   format("DEBUG thopenonefile: about to call evaluate_one_folder1~n"),
    evaluate_one_folder1(user,Evals, Stat),
   !.
 

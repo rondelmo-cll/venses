@@ -4136,12 +4136,18 @@ read_nfr([Out|File], Frase, T, Rest):-
     !.
 
 callnewtager(N,Text,Output):-
+	format("DEBUG callnewtager: calling init~n"),
   init,
+	format("DEBUG callnewtager: calling newinit~n"),
   newinit,
+	format("DEBUG callnewtager: calling thtok(~w)~n",[Text]),
   thtok(Text,Outs),
+	format("DEBUG callnewtager: thtok returned Outs=~w~n",[Outs]),
  % mcon('partial/testset',N,File),
+	format("DEBUG callnewtager: calling rtnew~n"),
   rtnew(Outs, 'user',  Output),
   !.
+
 cnewtager(N,Text,Output):-
   thtok(Text,Outs),
   mcon('partial/testset',N,File),
@@ -4185,6 +4191,7 @@ newinit:-
   abolish(idmw/5),
   abolish(idx/5),
   assert(ts(nil,nil,nil)),
+  format("DEBUG allinitss/newinit: complete~n"),
   !.
   
 recovertokens(Outs):-

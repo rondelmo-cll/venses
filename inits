@@ -451,6 +451,7 @@ init:-
     assert(wnet(on)),
     abolish(curr_frase/1),
     assert(curr_frase(1)),
+	format("DEBUG inits/init: complete~n"),
    !.
 
 init_sems:-
