@@ -1,5 +1,10 @@
 ﻿/*
 swipl -f nguiev -q -g main -- Claude Chabrol '(' born June 24 ',' 1930 ')' is a French movie director and has become well-known in the 40 years since his first film ',' Le Beau Serge ',' for his chilling tales of murder ',' including Le Boucher '.' Le Beau Serge was directed by Chabrol '.'
+
+
+20160916-17:01:32 mengwong@venice2:~/foscari/venses% swipl -f nguiev -q -g main --  "Claude_Chabrol ( born June_24 , 1930 ) is a French movie director and has become well-known in the 40 years since his first film , Le_Beau Serge , for his chilling tales of murder , including Le_Boucher ." "Le Boucher was directed by Le Beau Serge ."
+
+
 */
 
 /*
@@ -11,16 +16,20 @@ swipl --goal=main -o myprog -c nguiev
 :- [inits].
 :- make_all.
 
+%% we need to overhaul the way the program reads input -- mengwong
+
 eval :-
-        current_prolog_flag(argv, Argv),
-        append(_, [--|Args], Argv),
+	writeln("running eval"),
+    current_prolog_flag(argv, Argv),
+		writeln("starting."),
 %        concat_atom(Args, ' ', SingleArg),
 %        term_to_atom(Term, SingleArg),
 %        Val is Term,
-        sommat(Args).
+        sommat(Argv).
 %        format('~w~n', [Val]).
 
 main :-
+	writeln("running main"),
         catch(eval, E, (print_message(error, E), fail)),
         halt.
 main :-
@@ -35,15 +44,59 @@ main :-
 :- include(inits).
 :- make_all.*/
 
+showElems(_,[],_).
+showElems(Label,[H|T],Counter) :-
+	termType(H,HType),
+	HValue = H,
+	format("DEBUG showElems ~w: element ~d has type=~w, value=~w~n",[Label,Counter,HType,HValue]),
+	showElems(Label,T,Counter+1).
 
-
+termType(Term,"number")  :- number(Term).
+termType(Term,"string")  :- string(Term).
+termType(Term,"atom")    :-   atom(Term).
+termType(Term,"other").
 
 sommat(In) :-
-       retractall(statsfp(_,_,_,_,_)),
+	format("DEBUG sommat: input given: ~w~n",[In]),
+	%% showElems("In",In,0), !,
+	split_if_needed(In,Splitted),
+	
+	format("DEBUG sommat: working with: ~w~n",[Splitted]),
+	%% showElems("Splitted",Splitted,0), !,
+
+    retractall(statsfp(_,_,_,_,_)),
        asserta(statsfp(0,0,0,0,0)),
        retractall(tac(_,_)),
-       thopenonefile(In,Out).
+       thopenonefile(Splitted,Out).
 %       compute_ft_total(NFile,Stats),nl.
+
+%% sometimes the input arrives in the form of ["foo bar baz","honk quux"]
+%% rather than ["foo","bar","baz","honk","quux"].
+%% the former is actually preferable but the latter is legacy.
+%% convert the former to the latter.
+%% note that this will only decline to split if it sees 2 elements.
+%% if you want to split arbitrary sublists, use maplist or foldl
+%% mengwong 20160916
+split_if_needed(In,Splitted) :-
+	%% format("split_if_needed: ~w~n",[In]),
+	( length(In, 2)
+	 ->
+		 %% format("split_if_needed: got 2 args, need to split~n"),
+		 [In0, In1] = In,
+		 split_atom(In0," "," ",Splitted0),
+		 split_atom(In1," "," ",Splitted1),
+		 append(Splitted0,Splitted1,Splitted),
+		 %% format("split_if_needed: returning combined lists: ~w~n",[Splitted]),
+		 !
+	 ;
+	 %% format("split_if_needed: length is not 2, no need to split~n"),
+	 %% though it would be a good idea to check that they're atoms and not strings, because that leads to bugs.
+	 Splitted = In
+	).
+	
+
+split_atom(A,B,C,D) :- split_string(A,B,C,D1),
+					   maplist(atom_string,D,D1).
 
 thopenonefile(Text,Evals):-
    retractall(current_num(_,_)),
